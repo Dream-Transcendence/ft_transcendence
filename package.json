@@ -1,0 +1,14 @@
+{
+  "name": "ft_transcendence",
+  "private": true,
+  "version": "1.0.0",
+  "repository": "https://github.com/Dream-Transcendence/ft_transcendence.git",
+  "description": "project ft_transcendence",
+  "author": "Team BJS <flfns333@gmail.com>",
+  "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "packages/**"
+    ]
+  }
+}
