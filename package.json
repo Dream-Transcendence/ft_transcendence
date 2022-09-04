@@ -12,8 +12,8 @@
     ]
   },
   "scripts": {
-    "lint": "eslint packages/**/*.{ts,tsx}",
-    "format:fix": "prettier --write packages/**/*.{ts,tsx}"
+    "lint": "eslint packages/**/*",
+    "format:fix": "prettier --write packages/**/*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.36.1",
