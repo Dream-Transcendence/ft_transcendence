@@ -1,7 +1,8 @@
 name: common lint test
 
 on:
-  branches: ['*']
+  push:
+    branches: ['*']
   pull_request:
     branches: ['main']
 
