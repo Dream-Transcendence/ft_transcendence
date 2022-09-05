@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       to: ${{ steps.figure.outputs.moveto }}
-      node_it: ${{ steps.figure.outputs.nodedata }}
+      node_id: ${{ steps.figure.outputs.nodedata }}
     steps:
       - id: figure
         run: |
