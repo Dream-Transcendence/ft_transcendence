@@ -36,21 +36,21 @@ jobs:
                   TO="$in_progress";;
                 closed)
                   TO="$done";;
-                esac
-              ;;
-              pull_request)
-                NODE="node_pr"
-                case $event_action in
-                  opened | reopened | review_requested)
-                    TO="$in_progress";;
-                  closed)
-                    TO="$done";;
-                esac
-              ;;
-            esac
-            echo "will move to $TO using node: $NODE"
-            echo "::set-output name=moveto::$TO"
-            echo "::set-output name=nodedata::$NODE"
+              esac
+            ;;
+            pull_request)
+              NODE="node_pr"
+              case $event_action in
+                opened | reopened | review_requested)
+                  TO="$in_progress";;
+                closed)
+                  TO="$done";;
+              esac
+            ;;
+          esac
+          echo "will move to $TO using node: $NODE"
+          echo "::set-output name=moveto::$TO"
+          echo "::set-output name=nodedata::$NODE"
 
   move_card:
     runs-on: ubuntu-latest
