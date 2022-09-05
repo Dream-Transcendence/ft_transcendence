@@ -1,14 +1,10 @@
 # ft_transcendence
 
+## 공용 노션
+https://www.notion.so/ft_transcendence-5d6b3da6b2c74db88cf186ecf0d7f8ea</br>
+
 #### [🗃 Project](https://github.com/orgs/Dream-Transcendence/projects/2/views/1)
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
-
-### 모노레포로 관리하기
-모노레포란?
-https://www.notion.so/83c04565137e494c82a7af78ce6a0f13
-</br>
-모노레포 적용
-https://youthful-gem-026.notion.site/yarn-workspace-9d618fd1981a4391995358a343e93ce0
 
 ## Front-end 기술 스택
 
