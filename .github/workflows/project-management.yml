@@ -1,0 +1,68 @@
+name: Project management
+on:
+  issues:
+    types: [opened, reopened, closed, assigned]
+  
+  pull_request:
+    types: [opened, reopened, review_requested, closed]
+  
+env:
+  new: 💡 New
+  backlog: 📅 Backlog
+  in_progress: 🚧 In Progress
+  done: ✅ Done
+
+  event_name: ${{ github.event.name }}
+  event_action: ${{ github.event.action }}
+  node_issue: ${{ github.event.issue.node_id }}
+  node_pr: ${{ github.event.pull_request.node_id }}
+
+jobs:
+  what_to_do:
+    runs-on: ubuntu-latest
+    outputs:
+      to: ${{ steps.figure.outputs.moveto }}
+      node_it: ${{ steps.figure.outputs.nodedata }}
+    steps:
+      - id: figure
+        run: |
+          case $event_name in
+            issues)
+              NODE="$node_issue"
+              case $event_action in
+                opened | reopened | review_requested | unassigned)
+                  TO="$new";;
+                assigned)
+                  TO="$in_progress";;
+                closed)
+                  TO="$done";;
+                esac
+              ;;
+              pull_request)
+                NODE="node_pr"
+                case $event_action in
+                  opened | reopened | review_requested)
+                    TO="$in_progress";;
+                  closed)
+                    TO="$done";;
+                esac
+              ;;
+            esac
+            echo "will move to $TO using node: $NODE"
+            echo "::set-output name=moveto::$TO"
+            echo "::set-output name=nodedata::$NODE"
+
+  move_card:
+    runs-on: ubuntu-latest
+    needs: what_to_do
+    steps:
+      - name: Move issue to ${{ needs.which.outputs.to }}
+        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
+        with:
+          gh_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          organization: Dream-Transcendence
+          project_id: 2
+          resource_node_id: ${{ needs.which.outputs.node_id }}
+          status_value: ${{ needs.which.outputs.to }} # Target status
+
+  
