@@ -1,12 +1,13 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import NavigationBar from './components/bar/NavigationBar';
+import { Route, Routes } from 'react-router-dom';
+import Landing from './pages/Landing';
 
 function App() {
   return (
     <div className="App">
-      <NavigationBar />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+      </Routes>
     </div>
   );
 }
