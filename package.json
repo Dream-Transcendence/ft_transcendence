@@ -12,7 +12,7 @@
     ]
   },
   "scripts": {
-    "lint": "eslint packages/**/*",
+    "lint": "eslint './packages/**/*.{ts,tsx}'",
     "format:fix": "prettier --write packages/**/*",
     "commit": "cz"
   },
