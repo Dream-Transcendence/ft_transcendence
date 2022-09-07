@@ -8,6 +8,10 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import NavProfile from '../avatar/NavProfile';
+import ChatIconButton from '../button/icon/ChatIconButton';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import GameIconButton from '../button/icon/GameIconButton';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -22,6 +26,7 @@ const Search = styled('div')(({ theme }) => ({
     marginLeft: theme.spacing(1),
     width: 'auto',
   },
+  flexGrow: 1,
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -51,37 +56,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const ButtonLayout = styled('section')(({ theme }) => ({
+  width: '50vh',
+  height: '100%',
+}));
+
+const SearchLayout = styled('section')(({ theme }) => ({
+  width: '50vh',
+  marginLeft: 'auto',
+}));
+
 export default function NavigationBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-          >
-            MUI
-          </Typography>
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </Search>
+          <ButtonLayout>
+            <NavProfile />
+            <GameIconButton />
+            <ChatIconButton />
+          </ButtonLayout>
+          <div>
+            <SearchLayout>
+              <Search>
+                <SearchIconWrapper>
+                  <SearchIcon />
+                </SearchIconWrapper>
+                <StyledInputBase
+                  placeholder="Search…"
+                  inputProps={{ 'aria-label': 'search' }}
+                />
+              </Search>
+            </SearchLayout>
+          </div>
         </Toolbar>
       </AppBar>
     </Box>
