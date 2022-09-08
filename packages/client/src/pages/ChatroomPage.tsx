@@ -1,26 +1,14 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
+import SearchBox from '../components/input/SearchBox';
+import AsideSearchBoxModule from '../modules/ChatSidebar/AsideSearchBox';
+import AsideCurrentChatRoomModule from '../modules/ChatSidebar/AsideCurrentChatRoom';
+import AsideFriendListModule from '../modules/ChatSidebar/AsidefriendList';
+import AisdeCreateChatRoomModule from '../modules/ChatSidebar/AsideCreateChatRoom';
 
-// const ProfileLayout = styled('section')(({ theme }) => ({
-//   display: 'grid',
-//   alignItems: 'center',
-//   gridTemplateColumns: '1fr 2fr',
-//   //     gridTemplateAreas:
-//   // 		'a a a',
-//   // 		'b c c',
-//   // 		'b d g'
-//   // 		'e f g'
-//   // }
-// }));
 const Chatroom = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
-  //     gridTemplateAreas:
-  // 		'a a a',
-  // 		'b c c',
-  // 		'b d g'
-  // 		'e f g'
-  // }
 }));
 
 const MainSection = styled('section')(({ theme }) => ({
@@ -30,12 +18,6 @@ const MainSection = styled('section')(({ theme }) => ({
   flexDirection: 'row',
   gridTemplateColumns: '1fr 1fr',
   justifyContent: 'center',
-  //     gridTemplateAreas:
-  // 		'a a a',
-  // 		'b c c',
-  // 		'b d g'
-  // 		'e f g'
-  // }
 }));
 
 const Section = styled('section')(({ theme }) => ({
@@ -59,7 +41,12 @@ function ChatroomPage() {
         </nav>
       </header>
       <MainSection>
-        <Aside></Aside>
+        <Aside>
+          <AsideSearchBoxModule />
+          <AsideCurrentChatRoomModule />
+          <AsideFriendListModule />
+          <AisdeCreateChatRoomModule />
+        </Aside>
         <Section></Section>
       </MainSection>
       <footer></footer>
