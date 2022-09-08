@@ -8,7 +8,7 @@ const CurrentChatRoomLayout = styled('div')(({ theme }) => ({
 
 const CurrentChatRoomBox = styled('div')(({ theme }) => ({
   marginTop: '3%',
-  marginBottom: '3%',
+  marginBottom: '4%',
   height: '87%',
   width: '90%',
   borderRadius: '13px',
