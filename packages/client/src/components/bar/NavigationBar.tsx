@@ -12,6 +12,8 @@ import NavProfile from '../avatar/NavProfile';
 import ChatIconButton from '../button/icon/ChatIconButton';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import GameIconButton from '../button/icon/GameIconButton';
+import LogoutIconButton from '../button/icon/LogoutIconButton';
+import { flexbox } from '@mui/system';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -20,13 +22,8 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  marginLeft: 0,
+  marginLeft: 'auto',
   width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-  flexGrow: 1,
 }));
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -56,14 +53,10 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const ButtonLayout = styled('section')(({ theme }) => ({
-  width: '50vh',
-  height: '100%',
-}));
-
-const SearchLayout = styled('section')(({ theme }) => ({
-  width: '50vh',
+const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
+  display: 'flex',
+  alignItems: 'center',
 }));
 
 export default function NavigationBar() {
@@ -71,24 +64,21 @@ export default function NavigationBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <ButtonLayout>
-            <NavProfile />
-            <GameIconButton />
-            <ChatIconButton />
-          </ButtonLayout>
-          <div>
-            <SearchLayout>
-              <Search>
-                <SearchIconWrapper>
-                  <SearchIcon />
-                </SearchIconWrapper>
-                <StyledInputBase
-                  placeholder="Search…"
-                  inputProps={{ 'aria-label': 'search' }}
-                />
-              </Search>
-            </SearchLayout>
-          </div>
+          <NavProfile />
+          <GameIconButton />
+          <ChatIconButton />
+          <RightLayout>
+            <Search>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="유저찾기…"
+                inputProps={{ 'aria-label': 'search' }}
+              />
+            </Search>
+            <LogoutIconButton />
+          </RightLayout>
         </Toolbar>
       </AppBar>
     </Box>
