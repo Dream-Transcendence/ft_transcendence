@@ -9,15 +9,19 @@ import AisdeCreateChatRoomModule from '../modules/ChatSidebar/AsideCreateChatRoo
 const Chatroom = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const MainSection = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
+  minWidth: '800px',
+  minHeight: '700px',
   display: 'flex',
   flexDirection: 'row',
-  gridTemplateColumns: '1fr 1fr',
   justifyContent: 'center',
+  flex: 1,
 }));
 
 const Section = styled('section')(({ theme }) => ({
