@@ -20,6 +20,7 @@ const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'right',
 }));
 
 export default function NavigationBar() {
