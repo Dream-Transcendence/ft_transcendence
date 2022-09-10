@@ -48,7 +48,7 @@ function ChatroomPage() {
           <ChatSidebarTemplate />
         </Aside>
         <Section>
-          <ChatRoomListTemplate />
+          {/* <ChatRoomListTemplate /> */}
           {/* <EnteredChatRoomTemplate /> */}
           {/* <ChatRoomDefaultTemplate /> */}
         </Section>
