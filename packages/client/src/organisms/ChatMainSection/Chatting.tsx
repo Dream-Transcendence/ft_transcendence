@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import SectionChatInputModule from '../../modules/ChatSection/SectionChatInput';
-import ChatLogListModule from '../../modules/ChatSection/SectionChatLogList';
+import ChatInputModule from '../../modules/ChatSection/ChatInput';
+import ChatLogListOranisms from './ChatLogList';
 
 const ChattingLayout = styled('div')(({ theme }) => ({
   width: '75%',
@@ -9,13 +9,13 @@ const ChattingLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column-reverse',
 }));
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
-function Chatting(prop: any) {
+function ChattingOrganisms(prop: any) {
   return (
     <ChattingLayout>
-      <SectionChatInputModule></SectionChatInputModule>
-      <ChatLogListModule></ChatLogListModule>
+      <ChatInputModule></ChatInputModule>
+      <ChatLogListOranisms />
     </ChattingLayout>
   );
 }
 
-export default Chatting;
+export default ChattingOrganisms;

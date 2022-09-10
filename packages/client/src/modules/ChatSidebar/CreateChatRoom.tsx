@@ -15,7 +15,7 @@ const AsideButtonBox = styled('div')(({ theme }) => ({
   flexDirection: 'row',
 }));
 
-function AisdeCreateChatRoomModule() {
+function CreateChatRoomModule() {
   return (
     <CreateChatRoomLayout>
       <AsideButtonBox>
@@ -25,4 +25,4 @@ function AisdeCreateChatRoomModule() {
   );
 }
 
-export default AisdeCreateChatRoomModule;
+export default CreateChatRoomModule;

@@ -2,7 +2,7 @@ import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import ChatSendIconButton from '../../components/button/icon/ChatSendIconButton';
 
-function SectionChatInputModule() {
+function ChatInputModule() {
   return (
     <Paper
       component="form"
@@ -29,4 +29,4 @@ function SectionChatInputModule() {
   );
 }
 
-export default SectionChatInputModule;
+export default ChatInputModule;

@@ -1,11 +1,8 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
-import AsideSearchBoxModule from '../modules/ChatSidebar/AsideSearchBox';
-import AsideCurrentChatRoomModule from '../modules/ChatSidebar/AsideCurrentChatRoom';
-import AsideFriendListModule from '../modules/ChatSidebar/AsidefriendList';
-import AisdeCreateChatRoomModule from '../modules/ChatSidebar/AsideCreateChatRoom';
-import ChatRoomTemplate from '../template/ChatRoomTemplate';
-import ChatSidebarTemplate from '../template/ChatSidebarTemplate';
+import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
+import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
+import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -50,7 +47,8 @@ function ChatroomPage() {
           <ChatSidebarTemplate />
         </Aside>
         <Section>
-          <ChatRoomTemplate />
+          {/* <EnteredChatRoomTemplate /> */}
+          <ChatRoomDefaultTemplate />
         </Section>
       </MainSection>
       <footer></footer>

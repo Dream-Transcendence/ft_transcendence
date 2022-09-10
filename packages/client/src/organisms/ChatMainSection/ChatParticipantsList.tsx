@@ -16,7 +16,7 @@ const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
   border: 'solid',
 }));
 
-function SectionChatParticipantsModule() {
+function ChatParticipantsListOrganisms() {
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
   return (
@@ -38,4 +38,4 @@ function SectionChatParticipantsModule() {
   );
 }
 
-export default SectionChatParticipantsModule;
+export default ChatParticipantsListOrganisms;

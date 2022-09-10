@@ -19,7 +19,7 @@ const ChatLogLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column-reverse',
 }));
 
-export default function ChatLogListModule() {
+function ChatLogListOranisms() {
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
 
@@ -41,3 +41,5 @@ export default function ChatLogListModule() {
     </ChatLogLayout>
   );
 }
+
+export default ChatLogListOranisms;

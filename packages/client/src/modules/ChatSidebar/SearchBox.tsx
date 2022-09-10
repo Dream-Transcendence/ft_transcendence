@@ -24,7 +24,7 @@ const SearchBoxLayout = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-function AsideSearchBoxModule() {
+function SearchBoxModule() {
   return (
     <SearchBoxLayout>
       <AsideSearchBox>
@@ -34,4 +34,4 @@ function AsideSearchBoxModule() {
   );
 }
 
-export default AsideSearchBoxModule;
+export default SearchBoxModule;

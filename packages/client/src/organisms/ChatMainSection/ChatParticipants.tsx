@@ -1,6 +1,6 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SectionChatParticipantsModule from '../../modules/ChatSection/SectionChatParticipants';
+import ChatParticipantsListOrganisms from './ChatParticipantsList';
 
 const ChatParticipantsLayout = styled('div')(({ theme }) => ({
   width: '40%',
@@ -25,7 +25,7 @@ const ParticipantsBoxTitle = styled('div')(({ theme }) => ({
 }));
 
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
-function ChatParticipants(prop: any) {
+function ChatParticipantsOrganisms(prop: any) {
   return (
     <ChatParticipantsLayout>
       <ChatParticipantBox>
@@ -33,11 +33,11 @@ function ChatParticipants(prop: any) {
           <Typography color="white" marginTop={1}>
             채팅방 인원
           </Typography>
-          <SectionChatParticipantsModule></SectionChatParticipantsModule>
+          <ChatParticipantsListOrganisms />
         </ParticipantsBoxTitle>
       </ChatParticipantBox>
     </ChatParticipantsLayout>
   );
 }
 
-export default ChatParticipants;
+export default ChatParticipantsOrganisms;
