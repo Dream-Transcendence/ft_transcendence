@@ -1,15 +1,13 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
-import SearchBox from '../components/input/SearchBox';
 import AsideSearchBoxModule from '../modules/ChatSidebar/AsideSearchBox';
 import AsideCurrentChatRoomModule from '../modules/ChatSidebar/AsideCurrentChatRoom';
 import AsideFriendListModule from '../modules/ChatSidebar/AsidefriendList';
 import AisdeCreateChatRoomModule from '../modules/ChatSidebar/AsideCreateChatRoom';
-import SectionRoomInfoModule from '../modules/ChatSection/SectionRoomInfo';
-import Chatting from '../organisms/ChatMainSection/Chatting';
-import ChatParticipants from '../organisms/ChatMainSection/ChatParticipants';
+import ChatRoomTemplate from '../template/ChatRoomTemplate';
+import ChatSidebarTemplate from '../template/ChatSidebarTemplate';
 
-const Chatroom = styled('section')(({ theme }) => ({
+const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -39,16 +37,9 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
-const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '89%',
-  display: 'flex',
-  marginTop: '0%',
-}));
-
 function ChatroomPage() {
   return (
-    <Chatroom>
+    <ChatChannel>
       <header>
         <nav>
           <NavigationBar></NavigationBar>
@@ -56,21 +47,14 @@ function ChatroomPage() {
       </header>
       <MainSection>
         <Aside>
-          <AsideSearchBoxModule />
-          <AsideCurrentChatRoomModule />
-          <AsideFriendListModule />
-          <AisdeCreateChatRoomModule />
+          <ChatSidebarTemplate />
         </Aside>
         <Section>
-          <SectionRoomInfoModule />
-          <ChatRoomFeaterLayout>
-            <Chatting />
-            <ChatParticipants />
-          </ChatRoomFeaterLayout>
+          <ChatRoomTemplate />
         </Section>
       </MainSection>
       <footer></footer>
-    </Chatroom>
+    </ChatChannel>
   );
 }
 
