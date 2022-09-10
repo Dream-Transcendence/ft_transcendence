@@ -3,6 +3,7 @@ import NavigationBar from '../components/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
+import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -47,8 +48,9 @@ function ChatroomPage() {
           <ChatSidebarTemplate />
         </Aside>
         <Section>
+          <ChatRoomListTemplate />
           {/* <EnteredChatRoomTemplate /> */}
-          <ChatRoomDefaultTemplate />
+          {/* <ChatRoomDefaultTemplate /> */}
         </Section>
       </MainSection>
       <footer></footer>
