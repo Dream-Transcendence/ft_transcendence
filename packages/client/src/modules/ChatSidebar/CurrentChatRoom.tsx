@@ -15,7 +15,7 @@ const CurrentChatRoomBox = styled('div')(({ theme }) => ({
   backgroundColor: '#001D3D',
 }));
 
-function AsideCurrentChatRoomModule() {
+function CurrentChatRoomModule() {
   return (
     <CurrentChatRoomLayout>
       <CurrentChatRoomBox></CurrentChatRoomBox>
@@ -23,4 +23,4 @@ function AsideCurrentChatRoomModule() {
   );
 }
 
-export default AsideCurrentChatRoomModule;
+export default CurrentChatRoomModule;

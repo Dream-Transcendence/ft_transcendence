@@ -1,7 +1,7 @@
-import SectionRoomInfoModule from '../modules/ChatSection/SectionRoomInfo';
-import Chatting from '../organisms/ChatMainSection/Chatting';
+import RoomInfoModule from '../../modules/ChatSection/RoomInfo';
 import { styled } from '@mui/material/styles';
-import ChatParticipants from '../organisms/ChatMainSection/ChatParticipants';
+import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
+import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -15,16 +15,16 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   marginTop: '0%',
 }));
 
-function ChatRoomTemplate() {
+function EnteredChatRoomTemplate() {
   return (
     <ChattingRoomLayout>
-      <SectionRoomInfoModule />
+      <RoomInfoModule />
       <ChatRoomFeaterLayout>
-        <Chatting />
-        <ChatParticipants />
+        <ChattingOrganisms />
+        <ChatParticipantsOrganisms />
       </ChatRoomFeaterLayout>
     </ChattingRoomLayout>
   );
 }
 
-export default ChatRoomTemplate;
+export default EnteredChatRoomTemplate;
