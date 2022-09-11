@@ -9,6 +9,7 @@ const Search = styled('div')(({ theme }) => ({
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
+  height: '100%',
   marginLeft: 'auto',
   width: '100%',
 }));
@@ -31,10 +32,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
+    height: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: '12ch',
+      width: '60%',
       '&:focus': {
-        width: '20ch',
+        width: '70%',
       },
     },
   },

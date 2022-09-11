@@ -20,13 +20,15 @@ const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'right',
 }));
 
 export default function NavigationBar() {
+  // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, minWidth: '800px' }}>
       <AppBar position="static">
-        <Toolbar>
+        <Toolbar variant="dense">
           <NavProfile />
           <GameIconButton />
           <ChatIconButton />
