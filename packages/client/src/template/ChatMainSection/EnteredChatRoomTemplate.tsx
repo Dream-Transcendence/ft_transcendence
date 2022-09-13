@@ -1,4 +1,4 @@
-import RoomInfoModule from '../../modules/ChatSection/RoomInfo';
+import EnteredRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredRoomInfo';
 import { styled } from '@mui/material/styles';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
@@ -18,7 +18,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
 function EnteredChatRoomTemplate() {
   return (
     <ChattingRoomLayout>
-      <RoomInfoModule />
+      <EnteredRoomInfoOrganisms />
       <ChatRoomFeaterLayout>
         <ChattingOrganisms />
         <ChatParticipantsOrganisms />

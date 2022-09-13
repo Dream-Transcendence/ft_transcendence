@@ -49,7 +49,7 @@ function ChatroomPage() {
         </Aside>
         <Section>
           {/* <ChatRoomListTemplate /> */}
-          {/* <EnteredChatRoomTemplate /> */}
+          <EnteredChatRoomTemplate />
           {/* <ChatRoomDefaultTemplate /> */}
         </Section>
       </MainSection>

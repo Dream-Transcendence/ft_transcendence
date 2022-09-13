@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
-import ChatRoomElementModule from '../../modules/ChatSection/ChatRoomElement';
+import ChatRoomElementOrganisms from './ChatRoomElement';
 
 function generate(element: React.ReactElement) {
   return [0, 1, 2, 3, 4, 5, 6].map((value) =>
@@ -28,7 +28,7 @@ function ChatRoomListOrganisms() {
         '& ul': { padding: 1 },
       }}
     >
-      {generate(<ChatRoomElementModule />)}
+      {generate(<ChatRoomElementOrganisms />)}
     </List>
   );
 }

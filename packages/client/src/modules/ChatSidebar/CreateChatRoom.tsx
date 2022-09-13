@@ -35,9 +35,8 @@ function CreateChatRoomModule() {
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
-          onClick={handleClose}
         >
-          <SettingRoomConfigOranisms />
+          {SettingRoomConfigOranisms(handleClose)}
         </Backdrop>
       </AsideButtonBox>
     </CreateChatRoomLayout>
