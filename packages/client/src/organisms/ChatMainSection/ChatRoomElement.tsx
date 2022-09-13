@@ -1,6 +1,5 @@
 import { Typography, ThemeProvider, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import RoomOutIconButton from '../../components/button/icon/ChatRoomOutIconButton';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import PasswordInput from '../../components/input/passwordBox';
 import TextButton from '../../components/button/text/TextButton';
@@ -27,7 +26,6 @@ const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '45%',
   height: '90%',
   display: 'flex',
-  border: 'solid',
   flexDirection: 'column',
   justifyContent: 'center',
 }));
@@ -35,13 +33,11 @@ const RoomInfoLayout = styled('div')(({ theme }) => ({
 const PasswordInputLayout = styled('div')(({ theme }) => ({
   width: '15%',
   height: '40%',
-  border: 'solid',
 }));
 
 const EnterButtonLayout = styled('div')(({ theme }) => ({
   width: '15%',
   height: '40%',
-  border: 'solid',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',

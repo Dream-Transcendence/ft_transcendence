@@ -1,5 +1,5 @@
-import { Typography } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { ThemeProvider, Typography } from '@mui/material';
+import { styled, responsiveFontSizes, createTheme } from '@mui/material/styles';
 
 interface NumOfPeopleProps {
   num: string;
@@ -8,16 +8,21 @@ interface NumOfPeopleProps {
 const RoomNumberOfPeopleLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '40%',
-  border: 'solid',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 }));
 
 function RoomNumberOfPeopleModule({ num }: NumOfPeopleProps) {
+  let theme = createTheme();
+  theme = responsiveFontSizes(theme); //반응형을 위해 사용
+
   return (
     <RoomNumberOfPeopleLayout>
-      <Typography variant="h5">{num}</Typography>
+      <ThemeProvider theme={theme}>
+        <Typography variant="h5">현 인원: </Typography>
+        <Typography variant="h5">{num}</Typography>
+      </ThemeProvider>
     </RoomNumberOfPeopleLayout>
   );
 }

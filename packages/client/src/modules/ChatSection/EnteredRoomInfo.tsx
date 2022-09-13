@@ -1,5 +1,9 @@
 import { styled } from '@mui/material/styles';
-import RoomOutIconButton from '../../components/button/icon/ChatRoomOutIconButton';
+import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import BlockIcon from '@mui/icons-material/Block';
+import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
+import PersonIcon from '@mui/icons-material/Person';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -37,7 +41,10 @@ function EnteredRoomInfoModule() {
       <RoomInfoBox>
         <InfoBoxNameLayout></InfoBoxNameLayout>
         <InfoBoxFunctionLayout>
-          <RoomOutIconButton />
+          {CustomIconButton(<MeetingRoomIcon />)}
+          {CustomIconButton(<BlockIcon />)}
+          {CustomIconButton(<SportsKabaddiIcon />)}
+          {CustomIconButton(<PersonIcon />)}
         </InfoBoxFunctionLayout>
       </RoomInfoBox>
     </RoomInfoLayout>

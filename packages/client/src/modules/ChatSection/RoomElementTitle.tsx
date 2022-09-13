@@ -8,7 +8,6 @@ interface TitleProps {
 const RoomTitleLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '60%',
-  border: 'solid',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
