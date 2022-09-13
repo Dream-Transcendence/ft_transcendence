@@ -42,10 +42,14 @@ function ChatProfileNText() {
         </Avatar>
       </ListItemAvatar>
       <ListTextLayout>
-        <Typography fontSize={7}>Junghan</Typography>
+        <Typography color={'gray'} fontSize={7}>
+          Junghan
+        </Typography>
         <ListTextBox>
           <TextInput>
-            <Typography fontSize={12}>안녕하세요??????????????????</Typography>
+            <Typography color={'white'} fontSize={12}>
+              안녕하세요??????????????????
+            </Typography>
           </TextInput>
         </ListTextBox>
       </ListTextLayout>
