@@ -1,5 +1,11 @@
+import { Typography, ThemeProvider, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RoomOutIconButton from '../../components/button/icon/ChatRoomOutIconButton';
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import PasswordInput from '../../components/input/passwordBox';
+import TextButton from '../../components/button/text/TextButton';
+import RoomNumberOfPeopleModule from '../../modules/ChatSection/RoomElementNumOfPeople';
+import RoomTitleModule from '../../modules/ChatSection/RoomElementTitle';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -26,18 +32,6 @@ const RoomInfoLayout = styled('div')(({ theme }) => ({
   justifyContent: 'center',
 }));
 
-const RoomTitleLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '60%',
-  border: 'solid',
-}));
-
-const RoomNumberOfPeopleLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '40%',
-  border: 'solid',
-}));
-
 const PasswordInputLayout = styled('div')(({ theme }) => ({
   width: '15%',
   height: '40%',
@@ -48,20 +42,30 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   width: '15%',
   height: '40%',
   border: 'solid',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
-function ChatRoomElementModule() {
+function ChatRoomElementOrganisms() {
+  let theme = createTheme();
+  theme = responsiveFontSizes(theme); //반응형을 위해 사용
+
   return (
     <ChatRoomElementLayout>
       <ProfileLayout></ProfileLayout>
       <RoomInfoLayout>
-        <RoomTitleLayout></RoomTitleLayout>
-        <RoomNumberOfPeopleLayout></RoomNumberOfPeopleLayout>
+        <RoomTitleModule title="방 이름"></RoomTitleModule>
+        <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
-      <PasswordInputLayout></PasswordInputLayout>
-      <EnterButtonLayout></EnterButtonLayout>
+      <PasswordInputLayout>
+        <PasswordInput></PasswordInput>
+      </PasswordInputLayout>
+      <EnterButtonLayout>
+        <TextButton content="입장"></TextButton>
+      </EnterButtonLayout>
     </ChatRoomElementLayout>
   );
 }
 
-export default ChatRoomElementModule;
+export default ChatRoomElementOrganisms;

@@ -31,7 +31,7 @@ const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   height: '95%',
 }));
 
-function RoomInfoModule() {
+function EnteredRoomInfoModule() {
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
@@ -44,4 +44,4 @@ function RoomInfoModule() {
   );
 }
 
-export default RoomInfoModule;
+export default EnteredRoomInfoModule;

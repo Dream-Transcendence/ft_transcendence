@@ -41,7 +41,6 @@ function ChatProfileNText() {
           <AccountCircleIcon />
         </Avatar>
       </ListItemAvatar>
-      <></>
       <ListTextLayout>
         <Typography fontSize={7}>Junghan</Typography>
         <ListTextBox>
