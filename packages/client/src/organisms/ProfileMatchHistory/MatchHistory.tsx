@@ -4,7 +4,7 @@ const MatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   height: '85%',
-  width: '80%',
+  width: '60%',
   gridArea: 'MatchHistory',
   backgroundColor: '#1976D2',
 }));

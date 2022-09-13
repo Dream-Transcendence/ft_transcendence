@@ -40,7 +40,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function UserProfileBoxAvatar() {
+function AvatarWithCricle() {
   return (
     <ProfileBoxAvatarLayout>
       <StyledBadge
@@ -50,9 +50,8 @@ function UserProfileBoxAvatar() {
       >
         <Avatar alt="s Sharp" src="/static/images/avatar/1.jpg" />
       </StyledBadge>
-      <UserProfileBoxNickname />
     </ProfileBoxAvatarLayout>
   );
 }
 
-export default UserProfileBoxAvatar;
+export default AvatarWithCricle;

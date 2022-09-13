@@ -11,7 +11,7 @@ function App() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/chatRoom" element={<ChatroomPage />} />
       <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/Nickname" element={<NicknamePage />} />
+      <Route path="/nickname" element={<NicknamePage />} />
     </Routes>
   );
 }

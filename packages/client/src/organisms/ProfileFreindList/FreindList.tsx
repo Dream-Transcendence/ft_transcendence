@@ -1,30 +1,34 @@
 import styled from '@emotion/styled';
+import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
+
+import * as React from 'react';
+import List from '@mui/material/List';
+import ListGenerate from '../../components/list/ListGenerate';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'start',
   justifySelf: 'end',
+  alignItems: 'center',
+  justifyContent: 'space-evenly',
   height: '75%',
-  width: '65%',
+  width: '50%',
   gridArea: 'FreindList',
   backgroundColor: '#1976D2',
+  border: 'solid',
 }));
 
-const UserPicture = styled('div')(({ theme }) => ({
-  height: '60%',
-}));
+function FreindListOrganisms() {
+  const [dense, setDense] = React.useState(false);
+  const [secondary, setSecondary] = React.useState(false);
 
-const UserNickname = styled('div')(({ theme }) => ({
-  height: '20%',
-}));
-
-const SecondAuth = styled('div')(({ theme }) => ({
-  height: '20%',
-}));
-
-function FreindList() {
-  return <FreindListLayout>freind list</FreindListLayout>;
+  return (
+    <FreindListLayout>
+      freind list
+      {ListGenerate(<UserProfileBox />)}
+    </FreindListLayout>
+  );
 }
 
-export default FreindList;
+export default FreindListOrganisms;
