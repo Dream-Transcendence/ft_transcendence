@@ -1,10 +1,10 @@
-import { Typography, ThemeProvider, TextField } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import PasswordInput from '../../components/input/passwordBox';
 import TextButton from '../../components/button/text/TextButton';
 import RoomNumberOfPeopleModule from '../../modules/ChatSection/RoomElementNumOfPeople';
 import RoomTitleModule from '../../modules/ChatSection/RoomElementTitle';
+import RoomElementImageModule from '../../modules/ChatSection/RoomElementImage';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -14,12 +14,6 @@ const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#1976D2',
   display: 'flex',
   alignItems: 'center',
-}));
-
-const ProfileLayout = styled('div')(({ theme }) => ({
-  width: '25%',
-  height: '40%',
-  border: 'solid',
 }));
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
@@ -49,14 +43,12 @@ function ChatRoomElementOrganisms() {
 
   return (
     <ChatRoomElementLayout>
-      <ProfileLayout></ProfileLayout>
+      <RoomElementImageModule image="/static/images/avatar/1.jpg" />
       <RoomInfoLayout>
         <RoomTitleModule title="방 이름"></RoomTitleModule>
         <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
-      <PasswordInputLayout>
-        <PasswordInput></PasswordInput>
-      </PasswordInputLayout>
+      <PasswordInput />
       <EnterButtonLayout>
         <TextButton content="입장"></TextButton>
       </EnterButtonLayout>

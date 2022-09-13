@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -15,6 +16,11 @@ interface State {
   weightRange: string;
   showPassword: boolean;
 }
+
+const PasswordInputLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '40%',
+}));
 
 function PasswordInput() {
   const [values, setValues] = React.useState<State>({
@@ -47,33 +53,35 @@ function PasswordInput() {
   theme = responsiveFontSizes(theme); //반응형을 위해 사용
 
   return (
-    <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
-      <InputLabel
-        htmlFor="standard-adornment-password"
-        variant="filled"
-        size="small"
-        sx={{ mt: 1, width: '60%' }}
-      >
-        Password
-      </InputLabel>
-      <Input
-        id="standard-adornment-password"
-        type={values.showPassword ? 'text' : 'password'}
-        value={values.password}
-        onChange={handleChange('password')}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClickShowPassword}
-              onMouseDown={handleMouseDownPassword}
-            >
-              {values.showPassword ? <VisibilityOff /> : <Visibility />}
-            </IconButton>
-          </InputAdornment>
-        }
-      />
-    </FormControl>
+    <PasswordInputLayout>
+      <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
+        <InputLabel
+          htmlFor="standard-adornment-password"
+          variant="filled"
+          size="small"
+          sx={{ mt: 1, width: '60%' }}
+        >
+          Password
+        </InputLabel>
+        <Input
+          id="standard-adornment-password"
+          type={values.showPassword ? 'text' : 'password'}
+          value={values.password}
+          onChange={handleChange('password')}
+          endAdornment={
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClickShowPassword}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {values.showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          }
+        />
+      </FormControl>
+    </PasswordInputLayout>
   );
 }
 
