@@ -16,6 +16,12 @@ import LogoutIconButton from '../button/icon/LogoutIconButton';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 
+const NavLayout = styled('section')(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+  display: 'flex',
+}));
+
 const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
   display: 'flex',
@@ -26,18 +32,20 @@ const RightLayout = styled('section')(({ theme }) => ({
 export default function NavigationBar() {
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
-    <Box sx={{ flexGrow: 1, minWidth: '800px' }}>
-      <AppBar position="static">
-        <Toolbar variant="dense">
-          <NavProfile />
-          <GameIconButton />
-          <ChatIconButton />
-          <RightLayout>
-            <SearchBox />
-            <LogoutIconButton />
-          </RightLayout>
-        </Toolbar>
-      </AppBar>
-    </Box>
+    <NavLayout>
+      <Box sx={{ flexGrow: 1, minWidth: '800px' }}>
+        <AppBar position="static">
+          <Toolbar variant="dense">
+            <NavProfile />
+            <GameIconButton />
+            <ChatIconButton />
+            <RightLayout>
+              <SearchBox />
+              <LogoutIconButton />
+            </RightLayout>
+          </Toolbar>
+        </AppBar>
+      </Box>
+    </NavLayout>
   );
 }

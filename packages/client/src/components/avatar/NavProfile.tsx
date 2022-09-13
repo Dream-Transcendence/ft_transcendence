@@ -3,8 +3,8 @@ import { Avatar } from '@mui/material';
 export default function NavProfile() {
   return (
     <Avatar
-      alt="Remy Sharp"
-      src="/static/images/avatar/1.jpg"
+      alt="Songjunggi"
+      src="../../assets/songprofile.jpeg"
       sx={{ width: 56, height: 56 }}
     />
   );
