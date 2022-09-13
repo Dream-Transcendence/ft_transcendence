@@ -48,7 +48,9 @@ function ChatRoomElementOrganisms() {
         <RoomTitleModule title="방 이름"></RoomTitleModule>
         <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
-      <PasswordInput />
+      <PasswordInputLayout>
+        <PasswordInput />
+      </PasswordInputLayout>
       <EnterButtonLayout>
         <TextButton content="입장"></TextButton>
       </EnterButtonLayout>

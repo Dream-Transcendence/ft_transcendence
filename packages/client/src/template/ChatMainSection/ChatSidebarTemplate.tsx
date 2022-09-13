@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import SearchBoxModule from '../../modules/ChatSidebar/SearchBox';
-import CurrentChatRoomModule from '../../modules/ChatSidebar/CurrentChatRoom';
+import JoinedChatRoomModule from '../../organisms/ChatSidebar/JoinedChatRoomList';
 import CreateChatRoomModule from '../../modules/ChatSidebar/CreateChatRoom';
-import JoinedChatListOrganisms from '../../organisms/ChatMainSection/JoinedChatList';
+import JoinedDMListOrganisms from '../../organisms/ChatSidebar/JoinedDMList';
 
 const ChatSidebarLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -13,8 +13,8 @@ function ChatSidebarTemplate() {
   return (
     <ChatSidebarLayout>
       <SearchBoxModule />
-      <CurrentChatRoomModule />
-      <JoinedChatListOrganisms />
+      <JoinedChatRoomModule />
+      <JoinedDMListOrganisms />
       <CreateChatRoomModule />
     </ChatSidebarLayout>
   );
