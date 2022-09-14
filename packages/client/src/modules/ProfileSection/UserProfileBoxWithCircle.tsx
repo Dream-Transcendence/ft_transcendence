@@ -3,11 +3,16 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import UserProfileBoxNickname from './ProfileBoxNickname';
+import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
+import ProfileAvatar from '../../atoms/ProfileAvatar';
+import UserProfileBox from './UserProfileBox';
+import { Box, Button } from '@mui/material';
 
-const ProfileBoxAvatarLayout = styled(Badge)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
+const ProfileBoxAvatarLayout = styled(Button)(({ theme }) => ({
+  display: 'flex', //특정 조건에서 주면 profile box 개별마다 반토막남. 이유는 모르겠움
+  width: '100%',
+  justifyContent: 'flex-start',
+  border: 'solid',
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -40,18 +45,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function AvatarWithCricle() {
+function UserProfileBoxWithCircle(isButton: Boolean) {
   return (
-    <ProfileBoxAvatarLayout>
-      <StyledBadge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        variant="dot"
-      >
-        <Avatar alt="s Sharp" src="/static/images/avatar/1.jpg" />
-      </StyledBadge>
-    </ProfileBoxAvatarLayout>
+    <ProfileBoxAvatarLayout>{ProfileAvatar('circle')}</ProfileBoxAvatarLayout>
   );
 }
 
-export default AvatarWithCricle;
+export default UserProfileBoxWithCircle;

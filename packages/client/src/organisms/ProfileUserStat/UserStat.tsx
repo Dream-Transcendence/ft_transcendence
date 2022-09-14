@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import UserStatLadder from '../../components/text/ProfileUserStatLadder';
 import UserStatResult from '../../modules/ProfileSection/StatResult';
 
 const UserStatLayout = styled('div')(({ theme }) => ({
@@ -23,10 +24,9 @@ const StatLadder = styled('div')(({ theme }) => ({
 }));
 
 function UserStat() {
-  let name = 'StatLadder';
   return (
     <UserStatLayout>
-      <StatLadder>{name}</StatLadder>
+      <UserStatLadder />
       <UserStatResult />
     </UserStatLayout>
   );
