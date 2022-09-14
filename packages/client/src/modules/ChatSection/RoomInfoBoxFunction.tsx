@@ -4,9 +4,10 @@ import BlockIcon from '@mui/icons-material/Block';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
+import PasswordInput from '../../components/input/passwordBox';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
-  width: '50%',
+  width: '30%',
   height: '95%',
   flexDirection: 'row-reverse',
   display: 'flex',

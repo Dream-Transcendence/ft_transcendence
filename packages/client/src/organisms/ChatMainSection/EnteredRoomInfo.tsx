@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import CustomIconButton from '../../components/button/icon/CustomIconButtion';
 import InfoBoxFunctionModule from '../../modules/ChatSection/RoomInfoBoxFunction';
 import InfoBoxNameModule from '../../modules/ChatSection/RoomInfoBoxName';
+import InfoBoxPasswordModule from '../../modules/ChatSection/RoomInfoBoxPassword';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -25,6 +26,7 @@ function EnteredRoomInfoOrganisms() {
     <RoomInfoLayout>
       <RoomInfoBox>
         <InfoBoxNameModule />
+        <InfoBoxPasswordModule />
         <InfoBoxFunctionModule />
       </RoomInfoBox>
     </RoomInfoLayout>
