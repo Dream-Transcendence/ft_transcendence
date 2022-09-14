@@ -3,7 +3,8 @@ import ListGenerate from '../../components/list/ListGenerate';
 import ProfileChatRoomBox from '../../modules/ProfileSection/ProfileChatRoomBox';
 
 const JoinedChatRoomLayout = styled('div')(({ theme }) => ({
-  height: '40.3%',
+  height: '35.3%',
+  width: '100%',
   display: 'flex',
   justifyContent: 'center',
 }));
