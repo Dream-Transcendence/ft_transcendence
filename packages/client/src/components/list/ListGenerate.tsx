@@ -3,14 +3,14 @@ import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
 
 import * as React from 'react';
 import List from '@mui/material/List';
+import BasicSpeedDial from '../SpeedDial/SpeedDial';
+import { Margin } from '@mui/icons-material';
 
 const ListGenerateLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  height: '75%',
-  width: '85%',
-  backgroundColor: '#40C6FF',
-  border: 'solid',
+  height: '100%',
+  width: '100%',
 }));
 
 //이런식으로 엘리멘트를 함수로 전달가능하네 아이콘도 함수하나로 처리가능할듯

@@ -1,6 +1,9 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchBox from '../../components/input/SearchBox';
+import ListGenerate from '../../components/list/ListGenerate';
+import UserProfileBox from '../ProfileSection/UserProfileBox';
+import UserInviteProfileBox from '../ProfileSection/UserInviteBox';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -21,9 +24,12 @@ const SearchBoxLayout = styled('div')(({ theme }) => ({
   marginLeft: '9.5%',
 }));
 
-const NameInputStyle = {
-  marginLeft: '3%',
-};
+const InvitedListLayout = styled('section')(({ theme }) => ({
+  width: '80%',
+  height: '65%',
+  marginLeft: '9.5%',
+  overflow: 'auto',
+}));
 
 function SetChatRoomInviteModule() {
   return (
@@ -34,6 +40,9 @@ function SetChatRoomInviteModule() {
       <SearchBoxLayout>
         <SearchBox />
       </SearchBoxLayout>
+      <InvitedListLayout>
+        {ListGenerate(<UserInviteProfileBox />)}
+      </InvitedListLayout>
     </SetInviteLayout>
   );
 }

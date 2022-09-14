@@ -1,6 +1,7 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchBox from '../../components/input/SearchBox';
+import PasswordInput from '../../components/input/passwordBox';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -19,13 +20,21 @@ const NameInputStyle = {
   marginLeft: '3%',
 };
 
+const PasswordInputLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+  height: '40%',
+  marginLeft: '2%',
+}));
+
 function SetChatRoomPasswordModule() {
   return (
     <SetPasswordLayout>
       <Typography margin="3%" variant="h5">
         비밀번호 입력
       </Typography>
-      <Input placeholder="비밀번호를 입력하세요" style={NameInputStyle}></Input>
+      <PasswordInputLayout>
+        <PasswordInput />
+      </PasswordInputLayout>
     </SetPasswordLayout>
   );
 }
