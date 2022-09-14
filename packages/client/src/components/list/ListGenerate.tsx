@@ -3,6 +3,8 @@ import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
 
 import * as React from 'react';
 import List from '@mui/material/List';
+import BasicSpeedDial from '../SpeedDial/SpeedDial';
+import { Margin } from '@mui/icons-material';
 
 const ListGenerateLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -34,8 +36,9 @@ function ListGenerate(element: React.ReactElement) {
           height: '100%',
           bgcolor: '#00000000',
           position: 'relative',
-          overflow: 'auto',
-          '& ul': { padding: 1 },
+          overflowX: 'visible',
+          overflowY: 'auto',
+          '& ul': { padding: 1, position: 'absolute', zIndex: 10 },
         }}
       >
         {generate(element)}

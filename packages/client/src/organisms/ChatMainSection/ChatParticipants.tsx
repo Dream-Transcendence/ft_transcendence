@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChatParticipantsListOrganisms from './ChatParticipantsList';
+import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
 
 const ChatParticipantsLayout = styled('div')(({ theme }) => ({
   width: '40%',
