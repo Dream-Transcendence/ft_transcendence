@@ -4,6 +4,7 @@ import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListGenerate from '../../components/list/ListGenerate';
+import UserProfileBoxWithCircle from '../../modules/ProfileSection/UserProfileBoxWithCircle';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -25,8 +26,8 @@ function FreindListOrganisms() {
 
   return (
     <FreindListLayout>
-      freind list
-      {ListGenerate(<UserProfileBox />)}
+      <div>freind list</div>
+      {ListGenerate(UserProfileBox(true, 'circle'))}
     </FreindListLayout>
   );
 }

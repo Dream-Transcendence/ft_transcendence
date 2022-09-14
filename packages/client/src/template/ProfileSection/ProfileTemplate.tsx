@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import UserStat from '../../organisms/ProfileUserStat/UserStat';
 import FreindList from '../../organisms/ProfileFreindList/FreindList';
-import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
+import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 
 const ProfileLayout = styled('div')(({ theme }) => ({
   gridArea: 'ProfileItems',

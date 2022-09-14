@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
-import { Box, CardMedia } from '@mui/material';
-import { Image } from '@chakra-ui/react';
-import ProfileImage from '../../components/avatar/ProcileImage';
+import ProfileImage from '../../atoms/ProfileImage';
 import ProfileNicname from '../../components/text/ProfileNicname';
 
 const UserInfoLayout = styled('div')(({ theme }) => ({
