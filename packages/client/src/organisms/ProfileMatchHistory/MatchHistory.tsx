@@ -10,6 +10,7 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   alignSelf: 'start',
   justifySelf: 'start',
   alignItems: 'center',
+  justifyContent: 'space-evenly',
   height: '75%',
   width: '60%',
   gridArea: 'MatchHistory',
