@@ -15,6 +15,10 @@ const SetNameLayout = styled('div')(({ theme }) => ({
   marginBottom: '1%',
 }));
 
+const InputLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+}));
+
 const NameInputStyle = {
   marginLeft: '3%',
 };
@@ -25,7 +29,13 @@ function SetChatRoomNameModule() {
       <Typography margin="3%" variant="h5">
         채팅방 이름
       </Typography>
-      <Input placeholder="방 이름을 입력하세요" style={NameInputStyle}></Input>
+      <InputLayout>
+        <Input
+          fullWidth
+          placeholder="방 이름을 입력하세요"
+          style={NameInputStyle}
+        ></Input>
+      </InputLayout>
     </SetNameLayout>
   );
 }

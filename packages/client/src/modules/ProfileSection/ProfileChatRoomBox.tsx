@@ -4,15 +4,18 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
+import { Button } from '@mui/material';
 
 interface TitleProps {
   image: string;
 }
 
-const UserProfileBoxLayout = styled(Badge)(({ theme }) => ({
-  margin: '1px',
+const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
-  alignItems: 'center',
+  justifyContent: 'flex-start',
+  textAlign: 'start',
+  width: '90%',
+  padding: 0,
 }));
 
 function ProfileChatRoomBox({ image }: TitleProps) {

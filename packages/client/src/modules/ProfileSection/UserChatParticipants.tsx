@@ -14,7 +14,7 @@ const UserProfileLayout = styled(Badge)(({ theme }) => ({
 }));
 
 const UserFuntionLayout = styled('div')(({ theme }) => ({
-  width: '100%',
+  width: '60%',
   height: '100%',
   display: 'flex',
   justifyContent: 'center',
