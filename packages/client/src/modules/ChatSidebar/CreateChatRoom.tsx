@@ -6,14 +6,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SettingRoomConfigOranisms from '../../organisms/ChatPopUp/SettingRoomConfig';
 
 const CreateChatRoomLayout = styled('div')(({ theme }) => ({
-  height: '7.89%',
+  height: '5.89%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  marginBottom: '10%',
 }));
 
 const AsideButtonBox = styled('div')(({ theme }) => ({
-  height: '70%',
+  height: '100%',
   display: 'flex',
   flexDirection: 'row',
 }));
@@ -35,9 +36,8 @@ function CreateChatRoomModule() {
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}
-          onClick={handleClose}
         >
-          <SettingRoomConfigOranisms />
+          {SettingRoomConfigOranisms(handleClose)}
         </Backdrop>
       </AsideButtonBox>
     </CreateChatRoomLayout>

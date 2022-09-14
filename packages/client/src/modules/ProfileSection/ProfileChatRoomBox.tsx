@@ -1,10 +1,14 @@
+import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import ProfileAvatar from '../../atoms/ProfileAvatar';
 import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
 import { Button } from '@mui/material';
+
+interface TitleProps {
+  image: string;
+}
 
 const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
@@ -14,18 +18,13 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   padding: 0,
 }));
 
-function UserProfileBox(isButton: Boolean, avaterType: String) {
-  return isButton ? (
+function ProfileChatRoomBox({ image }: TitleProps) {
+  return (
     <UserProfileBoxLayout>
-      {ProfileAvatar(avaterType)}
-      <UserProfileBoxNickname />
-    </UserProfileBoxLayout>
-  ) : (
-    <UserProfileBoxLayout disabled>
-      {ProfileAvatar(avaterType)}
+      <Avatar alt="Remy Sharp" src={image} />
       <UserProfileBoxNickname />
     </UserProfileBoxLayout>
   );
 }
 
-export default UserProfileBox;
+export default ProfileChatRoomBox;
