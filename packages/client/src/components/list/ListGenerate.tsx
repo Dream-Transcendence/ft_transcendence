@@ -37,6 +37,8 @@ function ListGenerate(element: React.ReactElement) {
           bgcolor: '#00000000',
           position: 'relative',
           overflow: 'auto',
+          paddingTop: '0px',
+          paddingBottom: '0px',
           '& ul': { padding: 1 },
         }}
       >
