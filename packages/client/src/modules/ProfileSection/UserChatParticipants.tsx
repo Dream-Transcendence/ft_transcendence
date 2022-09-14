@@ -30,7 +30,7 @@ const SpeedDialLayout = styled('div')((props) => ({
 function UserChatParticipantsBox() {
   return (
     <UserProfileLayout>
-      <UserProfileBox />
+      {UserProfileBox(true, 'circle')}
       <UserFuntionLayout>
         {CustomIconButton(<PersonIcon />)}
         {CustomIconButton(<NotInterestedIcon />)}

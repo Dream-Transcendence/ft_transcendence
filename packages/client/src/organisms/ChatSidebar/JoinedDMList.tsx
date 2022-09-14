@@ -20,7 +20,7 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 function JoinedDMListOrganisms() {
   return (
     <JoinedChatListLayout>
-      <JoinedDMBox>{ListGenerate(<UserProfileBox />)}</JoinedDMBox>
+      <JoinedDMBox>{ListGenerate(UserProfileBox(true, 'circle'))}</JoinedDMBox>
     </JoinedChatListLayout>
   );
 }

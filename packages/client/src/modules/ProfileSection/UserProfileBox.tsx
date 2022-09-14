@@ -2,8 +2,9 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import UserProfileBoxNickname from '../../components/avatar/ProfileBoxNickname';
-import AvatarWithCricle from '../../components/avatar/AvartarWithCircle';
+import ProfileAvatar from '../../atoms/ProfileAvatar';
+import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
+import { Button } from '@mui/material';
 
 const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
