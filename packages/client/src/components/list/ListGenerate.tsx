@@ -10,7 +10,7 @@ const ListGenerateLayout = styled('div')(({ theme }) => ({
   height: '75%',
   width: '85%',
   backgroundColor: '#40C6FF',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 //이런식으로 엘리멘트를 함수로 전달가능하네 아이콘도 함수하나로 처리가능할듯

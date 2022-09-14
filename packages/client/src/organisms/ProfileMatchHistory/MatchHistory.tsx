@@ -11,11 +11,11 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   justifySelf: 'start',
   alignItems: 'center',
   justifyContent: 'space-evenly',
-  height: '75%',
+  height: '100%',
   width: '60%',
   gridArea: 'MatchHistory',
   backgroundColor: '#1976D2',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function MatchHistory() {

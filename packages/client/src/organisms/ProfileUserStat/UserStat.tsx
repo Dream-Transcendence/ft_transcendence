@@ -20,7 +20,7 @@ const StatLadder = styled('div')(({ theme }) => ({
   paddingLeft: '3%',
   width: '30%',
   height: '100%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function UserStat() {

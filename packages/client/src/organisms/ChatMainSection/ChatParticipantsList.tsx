@@ -13,7 +13,7 @@ function generate(element: React.ReactElement) {
 const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
   width: '98%',
   height: '90%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function ChatParticipantsListOrganisms() {

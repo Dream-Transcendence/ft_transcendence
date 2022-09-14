@@ -5,7 +5,7 @@ const StatWinLayout = styled('div')(({ theme }) => ({
   flexGrow: '1',
   width: '50%',
   height: '100%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function UserStatWin() {

@@ -20,7 +20,7 @@ const SettingRoomConfigBox = styled('div')(({ theme }) => ({
 const SetNameLayout = styled('div')(({ theme }) => ({
   width: '90%',
   height: '15%',
-  border: 'solid',
+  border: 'solid 1px',
   borderRadius: '10px',
   marginBottom: '1%',
 }));
@@ -28,7 +28,7 @@ const SetNameLayout = styled('div')(({ theme }) => ({
 const SetTypeLayout = styled('div')(({ theme }) => ({
   width: '90%',
   height: '15%',
-  border: 'solid',
+  border: 'solid 1px',
   borderRadius: '10px',
   marginBottom: '1%',
 }));
@@ -36,7 +36,7 @@ const SetTypeLayout = styled('div')(({ theme }) => ({
 const SetPasswordLayout = styled('div')(({ theme }) => ({
   width: '90%',
   height: '15%',
-  border: 'solid',
+  border: 'solid 1px',
   borderRadius: '10px',
   marginBottom: '1%',
 }));
@@ -44,7 +44,7 @@ const SetPasswordLayout = styled('div')(({ theme }) => ({
 const SetInviteLayout = styled('div')(({ theme }) => ({
   width: '90%',
   height: '30%',
-  border: 'solid',
+  border: 'solid 1px',
   borderRadius: '10px',
   marginBottom: '3%',
 }));

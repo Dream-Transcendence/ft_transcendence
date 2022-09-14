@@ -10,8 +10,8 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   alignContent: 'center',
   alignItems: 'center',
-  border: 'solid',
-  width: '100%',
+  border: 'solid 1px',
+  width: '98%',
   height: '10%',
 }));
 

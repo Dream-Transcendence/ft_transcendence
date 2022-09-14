@@ -17,7 +17,16 @@ const FreindListLayout = styled('div')(({ theme }) => ({
   width: '50%',
   gridArea: 'FreindList',
   backgroundColor: '#1976D2',
-  border: 'solid',
+  border: 'solid 1px',
+}));
+
+const ProfileBoxLayout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  alignSelf: 'start',
+  justifySelf: 'end',
+  alignItems: 'center',
+  border: 'solid 1px',
 }));
 
 function FreindListOrganisms() {
@@ -27,7 +36,9 @@ function FreindListOrganisms() {
   return (
     <FreindListLayout>
       <div>freind list</div>
-      {ListGenerate(UserProfileBox(true, 'circle'))}
+      {ListGenerate(
+        <ProfileBoxLayout>{UserProfileBox(true, 'circle')} </ProfileBoxLayout>,
+      )}
     </FreindListLayout>
   );
 }

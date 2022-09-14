@@ -16,17 +16,17 @@ const UserInfoLayout = styled('div')(({ theme }) => ({
 
 const UserPicture = styled('div')(({ theme }) => ({
   height: '60%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 const UserNickname = styled('div')(({ theme }) => ({
   height: '20%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 const SecondAuth = styled('div')(({ theme }) => ({
   height: '20%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function UserInfo() {

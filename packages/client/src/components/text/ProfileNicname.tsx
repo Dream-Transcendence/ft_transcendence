@@ -65,6 +65,7 @@ function ProfileNicname() {
       defaultValue="sonkang ⚡️"
       fontSize="2xl"
       isPreviewFocusable={false}
+      padding="1rea"
     >
       <ProfileNicnameLayout>
         <EditablePreview />

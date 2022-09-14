@@ -12,7 +12,7 @@ const ProfileBoxAvatarLayout = styled(Button)(({ theme }) => ({
   display: 'flex', //특정 조건에서 주면 profile box 개별마다 반토막남. 이유는 모르겠움
   width: '100%',
   justifyContent: 'flex-start',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
