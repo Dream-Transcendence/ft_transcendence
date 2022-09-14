@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import ProfileImage from '../../atoms/ProfileImage';
+import SecondAuthSwitch from '../../components/button/switch/SecondAuth';
 import ProfileNicname from '../../components/text/ProfileNicname';
 
 const UserInfoLayout = styled('div')(({ theme }) => ({
@@ -37,7 +38,9 @@ function UserInfo() {
       <UserNickname>
         <ProfileNicname />
       </UserNickname>
-      <SecondAuth>SecondAuth</SecondAuth>
+      <SecondAuth>
+        <SecondAuthSwitch />
+      </SecondAuth>
     </UserInfoLayout>
   );
 }
