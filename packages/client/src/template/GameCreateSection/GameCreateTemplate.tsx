@@ -1,8 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import TextBox from "../../atoms/TextBox";
-import BottonComponent from "../../components/button/block/Button";
-import ImageComponent from "../../components/Image/Image";
+import ButtonByText from "../../components/button/block/ButtonCompenent";
 import GameCreateMainOrganism from "../../organisms/GameCreateSection/GameCreateMainSection";
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
@@ -38,7 +37,7 @@ const GameFooterLayout = styled('div')(({ theme }) => ({
     height: '20%',
 }))
 
-const ButtonComponent = styled('div')(({ theme }) => ({
+const ButtonComponentLayout = styled('div')(({ theme }) => ({
     backgroundColor: '#312ECE',
 }))
 
@@ -49,15 +48,15 @@ function GameCreateTemplate(props: { buttonType: string | undefined }) {
     return (
         <GameTemplateLayout>
             <GameHeaderLayout>
-                <TextBox value={'Enjoy Game!'} />
+                <TextBox value={'Enjoy Game!'} size={'3rem'} fontColor={'black'} />
             </GameHeaderLayout>
             <GameSectionLayout>
                 <GameCreateMainOrganism />
             </GameSectionLayout>
             <GameFooterLayout>
-                <ButtonComponent>
-                    <BottonComponent value={buttonType ? buttonType : 'start'} />
-                </ButtonComponent>
+                <ButtonComponentLayout>
+                    <ButtonByText value={buttonType ? buttonType : 'start'} />
+                </ButtonComponentLayout>
             </GameFooterLayout>
         </GameTemplateLayout>
     );
