@@ -1,9 +1,16 @@
-import { Typography, Button } from '@mui/material';
+import { Typography, Button, TextField, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import SetChatRoomNameModule from '../../modules/ChatPopUp/SetChatRoomName';
+import RadioGroupButton from '../../components/radio/RadioGroupButton';
+import SetChatRoomTypeModule from '../../modules/ChatPopUp/SetChatRoomType';
+import SetChatRoomPasswordModule from '../../modules/ChatPopUp/SetChatRoomPassword';
+import SetChatRoomInviteModule from '../../modules/ChatPopUp/SetChatRoomInvite';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',
   height: '80%',
+  minWidth: '400px',
+  minHeight: '800px',
 }));
 
 const SettingRoomConfigBox = styled('div')(({ theme }) => ({
@@ -50,16 +57,20 @@ const SetInviteLayout = styled('div')(({ theme }) => ({
 }));
 
 //일단 임시로 prop을 내려서 상태관리함 향후 교체할 예정
-function SettingRoomConfigOranisms() {
+function SettingRoomConfigOranisms(click: React.MouseEventHandler) {
   return (
     <SettingRoomConfigLayout>
       <SettingRoomConfigBox>
-        <Typography marginBottom={3}>채팅방 생성</Typography>
-        <SetNameLayout></SetNameLayout>
-        <SetTypeLayout></SetTypeLayout>
-        <SetPasswordLayout></SetPasswordLayout>
-        <SetInviteLayout></SetInviteLayout>
-        <Button variant="contained">저장하기</Button>
+        <Typography variant="h4" marginBottom={2}>
+          채팅방 생성
+        </Typography>
+        <SetChatRoomNameModule />
+        <SetChatRoomTypeModule />
+        <SetChatRoomPasswordModule />
+        <SetChatRoomInviteModule />
+        <Button onClick={click} variant="contained">
+          저장하기
+        </Button>
       </SettingRoomConfigBox>
     </SettingRoomConfigLayout>
   );

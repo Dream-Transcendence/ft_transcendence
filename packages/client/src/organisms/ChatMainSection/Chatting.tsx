@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import ChatInputModule from '../../modules/ChatSection/ChatInput';
-import ChatLogListOranisms from './ChatLogList';
+import ChatLogListOrganisms from './ChatLogList';
 
 const ChattingLayout = styled('div')(({ theme }) => ({
   width: '75%',
@@ -13,7 +13,7 @@ function ChattingOrganisms(prop: any) {
   return (
     <ChattingLayout>
       <ChatInputModule></ChatInputModule>
-      <ChatLogListOranisms />
+      <ChatLogListOrganisms />
     </ChattingLayout>
   );
 }

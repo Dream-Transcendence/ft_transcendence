@@ -1,6 +1,7 @@
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import ChatSendIconButton from '../../components/button/icon/ChatSendIconButton';
+import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import SendIcon from '@mui/icons-material/Send';
 
 function ChatInputModule() {
   return (
@@ -24,7 +25,7 @@ function ChatInputModule() {
         placeholder="  내용을 입력하세요.."
         inputProps={{ 'aria-label': '내용을 입력하세요..' }}
       />
-      <ChatSendIconButton />
+      {CustomIconButton(<SendIcon />)}
     </Paper>
   );
 }
