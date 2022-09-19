@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import NicknameConfirmButton from '../../components/button/block/NicknameConfirmButton';
+import NicknameConfirmButton from '../../atoms/NicknameConfirmButton';
 import NickNameTextFiled from '../../components/text/NicknameInitTextField';
 
 const NicknameInitLayout = styled('section')(({ theme }) => ({

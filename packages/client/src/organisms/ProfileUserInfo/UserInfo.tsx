@@ -15,6 +15,8 @@ const UserInfoLayout = styled('div')(({ theme }) => ({
 }));
 
 const UserPicture = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
   height: '60%',
   border: 'solid 1px',
 }));

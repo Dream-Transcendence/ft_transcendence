@@ -19,7 +19,7 @@ import SearchBox from '../input/SearchBox';
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '100%',
-  minWidth: '1200px',
+  minWidth: '100px',
   display: 'flex',
 }));
 
@@ -34,7 +34,7 @@ export default function NavigationBar() {
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
-      <Box sx={{ flexGrow: 1, minWidth: '800px' }}>
+      <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
             <NavProfile />

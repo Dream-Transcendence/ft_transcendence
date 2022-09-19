@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
-import ProfileTemplate from '../template/ProfileSection/ProfileTemplate';
+import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 
 const GameLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -10,10 +10,18 @@ const GameLayout = styled('section')(({ theme }) => ({
   width: '100%',
 }));
 
-const NavGridLayout = styled('div')(({ theme }) => ({
+const NavGridLayout = styled('section')(({ theme }) => ({
   width: '100%',
   height: '10%',
 }));
+
+const GameTemplateLayout = styled('section')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  height: '90%',
+  alignItems: 'center',
+  justifyContent: 'center', //justifySelf: 'center'는 왜 안될까..
+}))
 
 function GamePage() {
   return (
@@ -21,6 +29,9 @@ function GamePage() {
       <NavGridLayout>
         <NavigationBar></NavigationBar>
       </NavGridLayout>
+      <GameTemplateLayout>
+        <GameCreateTemplate buttonType={'invite'} />
+      </GameTemplateLayout>
     </GameLayout>
   );
 }
