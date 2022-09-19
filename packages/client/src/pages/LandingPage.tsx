@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import NavigationBar from '../components/bar/NavigationBar';
 
 const MainSection = styled.section`

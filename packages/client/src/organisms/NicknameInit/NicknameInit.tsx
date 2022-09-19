@@ -10,7 +10,7 @@ const NicknameInitLayout = styled('section')(({ theme }) => ({
   backgroundColor: '#0288D1',
   width: '24%',
   height: '10%',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 function NicknameInit() {

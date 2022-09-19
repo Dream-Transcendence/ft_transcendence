@@ -3,7 +3,7 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
+import TextBox from '../../atoms/TextBox';
 import ProfileAvatar from '../../atoms/ProfileAvatar';
 import UserProfileBox from './UserProfileBox';
 import { Box, Button } from '@mui/material';
@@ -12,7 +12,7 @@ const ProfileBoxAvatarLayout = styled(Button)(({ theme }) => ({
   display: 'flex', //특정 조건에서 주면 profile box 개별마다 반토막남. 이유는 모르겠움
   width: '100%',
   justifyContent: 'flex-start',
-  border: 'solid',
+  border: 'solid 1px',
 }));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({

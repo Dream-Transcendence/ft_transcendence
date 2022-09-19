@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import UserProfileBoxNickname from '../../atoms/ProfileBoxNickname';
 import { Button } from '@mui/material';
+import TextBox from '../../atoms/TextBox';
 
 interface TitleProps {
   image: string;
@@ -22,7 +22,7 @@ function ProfileChatRoomBox({ image }: TitleProps) {
   return (
     <UserProfileBoxLayout>
       <Avatar alt="Remy Sharp" src={image} />
-      <UserProfileBoxNickname />
+      <TextBox value={'Remy'} />
     </UserProfileBoxLayout>
   );
 }

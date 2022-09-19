@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
 import ProfileTemplate from '../template/ProfileSection/ProfileTemplate';
 
-const ProfileLayout = styled('section')(({ theme }) => ({
+const GameLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: '#6BADE2',
@@ -15,15 +15,14 @@ const NavGridLayout = styled('div')(({ theme }) => ({
   height: '10%',
 }));
 
-function ProfilePage() {
+function GamePage() {
   return (
-    <ProfileLayout>
+    <GameLayout>
       <NavGridLayout>
         <NavigationBar></NavigationBar>
       </NavGridLayout>
-      <ProfileTemplate />
-    </ProfileLayout>
+    </GameLayout>
   );
 }
 
-export default ProfilePage;
+export default GamePage;

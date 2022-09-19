@@ -24,6 +24,38 @@ const SettingRoomConfigBox = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
+const SetNameLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+  height: '15%',
+  border: 'solid 1px',
+  borderRadius: '10px',
+  marginBottom: '1%',
+}));
+
+const SetTypeLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+  height: '15%',
+  border: 'solid 1px',
+  borderRadius: '10px',
+  marginBottom: '1%',
+}));
+
+const SetPasswordLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+  height: '15%',
+  border: 'solid 1px',
+  borderRadius: '10px',
+  marginBottom: '1%',
+}));
+
+const SetInviteLayout = styled('div')(({ theme }) => ({
+  width: '90%',
+  height: '30%',
+  border: 'solid 1px',
+  borderRadius: '10px',
+  marginBottom: '3%',
+}));
+
 //일단 임시로 prop을 내려서 상태관리함 향후 교체할 예정
 function SettingRoomConfigOranisms(click: React.MouseEventHandler) {
   return (
