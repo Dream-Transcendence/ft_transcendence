@@ -4,6 +4,7 @@ import FreindList from '../../organisms/ProfileFreindList/FreindList';
 import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
 import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 import ReceiveMessageAlert from '../../modules/CommonSection/ReceiveMessageAlert';
+import SendMessageAlert from '../../modules/CommonSection/SendMessageAlert';
 
 const ProfileLayout = styled('div')(({ theme }) => ({
   gridArea: 'ProfileItems',
@@ -38,9 +39,7 @@ function ProfileTemplate() {
       <FreindList />
       <UserStat />
       <MatchHistory />
-      <Footer>
-        <ReceiveMessageAlert />
-      </Footer>
+      <Footer>{SendMessageAlert('친구')}</Footer>
     </ProfileLayout>
   );
 }
