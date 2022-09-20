@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import NavigationBar from '../components/bar/NavigationBar';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 
-const GameLayout = styled('section')(({ theme }) => ({
+const GameCreateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: '#6BADE2',
@@ -15,25 +15,25 @@ const NavGridLayout = styled('section')(({ theme }) => ({
   height: '10%',
 }));
 
-const GameTemplateLayout = styled('section')(({ theme }) => ({
+const GameCreateTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   width: '100%',
   height: '90%',
   alignItems: 'center',
   justifyContent: 'center', //justifySelf: 'center'는 왜 안될까..
-}))
+}));
 
-function GamePage() {
+function GameCreatePage() {
   return (
-    <GameLayout>
+    <GameCreateLayout>
       <NavGridLayout>
         <NavigationBar></NavigationBar>
       </NavGridLayout>
-      <GameTemplateLayout>
+      <GameCreateTemplateLayout>
         <GameCreateTemplate buttonType={'invite'} />
-      </GameTemplateLayout>
-    </GameLayout>
+      </GameCreateTemplateLayout>
+    </GameCreateLayout>
   );
 }
 
-export default GamePage;
+export default GameCreatePage;

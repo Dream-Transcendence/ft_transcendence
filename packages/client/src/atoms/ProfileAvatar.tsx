@@ -40,14 +40,14 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function ProfileAvatar(avaterType: String) {
-  if (avaterType === 'default') {
+function ProfileAvatar(avatarType: String | undefined) {
+  if (avatarType === 'default') {
     return (
       <ProfileAvatarLayout>
         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
       </ProfileAvatarLayout>
     );
-  } else if (avaterType === 'circle') {
+  } else if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
         <StyledBadge
