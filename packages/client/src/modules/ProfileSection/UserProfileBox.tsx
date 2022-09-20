@@ -19,12 +19,12 @@ function UserProfileBox(isButton: Boolean, avaterType: String) {
   return isButton ? (
     <UserProfileBoxLayout>
       {ProfileAvatar(avaterType)}
-      <TextBox value={'doyun'} />
+      <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   ) : (
     <UserProfileBoxLayout disabled>
       {ProfileAvatar(avaterType)}
-      <TextBox value={'doyun'} />
+      <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   );
 }

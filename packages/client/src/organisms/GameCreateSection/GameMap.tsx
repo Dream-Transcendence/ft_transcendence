@@ -31,7 +31,7 @@ function GameMapModule() {
     return (
         <GameMapModuleLayout>
             <GameMapTextLayout>
-                <TextBox value={'Game Map'} />
+                <TextBox value={'Game Map'} size={'1rem'} fontColor={'black'} />
             </GameMapTextLayout>
             <GameMapLayout>
                 <ImageComponent title={'GameMap'} image='https://www.imaginarycloud.com/blog/content/images/2019/02/Pong.jpg' />
