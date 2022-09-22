@@ -11,14 +11,11 @@ export class User extends BaseEntity {
   }
 
   @PrimaryGeneratedColumn()
-  @ApiProperty()
   id: number;
 
   @Column()
-  @ApiProperty()
   nickname: string;
 
   @Column()
-  @ApiProperty()
   imageURL: string;
 }
