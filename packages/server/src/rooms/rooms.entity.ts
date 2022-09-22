@@ -1,12 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { CHAT_TYPE } from './dto/rooms.dto';
 
-export const CHAT_TYPE = {
-  DM: 0,
-  public: 1,
-  protected: 2,
-  private: 3,
-} as const;
-type CHAT_TYPE = typeof CHAT_TYPE[keyof typeof CHAT_TYPE];
 @Entity()
 export class Room {
   @PrimaryGeneratedColumn()
