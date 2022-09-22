@@ -11,9 +11,10 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
-  ApiProperty,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthUserDto } from './dto/auth-user.dto';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import {
@@ -32,7 +33,7 @@ export class UsersController {
   @ApiOperation({ summary: '유저 등록' })
   @ApiCreatedResponse({
     description: 'Add user successfully',
-    type: CreateUserDto,
+    type: User,
   })
   addUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.addUser(createUserDto);
@@ -40,44 +41,57 @@ export class UsersController {
 
   @Get('/:id')
   @ApiOperation({ summary: '유저 정보 가져오기' })
-  @ApiOkResponse({ description: '유저 정보 가져오기 성공' })
+  @ApiOkResponse({ description: '유저 정보 가져오기 성공', type: User })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getUser(@Param('id') id: number): Promise<User> {
     return;
   }
 
-  @Post('/:id/2nd-auth')
-  @ApiOperation({ summary: '2차 인증 추가' })
-  @ApiOkResponse({ description: '2차 인증 여부 가져오기 성공' })
-  patchAuthentication(@Param('id') id: number): Promise<User> {
+  @Patch('/:id/2nd-auth')
+  @ApiOperation({ summary: '2차 인증 업데이트' })
+  @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  patchAuthentication(@Param('id') id: number) {
     return;
   }
 
   @Get('/:id/2nd-auth')
   @ApiOperation({ summary: '2차 인증 여부 가져오기' })
-  getAuthentication(@Param('id') id: number): Promise<User> {
+  @ApiOkResponse({ description: '2차 인증 가져오기 성공', type: AuthUserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  getAuthentication(@Param('id') id: number): Promise<boolean> {
     return;
   }
 
   @Post('/:id/blocks')
   @ApiOperation({ summary: '유저 차단' })
-  blockUser(@Param('id') id: number): Promise<User> {
+  @ApiCreatedResponse({ description: '유저 차단 성공' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  blockUser(@Param('id') id: number) {
     return;
   }
 
   @Get('/:id/blocks')
   @ApiOperation({ summary: '유저 차단 목록 가져오기' })
+  @ApiOkResponse({ description: '유저 차단 목록 가져오기 성공', type: [User] })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getBlocks(@Param('id') id: number): Promise<User[]> {
     return;
   }
 
   @Get('/:id/channels')
   @ApiOperation({ summary: '유저의 채널 목록 가져오기' })
+  @ApiOkResponse({
+    description: '유저의 채널 목록 가져오기 성공',
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getChannels(@Param('id') id: number): Promise<any[]> {
     return;
   }
 
   @Get('/:id/dms')
   @ApiOperation({ summary: '유저의 DM 목록 가져오기' })
+  @ApiOkResponse({ description: '유저의 DM 목록 가져오기 성공' })
   getDMs(@Param('id') id: number): Promise<any[]> {
     return;
   }
