@@ -6,7 +6,7 @@ const BottonComponentLayout = styled('button')(({ theme }) => ({
     backgroundColor: '#00FF0000',
 }));
 
-function BottonComponent(props: { value: string | undefined }) {
+function ButtonByText(props: { value: string | undefined }) {
     const { value } = props;
 
     return (
@@ -18,4 +18,4 @@ function BottonComponent(props: { value: string | undefined }) {
     );
 }
 
-export default BottonComponent;
+export default ButtonByText;

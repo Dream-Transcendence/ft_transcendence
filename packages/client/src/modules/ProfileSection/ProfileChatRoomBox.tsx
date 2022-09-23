@@ -22,7 +22,7 @@ function ProfileChatRoomBox({ image }: TitleProps) {
   return (
     <UserProfileBoxLayout>
       <Avatar alt="Remy Sharp" src={image} />
-      <TextBox value={'Remy'} />
+      <TextBox value={'Remy'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   );
 }
