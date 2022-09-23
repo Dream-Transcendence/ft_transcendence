@@ -11,7 +11,7 @@ const ListGenerateLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   height: '75%',
   width: '85%',
-  backgroundColor: '#40C6FF',
+  backgroundColor: '#00FF0000',
   border: 'solid 1px',
 }));
 
