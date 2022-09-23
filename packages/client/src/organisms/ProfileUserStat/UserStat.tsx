@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import UserStatLadder from '../../components/text/ProfileUserStatLadder';
+import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
 import UserStatResult from '../../modules/ProfileSection/StatResult';
 
 const UserStatLayout = styled('div')(({ theme }) => ({

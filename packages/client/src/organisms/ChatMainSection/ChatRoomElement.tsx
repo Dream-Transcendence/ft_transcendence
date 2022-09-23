@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import PasswordInput from '../../components/input/passwordBox';
-import TextButton from '../../components/button/text/TextButton';
+import PasswordInput from '../../atoms/input/passwordBox';
+import TextButton from '../../atoms/button/text/TextButton';
 import RoomNumberOfPeopleModule from '../../modules/ChatSection/RoomElementNumOfPeople';
 import RoomTitleModule from '../../modules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../modules/ChatSection/RoomElementImage';

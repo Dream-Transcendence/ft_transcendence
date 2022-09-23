@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import NavigationBar from '../components/bar/NavigationBar';
+import NavigationBar from '../atoms/bar/NavigationBar';
 import ProfileTemplate from '../template/ProfileSection/ProfileTemplate';
 
 const ProfileLayout = styled('section')(({ theme }) => ({

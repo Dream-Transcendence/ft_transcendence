@@ -1,7 +1,7 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../components/input/SearchBox';
-import PasswordInput from '../../components/input/passwordBox';
+import SearchBox from '../../atoms/input/SearchBox';
+import PasswordInput from '../../atoms/input/passwordBox';
 
 /*
  * AsideSearchBox로 감싼 이유는

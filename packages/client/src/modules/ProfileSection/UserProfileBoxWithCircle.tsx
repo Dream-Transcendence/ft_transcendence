@@ -3,8 +3,8 @@ import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
-import TextBox from '../../atoms/TextBox';
-import ProfileAvatar from '../../atoms/ProfileAvatar';
+import TextBox from '../../texts/TextBox';
+import ProfileAvatar from '../../atoms/profile/ProfileAvatar';
 import UserProfileBox from './UserProfileBox';
 import { Box, Button } from '@mui/material';
 

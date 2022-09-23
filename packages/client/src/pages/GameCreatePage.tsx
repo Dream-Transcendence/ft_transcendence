@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import NavigationBar from '../components/bar/NavigationBar';
+import NavigationBar from '../atoms/bar/NavigationBar';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 
 const GameCreateLayout = styled('section')(({ theme }) => ({

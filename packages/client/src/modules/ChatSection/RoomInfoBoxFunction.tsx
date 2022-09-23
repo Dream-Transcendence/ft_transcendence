@@ -1,10 +1,10 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import BlockIcon from '@mui/icons-material/Block';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import PasswordInput from '../../components/input/passwordBox';
+import PasswordInput from '../../atoms/input/passwordBox';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',

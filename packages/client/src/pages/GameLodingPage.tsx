@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import TextBox from '../atoms/TextBox';
-import ButtonByText from '../components/button/block/ButtonCompenent';
+import TextBox from '../texts/TextBox';
+import ButtonByText from '../atoms/button/block/ButtonCompenent';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
     display: 'flex',

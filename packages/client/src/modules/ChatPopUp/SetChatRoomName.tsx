@@ -1,6 +1,6 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../components/input/SearchBox';
+import SearchBox from '../../atoms/input/SearchBox';
 
 /*
  * AsideSearchBox로 감싼 이유는

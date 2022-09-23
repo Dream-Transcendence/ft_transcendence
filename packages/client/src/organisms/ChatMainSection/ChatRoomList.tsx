@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
 import ChatRoomElementOrganisms from './ChatRoomElement';
-import ListGenerate from '../../components/list/ListGenerate';
+import ListGenerate from '../../atoms/list/ListGenerate';
 
 const ChatRoomListLayout = styled('div')(({ theme }) => ({
   width: '100%',

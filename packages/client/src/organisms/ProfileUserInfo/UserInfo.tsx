@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
-import ProfileImage from '../../atoms/ProfileImage';
-import SecondAuthSwitch from '../../components/button/switch/SecondAuth';
-import ProfileNicname from '../../components/text/ProfileNicname';
+import ProfileImage from '../../atoms/profile/ProfileImage';
+import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
+import ProfileNicname from '../../atoms/text/ProfileNicname';
 
 const UserInfoLayout = styled('div')(({ theme }) => ({
   display: 'flex',

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import UserStatLose from '../../components/text/ProfileUserStatLose';
-import UserStatWin from '../../components/text/ProfileUserStatWin';
+import UserStatLose from '../../atoms/text/ProfileUserStatLose';
+import UserStatWin from '../../atoms/text/ProfileUserStatWin';
 
 const StatResultLayout = styled('div')(({ theme }) => ({
   display: 'flex',

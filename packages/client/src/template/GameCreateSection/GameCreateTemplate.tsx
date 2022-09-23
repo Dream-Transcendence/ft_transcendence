@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import TextBox from "../../atoms/TextBox";
-import ButtonByText from "../../components/button/block/ButtonCompenent";
+import TextBox from "../../texts/TextBox";
+import ButtonByText from "../../atoms/button/block/ButtonCompenent";
 import GameCreateMainOrganism from "../../organisms/GameCreateSection/GameCreateMainSection";
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
