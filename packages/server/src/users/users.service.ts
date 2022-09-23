@@ -6,14 +6,9 @@ import { User } from './users.entity';
 @Injectable()
 export class UserService {
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const { id, nickname, imageURL } = createUserDto;
+    const { id, nickname, image } = createUserDto;
 
-    const user = new UserDto() {
-      id,
-      nickname,
-      imageURL,
-    };
-
+    var user = new UserDto(id, nickname, image);
 
     return user;
   }

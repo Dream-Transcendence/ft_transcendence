@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -28,6 +29,7 @@ import { UserService } from './users.service';
 @ApiTags('user')
 @Controller('users')
 export class UsersController {
+  private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
 
   @Post()
@@ -37,6 +39,7 @@ export class UsersController {
     type: UserDto,
   })
   addUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
+    this.logger.log(`addUser: ${JSON.stringify(createUserDto)}`);
     return this.userService.addUser(createUserDto);
   }
 

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Patch,
   Post,
@@ -22,11 +23,13 @@ import {
 @ApiTags('room')
 @Controller('rooms')
 export class RoomsController {
+  private logger = new Logger('RoomsController');
   constructor() {}
 
   @Post()
   @ApiOperation({ summary: '채팅방 생성' })
   createRoom(@Body() createRoomDto: CreateRoomDto) {
+    this.logger.log(`createRoom: ${JSON.stringify(createRoomDto)}`);
     return;
   }
 
