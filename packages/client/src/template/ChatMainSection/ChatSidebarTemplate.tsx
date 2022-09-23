@@ -19,7 +19,6 @@ function ChatSidebarTemplate() {
     <ChatSidebarLayout>
       <SearchBoxModule />
       <Typography
-        variant="h6"
         borderRadius={20}
         border={5}
         borderColor="#9C27B0"
@@ -29,7 +28,6 @@ function ChatSidebarTemplate() {
       </Typography>
       <JoinedChatRoomModule />
       <Typography
-        variant="h6"
         borderRadius={20}
         border={5}
         borderColor="#9C27B0"

@@ -3,7 +3,7 @@ import ListGenerate from '../../components/list/ListGenerate';
 import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
-  height: '43%',
+  height: '40%',
   width: '100%',
   display: 'flex',
   justifyContent: 'center',
@@ -11,7 +11,7 @@ const JoinedChatListLayout = styled('div')(({ theme }) => ({
 
 const JoinedDMBox = styled('div')(({ theme }) => ({
   marginTop: '6%',
-  height: '87%',
+  height: '80%',
   width: '90%',
   borderRadius: '13px',
   backgroundColor: '#001D7D',
