@@ -15,35 +15,33 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { Any } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 
-import { CreateUserDto } from './dto/create-user.dto';
-import {
-  PatchUserImageURLDto,
-  PatchUserNicknameDto,
-} from './dto/patch-user.dto';
+// import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './users.entity';
 import { UserService } from './users.service';
 
-@ApiTags('user')
 @Controller('users')
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
 
   @Post()
+  @ApiTags('유저 관리')
   @ApiOperation({ summary: '유저 등록' })
   @ApiCreatedResponse({
     description: 'Add user successfully',
     type: UserDto,
   })
-  addUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    this.logger.log(`addUser: ${JSON.stringify(createUserDto)}`);
-    return this.userService.addUser(createUserDto);
+  addUser(@Body() UserDto: UserDto): Promise<UserDto> {
+    this.logger.log(`addUser: ${JSON.stringify(UserDto)}`);
+    return this.userService.addUser(UserDto);
   }
 
   @Get('/:id')
+  @ApiTags('유저 관리')
   @ApiOperation({ summary: '유저 정보 가져오기' })
   @ApiOkResponse({ description: '유저 정보 가져오기 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -51,15 +49,20 @@ export class UsersController {
     return;
   }
 
-  @Patch('/:id/2nd-auth')
-  @ApiOperation({ summary: '2차 인증 업데이트' })
-  @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
+  @Patch('/:id')
+  @ApiTags('유저 관리')
+  @ApiOperation({ summary: '유저 정보 수정' })
+  @ApiOkResponse({ description: '유저 정보 수정 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchAuthentication(@Param('id') id: number) {
+  patchUserInfo(
+    @Param('id') id: number,
+    @Body() userDto: UserDto,
+  ): Promise<UserDto> {
     return;
   }
 
   @Get('/:id/2nd-auth')
+  @ApiTags('유저 관리')
   @ApiOperation({ summary: '2차 인증 여부 가져오기' })
   @ApiOkResponse({ description: '2차 인증 가져오기 성공', type: AuthUserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -67,49 +70,59 @@ export class UsersController {
     return;
   }
 
+  @Patch('/:id/2nd-auth')
+  @ApiTags('유저 관리')
+  @ApiOperation({ summary: '2차 인증 업데이트' })
+  @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  patchAuthentication(@Param('id') id: number) {
+    return;
+  }
+
   @Post('/:id/blocks')
+  @ApiTags('유저/차단')
   @ApiOperation({ summary: '유저 차단' })
-  @ApiCreatedResponse({ description: '유저 차단 성공' })
+  @ApiCreatedResponse({ description: '유저 차단 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   blockUser(@Param('id') id: number) {
     return;
   }
 
   @Get('/:id/blocks')
+  @ApiTags('유저/차단')
   @ApiOperation({ summary: '유저 차단 목록 가져오기' })
-  @ApiOkResponse({ description: '유저 차단 목록 가져오기 성공', type: [User] })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getBlocks(@Param('id') id: number): Promise<User[]> {
-    return;
-  }
-
-  @Get('/:id/channels')
-  @ApiOperation({ summary: '유저의 채널 목록 가져오기' })
   @ApiOkResponse({
-    description: '유저의 채널 목록 가져오기 성공',
+    description: '유저 차단 목록 가져오기 성공',
+    type: [UserDto],
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getChannels(@Param('id') id: number): Promise<any[]> {
+  getBlocks(@Param('id') id: number): Promise<UserDto[]> {
     return;
   }
 
-  @Get('/:id/dms')
-  @ApiOperation({ summary: '유저의 DM 목록 가져오기' })
-  @ApiOkResponse({ description: '유저의 DM 목록 가져오기 성공' })
+  @Get('/:id/rooms')
+  @ApiTags('유저/채팅')
+  @ApiOperation({ summary: '유저의 대화방 목록 가져오기' })
+  @ApiOkResponse({
+    description: '유저의 대화방 목록 가져오기 성공',
+    type: [Any],
+  })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getDMs(@Param('id') id: number): Promise<any[]> {
+  getRooms(@Param('id') id: number): Promise<any[]> {
     return;
   }
 
   @Post('/:id/friends')
+  @ApiTags('유저/친구')
   @ApiOperation({ summary: '친구 추가' })
-  @ApiCreatedResponse({ description: '친구 추가 성공' })
+  @ApiCreatedResponse({ description: '친구 추가 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  addFriend(@Param('id') id: number) {
+  addFriend(@Param('id') id: number, @Body() userId: number): Promise<UserDto> {
     return;
   }
 
   @Get('/:id/friends')
+  @ApiTags('유저/친구')
   @ApiOperation({ summary: '유저 친구 목록 가져오기' })
   @ApiCreatedResponse({
     description: '유저 친구 목록 가져오기 성공',
@@ -121,52 +134,34 @@ export class UsersController {
   }
 
   @Get('/:id/game/ladder')
+  @ApiTags('유저/게임')
   @ApiOperation({ summary: '유저의 래더 정보 가져오기' })
-  @ApiOkResponse({ description: '유저 래더 정보 가져오기 성공' })
+  @ApiOkResponse({ description: '유저 래더 정보 가져오기 성공', type: [Any] })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getLadderStat(@Param('id') id: number): Promise<any> {
     return;
   }
 
-  @Get('/:id/game/records')
-  @ApiOperation({ summary: '유저의 게임 기록 가져오기' })
-  @ApiOkResponse({ description: '유저 게임 기록 가져오기 성공' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getGameRecords(@Param('id') id: number): Promise<any[]> {
-    return;
-  }
-
   @Post('/:id/game/records')
+  @ApiTags('유저/게임')
   @ApiOperation({ summary: '유저의 게임 기록 추가' })
-  @ApiCreatedResponse({ description: '유저 게임 기록 추가 성공' })
+  @ApiCreatedResponse({ description: '유저 게임 기록 추가 성공', type: Any })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   addGameRecord(@Param('id') id: number): Promise<any> {
     return;
   }
 
-  @Patch('/:id/image')
-  @ApiOperation({ summary: '유저 프로필 이미지 수정' })
-  @ApiOkResponse({ description: '유저 프로필 이미지 수정 성공' })
+  @Get('/:id/game/records')
+  @ApiTags('유저/게임')
+  @ApiOperation({ summary: '유저의 게임 기록 가져오기' })
+  @ApiOkResponse({ description: '유저 게임 기록 가져오기 성공', type: [Any] })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchUserImageURL(
-    @Param('id') id: number,
-    @Body() patchUserImageURLDto: PatchUserImageURLDto,
-  ): Promise<UserDto> {
-    return;
-  }
-
-  @Patch('/:id/nickname')
-  @ApiOperation({ summary: '유저 닉네임 수정' })
-  @ApiOkResponse({ description: '유저 닉네임 수정 성공' })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchUserNickname(
-    @Param('id') id: number,
-    @Body() patchUserNicknameDto: PatchUserNicknameDto,
-  ): Promise<UserDto> {
+  getGameRecords(@Param('id') id: number): Promise<any[]> {
     return;
   }
 
   @Post('/:id/requests')
+  @ApiTags('유저/친구')
   @ApiOperation({ summary: '친구 요청 추가' })
   @ApiCreatedResponse({ description: '친구 요청 추가 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -175,6 +170,7 @@ export class UsersController {
   }
 
   @Get('/:id/requests')
+  @ApiTags('유저/친구')
   @ApiOperation({ summary: '친구 요청 목록 가져오기' })
   @ApiOkResponse({ description: '친구 요청 목록 가져오기 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -182,7 +178,8 @@ export class UsersController {
     return;
   }
 
-  @Get('/:id/search')
+  @Get('/:id/search?nickname=:nickname')
+  @ApiTags('유저/검색')
   @ApiOperation({ summary: '유저 검색' })
   @ApiOkResponse({ description: '유저 검색 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
@@ -190,7 +187,8 @@ export class UsersController {
     return;
   }
 
-  @Get('/:id/friends/search')
+  @Get('/:id/friends/search?nickname=:nickname')
+  @ApiTags('유저/검색')
   @ApiOperation({ summary: '친구 검색' })
   @ApiOkResponse({ description: '친구 검색 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })

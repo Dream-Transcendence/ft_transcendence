@@ -1,13 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  Unique,
+} from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
-  constructor(id: number, nickname: string, imageURL: string) {
+  constructor(id: number, nickname: string, image: string) {
     super();
     this.id = id;
     this.nickname = nickname;
-    this.imageURL = imageURL;
+    this.image = image;
   }
 
   @PrimaryGeneratedColumn()
@@ -17,5 +23,5 @@ export class User extends BaseEntity {
   nickname: string;
 
   @Column()
-  imageURL: string;
+  image: string;
 }
