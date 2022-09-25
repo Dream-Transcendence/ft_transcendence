@@ -17,6 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 // import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
@@ -35,9 +36,9 @@ export class UsersController {
     description: 'Add user successfully',
     type: UserDto,
   })
-  addUser(@Body() UserDto: UserDto): Promise<UserDto> {
+  addUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
     this.logger.log(`addUser: ${JSON.stringify(UserDto)}`);
-    return this.userService.addUser(UserDto);
+    return this.userService.addUser(createUserDto);
   }
 
   @Get('/:id')
@@ -46,7 +47,7 @@ export class UsersController {
   @ApiOkResponse({ description: '유저 정보 가져오기 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getUser(@Param('id') id: number): Promise<UserDto> {
-    return;
+    return this.userService.getUser(id);
   }
 
   @Patch('/:id')
@@ -54,11 +55,11 @@ export class UsersController {
   @ApiOperation({ summary: '유저 정보 수정' })
   @ApiOkResponse({ description: '유저 정보 수정 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchUserInfo(
+  patchUser(
     @Param('id') id: number,
     @Body() userDto: UserDto,
   ): Promise<UserDto> {
-    return;
+    return this.userService.patchUser(id, userDto);
   }
 
   @Get('/:id/2nd-auth')
@@ -66,8 +67,8 @@ export class UsersController {
   @ApiOperation({ summary: '2차 인증 여부 가져오기' })
   @ApiOkResponse({ description: '2차 인증 가져오기 성공', type: AuthUserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getAuthentication(@Param('id') id: number): Promise<boolean> {
-    return;
+  getAuth(@Param('id') id: number): Promise<AuthUserDto> {
+    return this.userService.getAuth(id);
   }
 
   @Patch('/:id/2nd-auth')
@@ -75,8 +76,8 @@ export class UsersController {
   @ApiOperation({ summary: '2차 인증 업데이트' })
   @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchAuthentication(@Param('id') id: number) {
-    return;
+  patchAuth(@Param('id') id: number) {
+    return this.userService.patchAuth(id);
   }
 
   @Post('/:id/blocks')
@@ -84,8 +85,8 @@ export class UsersController {
   @ApiOperation({ summary: '유저 차단' })
   @ApiCreatedResponse({ description: '유저 차단 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  blockUser(@Param('id') id: number) {
-    return;
+  blockUser(@Param('id') id: number, @Body() user: UserDto): Promise<UserDto> {
+    return this.userService.blockUser(id, user.id);
   }
 
   @Get('/:id/blocks')
@@ -97,7 +98,7 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getBlocks(@Param('id') id: number): Promise<UserDto[]> {
-    return;
+    return this.userService.getBlocks(id);
   }
 
   @Get('/:id/rooms')
