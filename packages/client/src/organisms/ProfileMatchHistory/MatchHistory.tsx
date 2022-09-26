@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
+import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import * as React from 'react';
 import ListGenerate from '../../atoms/list/ListGenerate';
-import OneMatchHistory from '../../modules/ProfileSection/OneMatchHistory';
+import OneMatchHistory from '../../molecules/ProfileSection/OneMatchHistory';
 import { Typography } from '@mui/material';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({

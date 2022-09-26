@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import GameResultModal from '../../modules/GameSecton/GameResultMadal';
+import GameResultModal from '../../molecules/GameSecton/GameResultMadal';
 
 const GameWindowLayout = styled('div')(({ theme }) => ({
   backgroundColor: 'black',

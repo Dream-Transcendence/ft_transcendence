@@ -2,9 +2,9 @@ import { styled } from '@mui/material/styles';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import PasswordInput from '../../atoms/input/passwordBox';
 import TextButton from '../../atoms/button/text/TextButton';
-import RoomNumberOfPeopleModule from '../../modules/ChatSection/RoomElementNumOfPeople';
-import RoomTitleModule from '../../modules/ChatSection/RoomElementTitle';
-import RoomElementImageModule from '../../modules/ChatSection/RoomElementImage';
+import RoomNumberOfPeopleModule from '../../molecules/ChatSection/RoomElementNumOfPeople';
+import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
+import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',

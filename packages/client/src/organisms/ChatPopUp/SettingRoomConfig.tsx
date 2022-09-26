@@ -1,10 +1,10 @@
 import { Typography, Button, TextField, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SetChatRoomNameModule from '../../modules/ChatPopUp/SetChatRoomName';
+import SetChatRoomNameModule from '../../molecules/ChatPopUp/SetChatRoomName';
 import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
-import SetChatRoomTypeModule from '../../modules/ChatPopUp/SetChatRoomType';
-import SetChatRoomPasswordModule from '../../modules/ChatPopUp/SetChatRoomPassword';
-import SetChatRoomInviteModule from '../../modules/ChatPopUp/SetChatRoomInvite';
+import SetChatRoomTypeModule from '../../molecules/ChatPopUp/SetChatRoomType';
+import SetChatRoomPasswordModule from '../../molecules/ChatPopUp/SetChatRoomPassword';
+import SetChatRoomInviteModule from '../../molecules/ChatPopUp/SetChatRoomInvite';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',

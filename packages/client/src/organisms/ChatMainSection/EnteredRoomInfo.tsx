@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import InfoBoxFunctionModule from '../../modules/ChatSection/RoomInfoBoxFunction';
-import InfoBoxNameModule from '../../modules/ChatSection/RoomInfoBoxName';
-import InfoBoxPasswordModule from '../../modules/ChatSection/RoomInfoBoxPassword';
+import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
+import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
+import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',

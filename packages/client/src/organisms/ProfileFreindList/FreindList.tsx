@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
+import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import * as React from 'react';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import { Typography } from '@mui/material';

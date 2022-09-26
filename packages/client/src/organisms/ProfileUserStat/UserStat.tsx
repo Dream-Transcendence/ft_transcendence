@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
-import UserStatResult from '../../modules/ProfileSection/StatResult';
+import UserStatResult from '../../molecules/ProfileSection/StatResult';
 
 const UserStatLayout = styled('div')(({ theme }) => ({
   display: 'flex',

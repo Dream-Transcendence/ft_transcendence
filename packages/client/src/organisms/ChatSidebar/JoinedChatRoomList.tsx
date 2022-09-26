@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import ListGenerate from '../../atoms/list/ListGenerate';
-import ProfileChatRoomBox from '../../modules/ProfileSection/ProfileChatRoomBox';
+import ProfileChatRoomBox from '../../molecules/ProfileSection/ProfileChatRoomBox';
 
 const JoinedChatRoomLayout = styled('div')(({ theme }) => ({
   height: '35.3%',
