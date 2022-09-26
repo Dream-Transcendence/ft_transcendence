@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../components/input/SearchBox';
+import SearchBox from '../../atoms/input/SearchBox';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -20,7 +20,7 @@ const SearchBoxLayout = styled('div')(({ theme }) => ({
   marginRight: '2%',
   marginBottom: '2%',
   width: '97%',
-  height: '5%',
+  height: '7%',
   backgroundColor: '#046EB155',
   display: 'flex',
   justifyContent: 'center',

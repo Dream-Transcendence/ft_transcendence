@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import ListGenerate from '../../components/list/ListGenerate';
+import ListGenerate from '../../atoms/list/ListGenerate';
 import UserChatParticipantsBox from '../../modules/ProfileSection/UserChatParticipants';
-import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
+import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 
 const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
   width: '98%',

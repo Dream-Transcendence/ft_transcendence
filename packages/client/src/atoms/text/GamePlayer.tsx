@@ -7,8 +7,8 @@ const GamePlayerLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   alignSelf: 'center',
   flexWrap: 'wrap',
-  flexGrow: 1,
   height: '100%',
+  padding: '3px',
 }));
 
 function GamePlayer(player: String) {

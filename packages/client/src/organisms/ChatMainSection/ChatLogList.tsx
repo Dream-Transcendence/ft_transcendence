@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
-import ChatProfileNText from '../../components/textPrompt/ChatProfileNText';
-import ListGenerate from '../../components/list/ListGenerate';
+import ChatProfileNText from '../../atoms/textPrompt/ChatProfileNText';
+import ListGenerate from '../../atoms/list/ListGenerate';
 
 const ChatLogLayout = styled('div')(({ theme }) => ({
   width: '90%',

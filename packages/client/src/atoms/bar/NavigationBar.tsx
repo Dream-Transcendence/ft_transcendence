@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
-import NavProfile from '../../atoms/NavProfile';
+import NavProfile from '../profile/NavProfile';
 import ChatIconButton from '../button/icon/ChatIconButton';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import GameIconButton from '../button/icon/GameIconButton';

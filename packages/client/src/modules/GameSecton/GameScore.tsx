@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import TextBox from '../../atoms/TextBox';
+import TextBox from '../../texts/TextBox';
 
 function GameScore(props: { player1Score: string; player2Score: string }) {
   const { player1Score, player2Score } = props;

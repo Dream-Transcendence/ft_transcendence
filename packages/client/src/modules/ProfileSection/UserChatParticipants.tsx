@@ -2,10 +2,10 @@ import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
-import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonIcon from '@mui/icons-material/Person';
 import NotInterestedIcon from '@mui/icons-material/NotInterested';
-import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
+import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',

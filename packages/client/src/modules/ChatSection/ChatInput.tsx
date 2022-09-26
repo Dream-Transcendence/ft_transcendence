@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
-import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import SendIcon from '@mui/icons-material/Send';
 
 function ChatInputModule() {

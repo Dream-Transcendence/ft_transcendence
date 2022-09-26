@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
-import TextBox from "../../atoms/TextBox";
-import ImageComponent from "../../components/Image/Image";
+import TextBox from "../../texts/TextBox";
+import ImageComponent from "../../atoms/Image/Image";
 import GameMapModule from "./GameMap";
 import GameOptionModule from "./GameOption";
 

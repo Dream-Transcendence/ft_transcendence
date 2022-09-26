@@ -1,6 +1,6 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import RadioGroupButton from '../../components/radio/RadioGroupButton';
+import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
 
 /*
  * AsideSearchBox로 감싼 이유는

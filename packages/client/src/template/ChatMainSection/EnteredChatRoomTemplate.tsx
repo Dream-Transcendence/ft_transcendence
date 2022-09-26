@@ -2,7 +2,7 @@ import EnteredRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredRoo
 import { styled } from '@mui/material/styles';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
-import BasicSpeedDial from '../../components/SpeedDial/SpeedDial';
+import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',

@@ -4,8 +4,8 @@ import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import AvatarWithCricle from './UserProfileBoxWithCircle';
 import { Button } from '@mui/material';
-import ProfileAvatar from '../../atoms/ProfileAvatar';
-import TextBox from '../../atoms/TextBox';
+import ProfileAvatar from '../../atoms/profile/ProfileAvatar';
+import TextBox from '../../texts/TextBox';
 
 const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
