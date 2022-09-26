@@ -2990,10 +2990,9 @@
   dependencies:
     tslib "2.4.0"
 
-"@nestjs/typeorm@^9.0.1":
+"@nestjs/typeorm@nestjs/typeorm":
   version "9.0.1"
-  resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-9.0.1.tgz#f78bfc00e71731ea860288e4a03830107daf3d9c"
-  integrity sha512-A2BgLIPsMtmMI0bPKEf4bmzgFPsnvHqNBx3KkvaJ7hJrBQy0OqYOb+Rr06ifblKWDWS2tUPNrAFQbZjtk3PI+g==
+  resolved "https://codeload.github.com/nestjs/typeorm/tar.gz/b27e1328b02fad0fd6e0dda8a21d8f72fca2633c"
   dependencies:
     uuid "8.3.2"
 
@@ -5926,6 +5925,11 @@ emojis-list@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/emojis-list/-/emojis-list-3.0.0.tgz"
   integrity sha512-/kyM18EfinwXZbno9FyUGeFh87KC8HRQBQGildHZbEuRyWFOmv1U10o9BBp8XVZDVNNuQKyIGIu5ZYAAXJ0V2Q==
+
+empty-dir@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/empty-dir/-/empty-dir-0.1.0.tgz#4915bd8b63773c3f458b2dc50339c908849c84f0"
+  integrity sha512-EatTcJH5cVS/NXEpy7IWBSpH0WxvJdBnmRkz8Gqr2Jn4GmSqc4Q4E81SmVGOrHHHtCys1SsFKmAoHlhaFkRlmg==
 
 encodeurl@~1.0.2:
   version "1.0.2"
@@ -10348,6 +10352,13 @@ postgres-interval@^1.1.0:
   dependencies:
     xtend "^4.0.0"
 
+postgresql@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/postgresql/-/postgresql-0.0.1.tgz#f07c179d937e0c54ee735a15eb2e462b1967ab70"
+  integrity sha512-qtBS+u3m4UxCVTTQBm58IR4TJWZKYVRa/egONxzkQtqEYhFc9HVno4S7//ABFRJR5LeCcrZtcBpZJ5SJkJkGEA==
+  dependencies:
+    empty-dir "^0.1.0"
+
 prelude-ls@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npmjs.org/prelude-ls/-/prelude-ls-1.2.1.tgz"
@@ -11829,6 +11840,18 @@ swagger-ui-dist@4.14.0:
   version "4.14.0"
   resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.14.0.tgz#e34d807464eb84578c43902e393084a1a6fbda52"
   integrity sha512-TBzhheU15s+o54Cgk9qxuYcZMiqSm/SkvKnapoGHOF66kz0Y5aGjpzj5BT/vpBbn6rTPJ9tUYXQxuDWfsjiGMw==
+
+swagger-ui-dist@>=4.11.0:
+  version "4.14.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-4.14.1.tgz#a08209042f47918d95179cdbb2286d3cfa2aba02"
+  integrity sha512-GjK581G3ZMOw1vLiQyMV+XHXSE4F83/2E48Y8Cs+X+25QHegwPu/83+GDCls3htPZvEOr0IG+oVljhMyuRy1kA==
+
+swagger-ui-express@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-4.5.0.tgz#feb1314627092eb9c7e6b65ee018927011445530"
+  integrity sha512-DHk3zFvsxrkcnurGvQlAcLuTDacAVN1JHKDgcba/gr2NFRE4HGwP1YeHIXMiGznkWR4AeS7X5vEblNn4QljuNA==
+  dependencies:
+    swagger-ui-dist ">=4.11.0"
 
 symbol-observable@1.0.1:
   version "1.0.1"
