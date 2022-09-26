@@ -7,10 +7,10 @@ import {
   IsUrl,
   Max,
   Min,
-  MinLength,
 } from 'class-validator';
 
-export const CHAT_TYPE = {
+// union type들 모아두는 파일들 따로 만들기
+const CHAT_TYPE = {
   dm: 0,
   public: 1,
   protected: 2,
@@ -18,17 +18,17 @@ export const CHAT_TYPE = {
 } as const;
 export type CHAT_TYPE = typeof CHAT_TYPE[keyof typeof CHAT_TYPE];
 
-export const AUTH_TYPE = {
+const AUTH_TYPE = {
   owner: 0,
   admin: 1,
 } as const;
-type AUTH_TYPE = typeof AUTH_TYPE[keyof typeof AUTH_TYPE];
+export type AUTH_TYPE = typeof AUTH_TYPE[keyof typeof AUTH_TYPE];
 
-export const STATUS_TYPE = {
+const STATUS_TYPE = {
   mute: 0,
   ban: 1,
 } as const;
-type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
+export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 export class CreateRoomDto {
   @ApiProperty()
@@ -79,20 +79,22 @@ export class AddChannelParticipantDto {
   statusStartDate: Date;
 }
 
-export class PatchRoomNameDto {
+export class RoomPasswordDto {
+  @ApiProperty()
+  @IsString()
+  salt: string;
+}
+
+export class PatchRoomInfoDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   name: string;
-}
 
-export class PatchRoomImageDto {
   @ApiProperty()
   @IsUrl()
   image: string;
-}
 
-export class RoomPasswordDto {
   @ApiProperty()
   @IsString()
   salt: string;

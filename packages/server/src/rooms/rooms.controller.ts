@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Injectable,
   Logger,
   Param,
   Patch,
@@ -10,26 +11,27 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { RoomsService } from './rooms.service';
 import {
   AddChannelParticipantDto,
   CreateRoomDto,
-  PatchRoomImageDto,
-  PatchRoomNameDto,
+  RoomPasswordDto,
+  PatchRoomInfoDto,
   PatchUserAuthDto,
   PatchUserStatusDto,
-  RoomPasswordDto,
 } from './dto/rooms.dto';
 
 @ApiTags('room')
 @Controller('rooms')
 export class RoomsController {
   private logger = new Logger('RoomsController');
-  constructor() {}
+  // constructor() {}
 
   @Post()
   @ApiOperation({ summary: '채팅방 생성' })
   createRoom(@Body() createRoomDto: CreateRoomDto) {
     this.logger.log(`createRoom: ${JSON.stringify(createRoomDto)}`);
+    // return this.roomsService.createRoom(createRoomDto);
     return;
   }
 
@@ -84,29 +86,11 @@ export class RoomsController {
     return;
   }
 
-  @Patch('/:roomId/image')
-  @ApiOperation({ summary: '채팅방 이미지 수정' })
-  patchRoomImage(
+  @Patch('/:roomid')
+  @ApiOperation({ summary: '체팅방 정보 수정' })
+  patchRoomInfo(
     @Param('roomId') roomId: number,
-    @Body() patchRoomImageDto: PatchRoomImageDto,
-  ) {
-    return;
-  }
-
-  @Patch('/:roomId/name')
-  @ApiOperation({ summary: '채팅방 이름 수정' })
-  patchRoomName(
-    @Param('roomId') roomId: number,
-    @Body() patchRoomNameDto: PatchRoomNameDto,
-  ) {
-    return;
-  }
-
-  @Patch('/:roomId/password')
-  @ApiOperation({ summary: '채팅방 비밀번호 수정' })
-  patchRoomPassword(
-    @Param('roomId') roomId: number,
-    @Body() roomPasswordDto: RoomPasswordDto,
+    @Body() patchRoomInfoDto: PatchRoomInfoDto,
   ) {
     return;
   }
@@ -131,3 +115,4 @@ export class RoomsController {
     return;
   }
 }
+// 채팅 유저 권한과 상태를 하나의 api로 통합할지 고민
