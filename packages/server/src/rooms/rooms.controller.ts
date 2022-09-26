@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { RoomsService } from './rooms.service';
+// import { RoomsService } from './rooms.service';
 import {
   AddChannelParticipantDto,
   CreateRoomDto,

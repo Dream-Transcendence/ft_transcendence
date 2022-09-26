@@ -18,7 +18,7 @@ export class ChannelParticipant {
   @Column()
   statusStartDate: Date;
 
-  @ManyToOne(() => User, (user) => user.channelParticipants)
+  @ManyToOne(() => User)
   user: User;
 
   @ManyToOne(() => Room, (room) => room.channelParticipants)

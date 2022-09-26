@@ -1,6 +1,6 @@
-import { Repository } from 'typeorm';
-import { CustomRepository } from '../config/db/typeorm-ex.decorator';
-import { Room } from './rooms.entity';
+// import { Repository } from 'typeorm';
+// import { CustomRepository } from '../config/db/typeorm-ex.decorator';
+// import { Room } from './rooms.entity';
 
-@CustomRepository(Room)
-export class RoomRepository extends Repository<Room> {}
+// @CustomRepository(Room)
+// export class RoomRepository extends Repository<Room> {}

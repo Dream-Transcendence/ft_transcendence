@@ -33,7 +33,7 @@ export class UsersController {
   @ApiTags('유저 관리')
   @ApiOperation({ summary: '유저 등록' })
   @ApiCreatedResponse({
-    description: 'Add user successfully',
+    description: 'Add user  successfully',
     type: UserDto,
   })
   addUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
