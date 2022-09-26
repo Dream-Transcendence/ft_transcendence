@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDate,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  IsUrl,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
 
 // union type들 모아두는 파일들 따로 만들기
 const CHAT_TYPE = {
@@ -50,33 +42,12 @@ export class CreateRoomDto {
   @ApiProperty()
   @IsNotEmpty()
   title: string;
-
-  @ApiProperty()
-  @IsUrl(undefined, { message: 'Uri is not valid' })
-  // IsUrl를 사용하면 기본 이미지를 사용하려고 할 때 어떤 값을 front에서 던져줄지
-  image: string;
 }
 
 export class AddChannelParticipantDto {
   @ApiProperty()
   @IsInt()
   participantId: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  auth: AUTH_TYPE;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  status: STATUS_TYPE;
-
-  @ApiProperty()
-  @IsDate()
-  statusStartDate: Date;
 }
 
 export class RoomPasswordDto {

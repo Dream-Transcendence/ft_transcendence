@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { AUTH_TYPE, STATUS_TYPE } from '../../rooms/dto/rooms.dto';
+import { AUTH_TYPE, STATUS_TYPE } from '../../chats/dto/rooms.dto';
 
 export class CreateChannelParticipantDto {
   @ApiProperty()

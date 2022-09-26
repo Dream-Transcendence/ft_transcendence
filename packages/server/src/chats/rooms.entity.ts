@@ -20,11 +20,11 @@ export class Room {
   title: string;
 
   @Column()
-  image: string;
+  image?: string;
 
-  @OneToMany(
-    () => ChannelParticipant,
-    (channelParticipant) => channelParticipant.room,
-  )
-  channelParticipants: ChannelParticipant[];
+  // @OneToMany(
+  //   () => ChannelParticipant,
+  //   (channelParticipant) => channelParticipant.room,
+  // )
+  // channelParticipants: ChannelParticipant[];
 }

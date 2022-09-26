@@ -11,7 +11,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-// import { RoomsService } from './rooms.service';
+import { RoomDto } from './dto/room.dto';
 import {
   AddChannelParticipantDto,
   CreateRoomDto,
@@ -20,25 +20,27 @@ import {
   PatchUserAuthDto,
   PatchUserStatusDto,
 } from './dto/rooms.dto';
+import { RoomService } from './rooms.service';
 
 @ApiTags('room')
 @Controller('rooms')
 export class RoomsController {
   private logger = new Logger('RoomsController');
-  // constructor() {}
+  constructor(private roomService: RoomService) {}
 
   @Post()
   @ApiOperation({ summary: '채팅방 생성' })
-  createRoom(@Body() createRoomDto: CreateRoomDto) {
+  createRoom(@Body() createRoomDto: CreateRoomDto): Promise<RoomDto> {
     this.logger.log(`createRoom: ${JSON.stringify(createRoomDto)}`);
-    // return this.roomsService.createRoom(createRoomDto);
-    return;
+    return this.roomService.createRoom(createRoomDto);
+    // return;
   }
 
   @Get('/channels')
   @ApiOperation({ summary: '공개, 보호 채널 목록' })
   getChannels() {
-    return;
+    this.logger.log(`getChannels`);
+    return this.roomService.getChannels();
   }
 
   @Post('/:roomId')
