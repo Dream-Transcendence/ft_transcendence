@@ -10,7 +10,9 @@ const ChatLogLayout = styled('div')(({ theme }) => ({
 }));
 
 function ChatLogListOrganisms() {
-  return <ChatLogLayout>{ListGenerate(<ChatProfileNText />)}</ChatLogLayout>;
+  return <ChatLogLayout>
+    <ListGenerate element={<ChatProfileNText />} />
+  </ChatLogLayout>;
 }
 
 export default ChatLogListOrganisms;

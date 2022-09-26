@@ -12,7 +12,7 @@ const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
 function ChatParticipantsListOrganisms() {
   return (
     <ChatParticipantsListLayout>
-      {ListGenerate(<UserChatParticipantsBox />)}
+      <ListGenerate element={<UserChatParticipantsBox />} />
     </ChatParticipantsListLayout>
   );
 }

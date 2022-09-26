@@ -17,10 +17,10 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
 function InfoBoxFunctionModule() {
   return (
     <InfoBoxFunctionLayout>
-      {CustomIconButton(<MeetingRoomIcon />)}
-      {CustomIconButton(<BlockIcon />)}
-      {CustomIconButton(<SportsKabaddiIcon />)}
-      {CustomIconButton(<PersonIcon />)}
+      <CustomIconButton element={<MeetingRoomIcon />} />
+      <CustomIconButton element={<BlockIcon />} />
+      <CustomIconButton element={<SportsKabaddiIcon />} />
+      <CustomIconButton element={<PersonIcon />} />
     </InfoBoxFunctionLayout>
   );
 }

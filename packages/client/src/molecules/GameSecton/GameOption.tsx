@@ -45,25 +45,3 @@ export default function GameOption() {
     </Box>
   );
 }
-
-
-
-// import styled from "@emotion/styled";
-
-// const GameOptionLayouy = styled('div')(({ theme }) => ({
-//     display: 'flex',
-//     alignContent: 'center',
-//     justifyContent: 'center',
-//     width: '80%',
-//     height: '30%',
-// }))
-
-// function GameOption() {
-//     return (
-//         <GameOptionLayouy>
-            
-//         </GameOptionLayouy>
-//     );
-// }
-
-// export default GameOption();

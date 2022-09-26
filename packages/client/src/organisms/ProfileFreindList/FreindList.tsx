@@ -47,9 +47,12 @@ function FreindListOrganisms() {
         <Typography variant='h6' align="center">freind list</Typography>
       </TextLayout>
       <ListLayout>
-        {ListGenerate(
-          <ProfileBoxLayout>{UserProfileBox(true, 'circle')} </ProfileBoxLayout>,
-        )}</ListLayout>
+        <ListGenerate element={
+          <ProfileBoxLayout>
+            <UserProfileBox isButton={true} avatarType='circle' />
+          </ProfileBoxLayout>
+        } />
+      </ListLayout>
     </FreindListLayout>
   );
 }

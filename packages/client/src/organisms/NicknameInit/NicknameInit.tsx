@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import NicknameConfirmButton from '../../atoms/button/block/NicknameConfirmButton';
-import NickNameTextFiled from '../../atoms/text/NicknameInitTextField';
+import NickNameTextField from '../../atoms/text/NicknameInitTextField';
 
 const NicknameInitLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -16,7 +16,7 @@ const NicknameInitLayout = styled('section')(({ theme }) => ({
 function NicknameInit() {
   return (
     <NicknameInitLayout>
-      <NickNameTextFiled />
+      <NickNameTextField />
       <NicknameConfirmButton />
     </NicknameInitLayout>
   );

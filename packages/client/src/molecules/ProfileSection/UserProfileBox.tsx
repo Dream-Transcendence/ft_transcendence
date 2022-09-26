@@ -15,15 +15,16 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   padding: 0,
 }));
 
-function UserProfileBox(isButton: Boolean, avaterType: String) {
+function UserProfileBox(props: { isButton: Boolean, avatarType: String }) {
+  const { isButton, avatarType } = props;
   return isButton ? (
     <UserProfileBoxLayout>
-      {ProfileAvatar(avaterType)}
+      <ProfileAvatar avatarType={avatarType} />
       <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   ) : (
     <UserProfileBoxLayout disabled>
-      {ProfileAvatar(avaterType)}
+      <ProfileAvatar avatarType={avatarType} />
       <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   );

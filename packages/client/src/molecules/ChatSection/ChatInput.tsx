@@ -25,7 +25,8 @@ function ChatInputModule() {
         placeholder="  내용을 입력하세요.."
         inputProps={{ 'aria-label': '내용을 입력하세요..' }}
       />
-      {CustomIconButton(<SendIcon />)}
+      <CustomIconButton element={<SendIcon />} />
+
     </Paper>
   );
 }
