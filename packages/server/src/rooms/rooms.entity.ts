@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { CHAT_TYPE } from './dto/rooms.dto';
+import { ChannelParticipant } from '../channel-participants/channel-participants.entity';
 
 @Entity()
 export class Room {
@@ -20,4 +21,10 @@ export class Room {
 
   @Column()
   image: string;
+
+  @OneToMany(
+    () => ChannelParticipant,
+    (channelParticipant) => channelParticipant.room,
+  )
+  channelParticipants: ChannelParticipant[];
 }

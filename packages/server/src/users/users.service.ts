@@ -8,7 +8,7 @@ export class UserService {
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const { id, nickname, image } = createUserDto;
 
-    var user = new UserDto(id, nickname, image);
+    const user = new UserDto(id, nickname, image);
 
     return user;
   }

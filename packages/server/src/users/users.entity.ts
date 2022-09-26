@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ChannelParticipant } from '../channel-participants/channel-participants.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -18,4 +25,10 @@ export class User extends BaseEntity {
 
   @Column()
   imageURL: string;
+
+  @OneToMany(
+    () => ChannelParticipant,
+    (channelParticipant) => channelParticipant.user,
+  )
+  channelParticipants: ChannelParticipant[];
 }
