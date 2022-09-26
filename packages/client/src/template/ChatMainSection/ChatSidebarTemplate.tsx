@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
-import SearchBoxModule from '../../modules/ChatSidebar/SearchBox';
+import SearchBoxModule from '../../molecules/ChatSidebar/SearchBox';
 import JoinedChatRoomModule from '../../organisms/ChatSidebar/JoinedChatRoomList';
-import CreateChatRoomModule from '../../modules/ChatSidebar/CreateChatRoom';
+import CreateChatRoomModule from '../../molecules/ChatSidebar/CreateChatRoom';
 import JoinedDMListOrganisms from '../../organisms/ChatSidebar/JoinedDMList';
 import { Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';

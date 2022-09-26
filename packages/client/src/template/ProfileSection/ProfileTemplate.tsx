@@ -3,8 +3,8 @@ import UserStat from '../../organisms/ProfileUserStat/UserStat';
 import FreindList from '../../organisms/ProfileFreindList/FreindList';
 import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
 import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
-import ReceiveMessageAlert from '../../modules/CommonSection/ReceiveMessageAlert';
-import SendMessageAlert from '../../modules/CommonSection/SendMessageAlert';
+import ReceiveMessageAlert from '../../molecules/CommonSection/ReceiveMessageAlert';
+import SendMessageAlert from '../../molecules/CommonSection/SendMessageAlert';
 
 const ProfileLayout = styled('div')(({ theme }) => ({
   gridArea: 'ProfileItems',

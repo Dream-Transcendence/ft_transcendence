@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
+import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { Box, CardMedia } from '@mui/material';
 import { Image } from '@chakra-ui/react';
 

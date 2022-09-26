@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import ChatInputModule from '../../modules/ChatSection/ChatInput';
+import ChatInputModule from '../../molecules/ChatSection/ChatInput';
 import ChatLogListOrganisms from './ChatLogList';
 
 const ChattingLayout = styled('div')(({ theme }) => ({
