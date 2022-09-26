@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { Auth, Block, User } from './users.entity';
+import { Auth, Block, Friend, User } from './users.entity';
 
 export const usersProviders = [
   {
@@ -15,6 +15,11 @@ export const usersProviders = [
   {
     provide: 'AUTH_REPOSITORY',
     useFactory: (dataSource: DataSource) => dataSource.getRepository(Auth),
+    inject: ['DATA_SOURCE'],
+  },
+  {
+    provide: 'FRIENDS_REPOSITORY',
+    useFactory: (dataSource: DataSource) => dataSource.getRepository(Friend),
     inject: ['DATA_SOURCE'],
   },
 ];

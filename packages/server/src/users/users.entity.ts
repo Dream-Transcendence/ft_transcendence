@@ -31,6 +31,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Block, (block) => block.user)
   blocks: Block[];
+
+  @OneToMany(() => Friend, (friend) => friend.user)
+  friends: Friend[];
 }
 
 @Entity()
@@ -62,4 +65,28 @@ export class Auth extends BaseEntity {
   @OneToOne(() => User)
   @JoinColumn()
   user: User;
+}
+
+@Entity()
+export class Friend extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => User, (user) => user.friends)
+  user: User;
+
+  @ManyToOne(() => User, (user) => user.friends)
+  friend: User;
+}
+
+@Entity()
+export class Request extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => User, (user) => user.friends)
+  requestor: User;
+
+  @ManyToOne(() => User, (user) => user.friends)
+  responser: User;
 }

@@ -119,7 +119,7 @@ export class UsersController {
   @ApiCreatedResponse({ description: '친구 추가 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   addFriend(@Param('id') id: number, @Body() userId: number): Promise<UserDto> {
-    return;
+    return this.userService.addFriend(id, userId);
   }
 
   @Get('/:id/friends')
@@ -130,7 +130,7 @@ export class UsersController {
     type: [User],
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getFriends(@Param('id') id: number): Promise<User[]> {
+  getFriends(@Param('id') id: number): Promise<UserDto[]> {
     return;
   }
 

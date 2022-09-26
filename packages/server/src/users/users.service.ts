@@ -3,7 +3,7 @@ import { DataSource, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
-import { Auth, Block, User } from './users.entity';
+import { Auth, Block, Friend, User } from './users.entity';
 
 @Injectable()
 export class UserService {
@@ -15,6 +15,8 @@ export class UserService {
     private blocksRepository: Repository<Block>,
     @Inject('AUTH_REPOSITORY')
     private authRepository: Repository<Auth>,
+    @Inject('FRIENDS_REPOSITORY')
+    private friendsRepository: Repository<Friend>,
   ) {}
 
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
@@ -129,5 +131,56 @@ export class UserService {
       blockedUsers.push(userDto);
     });
     return blockedUsers;
+  }
+
+  //TODO: 채팅
+
+  async addFriend(id: number, userId: number): Promise<UserDto> {
+    // SELECT * FROM public."user"
+    // WHERE "user"."id" = id;
+    const user = await this.usersRepository.findOne({ where: [{ id: id }] });
+
+    // SELECT * FROM public."user"
+    // WHERE "user"."id" = userId;
+    const friend = await this.usersRepository.findOne({
+      where: [{ id: userId }],
+    });
+
+    const row1 = this.friendsRepository.create({
+      user: user,
+      friend: friend,
+    });
+    const row2 = this.friendsRepository.create({
+      user: friend,
+      friend: user,
+    });
+
+    this.friendsRepository.save(row1);
+    this.friendsRepository.save(row2);
+
+    const friendDto = new UserDto(friend.id, friend.nickname, friend.image);
+
+    return friendDto;
+  }
+
+  async getFriends(id: number): Promise<UserDto[]> {
+    // SELECT * FROM public."friend"
+    // LEFT JOIN "user" ON "user"."id" = id
+    // WHERE "friend"."userId" = "user"."id";
+    const friends = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: id } },
+    });
+
+    const friendUsers: UserDto[] = [];
+    friends.forEach((friend) => {
+      const userDto = new UserDto(
+        friend.friend.id,
+        friend.friend.nickname,
+        friend.friend.image,
+      );
+    });
+
+    return friendUsers;
   }
 }
