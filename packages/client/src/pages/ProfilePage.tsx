@@ -18,9 +18,6 @@ const NavGridLayout = styled('div')(({ theme }) => ({
 function ProfilePage() {
   return (
     <ProfileLayout>
-      <NavGridLayout>
-        <NavigationBar></NavigationBar>
-      </NavGridLayout>
       <ProfileTemplate />
     </ProfileLayout>
   );

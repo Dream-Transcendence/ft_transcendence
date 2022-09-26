@@ -26,9 +26,6 @@ const GameCreateTemplateLayout = styled('section')(({ theme }) => ({
 function GameCreatePage() {
   return (
     <GameCreateLayout>
-      <NavGridLayout>
-        <NavigationBar></NavigationBar>
-      </NavGridLayout>
       <GameCreateTemplateLayout>
         <GameCreateTemplate buttonType={'invite'} />
       </GameCreateTemplateLayout>
