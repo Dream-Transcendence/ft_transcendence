@@ -17,7 +17,7 @@ const ImageLayout = styled('div')(({ theme }) => ({
     height: '100%', //받아오는 이미지의 크기가 정해져 있어 width가 더 클경우 height 로 조절해주어야함
 }))
 
-function ImageComponent(props: { title: string | undefined, image: string | undefined }) {
+function ImageComponent(props: { title: string, image: string }) {
     const { image, title } = props;
     return (
         <ImageLayout>

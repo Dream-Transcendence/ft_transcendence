@@ -82,13 +82,13 @@ function GameResultModal() {
         <Box sx={{ ...style, width: 400 }}>
           <GameResultLayout>
             <UserProfileBoxLayout>
-              {UserProfileBox(false, 'default')}
+              <UserProfileBox isButton={false} avatarType='default' />
             </UserProfileBoxLayout>
             <OtherProfileBoxLayout>
-              {UserProfileBox(false, 'circle')}
+              <UserProfileBox isButton={false} avatarType='circle' />
             </OtherProfileBoxLayout>
             <GameScoreLayout>
-              <GameScore player1Score={'10'} player2Score={'9'} />
+              <GameScore player1Score='10' player2Score='9' />
               {/* {GameScore({ player1Score: '10', player2Score: '9' })} */}
             </GameScoreLayout>
             <ExitButtonLayout>

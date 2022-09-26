@@ -22,7 +22,8 @@ function generate(element: React.ReactElement) {
   );
 }
 
-function ListGenerate(element: React.ReactElement) {
+function ListGenerate(props: { element: React.ReactElement }) {
+  const { element } = props;
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
 
@@ -41,6 +42,7 @@ function ListGenerate(element: React.ReactElement) {
           '& ul': { padding: 1 },
         }}
       >
+        {/* 리턴값이 배열이라 <> 컴포넌트식으로 구현하지 못하고(이유는 불명) 함수식으로 구현했음  */}
         {generate(element)}
       </List>
     </ListGenerateLayout>

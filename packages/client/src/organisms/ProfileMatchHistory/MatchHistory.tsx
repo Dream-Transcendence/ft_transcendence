@@ -49,7 +49,9 @@ function MatchHistory() {
         <Typography variant='h6' align="center">MatchHistory</Typography>
       </TextLayout>
       <ListLayout>
-        <OneMatchHistoryLayout>{ListGenerate(<OneMatchHistory />)}</OneMatchHistoryLayout>
+        <OneMatchHistoryLayout>
+          <ListGenerate element={<OneMatchHistory />} />
+        </OneMatchHistoryLayout>
       </ListLayout>
     </MatchHistoryLayout>
   );

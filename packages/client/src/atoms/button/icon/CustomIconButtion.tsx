@@ -1,6 +1,7 @@
 import { IconButton } from '@mui/material';
 
-function CustomIconButton(element: React.ReactElement) {
+function CustomIconButton(props: { element: React.ReactElement }) {
+  const { element } = props;
   return (
     <IconButton aria-label="game" size="large">
       {element}

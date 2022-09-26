@@ -28,7 +28,7 @@ function JoinedChatRoomModule() {
     <JoinedChatRoomLayout>
       <JoinedChatRoomBox>
         <BoxLayout>
-          {ListGenerate(<ProfileChatRoomBox image="picture things" />)}
+          <ListGenerate element={<ProfileChatRoomBox image="picture things" />} />
         </BoxLayout>
       </JoinedChatRoomBox>
     </JoinedChatRoomLayout>

@@ -12,7 +12,7 @@ const ChatRoomListLayout = styled('div')(({ theme }) => ({
 function ChatRoomListOrganisms() {
   return (
     <ChatRoomListLayout>
-      {ListGenerate(<ChatRoomElementOrganisms />)}
+      <ListGenerate element={<ChatRoomElementOrganisms />} />
     </ChatRoomListLayout>
   );
 }
