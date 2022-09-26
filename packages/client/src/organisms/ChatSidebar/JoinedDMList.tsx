@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import ListGenerate from '../../components/list/ListGenerate';
+import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../../modules/ProfileSection/UserProfileBox';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({

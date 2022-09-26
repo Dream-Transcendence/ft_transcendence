@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
-import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserProfileBox from './UserProfileBox';
 

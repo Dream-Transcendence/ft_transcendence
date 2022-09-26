@@ -1,7 +1,7 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../components/input/SearchBox';
-import ListGenerate from '../../components/list/ListGenerate';
+import SearchBox from '../../atoms/input/SearchBox';
+import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import UserInviteProfileBox from '../ProfileSection/UserInviteBox';
 

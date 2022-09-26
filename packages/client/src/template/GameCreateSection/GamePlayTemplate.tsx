@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import TextBox from '../../atoms/TextBox';
+import TextBox from '../../texts/TextBox';
 import GameCreateMainOrganism from '../../organisms/GameCreateSection/GameCreateMainSection';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
 

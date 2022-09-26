@@ -4,7 +4,7 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import Stack from '@mui/material/Stack';
 import { Button } from '@mui/material';
-import TextBox from '../../atoms/TextBox';
+import TextBox from '../../texts/TextBox';
 
 interface TitleProps {
   image: string;

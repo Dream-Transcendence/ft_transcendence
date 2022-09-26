@@ -1,7 +1,7 @@
 import { Typography, Button, TextField, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SetChatRoomNameModule from '../../modules/ChatPopUp/SetChatRoomName';
-import RadioGroupButton from '../../components/radio/RadioGroupButton';
+import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
 import SetChatRoomTypeModule from '../../modules/ChatPopUp/SetChatRoomType';
 import SetChatRoomPasswordModule from '../../modules/ChatPopUp/SetChatRoomPassword';
 import SetChatRoomInviteModule from '../../modules/ChatPopUp/SetChatRoomInvite';

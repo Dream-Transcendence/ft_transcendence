@@ -1,8 +1,9 @@
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
+import { PhotoSizeSelectLargeSharp } from '@mui/icons-material';
 import { createTheme } from '@mui/material';
-import GamePlayer from '../../components/text/GamePlayer';
-import MatchType from '../../components/text/MatchType';
+import GamePlayer from '../../atoms/text/GamePlayer';
+import MatchType from '../../atoms/text/MatchType';
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -10,9 +11,9 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   alignContent: 'center',
   alignItems: 'center',
-  border: 'solid 1px',
-  width: '98%',
-  height: '10%',
+  borderBottom: 'solid 1px',
+  width: '100%',
+  height: '12%',
 }));
 
 const GamePlayersLayout = styled('text')(({ theme }) => ({ border: 'solid' }));

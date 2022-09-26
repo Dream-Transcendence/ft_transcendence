@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../components/button/icon/CustomIconButtion';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import {
   Avatar,
   Typography,
@@ -11,7 +11,7 @@ import {
   FormControl,
 } from '@mui/material';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
-import PasswordInput from '../../components/input/passwordBox';
+import PasswordInput from '../../atoms/input/passwordBox';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 
