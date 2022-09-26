@@ -7,7 +7,7 @@ import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTempla
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  height: '95.7%',
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -38,18 +38,13 @@ const Aside = styled('aside')(({ theme }) => ({
 function ChatroomPage() {
   return (
     <ChatChannel>
-      <header>
-        <nav>
-          <NavigationBar></NavigationBar>
-        </nav>
-      </header>
       <MainSection>
         <Aside>
           <ChatSidebarTemplate />
         </Aside>
         <Section>
-          {/* <ChatRoomListTemplate /> */}
-          <EnteredChatRoomTemplate />
+          <ChatRoomListTemplate />
+          {/* <EnteredChatRoomTemplate /> */}
           {/* <ChatRoomDefaultTemplate /> */}
         </Section>
       </MainSection>

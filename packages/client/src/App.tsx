@@ -8,6 +8,7 @@ import GameCreatePage from './pages/GameCreatePage';
 import GameLodingPage from './pages/GameLodingPage';
 import GamePlayPage from './pages/GamePlayPage';
 import { RecoilRoot } from 'recoil';
+import PingpongLayout from './pages/PingpongLayout';
 
 function App() {
   return (
@@ -15,11 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/nickname" element={<NicknamePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/chatRoom" element={<ChatroomPage />} />
-        <Route path="/gameCreate" element={<GameCreatePage />} />
-        <Route path="/gamePlay" element={<GamePlayPage />} />
-        <Route path="/gameLoding" element={<GameLodingPage />} />
+        <Route path="/pingpong/*" element={<PingpongLayout />} />
         {/* 추후에 url을 통해 직접들어가지 못하고 game 버튼을 통해서만 접근 가능하도록 수정 */}
       </Routes>
     </RecoilRoot>
