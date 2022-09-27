@@ -28,6 +28,7 @@ const divStyle = {
 function InfoBoxNameModule() {
   return (
     <InfoBoxNameLayout>
+      {/* FileUploadButton 만들었습니다. 가져다 사용하셔도 좋아요 */}
       <IconButton color="primary" aria-label="upload picture" component="label">
         <input hidden accept="image/*" type="file" />
         <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />

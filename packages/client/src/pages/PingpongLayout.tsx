@@ -5,6 +5,7 @@ import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLodingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
+import OtherProfilePage from './OtherProfilePage';
 import ProfilePage from './ProfilePage';
 
 const PageSection = styled('section')(({ theme }) => ({
@@ -17,19 +18,20 @@ const PageSection = styled('section')(({ theme }) => ({
 function PingpongLayout() {
   return (
     <PageSection>
-        <header>
-            <nav>
-            <NavigationBar></NavigationBar>
-            </nav>
-        </header>
-        <Routes>  
-            <Route path="profile" element={<ProfilePage />} />
-            <Route path="chatroom" element={<ChatroomPage />} />
-            <Route path="gamecreate" element={<GameCreatePage />} />
-            <Route path="gameplay" element={<GamePlayPage />} />
-            <Route path="gameloding" element={<GameLodingPage />} />
+      <header>
+        <nav>
+          <NavigationBar></NavigationBar>
+        </nav>
+      </header>
+      <Routes>
+        <Route path="profile" element={<ProfilePage />} />
+        <Route path="otherprofile" element={<OtherProfilePage />} />
+        <Route path="chatroom" element={<ChatroomPage />} />
+        <Route path="gamecreate" element={<GameCreatePage />} />
+        <Route path="gameplay" element={<GamePlayPage />} />
+        <Route path="gameloding" element={<GameLodingPage />} />
         {/* 추후에 url을 통해 직접들어가지 못하고 game 버튼을 통해서만 접근 가능하도록 수정 */}
-        </Routes>
+      </Routes>
     </PageSection>
   );
 }
