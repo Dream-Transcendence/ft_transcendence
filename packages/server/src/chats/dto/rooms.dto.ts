@@ -35,8 +35,6 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsString()
-  // 비밀번호 길이 제한 길이는 비밀번호가 존재하지 않을 수도 있으니 제한X
-  // 없을 때는 빈 문자열로 넘어오게 하기
   salt: string;
 
   @ApiProperty()
@@ -44,10 +42,10 @@ export class CreateRoomDto {
   title: string;
 }
 
-export class AddChannelParticipantDto {
+export class AddChannelParticipantsDto {
   @ApiProperty()
   @IsInt()
-  participantId: number;
+  participantIds: number[];
 }
 
 export class RoomPasswordDto {

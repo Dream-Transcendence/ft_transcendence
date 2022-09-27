@@ -3,17 +3,15 @@ import {
   Controller,
   Delete,
   Get,
-  Injectable,
   Logger,
   Param,
   Patch,
   Post,
-  ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoomDto } from './dto/room.dto';
 import {
-  AddChannelParticipantDto,
+  AddChannelParticipantsDto,
   CreateRoomDto,
   RoomPasswordDto,
   PatchRoomInfoDto,
@@ -33,7 +31,6 @@ export class RoomsController {
   createRoom(@Body() createRoomDto: CreateRoomDto): Promise<RoomDto> {
     this.logger.log(`createRoom: ${JSON.stringify(createRoomDto)}`);
     return this.roomService.createRoom(createRoomDto);
-    // return;
   }
 
   @Get('/channels')
@@ -43,28 +40,40 @@ export class RoomsController {
     return this.roomService.getChannels();
   }
 
+  @Get('/channel/:roomId')
+  @ApiOperation({ summary: '채팅방 정보 가져오기' })
+  getRoomInfo(@Param('roomId') roomId: number): Promise<RoomDto> {
+    this.logger.log(`getRoomInfo`);
+    return this.roomService.getRoomInfo(roomId);
+  }
+
   @Post('/:roomId')
   @ApiOperation({ summary: 'protected 채팅방 입장' })
   enterRoom(
     @Param('roomId') roomId: number,
     @Body() roomPasswordDto: RoomPasswordDto,
   ) {
-    return;
+    return this.roomService.enterRoom(roomId, roomPasswordDto);
   }
 
   @Get('/:roomId/channel/participants')
   @ApiOperation({ summary: '채널 참여자 목록' })
   getChannelParticipants(@Param('roomId') roomId: number) {
-    return;
+    this.logger.log('getChannelParticipants');
+    return this.roomService.getChannelParticipants(roomId);
   }
 
   @Post('/:roomId/channel/participants')
   @ApiOperation({ summary: '채널 참여자 추가' })
-  addChannelParticipant(
+  addChannelParticipants(
     @Param('roomId') roomId: number,
-    @Body() addChannelParticipantDto: AddChannelParticipantDto,
+    @Body() addChannelParticipantsDto: AddChannelParticipantsDto,
   ) {
-    return;
+    this.logger.log('addChannelParticipant');
+    return this.roomService.addChannelParticipants(
+      roomId,
+      addChannelParticipantsDto,
+    );
   }
 
   @Delete('/:roomId/channel/participants/:userId')
@@ -73,7 +82,8 @@ export class RoomsController {
     @Param('roomId') roomId: number,
     @Param('userId') userId: number,
   ) {
-    return;
+    this.logger.log('deleteChannelParticipant');
+    return this.roomService.deleteChannelParticipant(roomId, userId);
   }
 
   @Get('/:roomId/dm/participants')
@@ -94,7 +104,8 @@ export class RoomsController {
     @Param('roomId') roomId: number,
     @Body() patchRoomInfoDto: PatchRoomInfoDto,
   ) {
-    return;
+    this.logger.log('patchRoomInfo');
+    return this.roomService.patchRoomInfo(roomId, patchRoomInfoDto);
   }
 
   @Patch('/:roomId/users/:userId/auth')
@@ -104,7 +115,8 @@ export class RoomsController {
     @Param('userId') userId: number,
     @Body() patchUserAuthDto: PatchUserAuthDto,
   ) {
-    return;
+    this.logger.log('patchUserAuth');
+    return this.roomService.patchUserAuth(roomId, userId, patchUserAuthDto);
   }
 
   @Patch('/:roomId/users/:userId/status')
@@ -114,7 +126,8 @@ export class RoomsController {
     @Param('userId') userId: number,
     @Body() patchUserStatusDto: PatchUserStatusDto,
   ) {
-    return;
+    this.logger.log('patchUserStatus');
+    return this.roomService.patchUserStatus(roomId, userId, patchUserStatusDto);
   }
 }
 // 채팅 유저 권한과 상태를 하나의 api로 통합할지 고민

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { ChannelParticipant } from '../chats/rooms.entity';
 import {
   BaseEntity,
   Column,
@@ -34,6 +35,12 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Friend, (friend) => friend.user)
   friends: Friend[];
+
+  @OneToMany(
+    () => ChannelParticipant,
+    (channelParticipant) => channelParticipant.user,
+  )
+  channelParticipants: ChannelParticipant[];
 }
 
 @Entity()
