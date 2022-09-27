@@ -35,7 +35,7 @@ const RightLayout = styled('section')(({ theme }) => ({
 
 export default function NavigationBar() {
   const Ladder: LinkIconResource = {
-    url: '/pingpong/gamecreate',
+    url: '/pingpong/gameloding',
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const ChatRoom: LinkIconResource = {
