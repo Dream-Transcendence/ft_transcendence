@@ -39,7 +39,6 @@ function ListGenerate(props: { element: React.ReactElement }) {
           overflow: 'auto',
           paddingTop: '0px',
           paddingBottom: '0px',
-          '& ul': { padding: 1 },
         }}
       >
         {/* 리턴값이 배열이라 <> 컴포넌트식으로 구현하지 못하고(이유는 불명) 함수식으로 구현했음  */}

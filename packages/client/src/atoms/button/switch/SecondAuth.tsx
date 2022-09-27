@@ -4,6 +4,7 @@ import { FormControlLabel, Switch } from '@mui/material';
 const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
+  paddingLeft: '0.5rem',
 }));
 
 function SecondAuthSwitch() {

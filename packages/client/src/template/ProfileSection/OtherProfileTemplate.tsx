@@ -9,16 +9,16 @@ import { Footer, ProfileLayout } from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 
 
-function ProfileTemplate() {
-  return (
-    <ProfileLayout>
-      <UserInfo />
-      <FreindList />
-      <UserStat />
-      <MatchHistory />
-      <Footer>{SendMessageAlert('친구')}</Footer>
-    </ProfileLayout>
-  );
+function OtherProfileTemplate() {
+    return (
+        <ProfileLayout>
+            <OtherInfo />
+            <FreindList />
+            <UserStat />
+            <MatchHistory />
+            <Footer>{SendMessageAlert('친구')}</Footer>
+        </ProfileLayout>
+    );
 }
 
-export default ProfileTemplate;
+export default OtherProfileTemplate;
