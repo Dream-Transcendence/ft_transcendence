@@ -8,3 +8,8 @@ export interface LinkTextResource {
   content: string;
   handler?: () => void;
 }
+
+export interface LinkComponentResource {
+  url: string;
+  component: React.ReactElement;
+}

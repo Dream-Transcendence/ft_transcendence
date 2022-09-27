@@ -34,6 +34,10 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
+  const Avartar: LinkIconResource = {
+    url: '/pingpong/profile',
+    icon: <NavProfile />,
+  };
   const Ladder: LinkIconResource = {
     url: '/pingpong/gameloding',
     icon: <SportsEsportsIcon fontSize="inherit" />,
@@ -49,7 +53,7 @@ export default function NavigationBar() {
       <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <NavProfile />
+            <LinkPageIconButton LinkIconResource={Avartar} />
             <LinkPageIconButton LinkIconResource={Ladder} />
             <LinkPageIconButton LinkIconResource={ChatRoom} />
             <RightLayout>

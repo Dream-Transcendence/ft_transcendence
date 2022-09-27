@@ -5,6 +5,7 @@ import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLodingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
+import OtherProfilePage from './OtherProfilePage';
 import ProfilePage from './ProfilePage';
 
 const PageSection = styled('section')(({ theme }) => ({
@@ -25,6 +26,7 @@ function PingpongLayout() {
       <Routes>
         <Route path="profile" element={<ProfilePage />} />
         <Route path="chatroom/*" element={<ChatroomPage />} />
+        <Route path="otherprofile" element={<OtherProfilePage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />
         <Route path="gameplay" element={<GamePlayPage />} />
         <Route path="gameloding" element={<GameLodingPage />} />
