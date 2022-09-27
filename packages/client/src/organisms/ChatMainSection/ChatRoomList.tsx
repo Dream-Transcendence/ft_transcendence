@@ -11,12 +11,11 @@ const ChatRoomListLayout = styled('div')(({ theme }) => ({
 }));
 
 function ChatRoomListOrganisms(props: { openRoomProps: OpenRoomProps }) {
+  const { openRoomProps } = props;
   return (
     <ChatRoomListLayout>
       <ListGenerate
-        element={
-          <ChatRoomElementOrganisms openRoomProps={props.openRoomProps} />
-        }
+        element={<ChatRoomElementOrganisms openRoomProps={openRoomProps} />}
       />
     </ChatRoomListLayout>
   );

@@ -41,8 +41,6 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
 
 function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
   const { openRoom, setOpenRoom } = props.openRoomProps;
-  let theme = createTheme();
-  theme = responsiveFontSizes(theme); //반응형을 위해 사용
 
   const openRoomHandler = (): void => {
     setOpenRoom('a');
