@@ -5,6 +5,8 @@ import TextButton from '../../atoms/button/text/TextButton';
 import RoomNumberOfPeopleModule from '../../molecules/ChatSection/RoomElementNumOfPeople';
 import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
+import { LinkTextResource } from '../../types/Link.type';
+import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -41,6 +43,11 @@ function ChatRoomElementOrganisms() {
   let theme = createTheme();
   theme = responsiveFontSizes(theme); //반응형을 위해 사용
 
+  const EnterRoom: LinkTextResource = {
+    url: '/pingpong/chatroom',
+    content: '입장',
+  };
+
   return (
     <ChatRoomElementLayout>
       <RoomElementImageModule image="/static/images/avatar/1.jpg" />
@@ -52,7 +59,7 @@ function ChatRoomElementOrganisms() {
         <PasswordInput />
       </PasswordInputLayout>
       <EnterButtonLayout>
-        <TextButton content="입장"></TextButton>
+        <LinkPageTextButton LinkTextResource={EnterRoom} />
       </EnterButtonLayout>
     </ChatRoomElementLayout>
   );
