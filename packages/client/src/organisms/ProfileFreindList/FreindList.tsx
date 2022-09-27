@@ -70,9 +70,7 @@ function FreindListOrganisms() {
       <ListLayout>
         <ListGenerate element={
           <ProfileBoxLayout>
-            <ProfileLinkLayout>
-              <LinkPageComponentButton LinkComponentResource={OtherProfile} />
-            </ProfileLinkLayout>
+            <LinkPageComponentButton LinkComponentResource={OtherProfile} />
           </ProfileBoxLayout>
         } />
       </ListLayout>
