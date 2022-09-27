@@ -25,8 +25,8 @@ function PingpongLayout() {
       </header>
       <Routes>
         <Route path="profile" element={<ProfilePage />} />
+        <Route path="chatroom/*" element={<ChatroomPage />} />
         <Route path="otherprofile" element={<OtherProfilePage />} />
-        <Route path="chatroom" element={<ChatroomPage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />
         <Route path="gameplay" element={<GamePlayPage />} />
         <Route path="gameloding" element={<GameLodingPage />} />

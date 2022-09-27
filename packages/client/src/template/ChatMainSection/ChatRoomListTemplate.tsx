@@ -8,10 +8,15 @@ const ChattingRoomListLayout = styled('div')(({ theme }) => ({
   marginLeft: '2%',
 }));
 
-function ChatRoomListTemplate() {
+export interface OpenRoomProps {
+  setOpenRoom: React.Dispatch<React.SetStateAction<string | null>>;
+  openRoom: string | null;
+}
+
+function ChatRoomListTemplate(openRoomProps: OpenRoomProps) {
   return (
     <ChattingRoomListLayout>
-      <ChatRoomListOrganisms />
+      <ChatRoomListOrganisms openRoomProps={openRoomProps} />
     </ChattingRoomListLayout>
   );
 }
