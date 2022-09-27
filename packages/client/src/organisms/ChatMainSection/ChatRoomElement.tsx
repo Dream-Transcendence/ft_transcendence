@@ -6,8 +6,8 @@ import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { CHATROOMURL } from '../../types/Link.url';
 import { OpenRoomProps } from '../../template/ChatMainSection/ChatRoomListTemplate';
+import { CHATROOMURL } from '../../configs/Link.url';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',

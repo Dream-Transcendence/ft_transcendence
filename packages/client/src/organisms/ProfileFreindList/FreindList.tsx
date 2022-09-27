@@ -7,7 +7,7 @@ import { LinkComponentResource, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { Link } from 'react-router-dom';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
-import { OTHERPROFILEURL } from '../../types/Link.url';
+import { OTHERPROFILEURL } from '../../configs/Link.url';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',

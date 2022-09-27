@@ -8,7 +8,7 @@ import NotInterestedIcon from '@mui/icons-material/NotInterested';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 import { LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from '../../types/Link.url';
+import { OTHERPROFILEURL } from '../../configs/Link.url';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',

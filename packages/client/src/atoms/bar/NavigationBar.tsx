@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 
 import { LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
-import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../types/Link.url';
+import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',

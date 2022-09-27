@@ -7,7 +7,7 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import PasswordInput from '../../atoms/input/passwordBox';
 import { LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from '../../types/Link.url';
+import { OTHERPROFILEURL } from '../../configs/Link.url';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',

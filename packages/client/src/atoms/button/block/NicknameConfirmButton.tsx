@@ -1,17 +1,21 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 
-const NicknameConfirmBottonLayout = styled('button')(({ theme }) => ({
-  alignContents: 'center',
+const NicknameConfirmBottonLayout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
   backgroundColor: '#1976D2',
   width: '100%',
-  height: '40%',
+  height: '50%',
 }));
 
 function NicknameConfirmButton() {
+  const handler = () => {
+    //닉네임 중복인지 확인하는 부분 필요함
+  }
   return (
     <NicknameConfirmBottonLayout>
-      <Button sx={{ gap: 0, p: 0, color: 'white' }} variant="text">
+      <Button fullWidth variant="contained" onClick={handler}>
         확인
       </Button>
     </NicknameConfirmBottonLayout>
