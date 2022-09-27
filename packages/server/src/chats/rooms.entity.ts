@@ -33,6 +33,9 @@ export class Room {
     (channelParticipant) => channelParticipant.room,
   )
   channelParticipants: ChannelParticipant[];
+
+  @OneToMany(() => DmParticipant, (dmParticipant) => dmParticipant.room)
+  dmParticipants: DmParticipant[];
 }
 
 @Entity()
@@ -53,5 +56,17 @@ export class ChannelParticipant {
   user: User;
 
   @ManyToOne(() => Room, (room) => room.channelParticipants)
+  room: Room;
+}
+
+@Entity()
+export class DmParticipant {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @ManyToOne(() => User, (user) => user.dmParticipants)
+  user: User;
+
+  @ManyToOne(() => Room, (room) => room.dmParticipants)
   room: Room;
 }

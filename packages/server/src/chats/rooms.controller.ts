@@ -11,7 +11,7 @@ import {
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { RoomDto } from './dto/room.dto';
 import {
-  AddChannelParticipantsDto,
+  AddParticipantsDto,
   CreateRoomDto,
   RoomPasswordDto,
   PatchRoomInfoDto,
@@ -25,6 +25,10 @@ import { RoomService } from './rooms.service';
 export class RoomsController {
   private logger = new Logger('RoomsController');
   constructor(private roomService: RoomService) {}
+
+  /********************************/
+  /*      channel controller      */
+  /********************************/
 
   @Post()
   @ApiOperation({ summary: '채팅방 생성' })
@@ -67,7 +71,7 @@ export class RoomsController {
   @ApiOperation({ summary: '채널 참여자 추가' })
   addChannelParticipants(
     @Param('roomId') roomId: number,
-    @Body() addChannelParticipantsDto: AddChannelParticipantsDto,
+    @Body() addChannelParticipantsDto: AddParticipantsDto,
   ) {
     this.logger.log('addChannelParticipant');
     return this.roomService.addChannelParticipants(
@@ -84,12 +88,6 @@ export class RoomsController {
   ) {
     this.logger.log('deleteChannelParticipant');
     return this.roomService.deleteChannelParticipant(roomId, userId);
-  }
-
-  @Get('/:roomId/dm/participants')
-  @ApiOperation({ summary: 'DM 참여자 목록' })
-  getDMParticipants(@Param('roomId') roomId: number) {
-    return;
   }
 
   @Get('/:roomId/messages')
@@ -129,5 +127,34 @@ export class RoomsController {
     this.logger.log('patchUserStatus');
     return this.roomService.patchUserStatus(roomId, userId, patchUserStatusDto);
   }
+  // 채팅 유저 권한과 상태를 하나의 api로 통합할지 고민
+
+  /********************************/
+  /*         DM controller        */
+  /********************************/
+
+  @Post(':roomId/dm/participants')
+  @ApiOperation({ summary: 'DM 참여자 추가' })
+  addDmParticipants(
+    @Param('roomId') roomId: number,
+    @Body() addParticipantsDto: AddParticipantsDto,
+  ) {
+    return this.roomService.addDmParticipants(roomId, addParticipantsDto);
+  }
+
+  @Get('/:roomId/dm/participants')
+  @ApiOperation({ summary: 'DM 참여자 목록' })
+  getDmParticipants(@Param('roomId') roomId: number) {
+    return this.roomService.getDmParticipants(roomId);
+  }
+
+  @Delete('/:roomId/dm/participants/:userId')
+  @ApiOperation({ summary: 'DM 참여자 삭제' })
+  deleteDmParticipant(
+    @Param('roomId') roomId: number,
+    @Param('userId') userId: number,
+  ) {
+    this.logger.log('deleteDmParticipant');
+    return this.roomService.deleteDmParticipant(roomId, userId);
+  }
 }
-// 채팅 유저 권한과 상태를 하나의 api로 통합할지 고민

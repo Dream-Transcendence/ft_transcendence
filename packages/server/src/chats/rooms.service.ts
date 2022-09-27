@@ -8,12 +8,13 @@ import {
 } from '../chats/dto/rooms.dto';
 import { RoomDto } from './dto/room.dto';
 import {
-  AddChannelParticipantsDto,
+  AddParticipantsDto,
   PatchUserStatusDto,
   PatchRoomInfoDto,
 } from './dto/rooms.dto';
 import { User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
+import { DmParticipant } from './rooms.entity';
 
 @Injectable()
 export class RoomService {
@@ -24,6 +25,8 @@ export class RoomService {
     private roomsRepository: Repository<Room>,
     @Inject('CHANNELPARTICIPANTS_REPOSITORY')
     private channelParticipantsRepository: Repository<ChannelParticipant>,
+    @Inject('DMPARTICIPANTS_REPOSITORY')
+    private dmParticipantsRepository: Repository<DmParticipant>,
   ) {}
 
   async createRoom(createRoomDto: CreateRoomDto): Promise<RoomDto> {
@@ -63,20 +66,16 @@ export class RoomService {
 
   async addChannelParticipants(
     roomId: number,
-    addChannelParticipantDto: AddChannelParticipantsDto,
+    addParticipantDto: AddParticipantsDto,
   ): Promise<UserDto[]> {
-    const { participantIds } = addChannelParticipantDto;
+    const { participantIds } = addParticipantDto;
 
     const participants: ChannelParticipant[] = [];
     const promises = participantIds.map(async (id) => {
       const participant: ChannelParticipant =
         this.channelParticipantsRepository.create();
-      participant.user = await this.usersRepository.findOneBy({
-        id,
-      });
-      participant.room = await this.roomsRepository.findOneBy({
-        id: roomId,
-      });
+      participant.user = await this.usersRepository.findOneBy({ id });
+      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
       if (!participant.user || !participant.room) {
         throw new NotFoundException(
           `Cant't find room${roomId} or participant ${id}`,
@@ -105,7 +104,7 @@ export class RoomService {
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
       where: { room: { id: roomId }, user: { id: userId } },
     });
-    if (deleteParticipant === undefined) {
+    if (deleteParticipant !== undefined) {
       await this.channelParticipantsRepository.delete({
         id: deleteParticipant.id,
       });
@@ -150,5 +149,47 @@ export class RoomService {
       where: { room: { id: roomId }, user: { id: userId } },
     });
     await this.channelParticipantsRepository.update(user.id, { status });
+  }
+
+  async addDmParticipants(
+    roomId: number,
+    addParticipantsDto: AddParticipantsDto,
+  ): Promise<UserDto[]> {
+    const { participantIds } = addParticipantsDto;
+    const participants: DmParticipant[] = [];
+    const promises = participantIds.map(async (id) => {
+      const participant: DmParticipant = this.dmParticipantsRepository.create();
+      participant.user = await this.usersRepository.findOneBy({ id });
+      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
+      if (!participant.user || !participant.room) {
+        throw new NotFoundException(
+          `Cant't find room${roomId} or participant ${id}`,
+        );
+      }
+      participants.push(participant);
+    });
+    await Promise.all(promises);
+    console.log(participants);
+    this.dmParticipantsRepository.save(participants);
+    return participants.map((participant) => participant.user);
+  }
+
+  async getDmParticipants(roomId: number): Promise<User[]> {
+    const participants = await this.dmParticipantsRepository.find({
+      relations: { user: true },
+      where: { room: { id: roomId } },
+    });
+    return participants.map((participant) => participant.user);
+  }
+
+  async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
+    const deleteParticipant = await this.dmParticipantsRepository.findOne({
+      where: { room: { id: roomId }, user: { id: userId } },
+    });
+    console.log(deleteParticipant);
+    if (deleteParticipant !== undefined) {
+      await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
+    }
+    return;
   }
 }

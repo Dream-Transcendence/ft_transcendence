@@ -22,6 +22,9 @@ const STATUS_TYPE = {
 } as const;
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
+/*************************/
+/*      channel dto      */
+/*************************/
 export class CreateRoomDto {
   @ApiProperty()
   @IsString()
@@ -42,7 +45,7 @@ export class CreateRoomDto {
   title: string;
 }
 
-export class AddChannelParticipantsDto {
+export class AddParticipantsDto {
   @ApiProperty()
   @IsInt()
   participantIds: number[];
@@ -84,3 +87,7 @@ export class PatchUserStatusDto {
   @Max(1)
   status: STATUS_TYPE;
 }
+
+/*************************/
+/*         DM dto        */
+/*************************/
