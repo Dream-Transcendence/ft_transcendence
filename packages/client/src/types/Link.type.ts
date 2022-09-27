@@ -6,6 +6,7 @@ export interface LinkIconResource {
 export interface LinkTextResource {
   url: string;
   content: string;
+  handler?: () => void;
 }
 
 export interface LinkComponentResource {

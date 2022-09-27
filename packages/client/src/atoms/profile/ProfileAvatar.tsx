@@ -8,8 +8,6 @@ const ProfileAvatarLayout = styled(Badge)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const theme = createTheme({});
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',

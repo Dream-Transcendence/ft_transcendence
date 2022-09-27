@@ -39,7 +39,7 @@ export default function NavigationBar() {
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: '/pingpong/gamecreate',
+    url: '/pingpong/gameloding',
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const ChatRoom: LinkIconResource = {
