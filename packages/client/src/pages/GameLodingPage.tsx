@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import TextBox from '../texts/TextBox';
-import TextButton from '../atoms/button/text/TextButton';
 import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
@@ -54,7 +53,6 @@ function GameLodingPage() {
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
-          {' '}
           {/*배경색 주기 위함*/}
           <HistoryBackTextButton />
         </ButtonLayout>
