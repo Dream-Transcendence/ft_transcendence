@@ -1,17 +1,19 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
   CreateRoomDto,
-  PatchUserAuthDto,
+  PatchUserInfoDto,
   RoomPasswordDto,
-} from '../chats/dto/rooms.dto';
-import { RoomDto } from './dto/room.dto';
-import {
   AddParticipantsDto,
-  PatchUserStatusDto,
   PatchRoomInfoDto,
-} from './dto/rooms.dto';
+} from '../chats/dto/rooms.dto';
+import { ChannelParticipantDto, RoomDto } from './dto/room.dto';
 import { User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
@@ -60,12 +62,24 @@ export class RoomService {
 
   async enterRoom(
     roomId: number,
+    userId: number,
     roomPasswordDto: RoomPasswordDto,
-  ): Promise<boolean> {
+  ): Promise<UserDto> {
     const { salt } = roomPasswordDto;
+    let participant: ChannelParticipant;
     const roomSalt = await (await this.getRoomInfo(roomId)).salt;
-    if (salt === roomSalt) return true;
-    else return false;
+    if (roomSalt === null || salt === roomSalt) {
+      participant = this.channelParticipantsRepository.create();
+      participant.user = await this.usersRepository.findOneBy({ id: userId });
+      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
+      if (!participant.user || !participant.room) {
+        throw new NotFoundException(
+          `Cant't find room${roomId} or participant ${userId}`,
+        );
+      }
+      this.channelParticipantsRepository.save(participant);
+    } else throw new ForbiddenException('Password is not correct');
+    return participant.user;
   }
 
   async addChannelParticipants(
@@ -93,7 +107,9 @@ export class RoomService {
     return participants.map((participant) => participant.user);
   }
 
-  async getChannelParticipants(roomId: number): Promise<ChannelParticipant[]> {
+  async getChannelParticipants(
+    roomId: number,
+  ): Promise<ChannelParticipantDto[]> {
     const channelParticipants = await this.channelParticipantsRepository.find({
       relations: { user: true },
       where: { room: { id: roomId } },
@@ -123,8 +139,6 @@ export class RoomService {
   async patchRoomInfo(roomId: number, patchRoomInfoDto: PatchRoomInfoDto) {
     const { name, image, salt } = patchRoomInfoDto;
     // image 기본으로 요청 : null, image 요청이 아닐 때 undefined
-    if (name === null) console.log('null');
-    if (name === undefined) console.log('undefined');
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (name !== undefined) room.name = name;
     if (image !== undefined) room.image = image;
@@ -132,28 +146,18 @@ export class RoomService {
     await this.roomsRepository.save(room);
   }
 
-  async patchUserAuth(
+  async patchUserInfo(
     roomId: number,
     userId: number,
-    patchUserAuthDto: PatchUserAuthDto,
+    patchUserInfoDto: PatchUserInfoDto,
   ): Promise<void> {
-    const { auth } = patchUserAuthDto;
+    const { auth, status } = patchUserInfoDto;
     const user = await this.channelParticipantsRepository.findOne({
       where: { room: { id: roomId }, user: { id: userId } },
     });
-    await this.channelParticipantsRepository.update(user.id, { auth });
-  }
-
-  async patchUserStatus(
-    roomId: number,
-    userId: number,
-    patchUserStatusDto: PatchUserStatusDto,
-  ): Promise<void> {
-    const { status } = patchUserStatusDto;
-    const user = await this.channelParticipantsRepository.findOne({
-      where: { room: { id: roomId }, user: { id: userId } },
-    });
-    await this.channelParticipantsRepository.update(user.id, { status });
+    if (auth !== undefined) user.auth = auth;
+    if (status !== undefined) user.status = auth;
+    await this.channelParticipantsRepository.save(user);
   }
 
   /********************************/

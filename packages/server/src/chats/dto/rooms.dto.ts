@@ -72,21 +72,27 @@ export class PatchRoomInfoDto {
   salt: string;
 }
 
-export class PatchUserAuthDto {
+export class PatchUserInfoDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   auth: AUTH_TYPE;
-}
 
-export class PatchUserStatusDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   status: STATUS_TYPE;
 }
+
+// export class PatchUserStatusDto {
+//   @ApiProperty()
+//   @IsInt()
+//   @Min(0)
+//   @Max(1)
+//   status: STATUS_TYPE;
+// }
 
 /*************************/
 /*         DM dto        */

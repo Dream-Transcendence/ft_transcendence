@@ -20,8 +20,7 @@ import {
   CreateRoomDto,
   RoomPasswordDto,
   PatchRoomInfoDto,
-  PatchUserAuthDto,
-  PatchUserStatusDto,
+  PatchUserInfoDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 import { UserDto } from '../users/dto/user.dto';
@@ -50,7 +49,7 @@ export class RoomsController {
     description: '공개, 보호 채널 목록 가져오기 성공',
     type: [RoomDto],
   })
-  getChannels() {
+  getChannels(): Promise<RoomDto[]> {
     this.logger.log(`getChannels`);
     return this.roomService.getChannels();
   }
@@ -63,14 +62,16 @@ export class RoomsController {
     return this.roomService.getRoomInfo(roomId);
   }
 
-  @Post('/:roomId')
-  @ApiOperation({ summary: 'protected 채팅방 입장' })
-  @ApiOkResponse({ description: '채팅방 입장 여부' })
+  @Post('/:roomId/users/:userId')
+  @ApiOperation({ summary: '채팅방 입장' })
+  @ApiOkResponse({ description: '채팅방 입장 성공', type: UserDto })
   enterRoom(
     @Param('roomId') roomId: number,
+    @Param('userId') userId: number,
     @Body() roomPasswordDto: RoomPasswordDto,
-  ) {
-    return this.roomService.enterRoom(roomId, roomPasswordDto);
+  ): Promise<UserDto> {
+    // 비밀번호가 없을 때는 빈 객체를 보내기
+    return this.roomService.enterRoom(roomId, userId, roomPasswordDto);
   }
 
   @Get('/:roomId/channel/participants')
@@ -79,7 +80,9 @@ export class RoomsController {
     description: '채널 참여자 목록 가져오기 성공',
     type: [ChannelParticipantDto],
   })
-  getChannelParticipants(@Param('roomId') roomId: number) {
+  getChannelParticipants(
+    @Param('roomId') roomId: number,
+  ): Promise<ChannelParticipantDto[]> {
     this.logger.log('getChannelParticipants');
     return this.roomService.getChannelParticipants(roomId);
   }
@@ -115,7 +118,7 @@ export class RoomsController {
     return;
   }
 
-  @Patch('/:roomid')
+  @Patch('/:roomId')
   @ApiOperation({ summary: '체팅방 정보 수정' })
   @ApiOkResponse({ description: '체팅방 정보 수정 성공' })
   patchRoomInfo(
@@ -126,30 +129,17 @@ export class RoomsController {
     return this.roomService.patchRoomInfo(roomId, patchRoomInfoDto);
   }
 
-  @Patch('/:roomId/users/:userId/auth')
-  @ApiOperation({ summary: '채팅 유저 권한 변경' })
-  @ApiOkResponse({ description: '채팅 유저 권한 변경 성공' })
-  patchUserAuth(
+  @Patch('/:roomId/users/:userId')
+  @ApiOperation({ summary: '채팅 유저 권한, 상태 변경' })
+  @ApiOkResponse({ description: '채팅 유저 권한, 상태 변경 성공' })
+  patchUserInfo(
     @Param('roomId') roomId: number,
     @Param('userId') userId: number,
-    @Body() patchUserAuthDto: PatchUserAuthDto,
+    @Body() patchUserInfoDto: PatchUserInfoDto,
   ) {
     this.logger.log('patchUserAuth');
-    return this.roomService.patchUserAuth(roomId, userId, patchUserAuthDto);
+    return this.roomService.patchUserInfo(roomId, userId, patchUserInfoDto);
   }
-
-  @Patch('/:roomId/users/:userId/status')
-  @ApiOperation({ summary: '채팅 유저 상태 변경' })
-  @ApiOkResponse({ description: '채팅 유저 상태 변경 성공' })
-  patchUserStatus(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-    @Body() patchUserStatusDto: PatchUserStatusDto,
-  ) {
-    this.logger.log('patchUserStatus');
-    return this.roomService.patchUserStatus(roomId, userId, patchUserStatusDto);
-  }
-  // 채팅 유저 권한과 상태를 하나의 api로 통합할지 고민
 
   /********************************/
   /*         DM controller        */
