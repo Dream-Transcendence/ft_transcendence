@@ -16,6 +16,10 @@ import { User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
 
+/********************************/
+/*         Room service         */
+/********************************/
+
 @Injectable()
 export class RoomService {
   constructor(
@@ -94,6 +98,7 @@ export class RoomService {
       relations: { user: true },
       where: { room: { id: roomId } },
     });
+    console.log(channelParticipants);
     return channelParticipants;
   }
 
@@ -151,6 +156,10 @@ export class RoomService {
     await this.channelParticipantsRepository.update(user.id, { status });
   }
 
+  /********************************/
+  /*          DM service          */
+  /********************************/
+
   async addDmParticipants(
     roomId: number,
     addParticipantsDto: AddParticipantsDto,
@@ -174,7 +183,7 @@ export class RoomService {
     return participants.map((participant) => participant.user);
   }
 
-  async getDmParticipants(roomId: number): Promise<User[]> {
+  async getDmParticipants(roomId: number): Promise<UserDto[]> {
     const participants = await this.dmParticipantsRepository.find({
       relations: { user: true },
       where: { room: { id: roomId } },

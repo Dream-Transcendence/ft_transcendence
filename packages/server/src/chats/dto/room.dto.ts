@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { AUTH_TYPE, CHAT_TYPE, STATUS_TYPE } from './rooms.dto';
+import { UserDto } from '../../users/dto/user.dto';
 
 export class RoomDto {
   constructor(
@@ -40,15 +41,13 @@ export class RoomDto {
 export class ChannelParticipantDto {
   constructor(
     id: number,
-    roomId: number,
-    participantId: number,
+    user: UserDto,
     auth: AUTH_TYPE,
     status: STATUS_TYPE,
     statusStartDate: Date,
   ) {
     this.id = id;
-    this.roomId = roomId;
-    this.participantId = participantId;
+    this.user = user;
     this.auth = auth;
     this.status = status;
     this.statusStartDate = statusStartDate;
@@ -58,10 +57,7 @@ export class ChannelParticipantDto {
   id: number;
 
   @ApiProperty()
-  roomId: number;
-
-  @ApiProperty()
-  participantId: number;
+  user: UserDto;
 
   @ApiProperty()
   auth: AUTH_TYPE;
