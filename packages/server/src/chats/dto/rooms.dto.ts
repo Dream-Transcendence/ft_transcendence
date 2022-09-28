@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsDate,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  IsUrl,
-  Max,
-  Min,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
 
 // union type들 모아두는 파일들 따로 만들기
 const CHAT_TYPE = {
@@ -30,6 +22,9 @@ const STATUS_TYPE = {
 } as const;
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
+/*************************/
+/*      channel dto      */
+/*************************/
 export class CreateRoomDto {
   @ApiProperty()
   @IsString()
@@ -43,40 +38,17 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsString()
-  // 비밀번호 길이 제한 길이는 비밀번호가 존재하지 않을 수도 있으니 제한X
-  // 없을 때는 빈 문자열로 넘어오게 하기
   salt: string;
 
   @ApiProperty()
   @IsNotEmpty()
   title: string;
-
-  @ApiProperty()
-  @IsUrl(undefined, { message: 'Uri is not valid' })
-  // IsUrl를 사용하면 기본 이미지를 사용하려고 할 때 어떤 값을 front에서 던져줄지
-  image: string;
 }
 
-export class AddChannelParticipantDto {
+export class AddParticipantsDto {
   @ApiProperty()
   @IsInt()
-  participantId: number;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  auth: AUTH_TYPE;
-
-  @ApiProperty()
-  @IsInt()
-  @Min(0)
-  @Max(1)
-  status: STATUS_TYPE;
-
-  @ApiProperty()
-  @IsDate()
-  statusStartDate: Date;
+  participantIds: number[];
 }
 
 export class RoomPasswordDto {
@@ -100,18 +72,28 @@ export class PatchRoomInfoDto {
   salt: string;
 }
 
-export class PatchUserAuthDto {
+export class PatchUserInfoDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   auth: AUTH_TYPE;
-}
 
-export class PatchUserStatusDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   status: STATUS_TYPE;
 }
+
+// export class PatchUserStatusDto {
+//   @ApiProperty()
+//   @IsInt()
+//   @Min(0)
+//   @Max(1)
+//   status: STATUS_TYPE;
+// }
+
+/*************************/
+/*         DM dto        */
+/*************************/

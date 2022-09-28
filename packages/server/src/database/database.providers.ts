@@ -9,10 +9,12 @@ export const databaseProviders = [
         host: 'localhost',
         port: 5432,
         username: 'postgres',
-        password: '1234',
+        password: 'postgres',
         database: 'postgres',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: true,
+        // console창에 query log를 볼 수 있는 option
       });
       return dataSource.initialize();
     },
