@@ -7,20 +7,17 @@ import {
 import { Equal, Repository, In } from 'typeorm';
 import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
-  CreateRoomDto,
+  CreateChannelDto,
   PatchUserInfoDto,
   RoomPasswordDto,
-  AddParticipantsDto,
   PatchRoomInfoDto,
+  createDmDto,
 } from '../chats/dto/rooms.dto';
 import { ChannelParticipantDto, RoomDto } from './dto/room.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
-
-/********************************/
-/*         Room service         */
-/********************************/
+import { GetUserChatsDto } from './dto/rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -37,9 +34,11 @@ export class RoomService {
     private blocksRepository: Repository<Block>,
   ) {}
 
-  async createRoom(createRoomDto: CreateRoomDto): Promise<RoomDto> {
-    const { name, type, salt, title } = createRoomDto;
-
+  // ANCHOR Room Service
+  async createChannel(createChannelDto: CreateChannelDto): Promise<RoomDto> {
+    const { userId, name, type, salt, title, participantIds } =
+      createChannelDto;
+    // NOTE room info 저장
     let room = this.roomsRepository.create({
       name,
       type,
@@ -47,6 +46,23 @@ export class RoomService {
       title,
     });
     room = await this.roomsRepository.save(room);
+    // Channel participants 저장
+    const participants: ChannelParticipant[] = [];
+    const Ids = [...participantIds, userId];
+    const promises = Ids.map(async (id) => {
+      const participant: ChannelParticipant =
+        this.channelParticipantsRepository.create();
+      participant.user = await this.usersRepository.findOneBy({ id });
+      participant.room = room;
+      if (!participant.user) {
+        throw new NotFoundException(`Cant't find participant ${id}`);
+      }
+      participants.push(participant);
+    });
+    await Promise.all(promises);
+    await this.channelParticipantsRepository.save(participants);
+    // channel owner로 auth 변경
+    await this.patchUserInfo(room.id, userId, { auth: 0 });
     return room;
   }
 
@@ -54,6 +70,20 @@ export class RoomService {
     return this.roomsRepository.findBy({
       type: 1 || 2,
     });
+  }
+
+  async getUserChats(userId: number): Promise<GetUserChatsDto> {
+    const channels = await this.channelParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: userId } },
+    });
+    const channelsList = channels.map((channel) => channel.room);
+    const dms = await this.dmParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: userId } },
+    });
+    const dmsList = dms.map((dm) => dm.room);
+    return { channelsList, dmsList };
   }
 
   async getRoomInfo(roomId: number): Promise<RoomDto> {
@@ -84,31 +114,6 @@ export class RoomService {
     return participant.user;
   }
 
-  async addChannelParticipants(
-    roomId: number,
-    addParticipantDto: AddParticipantsDto,
-  ): Promise<UserDto[]> {
-    const { participantIds } = addParticipantDto;
-
-    const participants: ChannelParticipant[] = [];
-    const promises = participantIds.map(async (id) => {
-      const participant: ChannelParticipant =
-        this.channelParticipantsRepository.create();
-      participant.user = await this.usersRepository.findOneBy({ id });
-      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
-      if (!participant.user || !participant.room) {
-        throw new NotFoundException(
-          `Cant't find room${roomId} or participant ${id}`,
-        );
-      }
-      participants.push(participant);
-    });
-    await Promise.all(promises);
-    console.log(participants);
-    this.channelParticipantsRepository.save(participants);
-    return participants.map((participant) => participant.user);
-  }
-
   async getChannelParticipants(
     userId: number,
     roomId: number,
@@ -118,7 +123,7 @@ export class RoomService {
       where: { user: { id: userId } },
     });
     const blockIds = blockUsers.map((user) => user.blockedUser.id);
-    // user block list의 id들만 뽑아온다
+    // NOTE user block list의 id들만 뽑아온다
     const blockedParticipants = await this.channelParticipantsRepository.find({
       relations: { user: true },
       where: { room: { id: Equal(roomId) }, user: { id: In(blockIds) } },
@@ -194,37 +199,37 @@ export class RoomService {
     await this.channelParticipantsRepository.save(user);
   }
 
-  /********************************/
-  /*          DM service          */
-  /********************************/
-
-  async addDmParticipants(
-    roomId: number,
-    addParticipantsDto: AddParticipantsDto,
-  ): Promise<UserDto[]> {
-    const { participantIds } = addParticipantsDto;
+  // ANCHOR Dm Service
+  async createDm(createDmDto: createDmDto): Promise<UserDto[]> {
+    const { userId, participantId, title } = createDmDto;
+    // NOTE dm info 저장
+    let dm = this.roomsRepository.create({
+      type: 0,
+      title,
+    });
+    dm = await this.roomsRepository.save(dm);
+    // dm participants 저장
     const participants: DmParticipant[] = [];
-    const promises = participantIds.map(async (id) => {
+    const Ids = [participantId, userId];
+    const promises = Ids.map(async (id) => {
       const participant: DmParticipant = this.dmParticipantsRepository.create();
       participant.user = await this.usersRepository.findOneBy({ id });
-      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
-      if (!participant.user || !participant.room) {
-        throw new NotFoundException(
-          `Cant't find room${roomId} or participant ${id}`,
-        );
+      participant.room = dm;
+      if (!participant.user) {
+        throw new NotFoundException(`Cant't find participant ${id}`);
       }
       participants.push(participant);
     });
     await Promise.all(promises);
-    console.log(participants);
     this.dmParticipantsRepository.save(participants);
     return participants.map((participant) => participant.user);
   }
 
+  // FIXME[epic=sonkang] 두명의 정보를 보낼 것인지.. userId를 받아서 상대방 정보만 보낼 것인지
   async getDmParticipants(roomId: number): Promise<UserDto[]> {
     const participants = await this.dmParticipantsRepository.find({
       relations: { user: true },
-      where: { room: { id: roomId } },
+      // where: { room: { id: roomId }, user: { id: userId } },
     });
     return participants.map((participant) => participant.user);
   }

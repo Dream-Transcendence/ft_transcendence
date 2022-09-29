@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
+import { RoomDto } from './room.dto';
 
-// union type들 모아두는 파일들 따로 만들기
+// FIXME[epic=sonkang] union type들 모아두는 파일들 따로 만들기
 const CHAT_TYPE = {
   dm: 0,
   public: 1,
@@ -22,10 +23,12 @@ const STATUS_TYPE = {
 } as const;
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
-/*************************/
-/*      channel dto      */
-/*************************/
-export class CreateRoomDto {
+// ANCHOR Channel DTO
+export class CreateChannelDto {
+  @ApiProperty()
+  @IsInt()
+  userId: number;
+
   @ApiProperty()
   @IsString()
   name: string;
@@ -43,12 +46,32 @@ export class CreateRoomDto {
   @ApiProperty()
   @IsNotEmpty()
   title: string;
-}
 
-export class AddParticipantsDto {
   @ApiProperty()
   @IsInt()
   participantIds: number[];
+}
+
+export class GetUserChatsDto {
+  @ApiProperty()
+  dmsList: RoomDto[];
+
+  @ApiProperty()
+  channelsList: RoomDto[];
+}
+
+export class createDmDto {
+  @ApiProperty()
+  @IsInt()
+  userId: number;
+
+  @ApiProperty()
+  @IsInt()
+  participantId: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  title: string;
 }
 
 export class RoomPasswordDto {
@@ -77,15 +100,11 @@ export class PatchUserInfoDto {
   @IsInt()
   @Min(0)
   @Max(1)
-  auth: AUTH_TYPE;
+  auth?: AUTH_TYPE;
 
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
-  status: STATUS_TYPE;
+  status?: STATUS_TYPE;
 }
-
-/*************************/
-/*         DM dto        */
-/*************************/
