@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Equal, Repository, In } from 'typeorm';
 import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
   CreateRoomDto,
@@ -14,7 +14,7 @@ import {
   PatchRoomInfoDto,
 } from '../chats/dto/rooms.dto';
 import { ChannelParticipantDto, RoomDto } from './dto/room.dto';
-import { User } from '../users/users.entity';
+import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
 
@@ -33,6 +33,8 @@ export class RoomService {
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
     private dmParticipantsRepository: Repository<DmParticipant>,
+    @Inject('BLOCKS_REPOSITORY')
+    private blocksRepository: Repository<Block>,
   ) {}
 
   async createRoom(createRoomDto: CreateRoomDto): Promise<RoomDto> {
@@ -108,14 +110,46 @@ export class RoomService {
   }
 
   async getChannelParticipants(
+    userId: number,
     roomId: number,
   ): Promise<ChannelParticipantDto[]> {
+    const blockUsers = await this.blocksRepository.find({
+      relations: { blockedUser: true },
+      where: { user: { id: userId } },
+    });
+    const blockIds = blockUsers.map((user) => user.blockedUser.id);
+    // user block list의 id들만 뽑아온다
+    const blockedParticipants = await this.channelParticipantsRepository.find({
+      relations: { user: true },
+      where: { room: { id: Equal(roomId) }, user: { id: In(blockIds) } },
+    });
+    const blockedParticipantIds = blockedParticipants.map(
+      (participant) => participant.user.id,
+    );
+    // room안에 user에게 block된 participant ids만 뽑아온다
     const channelParticipants = await this.channelParticipantsRepository.find({
       relations: { user: true },
       where: { room: { id: roomId } },
     });
-    console.log(channelParticipants);
-    return channelParticipants;
+    const results: ChannelParticipantDto[] = [];
+    channelParticipants.map((participant) => {
+      const blockedBool =
+        blockedParticipantIds.filter((id) => participant.user.id === id)
+          .length === 0
+          ? false
+          : true;
+      //blockedParticipantIds에 id가 있으면 true, 없으면 false
+      const result = new ChannelParticipantDto(
+        participant.id,
+        participant.user,
+        participant.auth,
+        participant.status,
+        participant.statusStartDate,
+        blockedBool,
+      );
+      results.push(result);
+    });
+    return results;
   }
 
   async deleteChannelParticipant(

@@ -86,14 +86,6 @@ export class PatchUserInfoDto {
   status: STATUS_TYPE;
 }
 
-// export class PatchUserStatusDto {
-//   @ApiProperty()
-//   @IsInt()
-//   @Min(0)
-//   @Max(1)
-//   status: STATUS_TYPE;
-// }
-
 /*************************/
 /*         DM dto        */
 /*************************/

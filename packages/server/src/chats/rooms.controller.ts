@@ -74,17 +74,19 @@ export class RoomsController {
     return this.roomService.enterRoom(roomId, userId, roomPasswordDto);
   }
 
-  @Get('/:roomId/channel/participants')
+  @Get('/:roomId/channel/:userId/participants')
+  // userId를 body에 넣으려고 했으나 'addChannelParticipants' 주소와 같게 됨. 고민해보기
   @ApiOperation({ summary: '채널 참여자 목록' })
   @ApiOkResponse({
     description: '채널 참여자 목록 가져오기 성공',
     type: [ChannelParticipantDto],
   })
   getChannelParticipants(
+    @Param('userId') userId: number,
     @Param('roomId') roomId: number,
   ): Promise<ChannelParticipantDto[]> {
     this.logger.log('getChannelParticipants');
-    return this.roomService.getChannelParticipants(roomId);
+    return this.roomService.getChannelParticipants(userId, roomId);
   }
 
   @Post('/:roomId/channel/participants')
