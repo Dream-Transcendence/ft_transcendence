@@ -1,9 +1,10 @@
-import { Inject, Injectable, Logger, Param } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Room } from 'src/chats/rooms.entity';
+import { Like, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
-import { Auth, Block, Friend, User } from './users.entity';
+import { Auth, Block, Friend, Request, User } from './users.entity';
 
 @Injectable()
 export class UserService {
@@ -17,8 +18,13 @@ export class UserService {
     private authRepository: Repository<Auth>,
     @Inject('FRIENDS_REPOSITORY')
     private friendsRepository: Repository<Friend>,
+    @Inject('REQUESTS_REPOSITORY')
+    private requestsRepository: Repository<Request>,
+    @Inject('ROOMS_REPOSITORY')
+    private roomsRepository: Repository<Room>,
   ) {}
 
+  //ANCHOR: user management
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const { id, nickname, image, email } = createUserDto;
 
@@ -95,6 +101,7 @@ export class UserService {
     return authUserDto;
   }
 
+  // ANCHOR: user block
   async blockUser(id: number, userId: number): Promise<UserDto> {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
     const blockedUser = await this.usersRepository.findOne({
@@ -133,17 +140,26 @@ export class UserService {
     return blockedUsers;
   }
 
-  //TODO: 채팅
+  // ANCHOR: user chat
+  // TODO: chat 관계 완성 후, 구현
+  // async getRooms(id: number): Promise<RoomDto[]> {
+  //   const rooms = await this.roomsRepository.find({
+  //     relations: { user: true, room: true },
+  //     where: { user: { id: id } },
+  //   });
 
-  async addFriend(id: number, userId: number): Promise<UserDto> {
+  // }
+
+  //ANCHOR: user friend
+  async addFriend(id: number, friendId: number): Promise<UserDto> {
     // SELECT * FROM public."user"
     // WHERE "user"."id" = id;
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
 
     // SELECT * FROM public."user"
-    // WHERE "user"."id" = userId;
+    // WHERE "user"."id" = friendId;
     const friend = await this.usersRepository.findOne({
-      where: [{ id: userId }],
+      where: [{ id: friendId }],
     });
 
     const row1 = this.friendsRepository.create({
@@ -179,8 +195,99 @@ export class UserService {
         friend.friend.nickname,
         friend.friend.image,
       );
+      friendUsers.push(userDto);
     });
 
     return friendUsers;
+  }
+
+  async addRequest(requestorId: number, responserId: number): Promise<UserDto> {
+    // SELECT * FROM public."user"
+    // WHERE "user"."id" = id;
+    const user = await this.usersRepository.findOne({
+      where: [{ id: requestorId }],
+    });
+
+    // SELECT * FROM public."user"
+    // WHERE "user"."id" = responserId;
+    const responser = await this.usersRepository.findOne({
+      where: [{ id: responserId }],
+    });
+
+    const row = this.requestsRepository.create({
+      requestor: user,
+      responser: responser,
+    });
+
+    this.requestsRepository.save(row);
+
+    const responserDto = new UserDto(
+      responser.id,
+      responser.nickname,
+      responser.image,
+    );
+
+    return responserDto;
+  }
+
+  async getRequests(id: number): Promise<UserDto[]> {
+    // SELECT * FROM public."request"
+    // LEFT JOIN "user" ON "user"."id" = id
+    // WHERE "request"."responserId" = "user"."id";
+    const requests = await this.requestsRepository.find({
+      relations: { requestor: true, responser: true },
+      where: { responser: { id: id } },
+    });
+
+    const requestors: UserDto[] = [];
+    requests.forEach((request) => {
+      const userDto = new UserDto(
+        request.requestor.id,
+        request.requestor.nickname,
+        request.requestor.image,
+      );
+      requestors.push(userDto);
+    });
+
+    return requestors;
+  }
+
+  //ANCHOR: user search
+  async searchUser(nickname: string): Promise<UserDto[]> {
+    // SELECT * FROM public."user"
+    // WHERE "user"."nickname" LIKE '%nickname%';
+    const users = await this.usersRepository.find({
+      where: { nickname: Like(`%${nickname}%`) },
+    });
+
+    const foundUsers: UserDto[] = [];
+    users.forEach((user) => {
+      const userDto = new UserDto(user.id, user.nickname, user.image);
+      foundUsers.push(userDto);
+    });
+
+    return foundUsers;
+  }
+
+  async searchFriend(id: number, nickname: string): Promise<UserDto[]> {
+    // SELECT * FROM public."friend"
+    // LEFT JOIN "user" ON "user"."id" = id
+    // WHERE "friend"."userId" = "user"."id";
+    const friends = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: id, nickname: Like(`%${nickname}%`) } },
+    });
+
+    const foundUsers: UserDto[] = [];
+    friends.forEach((row) => {
+      const userDto = new UserDto(
+        row.user.id,
+        row.user.nickname,
+        row.user.image,
+      );
+      foundUsers.push(userDto);
+    });
+
+    return foundUsers;
   }
 }

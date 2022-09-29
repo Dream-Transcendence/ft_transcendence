@@ -16,3 +16,12 @@ export class UserDto {
   @ApiProperty()
   image: string;
 }
+
+export class UserIdDto {
+  constructor(id: number) {
+    this.id = id;
+  }
+
+  @ApiProperty()
+  id: number;
+}

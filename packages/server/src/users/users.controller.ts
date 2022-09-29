@@ -15,12 +15,13 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { RoomDto } from 'src/chats/dto/room.dto';
 import { Any } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 
 // import { CreateUserDto } from './dto/create-user.dto';
-import { UserDto } from './dto/user.dto';
+import { UserDto, UserIdDto } from './dto/user.dto';
 import { User } from './users.entity';
 import { UserService } from './users.service';
 
@@ -109,7 +110,7 @@ export class UsersController {
     type: [Any],
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getRooms(@Param('id') id: number): Promise<any[]> {
+  getRooms(@Param('id') id: number): Promise<RoomDto[]> {
     return;
   }
 
@@ -118,8 +119,11 @@ export class UsersController {
   @ApiOperation({ summary: '친구 추가' })
   @ApiCreatedResponse({ description: '친구 추가 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  addFriend(@Param('id') id: number, @Body() userId: number): Promise<UserDto> {
-    return this.userService.addFriend(id, userId);
+  addFriend(
+    @Param('id') id: number,
+    @Body() friendIdDto: UserIdDto,
+  ): Promise<UserDto> {
+    return this.userService.addFriend(id, friendIdDto.id);
   }
 
   @Get('/:id/friends')
@@ -131,9 +135,10 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getFriends(@Param('id') id: number): Promise<UserDto[]> {
-    return;
+    return this.userService.getFriends(id);
   }
 
+  //TODO: Game 관련 요청 추후 처리
   @Get('/:id/game/ladder')
   @ApiTags('유저/게임')
   @ApiOperation({ summary: '유저의 래더 정보 가져오기' })
@@ -166,8 +171,11 @@ export class UsersController {
   @ApiOperation({ summary: '친구 요청 추가' })
   @ApiCreatedResponse({ description: '친구 요청 추가 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  addRequest(@Param('id') id: number): Promise<UserDto> {
-    return;
+  addRequest(
+    @Param('id') id: number,
+    @Body() responserIdDto: UserIdDto,
+  ): Promise<UserDto> {
+    return this.userService.addRequest(id, responserIdDto.id);
   }
 
   @Get('/:id/requests')
@@ -175,8 +183,8 @@ export class UsersController {
   @ApiOperation({ summary: '친구 요청 목록 가져오기' })
   @ApiOkResponse({ description: '친구 요청 목록 가져오기 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getRequests(@Param('id') id: number): Promise<User[]> {
-    return;
+  getRequests(@Param('id') id: number): Promise<UserDto[]> {
+    return this.userService.getRequests(id);
   }
 
   @Get('/:id/search?nickname=:nickname')
@@ -184,8 +192,8 @@ export class UsersController {
   @ApiOperation({ summary: '유저 검색' })
   @ApiOkResponse({ description: '유저 검색 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  searchUser(@Query('nickname') nickname: string): Promise<User[]> {
-    return;
+  searchUser(@Query('nickname') nickname: string): Promise<UserDto[]> {
+    return this.userService.searchUser(nickname);
   }
 
   @Get('/:id/friends/search?nickname=:nickname')
@@ -193,7 +201,10 @@ export class UsersController {
   @ApiOperation({ summary: '친구 검색' })
   @ApiOkResponse({ description: '친구 검색 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  searchFriend(@Query('nickname') nickname: string): Promise<User[]> {
-    return;
+  searchFriend(
+    @Param('id') id: number,
+    @Query('nickname') nickname: string,
+  ): Promise<UserDto[]> {
+    return this.userService.searchFriend(id, nickname);
   }
 }
