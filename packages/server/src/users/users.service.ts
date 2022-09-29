@@ -3,6 +3,7 @@ import { Room } from 'src/chats/rooms.entity';
 import { Like, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 import { UserDto } from './dto/user.dto';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 
@@ -26,10 +27,9 @@ export class UserService {
 
   //ANCHOR: user management
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const { id, nickname, image, email } = createUserDto;
+    const { nickname, image, email } = createUserDto;
 
     let user = this.usersRepository.create({
-      id,
       nickname,
       image,
     });
@@ -54,7 +54,7 @@ export class UserService {
     return userDto;
   }
 
-  async patchUser(id: number, userDto: UserDto): Promise<UserDto> {
+  async patchUser(id: number, userDto: PatchUserDto): Promise<UserDto> {
     const { nickname, image } = userDto;
 
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });

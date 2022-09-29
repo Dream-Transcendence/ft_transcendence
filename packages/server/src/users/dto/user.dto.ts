@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsInt, IsString, IsUrl } from 'class-validator';
 
 export class UserDto {
   constructor(id: number, nickname: string, image: string) {
@@ -8,12 +9,15 @@ export class UserDto {
   }
 
   @ApiProperty()
+  @IsInt()
   id: number;
 
   @ApiProperty()
+  @IsString()
   nickname: string;
 
   @ApiProperty()
+  @IsUrl()
   image: string;
 }
 

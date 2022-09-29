@@ -19,8 +19,7 @@ import { RoomDto } from 'src/chats/dto/room.dto';
 import { Any } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-
-// import { CreateUserDto } from './dto/create-user.dto';
+import { PatchUserDto } from './dto/patch-user.dto';
 import { UserDto, UserIdDto } from './dto/user.dto';
 import { User } from './users.entity';
 import { UserService } from './users.service';
@@ -30,9 +29,13 @@ export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
 
+  // NOTE: 로그인 로직에 유저 추가가 들어갈 경우, 삭제될 수 있음
   @Post()
   @ApiTags('유저 관리')
-  @ApiOperation({ summary: '유저 등록' })
+  @ApiOperation({
+    summary: '유저 등록 BodyType: CreateUserDto',
+    description: '로그인 로직에 유저 추가가 들어갈 경우, 삭제될 수 있음',
+  })
   @ApiCreatedResponse({
     description: 'Add user  successfully',
     type: UserDto,
@@ -44,7 +47,11 @@ export class UsersController {
 
   @Get('/:id')
   @ApiTags('유저 관리')
-  @ApiOperation({ summary: '유저 정보 가져오기' })
+  @ApiOperation({
+    summary: '유저 정보 가져오기',
+    description:
+      'UserID를 입력하여 유저 정보 확인(프로필이 들어간 부분(배너, 프로필 창 등))',
+  })
   @ApiOkResponse({ description: '유저 정보 가져오기 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getUser(@Param('id') id: number): Promise<UserDto> {
@@ -53,19 +60,25 @@ export class UsersController {
 
   @Patch('/:id')
   @ApiTags('유저 관리')
-  @ApiOperation({ summary: '유저 정보 수정' })
+  @ApiOperation({
+    summary: '유저 정보 수정',
+    description: '닉네임 또는 이미지 업데이트(수정할 객체만 담아서 요청)',
+  })
   @ApiOkResponse({ description: '유저 정보 수정 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   patchUser(
     @Param('id') id: number,
-    @Body() userDto: UserDto,
+    @Body() patchUserDto: PatchUserDto,
   ): Promise<UserDto> {
-    return this.userService.patchUser(id, userDto);
+    return this.userService.patchUser(id, patchUserDto);
   }
 
   @Get('/:id/2nd-auth')
   @ApiTags('유저 관리')
-  @ApiOperation({ summary: '2차 인증 여부 가져오기' })
+  @ApiOperation({
+    summary: '2차 인증 여부 가져오기',
+    description: '유저의 2차 인증 여부를 Boolean(true, false)으로 확인',
+  })
   @ApiOkResponse({ description: '2차 인증 가져오기 성공', type: AuthUserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getAuth(@Param('id') id: number): Promise<AuthUserDto> {

@@ -1,4 +1,3 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { ChannelParticipant, DmParticipant } from '../chats/rooms.entity';
 import {
   BaseEntity,
@@ -27,7 +26,7 @@ export class User extends BaseEntity {
   @Column()
   nickname: string;
 
-  @Column()
+  @Column({ nullable: true })
   image: string;
 
   @OneToMany(() => Block, (block) => block.user)
