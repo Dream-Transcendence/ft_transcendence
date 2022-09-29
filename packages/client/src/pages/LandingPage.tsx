@@ -1,6 +1,9 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
 import NavigationBar from '../atoms/bar/NavigationBar';
+import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
+import { PROFILEURL } from '../configs/Link.url';
+import { LinkComponentResource } from '../types/Link.type';
 
 const MainSection = styled.section`
   background: #6bade2;
@@ -29,9 +32,14 @@ const EnterButton = styled.button`
 `;
 
 function LandingPage() {
+  const Enter: LinkComponentResource = {
+    url: PROFILEURL,
+    component: <EnterButton>들어가기</EnterButton>
+    ,
+  };
   return (
     <MainSection>
-      <EnterButton>들어가기</EnterButton>
+      <LinkPageComponentButton LinkComponentResource={Enter} />
     </MainSection>
   );
 }

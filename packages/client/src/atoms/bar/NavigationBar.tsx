@@ -15,9 +15,10 @@ import LogoutIconButton from '../button/icon/LogoutIconButton';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 import { Link } from 'react-router-dom';
-import LinkPageButton from '../button/linkPage/LinkPageIconButton';
-import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
+
 import { LinkIconResource } from '../../types/Link.type';
+import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
+import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -35,15 +36,15 @@ const RightLayout = styled('section')(({ theme }) => ({
 
 export default function NavigationBar() {
   const Avartar: LinkIconResource = {
-    url: '/pingpong/profile',
+    url: PROFILEURL,
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: '/pingpong/gameloding',
+    url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const ChatRoom: LinkIconResource = {
-    url: '/pingpong/chatroom',
+    url: CHATROOMURL,
     icon: <ChatIcon fontSize="inherit" />,
   };
 

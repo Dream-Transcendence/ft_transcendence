@@ -7,6 +7,7 @@ import { LinkComponentResource, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { Link } from 'react-router-dom';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
+import { OTHERPROFILEURL } from '../../configs/Link.url';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -36,30 +37,20 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   alignSelf: 'start',
   justifySelf: 'start',
-  borderBottom: 'solid 1px',
-}));
-
-const ProfileLinkLayout = styled('div')(({ theme }) => ({
-  /**
-   * display: 'flex', 추가하면 link layout이 줄어듬
-   * component에 border 적용되어있으면 underline이 보여지는 현상 발견
-   * link underline을 컴포넌트에 적용시키지 않기 위해 추가
-   */
   width: '100%',
+  borderBottom: 'solid 1px',
+  borderColor: 'black',
 }));
-
-
-
 
 function FreindListOrganisms() {
   const [dense, setDense] = React.useState(false);
   const [secondary, setSecondary] = React.useState(false);
   const OtherProfile: LinkComponentResource = {
-    url: '/pingpong/otherprofile',
+    url: OTHERPROFILEURL,
     component:
-      <ProfileLinkLayout>
+      <ProfileBoxLayout>
         <UserProfileBox isButton={true} avatarType='circle' />
-      </ProfileLinkLayout>
+      </ProfileBoxLayout>
   };
 
   return (
@@ -69,9 +60,7 @@ function FreindListOrganisms() {
       </TextLayout>
       <ListLayout>
         <ListGenerate element={
-          <ProfileBoxLayout>
-            <LinkPageComponentButton LinkComponentResource={OtherProfile} />
-          </ProfileBoxLayout>
+          <LinkPageComponentButton LinkComponentResource={OtherProfile} />
         } />
       </ListLayout>
     </FreindListLayout>

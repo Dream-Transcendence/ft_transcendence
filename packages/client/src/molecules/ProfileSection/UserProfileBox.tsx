@@ -12,7 +12,8 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   justifyContent: 'flex-start',
   textAlign: 'start',
   width: '100%',
-  padding: 0,
+  padding: '0',
+  marginLeft: '0.3rem',
 }));
 
 function UserProfileBox(props: { isButton: Boolean, avatarType: String }) {

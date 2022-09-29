@@ -7,6 +7,7 @@ import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { OpenRoomProps } from '../../template/ChatMainSection/ChatRoomListTemplate';
+import { CHATROOMURL } from '../../configs/Link.url';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -47,7 +48,7 @@ function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
   };
 
   const EnterRoom: LinkTextResource = {
-    url: '/pingpong/chatroom',
+    url: CHATROOMURL,
     content: '입장',
     handler: openRoomHandler,
   };
