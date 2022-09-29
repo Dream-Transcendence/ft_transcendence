@@ -45,12 +45,14 @@ export class ChannelParticipantDto {
     auth: AUTH_TYPE,
     status: STATUS_TYPE,
     statusStartDate: Date,
+    blocked: boolean,
   ) {
     this.id = id;
     this.user = user;
     this.auth = auth;
     this.status = status;
     this.statusStartDate = statusStartDate;
+    this.blocked = blocked;
   }
 
   @ApiProperty()
@@ -67,4 +69,7 @@ export class ChannelParticipantDto {
 
   @ApiProperty()
   statusStartDate: Date;
+
+  @ApiProperty()
+  blocked: boolean;
 }
