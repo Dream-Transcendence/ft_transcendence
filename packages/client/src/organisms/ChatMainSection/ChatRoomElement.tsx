@@ -6,8 +6,9 @@ import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { OpenRoomProps } from '../../template/ChatMainSection/ChatRoomListTemplate';
 import { CHATROOMURL } from '../../configs/Link.url';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { isopenRoom } from '../../pages/ChatChannelPage';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -40,11 +41,12 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
-  const { openRoom, setOpenRoom } = props.openRoomProps;
+function ChatRoomElementOrganisms() {
+  const setOpenRoom = useSetRecoilState(isopenRoom);
+  const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
 
   const openRoomHandler = (): void => {
-    setOpenRoom('a');
+    OpenNCloseRoom('open');
   };
 
   const EnterRoom: LinkTextResource = {
