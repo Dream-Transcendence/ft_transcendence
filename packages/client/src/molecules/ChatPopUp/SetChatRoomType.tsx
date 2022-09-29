@@ -16,7 +16,7 @@ const SetTypeLayout = styled('div')(({ theme }) => ({
 }));
 
 const RadilButtonLayout = styled('div')(({ theme }) => ({
-  marginLeft: '35%',
+  marginLeft: '30%',
 }));
 
 function SetChatRoomTypeModule() {
@@ -26,7 +26,7 @@ function SetChatRoomTypeModule() {
         채팅방 설정
       </Typography>
       <RadilButtonLayout>
-        <RadioGroupButton first="공개" second="보호" />
+        <RadioGroupButton first="공개" second="보호" third="비공개" />
       </RadilButtonLayout>
     </SetTypeLayout>
   );

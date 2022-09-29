@@ -25,10 +25,8 @@ function InfoBoxFunctionModule() {
 
   return (
     <InfoBoxFunctionLayout>
+      {/* [axios DELETE 요청]해당 채팅방 나가기 요청 */}
       <CustomIconButton element={<MeetingRoomIcon />} />
-      <CustomIconButton element={<BlockIcon />} />
-      <CustomIconButton element={<SportsKabaddiIcon />} />
-      <LinkPageIconButton LinkIconResource={Personal} />
     </InfoBoxFunctionLayout>
   );
 }

@@ -14,6 +14,7 @@ function ChatRoomListOrganisms(props: { openRoomProps: OpenRoomProps }) {
   const { openRoomProps } = props;
   return (
     <ChatRoomListLayout>
+      {/* [axios GET 요청] 채팅방 리스트 불러오기 (사이드와 동일) */}
       <ListGenerate
         element={<ChatRoomElementOrganisms openRoomProps={openRoomProps} />}
       />

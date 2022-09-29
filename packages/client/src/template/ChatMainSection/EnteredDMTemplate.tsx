@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
-import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
+import EnteredDMInfoOrganisms from '../../organisms/ChatMainSection/EnteredDMInfo';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -19,10 +19,9 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
 function EnteredChatRoomTemplate() {
   return (
     <ChattingRoomLayout>
-      <EnteredChatRoomInfoOrganisms />
+      <EnteredDMInfoOrganisms />
       <ChatRoomFeaterLayout>
         <ChattingOrganisms />
-        <ChatParticipantsOrganisms />
       </ChatRoomFeaterLayout>
     </ChattingRoomLayout>
   );

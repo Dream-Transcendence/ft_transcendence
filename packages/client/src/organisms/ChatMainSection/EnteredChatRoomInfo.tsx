@@ -21,10 +21,11 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
   backgroundColor: '#003566',
 }));
 
-function EnteredRoomInfoOrganisms() {
+function EnteredChatRoomInfoOrganisms() {
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
+        {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
         <InfoBoxNameModule />
         <InfoBoxPasswordModule />
         <InfoBoxFunctionModule />
@@ -33,4 +34,4 @@ function EnteredRoomInfoOrganisms() {
   );
 }
 
-export default EnteredRoomInfoOrganisms;
+export default EnteredChatRoomInfoOrganisms;

@@ -21,6 +21,7 @@ function RoomTitleModule({ title }: TitleProps) {
     <RoomTitleLayout>
       <ThemeProvider theme={theme}>
         <Typography variant="h4">{title}</Typography>
+        {/* 채팅방 타입에 따라 유연하게 보일 것 */}
         <Typography>🔒</Typography>
       </ThemeProvider>
     </RoomTitleLayout>

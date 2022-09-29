@@ -48,6 +48,7 @@ function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
   };
 
   const EnterRoom: LinkTextResource = {
+    //데이터에 따라 다른 url
     url: CHATROOMURL,
     content: '입장',
     handler: openRoomHandler,
@@ -60,9 +61,11 @@ function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
         <RoomTitleModule title="방 이름"></RoomTitleModule>
         <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
+      {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
         <PasswordInput />
       </PasswordInputLayout>
+      {/* [axios POST 요청] 타입에 따라 입장 여부확인 후, 입장 요청 */}
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />
       </EnterButtonLayout>

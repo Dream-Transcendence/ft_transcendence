@@ -45,6 +45,7 @@ function PasswordInput() {
   };
 
   return (
+    //잠금설정에 따라 input을 보이게 또는 안보이게 설정할 것
     <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
       <InputLabel
         htmlFor="standard-adornment-password"
@@ -54,6 +55,7 @@ function PasswordInput() {
       >
         Password
       </InputLabel>
+      {/* [axios POST 요청]해당 채팅방 비밀번호 확인 및 등록 */}
       <Input
         id="standard-adornment-password"
         type={values.showPassword ? 'text' : 'password'}

@@ -11,9 +11,10 @@ import { Height, Margin } from '@mui/icons-material';
 interface RadioProps {
   first: string;
   second: string;
+  third: string;
 }
 
-function RadioGroupButton({ first, second }: RadioProps) {
+function RadioGroupButton({ first, second, third }: RadioProps) {
   return (
     <FormControl>
       <RadioGroup
@@ -31,6 +32,11 @@ function RadioGroupButton({ first, second }: RadioProps) {
           value={second}
           control={<Radio size="medium" />}
           label={second}
+        />
+        <FormControlLabel
+          value={third}
+          control={<Radio size="medium" />}
+          label={third}
         />
       </RadioGroup>
     </FormControl>
