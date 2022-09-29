@@ -20,7 +20,9 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 function JoinedDMListOrganisms() {
   return (
     <JoinedChatListLayout>
-      <JoinedDMBox>{ListGenerate(UserProfileBox(true, 'circle'))}</JoinedDMBox>
+      <JoinedDMBox>
+        <ListGenerate element={UserProfileBox({ isButton: true, avatarType: 'circle' })} />
+      </JoinedDMBox>
     </JoinedChatListLayout>
   );
 }

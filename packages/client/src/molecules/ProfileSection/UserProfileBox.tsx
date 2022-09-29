@@ -11,19 +11,21 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
   justifyContent: 'flex-start',
   textAlign: 'start',
-  width: '90%',
-  padding: 0,
+  width: '100%',
+  padding: '0',
+  marginLeft: '0.3rem',
 }));
 
-function UserProfileBox(isButton: Boolean, avaterType: String) {
+function UserProfileBox(props: { isButton: Boolean, avatarType: String }) {
+  const { isButton, avatarType } = props;
   return isButton ? (
     <UserProfileBoxLayout>
-      {ProfileAvatar(avaterType)}
+      <ProfileAvatar avatarType={avatarType} />
       <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   ) : (
     <UserProfileBoxLayout disabled>
-      {ProfileAvatar(avaterType)}
+      <ProfileAvatar avatarType={avatarType} />
       <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>
   );

@@ -33,7 +33,6 @@ export class UserService {
       nickname,
       image,
     });
-
     user = await this.usersRepository.save(user);
 
     const auth = this.authRepository.create({
@@ -41,7 +40,6 @@ export class UserService {
       authenticated: false,
       user,
     });
-
     await this.authRepository.save(auth);
 
     const userDto = new UserDto(user.id, user.nickname, user.image);
@@ -60,20 +58,19 @@ export class UserService {
     const { nickname, image } = userDto;
 
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
-
     if (nickname) user.nickname = nickname;
     if (image) user.image = image;
 
     await this.usersRepository.save(user);
 
     const newUserDto = new UserDto(user.id, user.nickname, user.image);
-
     return newUserDto;
   }
 
   async getAuth(id: number): Promise<AuthUserDto> {
     // SELECT * FROM public."auth"
     // LEFT JOIN "user" ON "user"."id" = id
+    // WHERE "auth"."userId" = "user"."id";
     const auth = await this.authRepository.findOne({
       relations: { user: true },
       where: { user: { id: id } },

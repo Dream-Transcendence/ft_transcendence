@@ -13,6 +13,8 @@ export const databaseProviders = [
         database: 'postgres',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
+        logging: true,
+        // console창에 query log를 볼 수 있는 option
       });
       return dataSource.initialize();
     },

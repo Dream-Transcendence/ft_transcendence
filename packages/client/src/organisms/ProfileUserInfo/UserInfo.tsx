@@ -2,49 +2,36 @@ import styled from '@emotion/styled';
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
 import ProfileNicname from '../../atoms/text/ProfileNicname';
+import { ProfileActionLayout, UserInfoLayout, UserNicknameLayout, UserPictureLayout } from '../OrganismsStyles/ProfileOrganismsCss';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
+import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
 
-const UserInfoLayout = styled('div')(({ theme }) => ({
+export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
-  flexDirection: 'column',
+  position: 'absolute',
   alignSelf: 'end',
-  justifySelf: 'end',
-  height: '80%',
-  width: '55%',
-  gridArea: 'Profile',
-  backgroundColor: '#1976D2',
-}));
-
-const UserPicture = styled('div')(({ theme }) => ({
-  display: 'flex',
   flexDirection: 'column',
-  height: '60%',
-  border: 'solid 1px',
-}));
-
-const UserNickname = styled('div')(({ theme }) => ({
-  height: '20%',
-  border: 'solid 1px',
-}));
-
-const SecondAuth = styled('div')(({ theme }) => ({
-  height: '20%',
-  border: 'solid 1px',
 }));
 
 function UserInfo() {
   return (
     <UserInfoLayout>
-      <UserPicture>
+      <UserPictureLayout>
         <ProfileImage />
-      </UserPicture>
-      <UserNickname>
+        <UserPictureButtonLayout>
+          <CustomIconButton element={<FileUploadButton />} />
+        </UserPictureButtonLayout>
+      </UserPictureLayout>
+      <UserNicknameLayout>
         <ProfileNicname />
-      </UserNickname>
-      <SecondAuth>
+      </UserNicknameLayout>
+      <ProfileActionLayout>
         <SecondAuthSwitch />
-      </SecondAuth>
+      </ProfileActionLayout>
     </UserInfoLayout>
   );
 }
+
 
 export default UserInfo;

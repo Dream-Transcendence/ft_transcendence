@@ -15,8 +15,8 @@ const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
 function UserInviteProfileBox() {
   return (
     <UserInviteProfileLayout>
-      {UserProfileBox(false, 'circle')}
-      {CustomIconButton(<CancelIcon />)}
+      <UserProfileBox isButton={false} avatarType='circle' />
+      <CustomIconButton element={<CancelIcon />} />
     </UserInviteProfileLayout>
   );
 }

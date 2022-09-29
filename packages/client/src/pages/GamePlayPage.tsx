@@ -11,11 +11,6 @@ const GamePlayLayout = styled('section')(({ theme }) => ({
   width: '100%',
 }));
 
-const NavGridLayout = styled('section')(({ theme }) => ({
-  width: '100%',
-  height: '10%',
-}));
-
 const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   width: '100%',
@@ -27,9 +22,6 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
 function GamePlayPage() {
   return (
     <GamePlayLayout>
-      <NavGridLayout>
-        <NavigationBar></NavigationBar>
-      </NavGridLayout>
       <GamePlayTemplateLayout>
         <GamePlayTemplate />
       </GamePlayTemplateLayout>

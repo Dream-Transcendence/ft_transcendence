@@ -47,7 +47,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function UserProfileBoxWithCircle(isButton: Boolean) {
   return (
-    <ProfileBoxAvatarLayout>{ProfileAvatar('circle')}</ProfileBoxAvatarLayout>
+    <ProfileBoxAvatarLayout>{ProfileAvatar({ avatarType: 'circle' })}</ProfileBoxAvatarLayout>
   );
 }
 

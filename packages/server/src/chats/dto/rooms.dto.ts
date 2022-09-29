@@ -22,6 +22,9 @@ const STATUS_TYPE = {
 } as const;
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
+/*************************/
+/*      channel dto      */
+/*************************/
 export class CreateRoomDto {
   @ApiProperty()
   @IsString()
@@ -35,8 +38,6 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsString()
-  // 비밀번호 길이 제한 길이는 비밀번호가 존재하지 않을 수도 있으니 제한X
-  // 없을 때는 빈 문자열로 넘어오게 하기
   salt: string;
 
   @ApiProperty()
@@ -44,10 +45,10 @@ export class CreateRoomDto {
   title: string;
 }
 
-export class AddChannelParticipantDto {
+export class AddParticipantsDto {
   @ApiProperty()
   @IsInt()
-  participantId: number;
+  participantIds: number[];
 }
 
 export class RoomPasswordDto {
@@ -71,18 +72,28 @@ export class PatchRoomInfoDto {
   salt: string;
 }
 
-export class PatchUserAuthDto {
+export class PatchUserInfoDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   auth: AUTH_TYPE;
-}
 
-export class PatchUserStatusDto {
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
   status: STATUS_TYPE;
 }
+
+// export class PatchUserStatusDto {
+//   @ApiProperty()
+//   @IsInt()
+//   @Min(0)
+//   @Max(1)
+//   status: STATUS_TYPE;
+// }
+
+/*************************/
+/*         DM dto        */
+/*************************/

@@ -9,12 +9,16 @@ import InputBase from '@mui/material/InputBase';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import NavProfile from '../profile/NavProfile';
-import ChatIconButton from '../button/icon/ChatIconButton';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import GameIconButton from '../button/icon/GameIconButton';
+import ChatIcon from '@mui/icons-material/Chat';
 import LogoutIconButton from '../button/icon/LogoutIconButton';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
+import { Link } from 'react-router-dom';
+
+import { LinkIconResource } from '../../types/Link.type';
+import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
+import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -31,15 +35,28 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
+  const Avartar: LinkIconResource = {
+    url: PROFILEURL,
+    icon: <NavProfile />,
+  };
+  const Ladder: LinkIconResource = {
+    url: GAMECREATEURL,
+    icon: <SportsEsportsIcon fontSize="inherit" />,
+  };
+  const ChatRoom: LinkIconResource = {
+    url: CHATROOMURL,
+    icon: <ChatIcon fontSize="inherit" />,
+  };
+
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
       <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <NavProfile />
-            <GameIconButton />
-            <ChatIconButton />
+            <LinkPageIconButton LinkIconResource={Avartar} />
+            <LinkPageIconButton LinkIconResource={Ladder} />
+            <LinkPageIconButton LinkIconResource={ChatRoom} />
             <RightLayout>
               <SearchBox />
               <LogoutIconButton />

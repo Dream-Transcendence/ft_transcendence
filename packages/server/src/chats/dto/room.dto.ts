@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CHAT_TYPE } from './rooms.dto';
+import { AUTH_TYPE, CHAT_TYPE, STATUS_TYPE } from './rooms.dto';
+import { UserDto } from '../../users/dto/user.dto';
 
 export class RoomDto {
   constructor(
@@ -8,7 +9,7 @@ export class RoomDto {
     type: CHAT_TYPE,
     salt: string,
     title: string,
-    image?: string,
+    image: string,
   ) {
     this.id = id;
     this.name = name;
@@ -34,5 +35,36 @@ export class RoomDto {
   title: string;
 
   @ApiProperty()
-  image?: string;
+  image: string;
+}
+
+export class ChannelParticipantDto {
+  constructor(
+    id: number,
+    user: UserDto,
+    auth: AUTH_TYPE,
+    status: STATUS_TYPE,
+    statusStartDate: Date,
+  ) {
+    this.id = id;
+    this.user = user;
+    this.auth = auth;
+    this.status = status;
+    this.statusStartDate = statusStartDate;
+  }
+
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  user: UserDto;
+
+  @ApiProperty()
+  auth: AUTH_TYPE;
+
+  @ApiProperty()
+  status: STATUS_TYPE;
+
+  @ApiProperty()
+  statusStartDate: Date;
 }

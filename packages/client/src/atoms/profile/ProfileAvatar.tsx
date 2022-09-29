@@ -8,8 +8,6 @@ const ProfileAvatarLayout = styled(Badge)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const theme = createTheme({});
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',
@@ -40,14 +38,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function ProfileAvatar(avatarType: String | undefined) {
-  if (avatarType === 'default') {
-    return (
-      <ProfileAvatarLayout>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      </ProfileAvatarLayout>
-    );
-  } else if (avatarType === 'circle') {
+function ProfileAvatar(props: { avatarType: String | undefined }) {
+  const { avatarType } = props;
+
+  if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
         <StyledBadge
@@ -57,6 +51,12 @@ function ProfileAvatar(avatarType: String | undefined) {
         >
           <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
         </StyledBadge>
+      </ProfileAvatarLayout>
+    );
+  } else {
+    return (
+      <ProfileAvatarLayout>
+        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
       </ProfileAvatarLayout>
     );
   }

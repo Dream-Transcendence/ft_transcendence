@@ -44,9 +44,6 @@ function PasswordInput() {
     event.preventDefault();
   };
 
-  let theme = createTheme();
-  theme = responsiveFontSizes(theme); //반응형을 위해 사용
-
   return (
     <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
       <InputLabel

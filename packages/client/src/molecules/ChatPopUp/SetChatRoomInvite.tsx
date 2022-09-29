@@ -41,7 +41,7 @@ function SetChatRoomInviteModule() {
         <SearchBox />
       </SearchBoxLayout>
       <InvitedListLayout>
-        {ListGenerate(<UserInviteProfileBox />)}
+        <ListGenerate element={<UserInviteProfileBox />} />
       </InvitedListLayout>
     </SetInviteLayout>
   );
