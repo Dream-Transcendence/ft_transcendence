@@ -13,6 +13,7 @@ const StatResultLayout = styled('div')(({ theme }) => ({
 function UserStatResult() {
   return (
     <StatResultLayout>
+      {/* [axios GET 요청] 레더 승, 패 정보 불러오기 */}
       <UserStatWin />
       <UserStatLose />
     </StatResultLayout>

@@ -4,6 +4,7 @@ import { Box, CardMedia } from '@mui/material';
 import { Image } from '@chakra-ui/react';
 
 function ProfileImage() {
+  // [axios GET 요청] 프로필 사진
   return (
     <Box
       component="img"

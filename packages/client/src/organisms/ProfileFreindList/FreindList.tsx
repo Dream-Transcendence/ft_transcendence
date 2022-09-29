@@ -43,25 +43,33 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindListOrganisms() {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
   const OtherProfile: LinkComponentResource = {
     url: OTHERPROFILEURL,
-    component:
+    component: (
       <ProfileBoxLayout>
-        <UserProfileBox isButton={true} avatarType='circle' />
+        <UserProfileBox isButton={true} avatarType="circle" />
       </ProfileBoxLayout>
+    ),
   };
 
   return (
     <FreindListLayout>
       <TextLayout>
-        <Typography variant='h6' align="center">freind list</Typography>
+        <Typography variant="h6" align="center">
+          freind list
+        </Typography>
       </TextLayout>
       <ListLayout>
-        <ListGenerate element={
-          <LinkPageComponentButton LinkComponentResource={OtherProfile} />
-        } />
+        {/* [axios GET 요청] 친구 리스트 불러오기 */}
+        {/* [Socket IO 요청]
+                - Socket.emit으로 로그인 상태 보냄
+                - Socket.on으로 친구유저 로그인 상태 받음
+                   */}
+        <ListGenerate
+          element={
+            <LinkPageComponentButton LinkComponentResource={OtherProfile} />
+          }
+        />
       </ListLayout>
     </FreindListLayout>
   );

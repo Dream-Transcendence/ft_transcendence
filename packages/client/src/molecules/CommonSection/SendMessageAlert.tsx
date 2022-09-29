@@ -11,6 +11,7 @@ const button = [<Button key="check">확인</Button>];
 function SendMessageAlert(props: String) {
   const [buttonRole, setButtonRole] = useState(['freind', 'game']);
 
+  // [Socket IO 응답] Socket.on으로 여러 요청 응답
   //친구, 게임 초대 구분 필요
   const to = 'junghan';
   return (

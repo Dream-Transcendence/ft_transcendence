@@ -9,6 +9,9 @@ const StatLadderLayout = styled('div')(({ theme }) => ({
 }));
 
 function UserStatLadder() {
+  {
+    /* [axios GET 요청] 레더 정보 불러오기 */
+  }
   return <StatLadderLayout>🐹</StatLadderLayout>;
 }
 
