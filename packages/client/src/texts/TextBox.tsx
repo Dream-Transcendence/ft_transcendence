@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 
-const UserProfileBoxNicknameLayout = styled('text')(({ theme }) => ({
+const UserProfileBoxNicknameLayout = styled('span')(({ theme }) => ({
   margin: '1rem',
   flexWrap: 'wrap',
 }));

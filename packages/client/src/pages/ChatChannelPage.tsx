@@ -4,11 +4,10 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
-import ChatRoomListTemplate, {
-  OpenRoomProps,
-} from '../template/ChatMainSection/ChatRoomListTemplate';
+import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Route, Routes } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { atom, useRecoilState, useRecoilValue } from 'recoil';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -40,12 +39,18 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
+export const isopenRoom = atom<string | null>({
+  key: 'checkOpenRoom',
+  default: null,
+});
+
 function ChatroomPage() {
   //나중에 room의 배열로 바꿀 것 비동기 요청
   let existenceRoom: boolean = true;
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
-  const [openRoom, setOpenRoom] = useState<string | null>(null);
-
+  // const [openRoom, setOpenRoom] = useState<string | null>(null);
+  const openRoom = useRecoilValue(isopenRoom);
+  console.log(openRoom);
   //채팅방 유무 검사하는 비동기요청
 
   //existenceRoom =
@@ -63,10 +68,7 @@ function ChatroomPage() {
             // <EnteredChatRoomTemplate />
             <EnteredDMTemplate />
           ) : existenceRoom ? (
-            <ChatRoomListTemplate
-              openRoom={openRoom}
-              setOpenRoom={setOpenRoom}
-            />
+            <ChatRoomListTemplate />
           ) : (
             <ChatRoomDefaultTemplate />
           )}

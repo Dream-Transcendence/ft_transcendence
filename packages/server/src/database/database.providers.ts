@@ -14,7 +14,7 @@ export const databaseProviders = [
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         synchronize: true,
         logging: true,
-        // console창에 query log를 볼 수 있는 option
+        // NOTE console창에 query log를 볼 수 있는 option
       });
       return dataSource.initialize();
     },
