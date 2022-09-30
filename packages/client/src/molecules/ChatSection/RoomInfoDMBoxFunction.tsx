@@ -28,6 +28,7 @@ function InfoDMBoxFunctionModule() {
       {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
       {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
       <CustomIconButton element={<BlockIcon />} />
+      {/* [axios POST 요청] 1 대 1 게임 큐에 등록 요청 */}
       <CustomIconButton element={<SportsKabaddiIcon />} />
       <LinkPageIconButton LinkIconResource={Personal} />
     </InfoBoxFunctionLayout>

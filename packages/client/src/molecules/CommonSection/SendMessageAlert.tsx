@@ -13,6 +13,8 @@ function SendMessageAlert(props: String) {
 
   // [Socket IO 응답] Socket.on으로 여러 요청 응답
   //친구, 게임 초대 구분 필요
+  {/* [axios POST 요청] 게임 초대 수락 시, 옵션이 포함된 게임방 개설 및 1 대 1 게임큐 참가 요청  */}
+  {/* [axios POST 요청] 친구 수락 시, 친구목록 추가요청  */}
   const to = 'junghan';
   return (
     <Alert

@@ -23,6 +23,7 @@ function GamePlayPage() {
   return (
     <GamePlayLayout>
       <GamePlayTemplateLayout>
+        {/* [SocketIO 요청] 게임구현 시, socket을 사용하겠지? */}
         <GamePlayTemplate />
       </GamePlayTemplateLayout>
     </GamePlayLayout>
