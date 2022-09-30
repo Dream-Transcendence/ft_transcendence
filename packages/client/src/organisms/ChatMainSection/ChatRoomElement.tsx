@@ -65,7 +65,7 @@ function ChatRoomElementOrganisms(props: { openRoomProps: OpenRoomProps }) {
       <PasswordInputLayout>
         <PasswordInput />
       </PasswordInputLayout>
-      {/* [axios POST 요청] 타입에 따라 입장 여부확인 후, 입장 요청 */}
+      {/* [axios POST 요청] 타입에 따라 입장 여부확인(어떤 성격의 채팅방인지 전달) 후, 입장 요청 */}
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />
       </EnterButtonLayout>

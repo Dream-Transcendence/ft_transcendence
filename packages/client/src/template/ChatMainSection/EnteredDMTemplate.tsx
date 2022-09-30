@@ -16,7 +16,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   marginTop: '0%',
 }));
 
-function EnteredChatRoomTemplate() {
+function EnteredDMTemplate() {
   return (
     <ChattingRoomLayout>
       <EnteredDMInfoOrganisms />
@@ -27,4 +27,4 @@ function EnteredChatRoomTemplate() {
   );
 }
 
-export default EnteredChatRoomTemplate;
+export default EnteredDMTemplate;

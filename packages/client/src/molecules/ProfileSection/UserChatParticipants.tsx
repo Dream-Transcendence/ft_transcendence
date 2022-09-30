@@ -38,12 +38,14 @@ function UserChatParticipantsBox() {
   return (
     <UserProfileLayout>
       <UserProfileBox isButton={true} avatarType='circle' />
-
       <UserFuntionLayout>
         <CustomIconButton element={
           <LinkPageIconButton LinkIconResource={Personal} />
         } />
+        {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
+        {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
         <CustomIconButton element={<NotInterestedIcon />} />
+        {/* admin 권한에 따라 활성/비활성화 */}
         <SpeedDialLayout>
           <BasicSpeedDial />
         </SpeedDialLayout>
