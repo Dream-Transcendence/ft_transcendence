@@ -1,8 +1,7 @@
 import { styled } from '@mui/material/styles';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
+import InfoDMBoxFunctionModule from 'client/src/molecules/ChatSection/RoomInfoDMBoxFunction';
 import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
-import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -21,16 +20,16 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
   backgroundColor: '#003566',
 }));
 
-function EnteredRoomInfoOrganisms() {
+function EnteredDMInfoOrganisms() {
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
+        {/* [axios GET 요청]해당 채팅방 정보 요청 */}
         <InfoBoxNameModule />
-        <InfoBoxPasswordModule />
-        <InfoBoxFunctionModule />
+        <InfoDMBoxFunctionModule />
       </RoomInfoBox>
     </RoomInfoLayout>
   );
 }
 
-export default EnteredRoomInfoOrganisms;
+export default EnteredDMInfoOrganisms;

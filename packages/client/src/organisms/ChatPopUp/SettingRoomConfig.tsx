@@ -68,6 +68,7 @@ function SettingRoomConfigOranisms(click: React.MouseEventHandler) {
         <SetChatRoomTypeModule />
         <SetChatRoomPasswordModule />
         <SetChatRoomInviteModule />
+        {/* [axios POST 요청] 위 정보를 포함한 채팅방 개설 */}
         <Button onClick={click} variant="contained">
           저장하기
         </Button>

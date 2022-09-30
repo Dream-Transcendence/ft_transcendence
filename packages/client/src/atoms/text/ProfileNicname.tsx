@@ -61,6 +61,7 @@ function ProfileNicname() {
   }));
 
   return (
+    //[axios GET 요청] 프로필 이름
     <Editable
       textAlign="center"
       defaultValue="sonkang ⚡️"
@@ -71,6 +72,7 @@ function ProfileNicname() {
       <ProfileNicnameLayout>
         <EditablePreview />
         {/* Here is the custom input */}
+        {/* [axios PATCH 요청] 본인의 프로필 변경 */}
         <Input as={EditableInput} />
         <EditableControls />
       </ProfileNicnameLayout>

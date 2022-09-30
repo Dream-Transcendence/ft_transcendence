@@ -34,8 +34,8 @@ const EnterButton = styled.button`
 function LandingPage() {
   const Enter: LinkComponentResource = {
     url: PROFILEURL,
-    component: <EnterButton>들어가기</EnterButton>
-    ,
+    // [axios GET 요청] 서버 측으로 로그인시도 전달
+    component: <EnterButton>들어가기</EnterButton>,
   };
   return (
     <MainSection>

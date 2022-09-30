@@ -43,6 +43,9 @@ const Goback = () => {
 function GameLodingPage() {
   return (
     <GameLodingLayout>
+      {/* [axios GET 요청] 게임 큐 체크? */}
+      {/* [axios POST 요청] 매칭 성공 시, 게임 방 생성요청 */}
+      {/* [SocketIO 요청] 게임 큐 체크? */}
       <LodingImageLayout>
         <TextBox
           value={'상대방을 기다리는 중입니다.'}

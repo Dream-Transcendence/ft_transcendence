@@ -12,9 +12,10 @@ const NicknameConfirmBottonLayout = styled('div')(({ theme }) => ({
 function NicknameConfirmButton() {
   const handler = () => {
     //닉네임 중복인지 확인하는 부분 필요함
-  }
+  };
   return (
     <NicknameConfirmBottonLayout>
+      {/* [axios POST 요청] 서버 측으로 닉네임 전달 */}
       <Button fullWidth variant="contained" onClick={handler}>
         확인
       </Button>

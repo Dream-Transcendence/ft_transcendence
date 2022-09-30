@@ -25,8 +25,9 @@ function ChatInputModule() {
         placeholder="  내용을 입력하세요.."
         inputProps={{ 'aria-label': '내용을 입력하세요..' }}
       />
+      {/* [axios POST 요청] 채팅 전송 요청 */}
+      {/* [SocketIO 요청] 소켓 연결해아함?? 좀 더 공부해야함 */}
       <CustomIconButton element={<SendIcon />} />
-
     </Paper>
   );
 }

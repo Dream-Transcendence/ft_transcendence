@@ -52,6 +52,8 @@ function SearchBox() {
         placeholder="유저찾기…"
         inputProps={{ 'aria-label': 'search' }}
       />
+      {/* [axios GET 요청] Input value에 따른 인원목록 */}
+      {/* 리스트 추가 후, 해당 유저 페이지로 연결하는 로직 구현해야함 */}
     </Search>
   );
 }

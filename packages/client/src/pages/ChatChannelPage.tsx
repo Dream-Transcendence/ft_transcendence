@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
+import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Route, Routes } from 'react-router-dom';
@@ -62,8 +63,10 @@ function ChatroomPage() {
         </Aside>
         <Section>
           {/* 채팅방의 유무에 따라 보여줄 것 */}
+          {/* 향후 api에 따라 조정될 조건입니다. */}
           {openRoom ? (
-            <EnteredChatRoomTemplate />
+            // <EnteredChatRoomTemplate />
+            <EnteredDMTemplate />
           ) : existenceRoom ? (
             <ChatRoomListTemplate />
           ) : (

@@ -8,17 +8,16 @@ import SendMessageAlert from '../../molecules/CommonSection/SendMessageAlert';
 import { Footer, ProfileLayout } from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 
-
 function OtherProfileTemplate() {
-    return (
-        <ProfileLayout>
-            <OtherInfo />
-            <FreindList />
-            <UserStat />
-            <MatchHistory />
-            <Footer>{SendMessageAlert('친구')}</Footer>
-        </ProfileLayout>
-    );
+  return (
+    <ProfileLayout>
+      <OtherInfo />
+      <FreindList />
+      <UserStat />
+      <MatchHistory />
+      <Footer>{SendMessageAlert('친구')}</Footer>
+    </ProfileLayout>
+  );
 }
 
 export default OtherProfileTemplate;

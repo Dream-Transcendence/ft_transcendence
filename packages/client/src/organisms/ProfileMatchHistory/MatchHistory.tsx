@@ -18,7 +18,6 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   border: 'solid 1px',
 }));
 
-
 const TextLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '8%',
@@ -28,7 +27,6 @@ const TextLayout = styled('div')(({ theme }) => ({
 const ListLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '92%',
-
 }));
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
@@ -46,9 +44,12 @@ function MatchHistory() {
   return (
     <MatchHistoryLayout>
       <TextLayout>
-        <Typography variant='h6' align="center">MatchHistory</Typography>
+        <Typography variant="h6" align="center">
+          MatchHistory
+        </Typography>
       </TextLayout>
       <ListLayout>
+        {/* [axios GET 요청] 레더 정보 리스트 불러오기 */}
         <OneMatchHistoryLayout>
           <ListGenerate element={<OneMatchHistory />} />
         </OneMatchHistoryLayout>

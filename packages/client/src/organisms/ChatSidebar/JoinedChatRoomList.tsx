@@ -27,8 +27,11 @@ function JoinedChatRoomModule() {
   return (
     <JoinedChatRoomLayout>
       <JoinedChatRoomBox>
+        {/* [axios GET 요청] 현재 개설된 채팅방 리스트 요청 */}
         <BoxLayout>
-          <ListGenerate element={<ProfileChatRoomBox image="picture things" />} />
+          <ListGenerate
+            element={<ProfileChatRoomBox image="picture things" />}
+          />
         </BoxLayout>
       </JoinedChatRoomBox>
     </JoinedChatRoomLayout>

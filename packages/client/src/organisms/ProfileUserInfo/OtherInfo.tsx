@@ -18,6 +18,7 @@ function OtherInfo() {
                 <OtherProfileNicname />
             </UserNicknameLayout>
             <ProfileActionLayout>
+                {/* [Socket IO 요청] 상대방에게 친구수락 팝업 뜨게할 것 */}
                 <CustomIconButton element={<PersonAddIcon />} />
             </ProfileActionLayout>
         </UserInfoLayout>

@@ -51,6 +51,7 @@ function GameCreateTemplate(props: { buttonType: string | undefined }) {
 
   return (
     <GameTemplateLayout>
+        {/* [axios GET 요청] 상대방이 게임중인지 확인할 수 있는 정보 불러오기 및 POST요청 시 확인해도 가능 */}
       <GameHeaderLayout>
         <TextBox value={'Enjoy Game!'} size={'3rem'} fontColor={'black'} />
       </GameHeaderLayout>
@@ -58,6 +59,10 @@ function GameCreateTemplate(props: { buttonType: string | undefined }) {
         <GameCreateMainOrganism />
       </GameSectionLayout>
       <GameFooterLayout>
+        {/* [axios POST 요청] 상대방이 게임중인지 확인할 수 있는 정보 불러오기 및 각종 옵션을 포함한 정보를 전달하여 게임방 생성 */}
+        {/* [SocketIO 요청] 상대방 초대 
+        소켓 연결해아함?? 좀 더 공부해야함 */}
+        {/* 상대방 화면에 수락 컴포넌트 요청할 것임. */}
         <ButtonComponentLayout LinkTextResource={EnterRoom} />
       </GameFooterLayout>
     </GameTemplateLayout>

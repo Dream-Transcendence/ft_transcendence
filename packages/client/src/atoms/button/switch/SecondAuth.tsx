@@ -9,6 +9,7 @@ const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
 
 function SecondAuthSwitch() {
   return (
+    //[axios GET 요청] 2차 인증 여부
     <SecondAuthSwitchLayout>
       <FormControlLabel
         control={
@@ -19,6 +20,7 @@ function SecondAuthSwitch() {
           />
         }
         label="2차 인증"
+        // [axios PATCH 요청] 2차 인증 상태 변경
       />
     </SecondAuthSwitchLayout>
   );

@@ -33,7 +33,6 @@ function ChatSidebarTemplate() {
         borderColor="#9C27B0"
         color="#0A92B0"
       >
-        {' '}
         DM 목록{' '}
       </Typography>
       <JoinedDMListOrganisms />

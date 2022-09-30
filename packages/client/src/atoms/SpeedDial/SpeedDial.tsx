@@ -25,6 +25,10 @@ const OwnerActions = [
 
 export default function BasicSpeedDial() {
   return (
+    //admin의 등급에 따라 아이콘 구분
+    // [axios POST 요청] 모든 액션에 대하여 설정 적용요청
+    // owner 모든 버튼 활성화 admin등록, 추방, 음소거
+    // admin은 추방 및 음소거 (owner 제외)
     <SpeedDial
       ariaLabel="SpeedDial basic example"
       sx={{
