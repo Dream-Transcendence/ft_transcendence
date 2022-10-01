@@ -1,10 +1,21 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Room } from 'src/chats/rooms.entity';
-import { Like, Repository } from 'typeorm';
+import { NotFoundError } from 'rxjs';
+import { GetUserChatsDto } from 'src/chats/dto/rooms.dto';
+import {
+  ChannelParticipant,
+  DmParticipant,
+  Room,
+} from 'src/chats/rooms.entity';
+import {
+  EntityNotFoundError,
+  EntityPropertyNotFoundError,
+  Like,
+  Repository,
+} from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { UserDto } from './dto/user.dto';
+import { FriendDto, UserDto } from './dto/user.dto';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 
 @Injectable()
@@ -23,6 +34,10 @@ export class UserService {
     private requestsRepository: Repository<Request>,
     @Inject('ROOMS_REPOSITORY')
     private roomsRepository: Repository<Room>,
+    @Inject('CHANNELPARTICIPANTS_REPOSITORY')
+    private channelParticipantsRepository: Repository<ChannelParticipant>,
+    @Inject('DMPARTICIPANTS_REPOSITORY')
+    private dmParticipantsRepository: Repository<DmParticipant>,
   ) {}
 
   //ANCHOR: user management
@@ -33,6 +48,7 @@ export class UserService {
       nickname,
       image,
     });
+
     user = await this.usersRepository.save(user);
 
     const auth = this.authRepository.create({
@@ -49,11 +65,15 @@ export class UserService {
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
+
+    if (user === null) throw new EntityNotFoundError(User, id);
+
     const userDto = new UserDto(user.id, user.nickname, user.image);
 
     return userDto;
   }
 
+  // FIXME: 유저 정보를 수정했을 떄, 중복하는 경우 404가 반환되는데 상황에 상태코드로 변경
   async patchUser(id: number, userDto: PatchUserDto): Promise<UserDto> {
     const { nickname, image } = userDto;
 
@@ -131,21 +151,27 @@ export class UserService {
         block.blockedUser.nickname,
         block.blockedUser.image,
       );
-
       blockedUsers.push(userDto);
     });
     return blockedUsers;
   }
 
   // ANCHOR: user chat
-  // TODO: chat 관계 완성 후, 구현
-  // async getRooms(id: number): Promise<RoomDto[]> {
-  //   const rooms = await this.roomsRepository.find({
-  //     relations: { user: true, room: true },
-  //     where: { user: { id: id } },
-  //   });
+  async getRooms(id: number): Promise<GetUserChatsDto> {
+    const channels = await this.channelParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: id } },
+    });
+    const channelsList = channels.map((channel) => channel.room);
 
-  // }
+    const dms = await this.dmParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: id } },
+    });
+    const dmsList = dms.map((dm) => dm.room);
+
+    return { channelsList, dmsList };
+  }
 
   //ANCHOR: user friend
   async addFriend(id: number, friendId: number): Promise<UserDto> {
@@ -176,23 +202,32 @@ export class UserService {
     return friendDto;
   }
 
-  async getFriends(id: number): Promise<UserDto[]> {
+  async getFriends(id: number): Promise<FriendDto[]> {
     // SELECT * FROM public."friend"
-    // LEFT JOIN "user" ON "user"."id" = id
-    // WHERE "friend"."userId" = "user"."id";
-    const friends = await this.friendsRepository.find({
+    // LEFT JOIN "user" ON "user"."id" = friendId
+    // WHERE "friend"."userId = "user"."id";
+    const friendRows = await this.friendsRepository.find({
       relations: { user: true, friend: true },
       where: { user: { id: id } },
     });
 
-    const friendUsers: UserDto[] = [];
-    friends.forEach((friend) => {
-      const userDto = new UserDto(
-        friend.friend.id,
-        friend.friend.nickname,
-        friend.friend.image,
+    // SELECT * FROM public."block"
+    // INNER JOIN "user" ON "user"."id" = blockedUserId
+    // LEFT JOIN "block" ON "block"."blockedUserId" = "user"."id"
+    // WHERE "block"."userId" = "user"."id";
+    const blockedRows = await this.blocksRepository.find({
+      relations: { user: true, blockedUser: true },
+      where: { user: { id: id } },
+    });
+    const blockedIds = blockedRows.map((blockRow) => blockRow.blockedUser.id);
+
+    const friendUsers: FriendDto[] = [];
+    friendRows.forEach((friendRow) => {
+      const friendDto = new FriendDto(
+        friendRow.friend,
+        blockedIds.includes(friendRow.friend.id),
       );
-      friendUsers.push(userDto);
+      friendUsers.push(friendDto);
     });
 
     return friendUsers;
@@ -270,19 +305,28 @@ export class UserService {
     // SELECT * FROM public."friend"
     // LEFT JOIN "user" ON "user"."id" = id
     // WHERE "friend"."userId" = "user"."id";
-    const friends = await this.friendsRepository.find({
+    const friendRows = await this.friendsRepository.find({
       relations: { user: true, friend: true },
       where: { user: { id: id, nickname: Like(`%${nickname}%`) } },
     });
 
+    // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
+    const blockRows = await this.blocksRepository.find({
+      relations: { user: true, blockedUser: true },
+      where: { user: { id: id } },
+    });
+    const blockedIds = blockRows.map((blockRow) => blockRow.blockedUser.id);
+
     const foundUsers: UserDto[] = [];
-    friends.forEach((row) => {
-      const userDto = new UserDto(
-        row.user.id,
-        row.user.nickname,
-        row.user.image,
-      );
-      foundUsers.push(userDto);
+    friendRows.forEach((row) => {
+      if (blockedIds.includes(row.friend.id) === false) {
+        const userDto = new UserDto(
+          row.friend.id,
+          row.friend.nickname,
+          row.friend.image,
+        );
+        foundUsers.push(userDto);
+      }
     });
 
     return foundUsers;

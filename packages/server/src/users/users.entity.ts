@@ -8,13 +8,13 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 @Entity()
 export class User extends BaseEntity {
-  constructor(id: number, nickname: string, image: string) {
+  constructor(nickname: string, image: string) {
     super();
-    this.id = id;
     this.nickname = nickname;
     this.image = image;
   }
@@ -23,7 +23,7 @@ export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ unique: true })
   nickname: string;
 
   @Column({ nullable: true })
@@ -46,6 +46,7 @@ export class User extends BaseEntity {
 }
 
 @Entity()
+@Unique(['user', 'blockedUser'])
 export class Block extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -77,6 +78,7 @@ export class Auth extends BaseEntity {
 }
 
 @Entity()
+@Unique(['user', 'friend'])
 export class Friend extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -89,6 +91,7 @@ export class Friend extends BaseEntity {
 }
 
 @Entity()
+@Unique(['requestor', 'responser'])
 export class Request extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

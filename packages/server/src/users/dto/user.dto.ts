@@ -21,6 +21,22 @@ export class UserDto {
   image: string;
 }
 
+export class FriendDto {
+  constructor(user: UserDto, isBlocked: boolean) {
+    this.user = user;
+    this.isBlocked = isBlocked;
+  }
+
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  user: UserDto;
+
+  @ApiProperty()
+  isBlocked: boolean;
+}
+
 export class UserIdDto {
   constructor(id: number) {
     this.id = id;
