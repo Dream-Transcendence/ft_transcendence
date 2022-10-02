@@ -1,17 +1,11 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { NotFoundError } from 'rxjs';
 import { GetUserChatsDto } from 'src/chats/dto/rooms.dto';
 import {
   ChannelParticipant,
   DmParticipant,
   Room,
 } from 'src/chats/rooms.entity';
-import {
-  EntityNotFoundError,
-  EntityPropertyNotFoundError,
-  Like,
-  Repository,
-} from 'typeorm';
+import { EntityNotFoundError, Like, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
@@ -32,8 +26,6 @@ export class UserService {
     private friendsRepository: Repository<Friend>,
     @Inject('REQUESTS_REPOSITORY')
     private requestsRepository: Repository<Request>,
-    @Inject('ROOMS_REPOSITORY')
-    private roomsRepository: Repository<Room>,
     @Inject('CHANNELPARTICIPANTS_REPOSITORY')
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
@@ -48,7 +40,6 @@ export class UserService {
       nickname,
       image,
     });
-
     user = await this.usersRepository.save(user);
 
     const auth = this.authRepository.create({
@@ -59,17 +50,14 @@ export class UserService {
     await this.authRepository.save(auth);
 
     const userDto = new UserDto(user.id, user.nickname, user.image);
-
     return userDto;
   }
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
-
     if (user === null) throw new EntityNotFoundError(User, id);
 
     const userDto = new UserDto(user.id, user.nickname, user.image);
-
     return userDto;
   }
 
@@ -131,7 +119,6 @@ export class UserService {
     });
 
     block = await this.blocksRepository.save(block);
-
     return block.blockedUser;
   }
 
@@ -198,7 +185,6 @@ export class UserService {
     this.friendsRepository.save(row2);
 
     const friendDto = new UserDto(friend.id, friend.nickname, friend.image);
-
     return friendDto;
   }
 

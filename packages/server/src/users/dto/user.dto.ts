@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsString, IsUrl } from 'class-validator';
+import { IsBoolean, IsInt, IsObject, IsString, IsUrl } from 'class-validator';
 
 export class UserDto {
   constructor(id: number, nickname: string, image: string) {
@@ -28,12 +28,15 @@ export class FriendDto {
   }
 
   @ApiProperty()
+  @IsInt()
   id: number;
 
   @ApiProperty()
+  @IsObject()
   user: UserDto;
 
   @ApiProperty()
+  @IsBoolean()
   isBlocked: boolean;
 }
 
@@ -43,5 +46,6 @@ export class UserIdDto {
   }
 
   @ApiProperty()
+  @IsInt()
   id: number;
 }

@@ -10,13 +10,13 @@ async function bootstrap() {
 
   app.useGlobalFilters(new EntityNotFoundExceptionFilter());
 
-  // app.useGlobalPipes(
-  //   new ValidationPipe({
-  //     whitelist: true,
-  //     forbidNonWhitelisted: true,
-  //     transform: true,
-  //   }),
-  // );
+  app.useGlobalPipes(
+    new ValidationPipe({
+      // whitelist: true,
+      // forbidNonWhitelisted: true,
+      transform: true,
+    }),
+  );
   const config = new DocumentBuilder()
     .setTitle('API design example')
     .setDescription('Example')
