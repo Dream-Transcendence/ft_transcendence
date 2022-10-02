@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { GetUserChatsDto } from 'src/chats/dto/rooms.dto';
 import {
   ChannelParticipant,
@@ -55,18 +55,27 @@ export class UserService {
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
-    if (user === null) throw new EntityNotFoundError(User, id);
+    // if (user === null) throw new EntityNotFoundError(User, id);
 
     const userDto = new UserDto(user.id, user.nickname, user.image);
     return userDto;
   }
 
-  // FIXME: 유저 정보를 수정했을 떄, 중복하는 경우 404가 반환되는데 상황에 상태코드로 변경
   async patchUser(id: number, userDto: PatchUserDto): Promise<UserDto> {
     const { nickname, image } = userDto;
 
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
-    if (nickname) user.nickname = nickname;
+
+    if (nickname) {
+      // SELECT COUNT(*) FROM public."user" WHERE "nickname" = $1;
+      // COUNT를 통해서 중복된 닉네임의 수를 확인할 수도 있다.
+      const duplicateCheck = await this.usersRepository.findOne({
+        where: { nickname: nickname },
+      });
+      if (duplicateCheck !== null) throw new ConflictException();
+
+      user.nickname = nickname;
+    }
     if (image) user.image = image;
 
     await this.usersRepository.save(user);
@@ -83,6 +92,7 @@ export class UserService {
       relations: { user: true },
       where: { user: { id: id } },
     });
+    // if (auth === null) throw new EntityNotFoundError(Auth, id);
 
     const authUserDto = new AuthUserDto();
     authUserDto.authenticated = auth.authenticated;
@@ -96,6 +106,7 @@ export class UserService {
       relations: { user: true },
       where: { user: { id: id } },
     });
+    // if (auth === null) throw new EntityNotFoundError(Auth, id);
 
     auth.authenticated = !auth.authenticated;
     await this.authRepository.save(auth);
@@ -112,6 +123,8 @@ export class UserService {
     const blockedUser = await this.usersRepository.findOne({
       where: [{ id: userId }],
     });
+    if (blockedUser === null) throw new EntityNotFoundError(User, id);
+
     let block = this.blocksRepository.create({
       blockedTime: new Date(),
       user: user,
@@ -171,6 +184,7 @@ export class UserService {
     const friend = await this.usersRepository.findOne({
       where: [{ id: friendId }],
     });
+    if (friend === null) throw new EntityNotFoundError(User, friendId);
 
     const row1 = this.friendsRepository.create({
       user: user,
@@ -231,6 +245,16 @@ export class UserService {
     const responser = await this.usersRepository.findOne({
       where: [{ id: responserId }],
     });
+    if (responser === null) throw new EntityNotFoundError(User, responserId);
+
+    const duplicateRequestCheck = await this.requestsRepository.findOne({
+      where: { requestor: { id: requestorId }, responser: { id: responserId } },
+    });
+    const duplicateFriendCheck = await this.friendsRepository.findOne({
+      where: { user: { id: requestorId }, friend: { id: responserId } },
+    });
+    if (duplicateRequestCheck !== null || duplicateFriendCheck !== null)
+      throw new ConflictException();
 
     const row = this.requestsRepository.create({
       requestor: user,

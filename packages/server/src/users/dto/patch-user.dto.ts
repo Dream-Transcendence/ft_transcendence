@@ -1,12 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsUrl, isURL } from 'class-validator';
+import { IsOptional, IsString, IsUrl, isURL } from 'class-validator';
 
 export class PatchUserDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   nickname: string;
 
   @ApiProperty()
   @IsUrl()
+  @IsOptional()
   image: string;
 }

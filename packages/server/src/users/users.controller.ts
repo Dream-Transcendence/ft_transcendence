@@ -9,7 +9,9 @@ import {
   Query,
 } from '@nestjs/common';
 import {
+  ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiQuery,
@@ -65,6 +67,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: '유저 정보 수정 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiConflictResponse({ description: '이미 있는 닉네임으로 변경 시도' })
   patchUser(
     @Param('id') id: number,
     @Body() patchUserDto: PatchUserDto,
@@ -181,6 +184,7 @@ export class UsersController {
       'Body에 UserId가 들어간 객체를 넘기면 해당 ID의 유저를 친구로 추가\n\n 친구요청 수락 버튼을 눌렀을 때 호출',
   })
   @ApiCreatedResponse({ description: '친구 추가 성공', type: UserDto })
+  @ApiNotFoundResponse({ description: 'Friend Not Found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   addFriend(
     @Param('id') id: number,
@@ -243,6 +247,8 @@ export class UsersController {
   @ApiOperation({ summary: '친구 요청 추가 / BodyType: UserIdDto' })
   @ApiCreatedResponse({ description: '친구 요청 추가 성공' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Friend Not Found' })
+  @ApiConflictResponse({ description: 'Already Friend or Requested' })
   addRequest(
     @Param('id') id: number,
     @Body() responserIdDto: UserIdDto,
