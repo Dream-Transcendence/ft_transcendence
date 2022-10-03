@@ -18,7 +18,12 @@ import { Link } from 'react-router-dom';
 
 import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
-import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
+import {
+  CHANNELURL,
+  CHATROOMURL,
+  GAMECREATEURL,
+  PROFILEURL,
+} from '../../configs/Link.url';
 import { useSetRecoilState } from 'recoil';
 import { isopenRoom } from '../../pages/ChatChannelPage';
 
@@ -51,13 +56,13 @@ export default function NavigationBar() {
     url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
-  const ChatRoom: LinkIconResource = {
-    url: CHATROOMURL,
+  const Channels: LinkIconResource = {
+    url: CHANNELURL,
     icon: <ChatIcon fontSize="inherit" />,
   };
 
   const chatAction: LinkIconProps = {
-    iconResource: ChatRoom,
+    iconResource: Channels,
     action: closeRoomHandler,
   };
 
