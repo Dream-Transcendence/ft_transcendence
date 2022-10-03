@@ -52,12 +52,26 @@ export class CreateChannelDto {
   participantIds: number[];
 }
 
-export class GetUserChatsDto {
+export class GetUserRoomsDto {
   @ApiProperty()
-  dmsList: RoomDto[];
+  dmList: GetUserRoomDto[];
 
   @ApiProperty()
-  channelsList: RoomDto[];
+  channelList: GetUserRoomDto[];
+}
+
+export class GetUserRoomDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  image: string;
+
+  @ApiProperty()
+  RecvMessageCount: number;
 }
 
 export class createDmDto {

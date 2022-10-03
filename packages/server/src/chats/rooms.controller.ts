@@ -20,7 +20,6 @@ import {
   RoomPasswordDto,
   PatchRoomInfoDto,
   PatchUserInfoDto,
-  GetUserChatsDto,
   createDmDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
@@ -58,16 +57,16 @@ export class RoomsController {
   }
 
   // NOTE user controller로 옮기기
-  @Get('/:userId/chats')
-  @ApiOperation({ summary: 'user의 채널, DM 목록' })
-  @ApiOkResponse({
-    description: 'user의 채널, DM 목록 가져오기 성공 type: GetUserChatsDto',
-    type: GetUserChatsDto,
-  })
-  getUserChats(@Param('userId') userId: number): Promise<GetUserChatsDto> {
-    this.logger.log(`getUserChats`);
-    return this.roomService.getUserChats(userId);
-  }
+  // @Get('/:userId/chats')
+  // @ApiOperation({ summary: 'user의 채널, DM 목록' })
+  // @ApiOkResponse({
+  //   description: 'user의 채널, DM 목록 가져오기 성공 type: GetUserChatsDto',
+  //   type: GetUserChatsDto,
+  // })
+  // getUserChats(@Param('userId') userId: number): Promise<GetUserChatsDto> {
+  //   this.logger.log(`getUserChats`);
+  //   return this.roomService.getUserChats(userId);
+  // }
 
   @Get('/channel/:roomId')
   @ApiOperation({ summary: '채팅방 정보 가져오기' })

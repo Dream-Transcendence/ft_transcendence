@@ -17,7 +17,6 @@ import { ChannelParticipantDto, RoomDto } from './dto/room.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
-import { GetUserChatsDto } from './dto/rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -72,19 +71,19 @@ export class RoomService {
     });
   }
 
-  async getUserChats(userId: number): Promise<GetUserChatsDto> {
-    const channels = await this.channelParticipantsRepository.find({
-      relations: { room: true },
-      where: { user: { id: userId } },
-    });
-    const channelsList = channels.map((channel) => channel.room);
-    const dms = await this.dmParticipantsRepository.find({
-      relations: { room: true },
-      where: { user: { id: userId } },
-    });
-    const dmsList = dms.map((dm) => dm.room);
-    return { channelsList, dmsList };
-  }
+  // async getUserChats(userId: number): Promise<GetUserChatsDto> {
+  //   const channels = await this.channelParticipantsRepository.find({
+  //     relations: { room: true },
+  //     where: { user: { id: userId } },
+  //   });
+  //   const channelsList = channels.map((channel) => channel.room);
+  //   const dms = await this.dmParticipantsRepository.find({
+  //     relations: { room: true },
+  //     where: { user: { id: userId } },
+  //   });
+  //   const dmsList = dms.map((dm) => dm.room);
+  //   return { channelsList, dmsList };
+  // }
 
   async getRoomInfo(roomId: number): Promise<RoomDto> {
     return this.roomsRepository.findOneBy({
