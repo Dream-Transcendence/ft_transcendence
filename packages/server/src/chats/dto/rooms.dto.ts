@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  isObject,
   IsObject,
   IsOptional,
   IsString,
@@ -166,15 +167,17 @@ export class RoomPasswordDto {
 export class PatchChannelInfoDto {
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @ApiProperty()
   @IsUrl()
+  @IsOptional()
   image: string;
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 
@@ -183,11 +186,13 @@ export class PatchUserInfoDto {
   @IsInt()
   @Min(0)
   @Max(1)
+  @IsOptional()
   auth?: AUTH_TYPE;
 
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
+  @IsOptional()
   status?: STATUS_TYPE;
 }
