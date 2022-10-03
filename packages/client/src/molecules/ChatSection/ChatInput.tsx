@@ -2,8 +2,12 @@ import Paper from '@mui/material/Paper';
 import InputBase from '@mui/material/InputBase';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import SendIcon from '@mui/icons-material/Send';
+import { CustomIconProps } from '../../types/Link.type';
 
 function ChatInputModule() {
+  const customSendProps: CustomIconProps = {
+    icon: <SendIcon />,
+  };
   return (
     <Paper
       component="form"
@@ -27,7 +31,7 @@ function ChatInputModule() {
       />
       {/* [axios POST 요청] 채팅 전송 요청 */}
       {/* [SocketIO 요청] 소켓 연결해아함?? 좀 더 공부해야함 */}
-      <CustomIconButton element={<SendIcon />} />
+      <CustomIconButton customProps={customSendProps} />
     </Paper>
   );
 }

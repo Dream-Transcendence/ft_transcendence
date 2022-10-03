@@ -50,11 +50,9 @@ function ChatroomPage() {
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   // const [openRoom, setOpenRoom] = useState<string | null>(null);
   const openRoom = useRecoilValue(isopenRoom);
-  console.log(openRoom);
   //채팅방 유무 검사하는 비동기요청
 
   //existenceRoom =
-
   return (
     <ChatChannel>
       <MainSection>
@@ -65,8 +63,10 @@ function ChatroomPage() {
           {/* 채팅방의 유무에 따라 보여줄 것 */}
           {/* 향후 api에 따라 조정될 조건입니다. */}
           {openRoom ? (
-            // <EnteredChatRoomTemplate />
-            <EnteredDMTemplate />
+            <Routes>
+              <Route path="room/*" element={<EnteredChatRoomTemplate />} />
+              <Route path="DM/*" element={<EnteredDMTemplate />} />
+            </Routes>
           ) : existenceRoom ? (
             <ChatRoomListTemplate />
           ) : (

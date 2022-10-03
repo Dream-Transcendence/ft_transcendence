@@ -1,10 +1,12 @@
 import { IconButton } from '@mui/material';
+import { CustomIconProps } from '../../../types/Link.type';
 
-function CustomIconButton(props: { element: React.ReactElement }) {
-  const { element } = props;
+function CustomIconButton(props: { customProps: CustomIconProps }) {
+  const { icon, action } = props.customProps;
+
   return (
-    <IconButton aria-label="game" size="large">
-      {element}
+    <IconButton onClick={action} aria-label="game" size="large">
+      {icon}
     </IconButton>
   );
 }

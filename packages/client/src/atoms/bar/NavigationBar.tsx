@@ -16,9 +16,11 @@ import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 import { Link } from 'react-router-dom';
 
-import { LinkIconResource } from '../../types/Link.type';
+import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
 import { CHATROOMURL, GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
+import { useSetRecoilState } from 'recoil';
+import { isopenRoom } from '../../pages/ChatChannelPage';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -35,6 +37,12 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
+  const setOpenRoom = useSetRecoilState(isopenRoom);
+  const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
+  const closeRoomHandler = (): void => {
+    OpenNCloseRoom(null);
+  };
+
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
     icon: <NavProfile />,
@@ -48,17 +56,30 @@ export default function NavigationBar() {
     icon: <ChatIcon fontSize="inherit" />,
   };
 
+  const chatAction: LinkIconProps = {
+    iconResource: ChatRoom,
+    action: closeRoomHandler,
+  };
+
+  const avartarAction: LinkIconProps = {
+    iconResource: Avartar,
+  };
+
+  const ladderAction: LinkIconProps = {
+    iconResource: Ladder,
+  };
+
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
       <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
-            <LinkPageIconButton LinkIconResource={Avartar} />
+            <LinkPageIconButton linkIconProps={avartarAction} />
             {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
             {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
-            <LinkPageIconButton LinkIconResource={Ladder} />
-            <LinkPageIconButton LinkIconResource={ChatRoom} />
+            <LinkPageIconButton linkIconProps={ladderAction} />
+            <LinkPageIconButton linkIconProps={chatAction} />
             <RightLayout>
               <SearchBox />
               <LogoutIconButton />
