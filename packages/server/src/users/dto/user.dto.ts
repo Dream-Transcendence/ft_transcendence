@@ -49,3 +49,23 @@ export class UserIdDto {
   @IsInt()
   id: number;
 }
+
+export class DmUserDto {
+  constructor(id: number, nickname: string, image: string) {
+    this.id = id;
+    this.nickname = nickname;
+    this.image = image;
+  }
+
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  nickname: string;
+
+  @ApiProperty()
+  image: string;
+
+  @ApiProperty()
+  blocked: boolean;
+}

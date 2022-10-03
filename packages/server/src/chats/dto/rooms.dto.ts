@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
-import { RoomDto } from './room.dto';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsString,
+  IsUrl,
+  Max,
+  Min,
+} from 'class-validator';
+import { UserDto } from '../../users/dto/user.dto';
 
 // FIXME[epic=sonkang] union type들 모아두는 파일들 따로 만들기
 const CHAT_TYPE = {
@@ -24,6 +32,65 @@ const STATUS_TYPE = {
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 // ANCHOR Channel DTO
+export class ChannelDto {
+  constructor(name: string, type: CHAT_TYPE, image: string) {
+    this.name = name;
+    this.type = type;
+    this.image = image;
+  }
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+}
+
+export class ChannelParticipantDto {
+  constructor(
+    user: UserDto,
+    auth: AUTH_TYPE,
+    status: STATUS_TYPE,
+    // statusStartDate: Date,
+    blocked: boolean,
+  ) {
+    this.user = user;
+    this.auth = auth;
+    this.status = status;
+    // this.statusStartDate = statusStartDate;
+    this.blocked = blocked;
+  }
+
+  @ApiProperty()
+  user: UserDto;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  auth: AUTH_TYPE;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  status: STATUS_TYPE;
+
+  // @ApiProperty()
+  // statusStartDate: Date;
+
+  @ApiProperty()
+  @IsBoolean()
+  blocked: boolean;
+}
 export class CreateChannelDto {
   @ApiProperty()
   @IsInt()
@@ -42,10 +109,6 @@ export class CreateChannelDto {
   @ApiProperty()
   @IsString()
   salt: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  title: string;
 
   @ApiProperty()
   @IsInt()
@@ -82,10 +145,6 @@ export class createDmDto {
   @ApiProperty()
   @IsInt()
   participantId: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  title: string;
 }
 
 export class RoomPasswordDto {
@@ -94,7 +153,7 @@ export class RoomPasswordDto {
   salt: string;
 }
 
-export class PatchRoomInfoDto {
+export class PatchChannelInfoDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
