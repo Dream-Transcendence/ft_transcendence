@@ -11,6 +11,7 @@ import {
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
+import { CustomIconProps } from '../../types/Link.type';
 
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -20,6 +21,9 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 }));
 
 function UserInfo() {
+  const customProps: CustomIconProps = {
+    icon: <FileUploadButton />,
+  };
   return (
     <UserInfoLayout>
       <UserPictureLayout>
@@ -27,7 +31,7 @@ function UserInfo() {
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 */}
-          <CustomIconButton element={<FileUploadButton />} />
+          <CustomIconButton customProps={customProps} />
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>

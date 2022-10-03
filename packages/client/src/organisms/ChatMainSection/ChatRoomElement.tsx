@@ -45,6 +45,7 @@ function ChatRoomElementOrganisms() {
   const setOpenRoom = useSetRecoilState(isopenRoom);
   const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
 
+  //항후, 방 넘버를 토대로 정보를 구성할 것임.
   const openRoomHandler = (): void => {
     OpenNCloseRoom('open');
   };

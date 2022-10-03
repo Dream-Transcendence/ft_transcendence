@@ -14,6 +14,7 @@ import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import PasswordInput from '../../atoms/input/passwordBox';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import { CustomIconProps } from '../../types/Link.type';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -22,10 +23,13 @@ const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
 }));
 
 function InfoBoxPasswordModule() {
+  const customMeetProps: CustomIconProps = {
+    icon: <LockIcon />,
+  };
   return (
     <InfoBoxPasswordLayout>
       <PasswordInput />
-      <CustomIconButton element={<LockIcon />} />
+      <CustomIconButton customProps={customMeetProps} />
       {/* {CustomIconButton(<LockOpenIcon />)} 상황에 따라 아이콘 바꿀 것 */}
     </InfoBoxPasswordLayout>
   );
