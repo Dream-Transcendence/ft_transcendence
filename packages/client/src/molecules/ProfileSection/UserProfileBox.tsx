@@ -6,6 +6,7 @@ import AvatarWithCricle from './UserProfileBoxWithCircle';
 import { Button } from '@mui/material';
 import ProfileAvatar from '../../atoms/profile/ProfileAvatar';
 import TextBox from '../../texts/TextBox';
+import { UserProfileBoxTypes } from '../../types/Profile.type';
 
 const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
@@ -16,15 +17,10 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   marginLeft: '0.3rem',
 }));
 
-function UserProfileBox(props: { isButton: Boolean, avatarType: String }) {
-  const { isButton, avatarType } = props;
-  return isButton ? (
-    <UserProfileBoxLayout>
-      <ProfileAvatar avatarType={avatarType} />
-      <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
-    </UserProfileBoxLayout>
-  ) : (
-    <UserProfileBoxLayout disabled>
+function UserProfileBox(props: { userProfileBoxProps: UserProfileBoxTypes }) {
+  const { isButton, avatarType, action } = props.userProfileBoxProps;
+  return (
+    <UserProfileBoxLayout disabled={!isButton} onClick={action}>
       <ProfileAvatar avatarType={avatarType} />
       <TextBox value={'doyun'} size={'1rem'} fontColor={'black'} />
     </UserProfileBoxLayout>

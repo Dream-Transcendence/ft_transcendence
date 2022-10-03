@@ -5,6 +5,9 @@ import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserProfileBox from './UserProfileBox';
 import { CustomIconProps } from '../../types/Link.type';
+import { useRecoilState } from 'recoil';
+import { UserProfileBoxTypes } from '../../types/Profile.type';
+import { baseUserProfileData } from '../../pages/PingpongRoutePage';
 
 const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
   margin: '1px',
@@ -17,9 +20,21 @@ function UserInviteProfileBox() {
   const customProps: CustomIconProps = {
     icon: <CancelIcon />,
   };
+
+  const [isUser, setIsUser] = useRecoilState(baseUserProfileData);
+
+  const userProfileBoxProps: UserProfileBoxTypes = {
+    isButton: true,
+    avatarType: "circle",
+    // action: () => {
+    //   setIsUser(!isUser);
+    // }
+  }
+
+
   return (
     <UserInviteProfileLayout>
-      <UserProfileBox isButton={false} avatarType="circle" />
+      <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       <CustomIconButton customProps={customProps} />
     </UserInviteProfileLayout>
   );

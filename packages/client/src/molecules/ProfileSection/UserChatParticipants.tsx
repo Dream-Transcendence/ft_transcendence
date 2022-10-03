@@ -12,7 +12,9 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from '../../configs/Link.url';
+import { UserProfileBoxTypes } from '../../types/Profile.type';
+import { useRecoilState } from 'recoil';
+import { PROFILEURL } from '../../configs/Link.url';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -35,7 +37,7 @@ const SpeedDialLayout = styled('div')((props) => ({
 }));
 
 const personal: LinkIconResource = {
-  url: OTHERPROFILEURL,
+  url: PROFILEURL,
   icon: <PersonIcon />,
 };
 const linkPersonal: LinkIconProps = {
@@ -45,11 +47,22 @@ const linkPersonal: LinkIconProps = {
 const customProps: CustomIconProps = {
   icon: <NotInterestedIcon />,
 };
+
+// const [isUser, setIsUser] = useRecoilState(IsUser);
+
+const userProfileBoxProps: UserProfileBoxTypes = {
+  isButton: true,
+  avatarType: "circle",
+  // action: () => {
+  //   setIsUser(!isUser);
+  // }
+}
+
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox() {
   return (
     <UserProfileLayout>
-      <UserProfileBox isButton={true} avatarType="circle" />
+      <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       <UserFuntionLayout>
         <LinkPageIconButton linkIconProps={linkPersonal} />
         {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}

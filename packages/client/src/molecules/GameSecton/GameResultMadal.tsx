@@ -6,6 +6,7 @@ import { styled } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import { color } from '@mui/system';
 import GameScore from './GameScore';
+import { UserProfileBoxTypes } from '../../types/Profile.type';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -67,6 +68,18 @@ function GameResultModal() {
     setOpen(false);
   };
 
+  //axios get을 통해서 현재 게임에 참여자 2명의 데이터를 받아와야함
+  const userProfileBoxProps: UserProfileBoxTypes = {
+    isButton: false,
+    avatarType: "default",
+  }
+
+  const otherProfileBoxProps: UserProfileBoxTypes = {
+    isButton: false,
+    avatarType: "circle",
+  }
+
+
   return (
     <div>
       <Button onClick={handleOpen}>
@@ -82,10 +95,10 @@ function GameResultModal() {
         <Box sx={{ ...style, width: 400 }}>
           <GameResultLayout>
             <UserProfileBoxLayout>
-              <UserProfileBox isButton={false} avatarType='default' />
+              <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
             </UserProfileBoxLayout>
             <OtherProfileBoxLayout>
-              <UserProfileBox isButton={false} avatarType='circle' />
+              <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
             </OtherProfileBoxLayout>
             <GameScoreLayout>
               <GameScore player1Score='10' player2Score='9' />
