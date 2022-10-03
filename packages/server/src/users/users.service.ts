@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
-import { GetUserChatsDto } from 'src/chats/dto/rooms.dto';
+import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import {
   ChannelParticipant,
   DmParticipant,
@@ -157,20 +157,40 @@ export class UserService {
   }
 
   // ANCHOR: user chat
-  async getRooms(id: number): Promise<GetUserChatsDto> {
+  async getRooms(id: number): Promise<GetUserRoomsDto> {
     const channels = await this.channelParticipantsRepository.find({
       relations: { room: true },
       where: { user: { id: id } },
     });
-    const channelsList = channels.map((channel) => channel.room);
+    const channelRooms = channels.map((channel) => channel.room);
+    const channelList: GetUserRoomDto[] = [];
+    channelRooms.forEach((room) => {
+      const userRoomDto: GetUserRoomDto = {
+        id: room.id,
+        name: room.name,
+        image: room.image,
+        RecvMessageCount: 0,
+      };
+      channelList.push(userRoomDto);
+    });
 
     const dms = await this.dmParticipantsRepository.find({
       relations: { room: true },
       where: { user: { id: id } },
     });
-    const dmsList = dms.map((dm) => dm.room);
+    const dmRooms = dms.map((dm) => dm.room);
+    const dmList: GetUserRoomDto[] = [];
+    dmRooms.forEach((room) => {
+      const userRoomDto: GetUserRoomDto = {
+        id: room.id,
+        name: room.name,
+        image: room.image,
+        RecvMessageCount: 0,
+      };
+      dmList.push(userRoomDto);
+    });
 
-    return { channelsList, dmsList };
+    return { channelList, dmList };
   }
 
   //ANCHOR: user friend

@@ -18,7 +18,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { GetUserChatsDto } from 'src/chats/dto/rooms.dto';
+import { GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { GameLadderDto, GameRecordDto } from 'src/game/game.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -142,7 +142,7 @@ export class UsersController {
     schema: {
       type: 'object',
       properties: {
-        dm: {
+        dmList: {
           type: 'array',
           items: {
             type: 'object',
@@ -150,12 +150,11 @@ export class UsersController {
               id: { type: 'number' },
               name: { type: 'string' },
               image: { type: 'string' },
-              lastMessage: { type: 'string' },
-              lastMessageTime: { type: 'string' },
+              RecvMessageCount: { type: 'number' },
             },
           },
         },
-        chat: {
+        chatList: {
           type: 'array',
           items: {
             type: 'object',
@@ -163,8 +162,7 @@ export class UsersController {
               id: { type: 'number' },
               name: { type: 'string' },
               image: { type: 'string' },
-              lastMessage: { type: 'string' },
-              lastMessageTime: { type: 'string' },
+              RecvMessageCount: { type: 'number' },
             },
           },
         },
@@ -172,7 +170,7 @@ export class UsersController {
     },
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getRooms(@Param('id') id: number): Promise<GetUserChatsDto> {
+  getRooms(@Param('id') id: number): Promise<GetUserRoomsDto> {
     return this.userService.getRooms(id);
   }
 
