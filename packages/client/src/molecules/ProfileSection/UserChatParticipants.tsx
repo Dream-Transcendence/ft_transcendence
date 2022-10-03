@@ -12,7 +12,9 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from '../../configs/Link.url';
+import { UserProfileBoxTypes } from '../../types/Profile.type';
+import { useRecoilState } from 'recoil';
+import { PROFILEURL } from '../../configs/Link.url';
 import { blockUser } from '../ChatSection/InfoBoxDMFunction';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
@@ -57,9 +59,20 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
     action: handlerBlock,
   };
 
+// const [isUser, setIsUser] = useRecoilState(IsUser);
+
+const userProfileBoxProps: UserProfileBoxTypes = {
+  isButton: true,
+  avatarType: "circle",
+  // action: () => {
+  //   setIsUser(!isUser);
+  // }
+}
+
+
   return (
     <UserProfileLayout>
-      <UserProfileBox isButton={true} avatarType="circle" />
+      <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       <UserFuntionLayout>
         <LinkPageIconButton linkIconProps={linkPersonal} />
         {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}

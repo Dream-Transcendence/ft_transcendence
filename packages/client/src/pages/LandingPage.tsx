@@ -39,7 +39,7 @@ function LandingPage() {
   };
   return (
     <MainSection>
-      <LinkPageComponentButton LinkComponentResource={Enter} />
+      <LinkPageComponentButton LinkComponentprops={Enter} />
     </MainSection>
   );
 }
