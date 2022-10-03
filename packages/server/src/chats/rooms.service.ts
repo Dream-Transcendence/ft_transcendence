@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Equal, Repository, In } from 'typeorm';
+import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
   CreateChannelDto,
@@ -54,7 +54,8 @@ export class RoomService {
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = room;
       if (!participant.user) {
-        throw new NotFoundException(`Cant't find participant ${id}`);
+        await this.roomsRepository.delete({ id: room.id });
+        throw new NotFoundException(`Can't find participant ${id}`);
       }
       participants.push(participant);
     });
@@ -109,14 +110,14 @@ export class RoomService {
   ) {
     const { salt } = roomPasswordDto;
     let participant: ChannelParticipant;
-    const room = await await this.roomsRepository.findOneBy({ id: roomId });
+    const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (room.type !== 2 || salt === room.salt) {
       participant = this.channelParticipantsRepository.create();
       participant.user = await this.usersRepository.findOneBy({ id: userId });
       participant.room = await this.roomsRepository.findOneBy({ id: roomId });
       if (!participant.user || !participant.room) {
         throw new NotFoundException(
-          `Cant't find room${roomId} or participant ${userId}`,
+          `Cant't find room ${roomId} or participant ${userId}`,
         );
       }
       this.channelParticipantsRepository.save(participant);
@@ -174,29 +175,25 @@ export class RoomService {
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
       where: { room: { id: roomId }, user: { id: userId } },
     });
-    if (deleteParticipant !== undefined) {
-      console.log(deleteParticipant);
+    if (deleteParticipant !== null) {
       await this.channelParticipantsRepository.delete({
         id: deleteParticipant.id,
       });
     } else {
       throw new NotFoundException(
-        `Can't not delete user with user${userId} in room ${roomId}`,
+        `Can't not delete user ${userId} in room ${roomId}`,
       );
     }
     if (deleteParticipant.auth === 0) {
       const owner = await this.channelParticipantsRepository.findOne({
         where: { room: { id: roomId } },
       });
-      owner.auth = 0;
-      await this.channelParticipantsRepository.save(owner);
-    }
-    if (
-      (await this.channelParticipantsRepository.countBy({
-        room: { id: roomId },
-      })) === 0
-    ) {
-      await this.roomsRepository.delete(roomId);
+      if (owner !== null) {
+        owner.auth = 0;
+        await this.channelParticipantsRepository.save(owner);
+      } else {
+        await this.roomsRepository.delete(roomId);
+      }
     }
   }
 
@@ -247,7 +244,7 @@ export class RoomService {
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = dm;
       if (!participant.user) {
-        throw new NotFoundException(`Cant't find participant ${id}`);
+        throw new NotFoundException(`Can't find participant ${id}`);
       }
       participants.push(participant);
     });
@@ -258,19 +255,19 @@ export class RoomService {
   async getDmParticipant(roomId: number, userId: number): Promise<UserDto> {
     const participant = await this.dmParticipantsRepository.findOne({
       relations: { user: true },
-      where: { room: { id: roomId }, user: { id: userId } },
+      where: { room: { id: roomId }, user: { id: Not(userId) } },
     });
-    const blocked = await this.blocksRepository.find({
-      where: { user: { id: userId } },
+    const blocked = await this.blocksRepository.findOne({
+      where: {
+        user: { id: userId },
+        blockedUser: { id: participant.user.id },
+      },
     });
-    const bool = blocked.filter(
-      (blocked) => blocked.id === participant.id,
-    ).length;
     const user = {
       id: participant.user.id,
       nickname: participant.user.nickname,
       image: participant.user.image,
-      blocked: bool !== 0 ? true : false,
+      blocked: blocked !== null ? true : false,
     };
     return user;
   }

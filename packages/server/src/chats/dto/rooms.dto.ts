@@ -3,6 +3,8 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsObject,
+  IsOptional,
   IsString,
   IsUrl,
   Max,
@@ -70,6 +72,7 @@ export class ChannelParticipantDto {
   }
 
   @ApiProperty()
+  @IsObject()
   user: UserDto;
 
   @ApiProperty()
@@ -107,33 +110,40 @@ export class CreateChannelDto {
   type: CHAT_TYPE;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
   salt: string;
 
   @ApiProperty()
-  @IsInt()
+  @IsInt({ each: true })
   participantIds: number[];
 }
 
 export class GetUserRoomsDto {
   @ApiProperty()
+  @IsObject({ each: true })
   dmList: GetUserRoomDto[];
 
   @ApiProperty()
+  @IsObject({ each: true })
   channelList: GetUserRoomDto[];
 }
 
 export class GetUserRoomDto {
   @ApiProperty()
+  @IsInt()
   id: number;
 
   @ApiProperty()
+  @IsString()
   name: string;
 
   @ApiProperty()
+  @IsUrl()
   image: string;
 
   @ApiProperty()
+  @IsInt()
   RecvMessageCount: number;
 }
 

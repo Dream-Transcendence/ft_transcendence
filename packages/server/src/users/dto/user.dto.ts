@@ -58,14 +58,18 @@ export class DmUserDto {
   }
 
   @ApiProperty()
+  @IsInt()
   id: number;
 
   @ApiProperty()
+  @IsString()
   nickname: string;
 
   @ApiProperty()
+  @IsUrl()
   image: string;
 
   @ApiProperty()
+  @IsBoolean()
   blocked: boolean;
 }

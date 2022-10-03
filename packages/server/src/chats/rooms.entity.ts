@@ -22,7 +22,7 @@ export class Room {
   @Column({ nullable: true })
   salt: string;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
   @Column({ nullable: true })
