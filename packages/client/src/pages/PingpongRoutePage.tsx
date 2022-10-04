@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import {
   atom,
@@ -8,8 +9,10 @@ import {
   RecoilState,
   selector,
   useRecoilState,
+  useRecoilValue,
 } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
+import { PROFILEURL } from '../configs/Link.url';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
@@ -49,36 +52,17 @@ const PageSection = styled('section')(({ theme }) => ({
   "nickname": "string",
   "image": "string"
 } */
-// export const baseUserProfileSelectorData = selector<BaseUserProfileData>({
-//   key: 'baseUserProfileSelectorData',
+// export const userData = selector<BaseUserProfileData>({
+//   key: 'userData',
 //   get: async ({ get }) => {
 //     const respones = await axios.get('/users');
+//     console.log(respones);
 //     return respones.data;
 //   },
 // });
 
-// export const isUserProfilePage = selector({
-//   key: 'isUserProfilePage',
-//   get: ({ get }) => {
-//     //기존 사용자 정보 받아오기
-//     const baseUser = get(baseUserProfileData);
-//     //클릭된 컴포넌트 유저 정보 받아오기
-//     const otherUser = get(mockUserProfileData);
-//     if (baseUser.id !== otherUser.id) {
-//       return false;
-//     }
-//     return true;
-//   },
-// });
-
-//유저의 현재 spot을 확인하여 클릭된 위치와 다를 때 해당 component를 띄워주는 함수
-
-export const userSpot = atom<string>({
-  key: 'userSpot',
-  default: 'profile',
-});
-
 function PingpongRoutePage() {
+  // const a = useRecoilValue(userData);
   return (
     <PageSection>
       <header>
@@ -87,12 +71,12 @@ function PingpongRoutePage() {
         </nav>
       </header>
       <Routes>
-        <Route path="profile" element={<ProfilePage />} />
-        <Route path="channels/*" element={<ChatroomPage />} />
+        <Route path="profile" element={<Navigate replace to={PROFILEURL} />} />
+        <Route path="profile/*" element={<ProfilePage />} />
+        <Route path="channels" element={<ChatroomPage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />
         <Route path="gameplay" element={<GamePlayPage />} />
         <Route path="gameloding" element={<GameLodingPage />} />
-        {/* 추후에 url을 통해 직접들어가지 못하고 game 버튼을 통해서만 접근 가능하도록 수정 */}
       </Routes>
     </PageSection>
   );

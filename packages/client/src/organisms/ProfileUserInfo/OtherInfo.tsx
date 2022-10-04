@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
 import ProfileNicname from '../../atoms/text/ProfileNicname';

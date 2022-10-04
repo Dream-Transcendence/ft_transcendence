@@ -12,7 +12,6 @@ import {
   UserProfileBoxTypes,
 } from '../../types/Profile.type';
 import { PROFILEURL } from '../../configs/Link.url';
-import { userSpot } from '../../pages/PingpongRoutePage';
 import { useRecoilState } from 'recoil';
 import { OTHERPROFILE } from '../../configs/Spot.string';
 
@@ -50,11 +49,8 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindListOrganisms() {
-  const [spot, setSpot] = useRecoilState<string>(userSpot);
   const changeSpot = () => {
-    //user는 타인의 프로필 박스만 누를 수 있으므로 현재 보고있는 화면이 user의 profile화면이라면 바꾸기
-    //현재 보는 page가 otherProfile page라면 spot을 바꿀 필요가 없음
-    if (spot !== OTHERPROFILE) setSpot(OTHERPROFILE);
+
   };
 
   const otherProfileBoxProps: UserProfileBoxTypes = {

@@ -10,17 +10,40 @@ import {
   ProfileLayout,
 } from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
-import { userSpot } from '../../pages/PingpongRoutePage';
 import { BaseUserProfileData } from '../../types/Profile.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { selector, useRecoilState, useRecoilValue } from 'recoil';
+import { Routes } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import axios from 'axios';
+
+const otherData = selector<BaseUserProfileData>({
+  key: 'otherData',
+  get: async ({ get }) => {
+    const respones = await axios.get('/others');
+    console.log("others: ", respones);
+    return respones.data;
+  }
+})
 
 function ProfileTemplate() {
-  const spot = useRecoilValue<string>(userSpot);
-
+  // const userId = useRecoilValue<BaseUserProfileData>(userData);
+  // const otherId = useRecoilValue<BaseUserProfileData>(otherData);
+  /**
+   * if (userId === otherId) {
+   *  
+   * }
+   */
+  const userId = 'user';
+  const otherId = 'user';
   return (
     <ProfileLayout>
-      {spot === 'profile' && <UserInfo />}
-      {spot === 'otherProfile' && <OtherInfo />}
+      <Routes>
+        {/* <Route path={`${userId.userNickname}`} element={<UserInfo />} />
+        <Route path={`${otherId.userNickname}`} element={<OtherInfo />} /> */}
+        {userId === otherId ? //기본 리다이렉션 경경로또한 /user -> /123456
+          <Route path={'user'} element={<UserInfo />} />
+          : <Route path={'user'} element={<OtherInfo />} />}
+      </Routes>
       <FreindList />
       <UserStat />
       <MatchHistory />

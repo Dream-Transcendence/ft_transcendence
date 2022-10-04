@@ -21,7 +21,7 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 }));
 
 function UserInfo() {
-  const customProps: CustomIconProps = {
+  const fileUpProps: CustomIconProps = {
     icon: <FileUploadButton />,
   };
   return (
@@ -31,7 +31,7 @@ function UserInfo() {
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 */}
-          <CustomIconButton customProps={customProps} />
+          <CustomIconButton customProps={fileUpProps} />
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>

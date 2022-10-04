@@ -1,4 +1,4 @@
-export const PROFILEURL = '/pingpong/profile';
+export const PROFILEURL = '/pingpong/profile/user';
 export const GAMECREATEURL = '/pingpong/gamecreate';
 export const CHATROOMURL = '/pingpong/channel/room/';
 export const CHATDMURL = '/pingpong/channel/DM';
