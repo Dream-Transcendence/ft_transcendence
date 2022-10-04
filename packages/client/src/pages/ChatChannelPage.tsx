@@ -5,9 +5,10 @@ import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoom
 import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { CHANNELURL, CHATROOMURL } from '../configs/Link.url';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -39,17 +40,11 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
-export const isopenRoom = atom<string | null>({
-  key: 'checkOpenRoom',
-  default: null,
-});
-
 function ChatroomPage() {
   //나중에 room의 배열로 바꿀 것 비동기 요청
-  let existenceRoom: boolean = true;
+  let existenceRoom: boolean = false;
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   // const [openRoom, setOpenRoom] = useState<string | null>(null);
-  const openRoom = useRecoilValue(isopenRoom);
   //채팅방 유무 검사하는 비동기요청
 
   //existenceRoom =
@@ -62,16 +57,17 @@ function ChatroomPage() {
         <Section>
           {/* 채팅방의 유무에 따라 보여줄 것 */}
           {/* 향후 api에 따라 조정될 조건입니다. */}
-          {openRoom ? (
-            <Routes>
-              <Route path="room/*" element={<EnteredChatRoomTemplate />} />
-              <Route path="DM/*" element={<EnteredDMTemplate />} />
-            </Routes>
-          ) : existenceRoom ? (
-            <ChatRoomListTemplate />
+          <Routes>
+            <Route path="room/" element={<Navigate replace to={CHANNELURL} />} />
+            <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} />
+            <Route path="room/:roomNumber" element={<EnteredChatRoomTemplate />} />
+            <Route path="dm/:dmNumber" element={<EnteredDMTemplate />} />
+            {existenceRoom ? (
+            <Route path="/" element={<ChatRoomDefaultTemplate />} />
           ) : (
-            <ChatRoomDefaultTemplate />
+            <Route path="/" element={<ChatRoomListTemplate />} />
           )}
+          </Routes>
         </Section>
       </MainSection>
       <footer></footer>

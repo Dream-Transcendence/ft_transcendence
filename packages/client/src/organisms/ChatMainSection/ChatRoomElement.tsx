@@ -8,7 +8,6 @@ import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { CHATROOMURL } from '../../configs/Link.url';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { isopenRoom } from '../../pages/ChatChannelPage';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -42,19 +41,12 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
 }));
 
 function ChatRoomElementOrganisms() {
-  const setOpenRoom = useSetRecoilState(isopenRoom);
-  const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
-
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
-  const openRoomHandler = (): void => {
-    OpenNCloseRoom('open');
-  };
-
+  //api 호출해서 룸 번호 알아냄
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
-    url: CHATROOMURL,
+    url: CHATROOMURL + '1',
     content: '입장',
-    handler: openRoomHandler,
   };
 
   return (

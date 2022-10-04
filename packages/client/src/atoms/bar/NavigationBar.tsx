@@ -25,7 +25,6 @@ import {
   PROFILEURL,
 } from '../../configs/Link.url';
 import { useSetRecoilState } from 'recoil';
-import { isopenRoom } from '../../pages/ChatChannelPage';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -42,11 +41,6 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
-  const setOpenRoom = useSetRecoilState(isopenRoom);
-  const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
-  const closeRoomHandler = (): void => {
-    OpenNCloseRoom(null);
-  };
 
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
@@ -62,8 +56,7 @@ export default function NavigationBar() {
   };
 
   const chatAction: LinkIconProps = {
-    iconResource: Channels,
-    action: closeRoomHandler,
+    iconResource: Channels
   };
 
   const avartarAction: LinkIconProps = {
