@@ -4,16 +4,17 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Equal, Repository, In } from 'typeorm';
+import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
   CreateChannelDto,
   PatchUserInfoDto,
   RoomPasswordDto,
-  PatchRoomInfoDto,
+  PatchChannelInfoDto,
   createDmDto,
+  ChannelParticipantDto,
+  ChannelDto,
 } from '../chats/dto/rooms.dto';
-import { ChannelParticipantDto, RoomDto } from './dto/room.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
@@ -34,27 +35,27 @@ export class RoomService {
   ) {}
 
   // ANCHOR Room Service
-  async createChannel(createChannelDto: CreateChannelDto): Promise<RoomDto> {
-    const { userId, name, type, salt, title, participantIds } =
-      createChannelDto;
+  async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
+    const { userId, name, type, salt, participantIds } = createChannelDto;
     // NOTE room info 저장
     let room = this.roomsRepository.create({
       name,
       type,
       salt,
-      title,
+      title: 'socket title',
     });
     room = await this.roomsRepository.save(room);
     // Channel participants 저장
     const participants: ChannelParticipant[] = [];
-    const Ids = [...participantIds, userId];
+    const Ids = [userId, ...participantIds];
     const promises = Ids.map(async (id) => {
       const participant: ChannelParticipant =
         this.channelParticipantsRepository.create();
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = room;
       if (!participant.user) {
-        throw new NotFoundException(`Cant't find participant ${id}`);
+        await this.roomsRepository.delete({ id: room.id });
+        throw new NotFoundException(`Can't find participant ${id}`);
       }
       participants.push(participant);
     });
@@ -62,55 +63,65 @@ export class RoomService {
     await this.channelParticipantsRepository.save(participants);
     // channel owner로 auth 변경
     await this.patchUserInfo(room.id, userId, { auth: 0 });
+    delete room.salt;
+    delete room.title;
     return room;
   }
 
-  async getChannels(): Promise<RoomDto[]> {
-    return this.roomsRepository.findBy({
-      type: 1 || 2,
+  async getChannels(): Promise<ChannelDto[]> {
+    const roomType = [1, 2];
+    const channels = await this.roomsRepository.find({
+      where: { type: In(roomType) },
+      order: { id: 'DESC' },
     });
+    channels.map((channel) => {
+      delete channel.salt;
+      delete channel.title;
+    });
+    return channels;
   }
 
-  // async getUserChats(userId: number): Promise<GetUserChatsDto> {
-  //   const channels = await this.channelParticipantsRepository.find({
-  //     relations: { room: true },
-  //     where: { user: { id: userId } },
-  //   });
-  //   const channelsList = channels.map((channel) => channel.room);
-  //   const dms = await this.dmParticipantsRepository.find({
-  //     relations: { room: true },
-  //     where: { user: { id: userId } },
-  //   });
-  //   const dmsList = dms.map((dm) => dm.room);
-  //   return { channelsList, dmsList };
-  // }
-
-  async getRoomInfo(roomId: number): Promise<RoomDto> {
-    return this.roomsRepository.findOneBy({
-      id: roomId,
+  async getChannelInfo(roomId: number, userId: number): Promise<ChannelDto> {
+    const channel = await this.roomsRepository.findOne({
+      where: { id: roomId },
     });
+    const user = await this.channelParticipantsRepository.findOneBy({
+      room: { id: roomId },
+      user: { id: userId },
+    });
+    if (!user)
+      throw new NotFoundException(
+        `Cant't find room ${roomId} or participant ${userId}`,
+      );
+    if (user.auth != 0) {
+      delete channel.type;
+    }
+    // NOTE 사용자가 owner라면 비밀번호를 설정할 수 있는 칸이 필요하기 때문에 owner일 때만 type을 준다
+    delete channel.id;
+    delete channel.salt;
+    delete channel.title;
+    return channel;
   }
 
-  async enterRoom(
+  async enterChannel(
     roomId: number,
     userId: number,
     roomPasswordDto: RoomPasswordDto,
-  ): Promise<UserDto> {
+  ) {
     const { salt } = roomPasswordDto;
     let participant: ChannelParticipant;
-    const roomSalt = await (await this.getRoomInfo(roomId)).salt;
-    if (roomSalt === null || salt === roomSalt) {
+    const room = await this.roomsRepository.findOneBy({ id: roomId });
+    if (room.type !== 2 || salt === room.salt) {
       participant = this.channelParticipantsRepository.create();
       participant.user = await this.usersRepository.findOneBy({ id: userId });
       participant.room = await this.roomsRepository.findOneBy({ id: roomId });
       if (!participant.user || !participant.room) {
         throw new NotFoundException(
-          `Cant't find room${roomId} or participant ${userId}`,
+          `Cant't find room ${roomId} or participant ${userId}`,
         );
       }
       this.channelParticipantsRepository.save(participant);
     } else throw new ForbiddenException('Password is not correct');
-    return participant.user;
   }
 
   async getChannelParticipants(
@@ -144,16 +155,17 @@ export class RoomService {
           : true;
       //blockedParticipantIds에 id가 있으면 true, 없으면 false
       const result = new ChannelParticipantDto(
-        participant.id,
         participant.user,
         participant.auth,
         participant.status,
-        participant.statusStartDate,
+        // participant.statusStartDate,
         blockedBool,
       );
       results.push(result);
     });
-    return results;
+    const user = results.filter((result) => result.user.id == userId);
+    const participants = results.filter((result) => result.user.id != userId);
+    return [user[0], ...participants];
   }
 
   async deleteChannelParticipant(
@@ -163,24 +175,41 @@ export class RoomService {
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
       where: { room: { id: roomId }, user: { id: userId } },
     });
-    if (deleteParticipant !== undefined) {
+    if (deleteParticipant !== null) {
       await this.channelParticipantsRepository.delete({
         id: deleteParticipant.id,
       });
     } else {
       throw new NotFoundException(
-        `Can't not delete user with user${userId} in room ${roomId}`,
+        `Can't not delete user ${userId} in room ${roomId}`,
       );
+    }
+    if (deleteParticipant.auth === 0) {
+      const owner = await this.channelParticipantsRepository.findOne({
+        where: { room: { id: roomId } },
+      });
+      if (owner !== null) {
+        owner.auth = 0;
+        await this.channelParticipantsRepository.save(owner);
+      } else {
+        await this.roomsRepository.delete(roomId);
+      }
     }
   }
 
-  async patchRoomInfo(roomId: number, patchRoomInfoDto: PatchRoomInfoDto) {
-    const { name, image, salt } = patchRoomInfoDto;
+  async patchChannelInfo(
+    roomId: number,
+    patchChannelInfoDto: PatchChannelInfoDto,
+  ) {
+    const { name, image, salt } = patchChannelInfoDto;
     // image 기본으로 요청 : null, image 요청이 아닐 때 undefined
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (name !== undefined) room.name = name;
     if (image !== undefined) room.image = image;
+    if (room.salt === null && salt !== undefined) room.type = 2;
+    if (room.salt !== null && salt === null) room.type = 1;
     if (salt !== undefined) room.salt = salt;
+    // salt를 삭제하고 싶을 때 null 주기
     await this.roomsRepository.save(room);
   }
 
@@ -199,12 +228,12 @@ export class RoomService {
   }
 
   // ANCHOR Dm Service
-  async createDm(createDmDto: createDmDto): Promise<UserDto[]> {
-    const { userId, participantId, title } = createDmDto;
+  async createDm(createDmDto: createDmDto): Promise<void> {
+    const { userId, participantId } = createDmDto;
     // NOTE dm info 저장
     let dm = this.roomsRepository.create({
       type: 0,
-      title,
+      // title,
     });
     dm = await this.roomsRepository.save(dm);
     // dm participants 저장
@@ -215,32 +244,42 @@ export class RoomService {
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = dm;
       if (!participant.user) {
-        throw new NotFoundException(`Cant't find participant ${id}`);
+        throw new NotFoundException(`Can't find participant ${id}`);
       }
       participants.push(participant);
     });
     await Promise.all(promises);
     this.dmParticipantsRepository.save(participants);
-    return participants.map((participant) => participant.user);
   }
 
-  // FIXME[epic=sonkang] 두명의 정보를 보낼 것인지.. userId를 받아서 상대방 정보만 보낼 것인지
-  async getDmParticipants(roomId: number): Promise<UserDto[]> {
-    const participants = await this.dmParticipantsRepository.find({
+  async getDmParticipant(roomId: number, userId: number): Promise<UserDto> {
+    const participant = await this.dmParticipantsRepository.findOne({
       relations: { user: true },
-      // where: { room: { id: roomId }, user: { id: userId } },
+      where: { room: { id: roomId }, user: { id: Not(userId) } },
     });
-    return participants.map((participant) => participant.user);
+    const blocked = await this.blocksRepository.findOne({
+      where: {
+        user: { id: userId },
+        blockedUser: { id: participant.user.id },
+      },
+    });
+    const user = {
+      id: participant.user.id,
+      nickname: participant.user.nickname,
+      image: participant.user.image,
+      blocked: blocked !== null ? true : false,
+    };
+    return user;
   }
 
-  async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
-    const deleteParticipant = await this.dmParticipantsRepository.findOne({
-      where: { room: { id: roomId }, user: { id: userId } },
-    });
-    console.log(deleteParticipant);
-    if (deleteParticipant !== undefined) {
-      await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
-    }
-    return;
-  }
+  // async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
+  //   const deleteParticipant = await this.dmParticipantsRepository.findOne({
+  //     where: { room: { id: roomId }, user: { id: userId } },
+  //   });
+  //   console.log(deleteParticipant);
+  //   if (deleteParticipant !== undefined) {
+  //     await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
+  //   }
+  //   return;
+  // }
 }
