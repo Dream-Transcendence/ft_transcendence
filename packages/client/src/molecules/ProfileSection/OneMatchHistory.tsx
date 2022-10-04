@@ -1,7 +1,7 @@
 import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { PhotoSizeSelectLargeSharp } from '@mui/icons-material';
-import { createTheme } from '@mui/material';
+import { createTheme, Typography } from '@mui/material';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
 
@@ -33,7 +33,7 @@ function OneMatchHistory() {
       <OneMatchHistoryLayout>
         {MatchType('Ladder')}
         {GamePlayer('doyun')}
-        <text>VS</text>
+        <Typography>VS</Typography>
         {GamePlayer('junghan')}
       </OneMatchHistoryLayout>
     </ThemeProvider>

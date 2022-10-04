@@ -1,6 +1,7 @@
 export interface LinkIconResource {
   url: string;
   icon: React.ReactElement;
+  action?: () => void;
 }
 
 export interface LinkTextResource {

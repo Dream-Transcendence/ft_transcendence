@@ -7,7 +7,6 @@ import UserProfileBox from './UserProfileBox';
 import { CustomIconProps } from '../../types/Link.type';
 import { useRecoilState } from 'recoil';
 import { UserProfileBoxTypes } from '../../types/Profile.type';
-import { baseUserProfileData } from '../../pages/PingpongRoutePage';
 
 const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
   margin: '1px',
@@ -21,16 +20,13 @@ function UserInviteProfileBox() {
     icon: <CancelIcon />,
   };
 
-  const [isUser, setIsUser] = useRecoilState(baseUserProfileData);
-
   const userProfileBoxProps: UserProfileBoxTypes = {
     isButton: true,
-    avatarType: "circle",
+    avatarType: 'circle',
     // action: () => {
     //   setIsUser(!isUser);
     // }
-  }
-
+  };
 
   return (
     <UserInviteProfileLayout>

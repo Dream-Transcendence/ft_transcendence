@@ -7,10 +7,14 @@ import { LinkComponentResource, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { Link } from 'react-router-dom';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
-import { selector, useRecoilState, useSetRecoilState } from 'recoil';
-import { BaseUserProfileData, IsUserProfilePage, UserProfileBoxTypes } from '../../types/Profile.type';
+import {
+  BaseUserProfileData,
+  UserProfileBoxTypes,
+} from '../../types/Profile.type';
 import { PROFILEURL } from '../../configs/Link.url';
-import { baseUserProfileData, isUserProfilePage } from '../../pages/PingpongRoutePage';
+import { userSpot } from '../../pages/PingpongRoutePage';
+import { useRecoilState } from 'recoil';
+import { OTHERPROFILE } from '../../configs/Spot.string';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -45,26 +49,25 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
   borderColor: 'black',
 }));
 
-const [isUser, setIsUser] = useRecoilState<IsUserProfilePage>(isUserProfilePage);
-const [userData, setUserState] = useRecoilState<BaseUserProfileData>(baseUserProfileData);
 function FreindListOrganisms() {
-  //const [isUser, setIsUser] = useRecoilState(baseUserProfileData);
-  let isUser = true;
-  const userProfileBoxProps: UserProfileBoxTypes = {
-    isButton: true,
-    avatarType: "circle",
-    action: () => {
-      if (isUser === true) //user는 타인의 프로필 박스만 누를 수 있으므로 현재 보고있는 화면이 user의 profile화면이라면 바꾸기
-        isUser = !isUser;//setIsUser(!isUser); //지금은 토글 형식이지만 실제 user의 데이터를 받아와서 띄워주어야함
-    }
-  }
+  const [spot, setSpot] = useRecoilState<string>(userSpot);
+  const changeSpot = () => {
+    //user는 타인의 프로필 박스만 누를 수 있으므로 현재 보고있는 화면이 user의 profile화면이라면 바꾸기
+    //현재 보는 page가 otherProfile page라면 spot을 바꿀 필요가 없음
+    if (spot !== OTHERPROFILE) setSpot(OTHERPROFILE);
+  };
 
+  const otherProfileBoxProps: UserProfileBoxTypes = {
+    isButton: true,
+    avatarType: 'circle',
+    action: changeSpot,
+  };
 
   const OtherProfile: LinkComponentResource = {
     url: PROFILEURL,
     component: (
       <ProfileBoxLayout>
-        <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+        <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
       </ProfileBoxLayout>
     ),
   };

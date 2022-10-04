@@ -5,32 +5,22 @@ import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
 import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 import ReceiveMessageAlert from '../../molecules/CommonSection/ReceiveMessageAlert';
 import SendMessageAlert from '../../molecules/CommonSection/SendMessageAlert';
-import { Footer as Popup, ProfileLayout } from '../../pages/PageStyles/ProfilePageCss';
+import {
+  Footer as Popup,
+  ProfileLayout,
+} from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
-import { atom, RecoilState, useRecoilState, useRecoilValue } from 'recoil';
-import { baseUserProfileData, isUserProfilePage } from '../../pages/PingpongRoutePage';
-import { BaseUserProfileData, IsUserProfilePage } from '../../types/Profile.type';
-
-// interface userState {
-//   isLogin: boolean,
-//   image: string,
-//   secondAuth: boolean,
-//   freineds
-//   stat
-//   history
-// }
-
-//하위 컴포넌트에서
-
+import { userSpot } from '../../pages/PingpongRoutePage';
+import { BaseUserProfileData } from '../../types/Profile.type';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 function ProfileTemplate() {
-  const [userData, setUserState] = useRecoilState<BaseUserProfileData>(baseUserProfileData);
-  const isUser = useRecoilValue<IsUserProfilePage>(isUserProfilePage);
+  const spot = useRecoilValue<string>(userSpot);
 
   return (
     <ProfileLayout>
-      {isUser && <UserInfo />}
-      {!isUser && <OtherInfo />}
+      {spot === 'profile' && <UserInfo />}
+      {spot === 'otherProfile' && <OtherInfo />}
       <FreindList />
       <UserStat />
       <MatchHistory />
