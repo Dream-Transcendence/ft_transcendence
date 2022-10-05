@@ -8,8 +8,6 @@ services: # 컨테이너 실행을 위한 단위
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
     container_name: postgres-db
-    expose: # 도커 컨테이너 리스닝 포트 지정
-      - '5432'
     ports: # container 포트 매핑
       - '5432:5432'
     # command: -p 5432 # 기본 명령어 덮어쓰기
@@ -21,18 +19,7 @@ services: # 컨테이너 실행을 위한 단위
     build:
       context: . # 도커 파일 경로 또는 레포지토리 url
       dockerfile: Dockerfile # 도커 파일
-    image: tusharchy/nest-and-postgres-application:latest
-    environment:
-      - DB_TYPE=${DB_TYPE}
-      - POSTGRES_HOST=${POSTGRES_HOST}
-      - POSTGRES_USER=${DATABASE_USER}
-      - POSTGRES_PASS=${DATABASE_PASSWORD}
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_SYNC=falsedf
-      - JWT_SECRET=${JWT_SECRET}
-      - POSTGRES_PORT=${POSTGRES_PORT}
-      - APP_EXPIRES=${APP_EXPIRES}
-      - APP_PORT=${APP_PORT}
+    image: kingWangZzang/nestjs
     ports:
       - '3000:3000' # expose-to-the-world : only-in-the-docker
     container_name: nest-app
