@@ -39,7 +39,6 @@
   "dependencies": {
     "eslint-plugin-react-hooks": "^4.6.0",
     "react-hooks": "^1.0.1",
-    "recoil": "^0.7.5",
-    "yarn": "^1.22.19"
+    "recoil": "^0.7.5"
   }
 }
