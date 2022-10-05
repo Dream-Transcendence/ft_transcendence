@@ -10,6 +10,16 @@ services: # 컨테이너 실행을 위한 단위
     container_name: postgres-db
     ports: # container 포트 매핑
       - '5432:5432'
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+        - 5430:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_USER}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
     # command: -p 5432 # 기본 명령어 덮어쓰기
     # volumes:
     #   - ./data:/var/lib/postgresql/data
@@ -25,3 +35,4 @@ services: # 컨테이너 실행을 위한 단위
     container_name: nest-app
     depends_on: # 실행 순서를 보장받고 싶을 때, 사용
       - db
+      - pgadmin

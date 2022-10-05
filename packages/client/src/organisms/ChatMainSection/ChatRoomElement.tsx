@@ -11,7 +11,7 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
-  height: '20%',
+  height: '100%',
   marginBottom: '1%',
   borderRadius: '3px',
   backgroundColor: '#1976D2',
@@ -34,15 +34,19 @@ const PasswordInputLayout = styled('div')(({ theme }) => ({
 
 const EnterButtonLayout = styled('div')(({ theme }) => ({
   width: '15%',
-  height: '40%',
+  height: '100%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 }));
 
-function ChatRoomElementOrganisms() {
+//DTO 확정되면 수정할 것 ChannelDto
+function ChatRoomElementOrganisms(roomInfo: any) {
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
+  const rooms = roomInfo.roomInfo;
+
+  const { id, name, type, image } = rooms;
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
     url: CHATROOMURL + '1',
@@ -53,13 +57,15 @@ function ChatRoomElementOrganisms() {
     <ChatRoomElementLayout>
       <RoomElementImageModule image="/static/images/avatar/1.jpg" />
       <RoomInfoLayout>
-        <RoomTitleModule title="방 이름"></RoomTitleModule>
+        <RoomTitleModule title={name}></RoomTitleModule>
         <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
-      <PasswordInputLayout>
-        <PasswordInput />
-      </PasswordInputLayout>
+      {type === 0 && (
+        <PasswordInputLayout>
+          <PasswordInput />
+        </PasswordInputLayout>
+      )}
       {/* [axios POST 요청] 타입에 따라 입장 여부확인(어떤 성격의 채팅방인지 전달) 후, 입장 요청 */}
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />

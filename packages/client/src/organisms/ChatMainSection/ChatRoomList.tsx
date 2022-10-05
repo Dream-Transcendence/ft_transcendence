@@ -9,11 +9,19 @@ const ChatRoomListLayout = styled('div')(({ theme }) => ({
   height: '100%',
 }));
 
-function ChatRoomListOrganisms() {
+//DTO 확정되면 수정할 것 ChannelDto[]
+function ChatRoomListOrganisms(roomList: any) {
+  const rooms = roomList.roomList;
   //채팅방 리스트 목록을 요청하는 api
   return (
     <ChatRoomListLayout>
-      <ListGenerate element={<ChatRoomElementOrganisms />} />
+      <ul>
+        {rooms.map((roomInfo: any) => (
+          <li key={roomInfo.id}>
+            <ChatRoomElementOrganisms roomInfo={roomInfo.roomInfo} />
+          </li>
+        ))}
+      </ul>
     </ChatRoomListLayout>
   );
 }
