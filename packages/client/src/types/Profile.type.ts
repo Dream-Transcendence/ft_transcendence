@@ -16,7 +16,7 @@ export interface FriendList {
 
 export interface BaseUserProfileData {
   id: number;
-  userNickname: string;
+  nickname: string;
   image: string;
 }
 

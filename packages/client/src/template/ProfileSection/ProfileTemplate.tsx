@@ -15,34 +15,46 @@ import { selector, useRecoilState, useRecoilValue } from 'recoil';
 import { Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
+import { userData } from '../../pages/PingpongRoutePage';
 
-const otherData = selector<BaseUserProfileData>({
+// const otherData = selector<BaseUserProfileData>({
+//   key: 'otherData',
+//   get: async ({ get }) => {
+//     const respones = await axios.get('/others');
+//     console.log('others: ', respones);
+//     return respones.data;
+//   },
+// });
+
+export const otherData = selector<BaseUserProfileData>({
   key: 'otherData',
-  get: async ({ get }) => {
-    const respones = await axios.get('/others');
-    console.log("others: ", respones);
-    return respones.data;
-  }
-})
+  get: ({ get }) => {
+    // async const respones = await axios.get('/users');
+    // console.log(respones);
+    //respones.data;
+    let response = {
+      id: 2,
+      nickname: 'junghan',
+      image: 'https://cdn.intra.42.fr/users/junghan.jpg',
+    };
+    return response;
+  },
+});
 
 function ProfileTemplate() {
-  // const userId = useRecoilValue<BaseUserProfileData>(userData);
-  // const otherId = useRecoilValue<BaseUserProfileData>(otherData);
-  /**
-   * if (userId === otherId) {
-   *  
-   * }
-   */
-  const userId = 'user';
-  const otherId = 'user';
+  const user = useRecoilValue<BaseUserProfileData>(userData);
+  const other = useRecoilValue<BaseUserProfileData>(otherData);
+
   return (
     <ProfileLayout>
       <Routes>
         {/* <Route path={`${userId.userNickname}`} element={<UserInfo />} />
         <Route path={`${otherId.userNickname}`} element={<OtherInfo />} /> */}
-        {userId === otherId ? //기본 리다이렉션 경경로또한 /user -> /123456
-          <Route path={'user'} element={<UserInfo />} />
-          : <Route path={'user'} element={<OtherInfo />} />}
+        {user.id === other.id ? ( //기본 리다이렉션 경경로또한 /user -> /123456
+          <Route path={`${user.nickname}`} element={<UserInfo />} />
+        ) : (
+          <Route path={`${other.nickname}`} element={<OtherInfo />} />
+        )}
       </Routes>
       <FreindList />
       <UserStat />

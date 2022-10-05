@@ -46,12 +46,6 @@ const PageSection = styled('section')(({ theme }) => ({
 //   },
 // });
 
-//실제로 data 받을시 예상 값과 사용할 로직
-/**{
-  "id": 0,
-  "nickname": "string",
-  "image": "string"
-} */
 // export const userData = selector<BaseUserProfileData>({
 //   key: 'userData',
 //   get: async ({ get }) => {
@@ -60,9 +54,24 @@ const PageSection = styled('section')(({ theme }) => ({
 //     return respones.data;
 //   },
 // });
+export const userData = selector<BaseUserProfileData>({
+  key: 'userData',
+  get: ({ get }) => {
+    // async const respones = await axios.get('/users');
+    // console.log(respones);
+    //respones.data;
+    let response = {
+      id: 1,
+      nickname: 'doyun',
+      image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
+    };
+    return response;
+  },
+});
 
 function PingpongRoutePage() {
-  // const a = useRecoilValue(userData);
+  const user = useRecoilValue(userData);
+
   return (
     <PageSection>
       <header>
@@ -71,7 +80,10 @@ function PingpongRoutePage() {
         </nav>
       </header>
       <Routes>
-        <Route path="profile" element={<Navigate replace to={PROFILEURL} />} />
+        <Route
+          path="profile"
+          element={<Navigate replace to={`${user.nickname}`} />}
+        />
         <Route path="profile/*" element={<ProfilePage />} />
         <Route path="channels" element={<ChatroomPage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />

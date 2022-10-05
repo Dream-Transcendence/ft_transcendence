@@ -6,11 +6,12 @@ import NicknamePage from './pages/NicknamePage';
 import GameCreatePage from './pages/GameCreatePage';
 import GameLodingPage from './pages/GameLodingPage';
 import GamePlayPage from './pages/GamePlayPage';
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, selector, useRecoilValue } from 'recoil';
 import PingpongRoutePage from './pages/PingpongRoutePage';
 import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import { PROFILEURL } from './configs/Link.url';
+import { BaseUserProfileData } from './types/Profile.type';
 
 function App() {
   return (
