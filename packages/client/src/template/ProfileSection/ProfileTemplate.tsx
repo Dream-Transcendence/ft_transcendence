@@ -11,55 +11,55 @@ import {
 } from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 import { BaseUserProfileData } from '../../types/Profile.type';
-import { selector, useRecoilState, useRecoilValue } from 'recoil';
-import { Routes } from 'react-router-dom';
+import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
 import { userData } from '../../pages/PingpongRoutePage';
+import { useEffect } from 'react';
+import { SERVERURL } from '../../configs/Link.url';
+import LandingPage from '../../pages/LandingPage';
 
-// const otherData = selector<BaseUserProfileData>({
-//   key: 'otherData',
-//   get: async ({ get }) => {
-//     const respones = await axios.get('/others');
-//     console.log('others: ', respones);
-//     return respones.data;
-//   },
-// });
-
-export const otherData = selector<BaseUserProfileData>({
-  key: 'otherData',
-  get: ({ get }) => {
-    // async const respones = await axios.get('/users');
-    // console.log(respones);
-    //respones.data;
-    let response = {
-      id: 2,
-      nickname: 'junghan',
-      image: 'https://cdn.intra.42.fr/users/junghan.jpg',
-    };
-    return response;
-  },
+export const reqUserData = atom<BaseUserProfileData>({
+  key: 'reqUserData',
+  default: {
+    id: 4,
+    nickname: 'sonkang',
+    image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
+  }
 });
 
 function ProfileTemplate() {
   const user = useRecoilValue<BaseUserProfileData>(userData);
-  const other = useRecoilValue<BaseUserProfileData>(otherData);
+  const [reqUser, setReqUser] = useRecoilState<BaseUserProfileData>(reqUserData);
+
+  useEffect(() => {
+    async function getUserData() {
+      const response = await axios.get(`${SERVERURL}users/${reqUser.id}/profile`);
+      console.log(response.data);
+      setReqUser(response.data);
+    }
+    try {
+      getUserData();
+    } catch {
+      console.log('error: PingpongRoutePage()');
+    }
+  }, [reqUserData]);
 
   return (
     <ProfileLayout>
       <Routes>
-        {/* <Route path={`${userId.userNickname}`} element={<UserInfo />} />
-        <Route path={`${otherId.userNickname}`} element={<OtherInfo />} /> */}
-        {user.id === other.id ? ( //기본 리다이렉션 경경로또한 /user -> /123456
-          <Route path={`${user.nickname}`} element={<UserInfo />} />
-        ) : (
-          <Route path={`${other.nickname}`} element={<OtherInfo />} />
-        )}
+        {user.nickname === reqUser.nickname
+          ? (
+            <Route path={`user`} element={<UserInfo />} />
+          ) : (
+            <Route path={`${reqUser.nickname}`} element={<OtherInfo />} />
+          )}
       </Routes>
       <FreindList />
       <UserStat />
       <MatchHistory />
-      <Popup>{SendMessageAlert('친구')}</Popup>
+      <Popup>{SendMessageAlert(`${user.nickname === reqUser.nickname}`)}</Popup>
     </ProfileLayout>
   );
 }

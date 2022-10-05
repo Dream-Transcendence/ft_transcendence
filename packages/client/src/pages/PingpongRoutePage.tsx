@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
+import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import {
@@ -8,6 +9,7 @@ import {
   atomFamily,
   RecoilState,
   selector,
+  selectorFamily,
   useRecoilState,
   useRecoilValue,
 } from 'recoil';
@@ -18,6 +20,7 @@ import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLodingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
+import LandingPage from './LandingPage';
 import ProfilePage from './ProfilePage';
 
 const PageSection = styled('section')(({ theme }) => ({
@@ -27,50 +30,30 @@ const PageSection = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-// //프로필, 채팅, 게임 모두 닉네임과 사진을 사용하므로 상단에 atom생성
-// export const baseUserProfileData = atom<BaseUserProfileData>({
-//   key: 'baseUserProfileData',
-//   default: {
-//     id: 1,
-//     userNickname: 'Kang pro',
-//     image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
-//   },
-// });
 
-// export const mockUserProfileData = atom<BaseUserProfileData>({
-//   key: 'mockUserProfileData',
-//   default: {
-//     id: 2,
-//     userNickname: 'Kang pro',
-//     image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
-//   },
-// });
-
-// export const userData = selector<BaseUserProfileData>({
-//   key: 'userData',
-//   get: async ({ get }) => {
-//     const respones = await axios.get('/users');
-//     console.log(respones);
-//     return respones.data;
-//   },
-// });
-export const userData = selector<BaseUserProfileData>({
+//기본 유저 데이터 초초기기화
+// useEffect(() => {
+//   async function getUserData() {
+//     const response = await axios.get(`${SERVERURL}users/${id}/profile`);
+//     console.log(response.data);
+//     setUser(response.data);
+//   }
+//   try {
+//     getUserData();
+//   } catch {
+//     console.log('error: PingpongRoutePage()');
+//   }
+// }, [userData]);
+export const userData = atom<BaseUserProfileData>({
   key: 'userData',
-  get: ({ get }) => {
-    // async const respones = await axios.get('/users');
-    // console.log(respones);
-    //respones.data;
-    let response = {
-      id: 1,
-      nickname: 'doyun',
-      image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
-    };
-    return response;
-  },
+  default: {
+    id: 4,
+    nickname: 'sonkang',
+    image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
+  }
 });
 
 function PingpongRoutePage() {
-  const user = useRecoilValue(userData);
 
   return (
     <PageSection>
@@ -80,9 +63,10 @@ function PingpongRoutePage() {
         </nav>
       </header>
       <Routes>
+        {/* 사용자 프로필페이지 */}
         <Route
           path="profile"
-          element={<Navigate replace to={`${user.nickname}`} />}
+          element={<Navigate replace to={PROFILEURL} />}
         />
         <Route path="profile/*" element={<ProfilePage />} />
         <Route path="channels" element={<ChatroomPage />} />

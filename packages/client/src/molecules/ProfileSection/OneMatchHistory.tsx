@@ -16,7 +16,7 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   height: '12%',
 }));
 
-const GamePlayersLayout = styled('text')(({ theme }) => ({ border: 'solid' }));
+const GamePlayersLayout = styled('span')(({ theme }) => ({ border: 'solid' }));
 
 const MatchHistoryTheme = createTheme({
   palette: {

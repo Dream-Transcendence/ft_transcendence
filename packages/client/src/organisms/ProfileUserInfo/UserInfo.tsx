@@ -30,7 +30,7 @@ function UserInfo() {
         <ProfileImage />
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
-              - 변경할 프로필 사진 */}
+              - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
           <CustomIconButton customProps={fileUpProps} />
         </UserPictureButtonLayout>
       </UserPictureLayout>

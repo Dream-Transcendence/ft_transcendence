@@ -24,7 +24,6 @@ function App() {
         <Route path="pingpong" element={<Navigate replace to={PROFILEURL} />} />
         <Route path="/pingpong/*" element={<PingpongRoutePage />} />
         {/* 추후에 url을 통해 직접들어가지 못하고 game 버튼을 통해서만 접근 가능하도록 수정 */}
-        <Route path="*" element={<Navigate replace to={PROFILEURL} />} />
       </Routes>
     </RecoilRoot>
   );

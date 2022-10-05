@@ -16,6 +16,9 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField } from '@mui/material';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { userData } from '../../pages/PingpongRoutePage';
+import { BaseUserProfileData } from '../../types/Profile.type';
 
 function EditableControls() {
   const {
@@ -50,22 +53,24 @@ function EditableControls() {
   );
 }
 
+const ProfileNicnameLayout = styled('span')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+  paddingLeft: '0.5rem',
+}));
+
 function ProfileNicname() {
   /* Here's a custom control */
+  const [user, setUser] = useRecoilState<BaseUserProfileData>(userData);
 
-  const ProfileNicnameLayout = styled('text')(({ theme }) => ({
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    paddingLeft: '0.5rem',
-  }));
 
   return (
     //[axios GET 요청] 프로필 이름
     <Editable
       textAlign="center"
-      defaultValue="sonkang ⚡️"
-      fontSize="2xl"
+      defaultValue={`${user.nickname}`}
+      fontSize="1.5rem"
       isPreviewFocusable={false}
       padding="1rea"
     >

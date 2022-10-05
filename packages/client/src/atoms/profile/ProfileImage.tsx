@@ -2,8 +2,11 @@ import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { Box, CardMedia } from '@mui/material';
 import { Image } from '@chakra-ui/react';
+import { useRecoilValue } from 'recoil';
+import { reqUserData } from '../../template/ProfileSection/ProfileTemplate';
 
 function ProfileImage() {
+  const reqUser = useRecoilValue(reqUserData);
   // [axios GET 요청] 프로필 사진
   return (
     <Box
@@ -13,7 +16,7 @@ function ProfileImage() {
         width: '100%',
       }}
       alt="UserPicture"
-      src="https://cdn.intra.42.fr/users/sonkang.jpg"
+      src={reqUser.image}
       borderRadius="35%"
     />
   );

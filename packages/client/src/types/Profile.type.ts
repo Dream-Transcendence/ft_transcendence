@@ -28,6 +28,6 @@ export interface OtherUserData {
   isFriend: boolean;
 }
 
-// export interface IsUserProfilePage {
-//     isUser: boolean;
-// }
+export interface UserSecondAuth {
+  authenticated: boolean;
+}

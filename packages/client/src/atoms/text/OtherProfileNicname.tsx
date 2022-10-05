@@ -16,14 +16,15 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField, Typography } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import { reqUserData } from '../../template/ProfileSection/ProfileTemplate';
 
 
 function OtherProfileNicname() {
-    /* Here's a custom control */
-    const otherName = 'doyun';
+    const reqUser = useRecoilValue(reqUserData);
     return (
         <Typography>
-            {otherName}
+            {reqUser.nickname}
         </Typography>
     );
 }
