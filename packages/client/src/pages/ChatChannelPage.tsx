@@ -27,6 +27,7 @@ const MainSection = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
+  backgroundColor: '#6BADE2',
   flex: 1,
 }));
 
