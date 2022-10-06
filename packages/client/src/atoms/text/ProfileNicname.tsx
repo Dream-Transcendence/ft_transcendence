@@ -17,7 +17,7 @@ import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField } from '@mui/material';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { userData } from '../../pages/PingpongRoutePage';
+import { userAtom } from '../../pages/PingpongRoutePage';
 import { BaseUserProfileData } from '../../types/Profile.type';
 
 function EditableControls() {
@@ -62,8 +62,7 @@ const ProfileNicnameLayout = styled('span')(({ theme }) => ({
 
 function ProfileNicname() {
   /* Here's a custom control */
-  const [user, setUser] = useRecoilState<BaseUserProfileData>(userData);
-
+  const [user, setUser] = useRecoilState<BaseUserProfileData>(userAtom);
 
   return (
     //[axios GET 요청] 프로필 이름

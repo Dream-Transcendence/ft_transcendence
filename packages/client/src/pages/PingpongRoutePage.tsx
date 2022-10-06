@@ -30,7 +30,6 @@ const PageSection = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-
 //기본 유저 데이터 초초기기화
 // useEffect(() => {
 //   async function getUserData() {
@@ -44,17 +43,25 @@ const PageSection = styled('section')(({ theme }) => ({
 //     console.log('error: PingpongRoutePage()');
 //   }
 // }, [userData]);
-export const userData = atom<BaseUserProfileData>({
+export const userAtom = atom<BaseUserProfileData>({
   key: 'userData',
   default: {
     id: 4,
     nickname: 'sonkang',
+    image: 'https://cdn.intra.42.fr/users/junghan.jpg',
+  },
+});
+
+export const reqUserAtom = atom<BaseUserProfileData>({
+  key: 'reqUserData',
+  default: {
+    id: 4,
+    nickname: 'sonkang',
     image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
-  }
+  },
 });
 
 function PingpongRoutePage() {
-
   return (
     <PageSection>
       <header>
@@ -64,10 +71,7 @@ function PingpongRoutePage() {
       </header>
       <Routes>
         {/* 사용자 프로필페이지 */}
-        <Route
-          path="profile"
-          element={<Navigate replace to={PROFILEURL} />}
-        />
+        <Route path="profile" element={<Navigate replace to={PROFILEURL} />} />
         <Route path="profile/*" element={<ProfilePage />} />
         <Route path="channels" element={<ChatroomPage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />

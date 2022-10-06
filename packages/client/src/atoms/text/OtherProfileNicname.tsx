@@ -1,14 +1,14 @@
 import {
-    ButtonGroup,
-    CheckboxIcon,
-    CloseButton,
-    Editable,
-    EditableInput,
-    EditablePreview,
-    Flex,
-    IconButton,
-    Input,
-    useEditableControls,
+  ButtonGroup,
+  CheckboxIcon,
+  CloseButton,
+  Editable,
+  EditableInput,
+  EditablePreview,
+  Flex,
+  IconButton,
+  Input,
+  useEditableControls,
 } from '@chakra-ui/react';
 import DoneIcon from '@mui/icons-material/Done';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -17,16 +17,11 @@ import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-import { reqUserData } from '../../template/ProfileSection/ProfileTemplate';
-
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
 
 function OtherProfileNicname() {
-    const reqUser = useRecoilValue(reqUserData);
-    return (
-        <Typography>
-            {reqUser.nickname}
-        </Typography>
-    );
+  const reqUser = useRecoilValue(reqUserAtom);
+  return <Typography>{reqUser.nickname}</Typography>;
 }
 
 export default OtherProfileNicname;

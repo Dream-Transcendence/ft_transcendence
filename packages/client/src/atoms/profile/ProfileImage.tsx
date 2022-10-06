@@ -3,10 +3,10 @@ import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { Box, CardMedia } from '@mui/material';
 import { Image } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
-import { reqUserData } from '../../template/ProfileSection/ProfileTemplate';
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileImage() {
-  const reqUser = useRecoilValue(reqUserData);
+  const reqUser = useRecoilValue(reqUserAtom);
   // [axios GET 요청] 프로필 사진
   return (
     <Box

@@ -7,6 +7,12 @@ import TextBox from '../../texts/TextBox';
 import ProfileAvatar from '../../atoms/profile/ProfileAvatar';
 import UserProfileBox from './UserProfileBox';
 import { Box, Button } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import {
+  BaseUserProfileData,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
 
 const ProfileBoxAvatarLayout = styled(Button)(({ theme }) => ({
   display: 'flex', //특정 조건에서 주면 profile box 개별마다 반토막남. 이유는 모르겠움
@@ -46,8 +52,16 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 function UserProfileBoxWithCircle(isButton: Boolean) {
+  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserAtom);
+  const changeSpot = () => {};
+
   return (
-    <ProfileBoxAvatarLayout>{ProfileAvatar({ avatarType: 'circle' })}</ProfileBoxAvatarLayout>
+    <ProfileBoxAvatarLayout>
+      {ProfileAvatar({
+        avatarType: 'circle',
+        avartarProps: reqUser,
+      })}
+    </ProfileBoxAvatarLayout>
   );
 }
 

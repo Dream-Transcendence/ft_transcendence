@@ -1,6 +1,12 @@
-export interface UserProfileBoxTypes {
+// export interface AvaterPropsType {
+//   nickname: string;
+//   image: string;
+// }
+
+export interface UserProfileBoxType {
   isButton: boolean;
   avatarType: string;
+  userData: BaseUserProfileData;
   action?: () => void;
 }
 

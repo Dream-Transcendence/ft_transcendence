@@ -1,8 +1,9 @@
 import { styled } from '@mui/material/styles';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { UserProfileBoxTypes } from '../../types/Profile.type';
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { UserProfileBoxType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
   height: '40%',
@@ -19,18 +20,16 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
   backgroundColor: '#001D7D',
 }));
 
-
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
-const userProfileBoxProps: UserProfileBoxTypes = {
-  isButton: true,
-  avatarType: "circle",
-  // action: () => {
-  //   setIsUser(!isUser);
-  // }
-}
-
 function JoinedDMListOrganisms() {
+  const reqUser = useRecoilValue(reqUserAtom);
+  const userProfileBoxProps: UserProfileBoxType = {
+    isButton: true,
+    avatarType: 'circle',
+    userData: reqUser,
+    // action?: () => void;
+  };
   return (
     <JoinedChatListLayout>
       {/* [axios GET 요청] 현재 개설된 DM 리스트 요청 */}
@@ -40,9 +39,7 @@ function JoinedDMListOrganisms() {
                 - Socket.emit으로 로그인 상태 보냄
                 - Socket.on으로  DM유저 로그인 상태 받음
                    */}
-        <ListGenerate
-          element={UserProfileBox({ userProfileBoxProps })}
-        />
+        <ListGenerate element={UserProfileBox({ userProfileBoxProps })} />
       </JoinedDMBox>
     </JoinedChatListLayout>
   );

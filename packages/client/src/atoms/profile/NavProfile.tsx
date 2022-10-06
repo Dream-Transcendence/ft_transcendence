@@ -1,5 +1,10 @@
+import { useRecoilValue } from 'recoil';
+import { userAtom } from '../../pages/PingpongRoutePage';
+import { BaseUserProfileData } from '../../types/Profile.type';
 import ProfileAvatar from './ProfileAvatar';
 
 export default function NavProfile() {
-  return <ProfileAvatar avatarType='default' />;
+  const user = useRecoilValue<BaseUserProfileData>(userAtom);
+
+  return <ProfileAvatar avatarType="default" avartarProps={user} />;
 }

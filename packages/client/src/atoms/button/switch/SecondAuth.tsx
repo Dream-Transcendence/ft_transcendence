@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../../configs/Link.url';
-import { reqUserData } from '../../../template/ProfileSection/ProfileTemplate';
+import { reqUserAtom } from '../../../pages/PingpongRoutePage';
 import { UserSecondAuth } from '../../../types/Profile.type';
 
 const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
@@ -17,24 +17,26 @@ export const userAuth = atom<UserSecondAuth>({
   key: 'userAuth',
   default: {
     authenticated: false,
-  }
+  },
 });
 
 function SecondAuthSwitch() {
-  const reqUser = useRecoilValue(reqUserData);
+  const reqUser = useRecoilValue(reqUserAtom);
   const [isAuth, setIsAuth] = useRecoilState<UserSecondAuth>(userAuth);
   useEffect(() => {
     async function getSecondAuth() {
-      const response = await axios.get(`${SERVERURL}/users/${reqUser.id}/2nd-auth`);
+      const response = await axios.get(
+        `${SERVERURL}/users/${reqUser.id}/2nd-auth`,
+      );
       console.log('SecondAuthSwitch : ', response.data);
       setIsAuth(response.data);
     }
     try {
-      getSecondAuth()
+      getSecondAuth();
     } catch {
       console.log('error : SecondAuthSwitch');
     }
-  })
+  });
   return (
     //[axios GET 요청] 2차 인증 여부
     <SecondAuthSwitchLayout>
@@ -48,7 +50,7 @@ function SecondAuthSwitch() {
           />
         }
         label="2차 인증"
-      // [axios PATCH 요청] 2차 인증 상태 변경
+        // [axios PATCH 요청] 2차 인증 상태 변경
       />
     </SecondAuthSwitchLayout>
   );

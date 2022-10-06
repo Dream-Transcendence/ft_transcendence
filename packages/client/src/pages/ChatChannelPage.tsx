@@ -3,19 +3,13 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-<<<<<<< HEAD
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
-=======
-import { Dispatch, SetStateAction, useState } from 'react';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import styled from '@emotion/styled';
-import { Route, Routes } from 'react-router-dom';
->>>>>>> ✨ feat(client): move page process change to url
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',

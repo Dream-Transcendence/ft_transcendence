@@ -12,6 +12,11 @@ import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
 import { CustomIconProps } from '../../types/Link.type';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { SERVERURL } from '../../configs/Link.url';
+import { useRecoilValue } from 'recoil';
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
 
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -24,6 +29,7 @@ function UserInfo() {
   const fileUpProps: CustomIconProps = {
     icon: <FileUploadButton />,
   };
+
   return (
     <UserInfoLayout>
       <UserPictureLayout>

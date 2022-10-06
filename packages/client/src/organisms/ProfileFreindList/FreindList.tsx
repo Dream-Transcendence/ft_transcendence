@@ -9,11 +9,12 @@ import { Link } from 'react-router-dom';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
 import {
   BaseUserProfileData,
-  UserProfileBoxTypes,
+  UserProfileBoxType,
 } from '../../types/Profile.type';
 import { PROFILEURL } from '../../configs/Link.url';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { OTHERPROFILE } from '../../configs/Spot.string';
+import { reqUserAtom } from '../../pages/PingpongRoutePage';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -49,13 +50,13 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindListOrganisms() {
-  const changeSpot = () => {
+  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserAtom);
+  const changeSpot = () => {};
 
-  };
-
-  const otherProfileBoxProps: UserProfileBoxTypes = {
+  const otherProfileBoxProps: UserProfileBoxType = {
     isButton: true,
     avatarType: 'circle',
+    userData: reqUser,
     action: changeSpot,
   };
 

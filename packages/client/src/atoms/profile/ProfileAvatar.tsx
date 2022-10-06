@@ -2,6 +2,7 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
+import { BaseUserProfileData } from '../../types/Profile.type';
 
 const ProfileAvatarLayout = styled(Badge)(({ theme }) => ({
   display: 'flex',
@@ -38,8 +39,11 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function ProfileAvatar(props: { avatarType: String | undefined }) {
-  const { avatarType } = props;
+function ProfileAvatar(props: {
+  avatarType: String | undefined;
+  avartarProps: BaseUserProfileData;
+}) {
+  const { avatarType, avartarProps } = props;
 
   if (avatarType === 'circle') {
     return (
@@ -49,14 +53,14 @@ function ProfileAvatar(props: { avatarType: String | undefined }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={avartarProps.nickname} src={avartarProps.image} />
         </StyledBadge>
       </ProfileAvatarLayout>
     );
   } else {
     return (
       <ProfileAvatarLayout>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar alt={avartarProps.nickname} src={avartarProps.image} />
       </ProfileAvatarLayout>
     );
   }

@@ -6,7 +6,9 @@ import { styled } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import { color } from '@mui/system';
 import GameScore from './GameScore';
-import { UserProfileBoxTypes } from '../../types/Profile.type';
+import { UserProfileBoxType } from '../../types/Profile.type';
+import { useRecoilValue } from 'recoil';
+import { reqUserAtom, userAtom } from '../../pages/PingpongRoutePage';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -68,17 +70,21 @@ function GameResultModal() {
     setOpen(false);
   };
 
+  const user = useRecoilValue(userAtom);
+  const reqUser = useRecoilValue(reqUserAtom);
+
   //axios get을 통해서 현재 게임에 참여자 2명의 데이터를 받아와야함
-  const userProfileBoxProps: UserProfileBoxTypes = {
+  const userProfileBoxProps: UserProfileBoxType = {
     isButton: false,
-    avatarType: "default",
-  }
+    avatarType: 'default',
+    userData: user,
+  };
 
-  const otherProfileBoxProps: UserProfileBoxTypes = {
+  const otherProfileBoxProps: UserProfileBoxType = {
     isButton: false,
-    avatarType: "circle",
-  }
-
+    avatarType: 'circle',
+    userData: reqUser,
+  };
 
   return (
     <div>
@@ -101,7 +107,7 @@ function GameResultModal() {
               <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
             </OtherProfileBoxLayout>
             <GameScoreLayout>
-              <GameScore player1Score='10' player2Score='9' />
+              <GameScore player1Score="10" player2Score="9" />
               {/* {GameScore({ player1Score: '10', player2Score: '9' })} */}
             </GameScoreLayout>
             <ExitButtonLayout>
