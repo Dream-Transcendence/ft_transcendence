@@ -8,7 +8,7 @@ import { color } from '@mui/system';
 import GameScore from './GameScore';
 import { UserProfileBoxType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
-import { reqUserAtom, userAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom, userDataAtom } from '../../pages/PingpongRoutePage';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -70,8 +70,8 @@ function GameResultModal() {
     setOpen(false);
   };
 
-  const user = useRecoilValue(userAtom);
-  const reqUser = useRecoilValue(reqUserAtom);
+  const user = useRecoilValue(userDataAtom);
+  const reqUser = useRecoilValue(reqUserDataAtom);
 
   //axios get을 통해서 현재 게임에 참여자 2명의 데이터를 받아와야함
   const userProfileBoxProps: UserProfileBoxType = {

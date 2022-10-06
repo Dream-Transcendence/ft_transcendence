@@ -16,7 +16,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
-import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',

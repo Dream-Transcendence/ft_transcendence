@@ -14,10 +14,14 @@ const MatchTypeLayout = styled('div')(({ theme }) => ({
   borderRight: 'solid 1px',
 }));
 
-function MatchType(matchType: String) {
+function MatchType(matchType: boolean) {
   return (
     <MatchTypeLayout>
-      <Typography>{matchType}</Typography>
+      <Typography>
+        {matchType ?
+          <Typography>ladder</Typography> :
+          <Typography>1 vs 1</Typography>}
+      </Typography>
     </MatchTypeLayout>
   );
 }

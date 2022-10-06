@@ -10,7 +10,7 @@ import {
   BaseUserProfileData,
   UserProfileBoxType,
 } from '../../types/Profile.type';
-import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
 const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
   margin: '1px',
@@ -24,8 +24,8 @@ function UserInviteProfileBox() {
     icon: <CancelIcon />,
   };
 
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserAtom);
-  const changeSpot = () => {};
+  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
+  const changeSpot = () => { };
 
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: true,

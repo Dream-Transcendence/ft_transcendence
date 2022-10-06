@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../../configs/Link.url';
-import { reqUserAtom } from '../../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../../pages/PingpongRoutePage';
 import { UserSecondAuth } from '../../../types/Profile.type';
 
 const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
@@ -21,7 +21,7 @@ export const userAuth = atom<UserSecondAuth>({
 });
 
 function SecondAuthSwitch() {
-  const reqUser = useRecoilValue(reqUserAtom);
+  const reqUser = useRecoilValue(reqUserDataAtom);
   const [isAuth, setIsAuth] = useRecoilState<UserSecondAuth>(userAuth);
   useEffect(() => {
     async function getSecondAuth() {
@@ -50,7 +50,7 @@ function SecondAuthSwitch() {
           />
         }
         label="2차 인증"
-        // [axios PATCH 요청] 2차 인증 상태 변경
+      // [axios PATCH 요청] 2차 인증 상태 변경
       />
     </SecondAuthSwitchLayout>
   );

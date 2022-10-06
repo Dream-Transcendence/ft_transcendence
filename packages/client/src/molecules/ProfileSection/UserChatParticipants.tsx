@@ -55,7 +55,7 @@ function UserChatParticipantsBox() {
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: true,
     avatarType: 'circle',
-    userData: //목업,
+    userData: ,//목업,
     // action: () => {
     //   setIsUser(!isUser);
     // }

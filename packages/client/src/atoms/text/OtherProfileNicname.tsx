@@ -17,10 +17,10 @@ import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
 function OtherProfileNicname() {
-  const reqUser = useRecoilValue(reqUserAtom);
+  const reqUser = useRecoilValue(reqUserDataAtom);
   return <Typography>{reqUser.nickname}</Typography>;
 }
 

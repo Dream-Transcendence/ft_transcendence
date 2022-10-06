@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 import { UserProfileBoxType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
@@ -23,7 +23,7 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 function JoinedDMListOrganisms() {
-  const reqUser = useRecoilValue(reqUserAtom);
+  const reqUser = useRecoilValue(reqUserDataAtom);
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: true,
     avatarType: 'circle',

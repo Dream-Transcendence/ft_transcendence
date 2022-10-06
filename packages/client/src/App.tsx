@@ -7,7 +7,7 @@ import GameCreatePage from './pages/GameCreatePage';
 import GameLodingPage from './pages/GameLodingPage';
 import GamePlayPage from './pages/GamePlayPage';
 import { RecoilRoot, selector, useRecoilState, useRecoilValue } from 'recoil';
-import PingpongRoutePage, { userAtom } from './pages/PingpongRoutePage';
+import PingpongRoutePage, { userDataAtom } from './pages/PingpongRoutePage';
 import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import { PROFILEURL } from './configs/Link.url';

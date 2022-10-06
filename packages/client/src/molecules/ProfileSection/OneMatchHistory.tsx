@@ -2,8 +2,11 @@ import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
 import { PhotoSizeSelectLargeSharp } from '@mui/icons-material';
 import { createTheme, Typography } from '@mui/material';
+import { useRecoilValue } from 'recoil';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
+import { UserMatchHistory } from '../../organisms/ProfileMatchHistory/MatchHistory';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -27,14 +30,16 @@ const MatchHistoryTheme = createTheme({
   },
 });
 
-function OneMatchHistory() {
+function OneMatchHistory(props: { matchHistory: UserMatchHistory }) {
+  const userData = useRecoilValue(userDataAtom);
+  const { id, opponent, isWin, isLadder } = props.matchHistory;
   return (
     <ThemeProvider theme={MatchHistoryTheme}>
       <OneMatchHistoryLayout>
-        {MatchType('Ladder')}
-        {GamePlayer('doyun')}
+        {MatchType(isLadder)}
+        {GamePlayer(userData.nickname)}
         <Typography>VS</Typography>
-        {GamePlayer('junghan')}
+        {GamePlayer(opponent)}
       </OneMatchHistoryLayout>
     </ThemeProvider>
   );

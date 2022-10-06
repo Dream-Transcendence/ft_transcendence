@@ -1,7 +1,8 @@
-// export interface AvaterPropsType {
-//   nickname: string;
-//   image: string;
-// }
+export interface UserLadderType {
+  rank: string;
+  winCount: number;
+  loseCount: number;
+}
 
 export interface UserProfileBoxType {
   isButton: boolean;

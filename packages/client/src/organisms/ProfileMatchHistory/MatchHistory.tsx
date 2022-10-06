@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import * as React from 'react';
+import ListGenerate from '../../atoms/list/ListGenerate';
 import OneMatchHistory from '../../molecules/ProfileSection/OneMatchHistory';
 import { Typography } from '@mui/material';
-import ListGenerate from '../../atoms/list/ListGenerate';
+import { useRecoilValue } from 'recoil';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
+import { useEffect, useState } from 'react';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -37,9 +39,39 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   justifySelf: 'start',
 }));
 
+export interface UserMatchHistory {
+  id: number,
+  opponent: string,
+  isWin: boolean,
+  isLadder: boolean,
+}
+
 function MatchHistory() {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
+  const reqUser = useRecoilValue(reqUserDataAtom);
+  const [userMatchHistory, setUserMatchHistory] = useState<UserMatchHistory>({
+    id: 0,
+    opponent: "UnKnown",
+    isWin: true,
+    isLadder: true,
+  })
+  useEffect(() => {
+    // async function getUserLadder() {
+    //   const response = await axios.get(`${SERVERURL}/user/${reqUser.id}/game/ladder`);
+    //   console.log('user ladder : ', response.data);
+    //   return response.data;
+    // }
+    const response = {
+      id: 1,
+      opponent: "doyun",
+      isWin: true,
+      isLadder: true,
+    }
+    try {
+      setUserMatchHistory(response)
+    } catch {
+      console.log('error : userMatchHistory');
+    }
+  })
 
   return (
     <MatchHistoryLayout>
@@ -49,9 +81,8 @@ function MatchHistory() {
         </Typography>
       </TextLayout>
       <ListLayout>
-        {/* [axios GET 요청] 레더 정보 리스트 불러오기 */}
         <OneMatchHistoryLayout>
-          <ListGenerate element={<OneMatchHistory />} />
+          <ListGenerate element={<OneMatchHistory matchHistory={userMatchHistory} />} />
         </OneMatchHistoryLayout>
       </ListLayout>
     </MatchHistoryLayout>

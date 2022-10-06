@@ -14,7 +14,7 @@ import {
 import { PROFILEURL } from '../../configs/Link.url';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { OTHERPROFILE } from '../../configs/Spot.string';
-import { reqUserAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -50,8 +50,8 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindListOrganisms() {
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserAtom);
-  const changeSpot = () => {};
+  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
+  const changeSpot = () => { };
 
   const otherProfileBoxProps: UserProfileBoxType = {
     isButton: true,

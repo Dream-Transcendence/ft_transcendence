@@ -43,7 +43,7 @@ const PageSection = styled('section')(({ theme }) => ({
 //     console.log('error: PingpongRoutePage()');
 //   }
 // }, [userData]);
-export const userAtom = atom<BaseUserProfileData>({
+export const userDataAtom = atom<BaseUserProfileData>({
   key: 'userData',
   default: {
     id: 4,
@@ -52,7 +52,7 @@ export const userAtom = atom<BaseUserProfileData>({
   },
 });
 
-export const reqUserAtom = atom<BaseUserProfileData>({
+export const reqUserDataAtom = atom<BaseUserProfileData>({
   key: 'reqUserData',
   default: {
     id: 4,

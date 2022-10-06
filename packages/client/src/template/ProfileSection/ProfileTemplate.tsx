@@ -15,14 +15,14 @@ import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
 import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
-import { reqUserAtom, userAtom } from '../../pages/PingpongRoutePage';
+import { reqUserDataAtom, userDataAtom } from '../../pages/PingpongRoutePage';
 import { useEffect } from 'react';
 import { SERVERURL } from '../../configs/Link.url';
 import LandingPage from '../../pages/LandingPage';
 
 function ProfileTemplate() {
-  const user = useRecoilValue<BaseUserProfileData>(userAtom);
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserAtom);
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
 
   return (
     <ProfileLayout>
