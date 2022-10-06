@@ -11,6 +11,7 @@ import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
+import { MakeRoom } from '../types/Room.type';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -45,6 +46,12 @@ const Aside = styled('aside')(({ theme }) => ({
 //채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
   const [roomList, setRoomList] = useState([]);
+  const [password, setPassword] = useState('');
+
+  const handlePassword = (childData: string) => {
+    setPassword(childData);
+  };
+
   useEffect(() => {
     async function getRoomList() {
       try {
@@ -56,6 +63,12 @@ function ChatroomPage() {
     }
     getRoomList();
   }, []);
+
+  const makeRoom: MakeRoom = {
+    roomList: roomList,
+    handler: handlePassword,
+  };
+
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (
     <ChatChannel>
@@ -74,13 +87,13 @@ function ChatroomPage() {
             <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} />
             <Route
               path="room/:roomNumber"
-              element={<EnteredChatRoomTemplate />}
+              element={<EnteredChatRoomTemplate password={password} />}
             />
             <Route path="dm/:dmNumber" element={<EnteredDMTemplate />} />
             {roomList.length ? (
               <Route
                 path="/"
-                element={<ChatRoomListTemplate roomList={roomList} />}
+                element={<ChatRoomListTemplate makeRoom={makeRoom} />}
               />
             ) : (
               <Route path="/" element={<ChatRoomDefaultTemplate />} />

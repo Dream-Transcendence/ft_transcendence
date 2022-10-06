@@ -3,7 +3,6 @@ import styled from '@emotion/styled';
 import * as React from 'react';
 import List from '@mui/material/List';
 import BasicSpeedDial from '../SpeedDial/SpeedDial';
-import { ListElement } from '../../types/List.type';
 
 const ListUlLayout = styled('ul')(({ theme }) => ({
   height: '100%',

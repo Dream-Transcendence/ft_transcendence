@@ -17,7 +17,8 @@ interface State {
   showPassword: boolean;
 }
 
-function PasswordInput() {
+function PasswordInput(handler: { handler: (props: string) => void }) {
+  const action = handler.handler;
   const [values, setValues] = React.useState<State>({
     amount: '',
     password: '',
@@ -29,6 +30,7 @@ function PasswordInput() {
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setValues({ ...values, [prop]: event.target.value });
+      action(values.password);
     };
 
   const handleClickShowPassword = () => {

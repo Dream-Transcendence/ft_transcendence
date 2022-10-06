@@ -3,6 +3,9 @@ import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParti
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { SERVERURL } from '../../configs/Link.url';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -16,7 +19,20 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   marginTop: '0%',
 }));
 //정보를 여기서 요청해야하나? 아니면 입장할때 요청해야하나..?
-function EnteredChatRoomTemplate() {
+function EnteredChatRoomTemplate(props: { password: string }) {
+  const password = props.password;
+  // const [enterRoomInfo, setEnterRoomInfo] = useState('');
+  // useEffect(() => {
+  //   async function enterRoom() {
+  //     try {
+  //       const response = await axios.post(`${SERVERURL}/rooms/channels`);
+  //       setEnterRoomInfo(response.data);
+  //     } catch (error) {
+  //       throw console.dir(error);
+  //     }
+  //   }
+  //   enterRoom();
+  // }, []);
   return (
     <ChattingRoomLayout>
       <EnteredChatRoomInfoOrganisms />

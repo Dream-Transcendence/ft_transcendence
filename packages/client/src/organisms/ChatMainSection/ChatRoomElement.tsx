@@ -8,6 +8,8 @@ import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { CHATROOMURL } from '../../configs/Link.url';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { PROTECTED } from '../../configs/RoomType';
+import { RoomInfo } from '../../types/Room.type';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -40,32 +42,32 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-//DTO 확정되면 수정할 것 ChannelDto
-function ChatRoomElementOrganisms(roomInfo: any) {
+//[수정사항] DTO 확정되면 수정할 것 any => ChannelDto
+function ChatRoomElementOrganisms(roomInfos: RoomInfo) {
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
-  const rooms = roomInfo.roomInfo;
+  const { roomInfo, handler } = roomInfos;
 
-  const { id, name, type, image } = rooms;
+  const { id, name, type, image } = roomInfo;
+
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
-    url: CHATROOMURL + '1',
+    url: CHATROOMURL + id,
     content: '입장',
   };
 
   return (
     <ChatRoomElementLayout>
-      <RoomElementImageModule image="/static/images/avatar/1.jpg" />
+      <RoomElementImageModule image={image} />
       <RoomInfoLayout>
         <RoomTitleModule title={name}></RoomTitleModule>
-        <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
+        {/*[수정사항] id대신 인원수가 들어갈 예정 */}
+        <RoomNumberOfPeopleModule num={id}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
-      {type === 0 && (
-        <PasswordInputLayout>
-          <PasswordInput />
-        </PasswordInputLayout>
-      )}
+      <PasswordInputLayout>
+        {type === PROTECTED && <PasswordInput handler={handler} />}
+      </PasswordInputLayout>
       {/* [axios POST 요청] 타입에 따라 입장 여부확인(어떤 성격의 채팅방인지 전달) 후, 입장 요청 */}
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />

@@ -28,7 +28,7 @@ function InfoBoxPasswordModule() {
   };
   return (
     <InfoBoxPasswordLayout>
-      <PasswordInput />
+      {/* <PasswordInput /> */}
       <CustomIconButton customProps={customMeetProps} />
       {/* {CustomIconButton(<LockOpenIcon />)} 상황에 따라 아이콘 바꿀 것 */}
     </InfoBoxPasswordLayout>
