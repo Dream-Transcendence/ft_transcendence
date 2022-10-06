@@ -67,7 +67,10 @@ export default function NavigationBar() {
     iconResource: Ladder,
   };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 🐛 fix(client): fix conflict
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>

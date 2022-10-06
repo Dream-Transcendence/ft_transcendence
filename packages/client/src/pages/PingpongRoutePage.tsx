@@ -73,7 +73,7 @@ function PingpongRoutePage() {
         {/* 사용자 프로필페이지 */}
         <Route path="profile" element={<Navigate replace to={PROFILEURL} />} />
         <Route path="profile/*" element={<ProfilePage />} />
-        <Route path="channels" element={<ChatroomPage />} />
+        <Route path="channel" element={<ChatroomPage />} />
         <Route path="gamecreate" element={<GameCreatePage />} />
         <Route path="gameplay" element={<GamePlayPage />} />
         <Route path="gameloding" element={<GameLodingPage />} />
