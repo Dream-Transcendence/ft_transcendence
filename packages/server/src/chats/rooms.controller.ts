@@ -36,19 +36,19 @@ export class RoomsController {
 
   // ANCHOR Channel Controller
 
-  @Post('/channels')
-  @ApiOperation({ summary: '채널 생성 BodyType: CreateChannelDto' })
-  @ApiCreatedResponse({
-    description: '채널 생성 성공 type: ChannelDto',
-    type: ChannelDto,
-  })
-  @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
-  createChannel(
-    @Body() createChannelDto: CreateChannelDto,
-  ): Promise<ChannelDto> {
-    this.logger.log(`createRoom: ${JSON.stringify(createChannelDto)}`);
-    return this.roomService.createChannel(createChannelDto);
-  }
+  // @Post('/channels')
+  // @ApiOperation({ summary: '채널 생성 BodyType: CreateChannelDto' })
+  // @ApiCreatedResponse({
+  //   description: '채널 생성 성공 type: ChannelDto',
+  //   type: ChannelDto,
+  // })
+  // @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
+  // createChannel(
+  //   @Body() createChannelDto: CreateChannelDto,
+  // ): Promise<ChannelDto> {
+  //   this.logger.log(`createRoom: ${JSON.stringify(createChannelDto)}`);
+  //   return this.roomService.createChannel(createChannelDto);
+  // }
 
   @Get('/channels')
   @ApiOperation({ summary: '공개, 보호 채널 목록' })
@@ -76,19 +76,19 @@ export class RoomsController {
     return this.roomService.getChannelInfo(roomId, userId);
   }
 
-  @Post('/:roomId/users/:userId')
-  @ApiOperation({ summary: '채팅방 입장 BodyType: RoomPasswordDto' })
-  @ApiOkResponse({ description: '채팅방 입장 성공' })
-  @ApiNotFoundResponse({ description: '방 혹은 user를 찾을 수 없습니다' })
-  @ApiForbiddenResponse({ description: '비밀번호가 맞지 않습니다' })
-  enterChannel(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-    @Body() roomPasswordDto: RoomPasswordDto,
-  ) {
-    // NOTE 비밀번호가 없을 때는 빈 객체 혹은 null을 보내기
-    return this.roomService.enterChannel(roomId, userId, roomPasswordDto);
-  }
+  // @Post('/:roomId/users/:userId')
+  // @ApiOperation({ summary: '채팅방 입장 BodyType: RoomPasswordDto' })
+  // @ApiOkResponse({ description: '채팅방 입장 성공' })
+  // @ApiNotFoundResponse({ description: '방 혹은 user를 찾을 수 없습니다' })
+  // @ApiForbiddenResponse({ description: '비밀번호가 맞지 않습니다' })
+  // enterChannel(
+  //   @Param('roomId') roomId: number,
+  //   @Param('userId') userId: number,
+  //   @Body() roomPasswordDto: RoomPasswordDto,
+  // ) {
+  //   // NOTE 비밀번호가 없을 때는 빈 객체 혹은 null을 보내기
+  //   return this.roomService.enterChannel(roomId, userId, roomPasswordDto);
+  // }
 
   @Get('/:roomId/channel/:userId/participants')
   // FIXME[epic=sonkang] userId를 body에 넣으려고 했으나 'addChannelParticipants' 주소와 같게 됨. 고민해보기
@@ -105,23 +105,17 @@ export class RoomsController {
     return this.roomService.getChannelParticipants(userId, roomId);
   }
 
-  @Delete('/:roomId/channel/participants/:userId')
-  @ApiOperation({ summary: '채널 참여자 삭제' })
-  @ApiOkResponse({ description: '채널 참여자 삭제 성공' })
-  @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
-  deleteChannelParticipant(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-  ) {
-    this.logger.log('deleteChannelParticipant');
-    return this.roomService.deleteChannelParticipant(roomId, userId);
-  }
-
-  @Get('/:roomId/messages')
-  @ApiOperation({ summary: '채팅방 메시지 목록' })
-  getMessages(@Param('roomId') roomId: number) {
-    return;
-  }
+  // @Delete('/:roomId/channel/participants/:userId')
+  // @ApiOperation({ summary: '채널 참여자 삭제' })
+  // @ApiOkResponse({ description: '채널 참여자 삭제 성공' })
+  // @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
+  // deleteChannelParticipant(
+  //   @Param('roomId') roomId: number,
+  //   @Param('userId') userId: number,
+  // ) {
+  //   this.logger.log('deleteChannelParticipant');
+  //   return this.roomService.deleteChannelParticipant(roomId, userId);
+  // }
 
   @Patch('/:roomId')
   @ApiOperation({
@@ -173,5 +167,13 @@ export class RoomsController {
     @Param('userId') userId: number,
   ) {
     return this.roomService.getDmParticipant(roomId, userId);
+  }
+
+  // ANCHOR Messages Controller
+  @Get('/:roomId/messages')
+  // 임시로 적어놓은 url
+  @ApiOperation({ summary: 'message 목록 가져오기' })
+  getMessages(@Param('roomId') roomId: number) {
+    return this.roomService.getMessages(roomId);
   }
 }

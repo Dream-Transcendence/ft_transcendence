@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
-import { ChannelParticipant, Room } from '../chats/rooms.entity';
+import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
 import {
   CreateChannelDto,
   PatchUserInfoDto,
@@ -18,6 +18,7 @@ import {
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
+import { MessageDto } from './dto/rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -32,17 +33,20 @@ export class RoomService {
     private dmParticipantsRepository: Repository<DmParticipant>,
     @Inject('BLOCKS_REPOSITORY')
     private blocksRepository: Repository<Block>,
+    @Inject('MESSAGES_REPOSITORY')
+    private messagesRepository: Repository<Message>,
   ) {}
 
   // ANCHOR Room Service
   async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
-    const { userId, name, type, salt, participantIds } = createChannelDto;
+    const { userId, name, type, salt, title, participantIds } =
+      createChannelDto;
     // NOTE room info 저장
     let room = this.roomsRepository.create({
       name,
       type,
       salt,
-      title: 'socket title',
+      title,
     });
     room = await this.roomsRepository.save(room);
     // Channel participants 저장
@@ -64,7 +68,7 @@ export class RoomService {
     // channel owner로 auth 변경
     await this.patchUserInfo(room.id, userId, { auth: 0 });
     delete room.salt;
-    delete room.title;
+    // delete room.title;
     return room;
   }
 
@@ -76,7 +80,7 @@ export class RoomService {
     });
     channels.map((channel) => {
       delete channel.salt;
-      delete channel.title;
+      // delete channel.title;
     });
     return channels;
   }
@@ -99,7 +103,7 @@ export class RoomService {
     // NOTE 사용자가 owner라면 비밀번호를 설정할 수 있는 칸이 필요하기 때문에 owner일 때만 type을 준다
     delete channel.id;
     delete channel.salt;
-    delete channel.title;
+    // delete channel.title;
     return channel;
   }
 
@@ -272,14 +276,32 @@ export class RoomService {
     return user;
   }
 
-  // async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
-  //   const deleteParticipant = await this.dmParticipantsRepository.findOne({
-  //     where: { room: { id: roomId }, user: { id: userId } },
-  //   });
-  //   console.log(deleteParticipant);
-  //   if (deleteParticipant !== undefined) {
-  //     await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
-  //   }
-  //   return;
-  // }
+  // ANCHOR Message
+  async sendMessage(roomId: number, userId: number, date: Date, body: string) {
+    const message = await this.messagesRepository.create({
+      date,
+      body,
+    });
+    message.user = await this.usersRepository.findOneBy({ id: userId });
+    message.room = await this.roomsRepository.findOneBy({ id: roomId });
+    this.messagesRepository.save(message);
+  }
+
+  async getMessages(roomId: number): Promise<MessageDto[]> {
+    const msgs = await this.messagesRepository.find({
+      relations: { user: true },
+      where: { room: { id: roomId } },
+      order: { id: 'ASC' },
+    });
+    const result: MessageDto[] = [];
+    msgs.map((msg) => {
+      const message = {
+        nickname: msg.user.nickname,
+        image: msg.user.image,
+        body: msg.body,
+      };
+      result.push(message);
+    });
+    return result;
+  }
 }

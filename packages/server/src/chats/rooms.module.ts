@@ -9,5 +9,6 @@ import { usersProviders } from '../users/users.providers';
   imports: [DatabaseModule],
   controllers: [RoomsController],
   providers: [RoomService, ...roomsProviders, ...usersProviders],
+  exports: [RoomService],
 })
 export class RoomModule {}

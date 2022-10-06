@@ -2,8 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsInt,
-  IsNotEmpty,
-  isObject,
   IsObject,
   IsOptional,
   IsString,
@@ -55,6 +53,14 @@ export class ChannelDto {
   @ApiProperty()
   @IsUrl()
   image: string;
+
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
 }
 
 export class ChannelParticipantDto {
@@ -114,6 +120,10 @@ export class CreateChannelDto {
   @IsOptional()
   @IsString()
   salt: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
 
   @ApiProperty()
   @IsInt({ each: true })
@@ -195,4 +205,12 @@ export class PatchUserInfoDto {
   @Max(1)
   @IsOptional()
   status?: STATUS_TYPE;
+}
+
+export class MessageDto {
+  nickname: string;
+
+  image: string;
+
+  body: string;
 }
