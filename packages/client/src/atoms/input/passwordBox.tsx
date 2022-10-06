@@ -17,7 +17,8 @@ interface State {
   showPassword: boolean;
 }
 
-function PasswordInput() {
+function PasswordInput(handler: { handler: (props: string) => void }) {
+  const action = handler.handler;
   const [values, setValues] = React.useState<State>({
     amount: '',
     password: '',
@@ -28,7 +29,11 @@ function PasswordInput() {
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
+      //동기적으로 바꾸기 위해 event.value를 명시적으로 선언해줌
+      //[수정완료]한글자씩 밀리는 현상발생
+      const value = event.target.value;
+      setValues({ ...values, [prop]: value });
+      action(value);
     };
 
   const handleClickShowPassword = () => {

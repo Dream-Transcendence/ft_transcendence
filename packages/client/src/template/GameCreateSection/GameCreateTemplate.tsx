@@ -44,14 +44,14 @@ const ButtonComponentLayout = styled(LinkPageTextButton)(({ theme }) => ({
 function GameCreateTemplate(props: { buttonType: string | undefined }) {
   const { buttonType } = props;
 
+  //[수정사항] gameloading으로 넘어가야함
   const EnterRoom: LinkTextResource = {
-    url: '/pingpong/gameloding',
     content: 'INVITE',
   };
 
   return (
     <GameTemplateLayout>
-        {/* [axios GET 요청] 상대방이 게임중인지 확인할 수 있는 정보 불러오기 및 POST요청 시 확인해도 가능 */}
+      {/* [axios GET 요청] 상대방이 게임중인지 확인할 수 있는 정보 불러오기 및 POST요청 시 확인해도 가능 */}
       <GameHeaderLayout>
         <TextBox value={'Enjoy Game!'} size={'3rem'} fontColor={'black'} />
       </GameHeaderLayout>

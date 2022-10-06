@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
-import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({

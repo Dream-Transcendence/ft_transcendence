@@ -6,9 +6,11 @@ import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
-import { CHANNELURL, CHATROOMURL } from '../configs/Link.url';
+import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
+import { LineAxisOutlined } from '@mui/icons-material';
+import axios from 'axios';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -25,6 +27,7 @@ const MainSection = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
+  backgroundColor: '#6BADE2',
   flex: 1,
 }));
 
@@ -40,14 +43,23 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
+//채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
-  //나중에 room의 배열로 바꿀 것 비동기 요청
-  let existenceRoom: boolean = false;
-  //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
-  // const [openRoom, setOpenRoom] = useState<string | null>(null);
-  //채팅방 유무 검사하는 비동기요청
+  const [roomList, setRoomList] = useState([]);
 
-  //existenceRoom =
+  useEffect(() => {
+    async function getRoomList() {
+      try {
+        const response = await axios.get(`${SERVERURL}/rooms/channels`);
+        setRoomList(response.data);
+      } catch (error) {
+        throw console.dir(error);
+      }
+    }
+    getRoomList();
+  }, []);
+
+  //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (
     <ChatChannel>
       <MainSection>
@@ -58,15 +70,24 @@ function ChatroomPage() {
           {/* 채팅방의 유무에 따라 보여줄 것 */}
           {/* 향후 api에 따라 조정될 조건입니다. */}
           <Routes>
-            <Route path="room/" element={<Navigate replace to={CHANNELURL} />} />
+            <Route
+              path="room/"
+              element={<Navigate replace to={CHANNELURL} />}
+            />
             <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} />
-            <Route path="room/:roomNumber" element={<EnteredChatRoomTemplate />} />
+            <Route
+              path="room/:roomNumber"
+              element={<EnteredChatRoomTemplate />}
+            />
             <Route path="dm/:dmNumber" element={<EnteredDMTemplate />} />
-            {existenceRoom ? (
-            <Route path="/" element={<ChatRoomDefaultTemplate />} />
-          ) : (
-            <Route path="/" element={<ChatRoomListTemplate />} />
-          )}
+            {roomList.length ? (
+              <Route
+                path="/"
+                element={<ChatRoomListTemplate roomList={roomList} />}
+              />
+            ) : (
+              <Route path="/" element={<ChatRoomDefaultTemplate />} />
+            )}
           </Routes>
         </Section>
       </MainSection>

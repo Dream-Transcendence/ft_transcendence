@@ -33,7 +33,7 @@ function SetChatRoomPasswordModule() {
         비밀번호 입력
       </Typography>
       <PasswordInputLayout>
-        <PasswordInput />
+        {/* <PasswordInput handler={handler} /> */}
       </PasswordInputLayout>
     </SetPasswordLayout>
   );
