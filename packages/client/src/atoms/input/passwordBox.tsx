@@ -29,8 +29,11 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
-      action(values.password);
+      //동기적으로 바꾸기 위해 event.value를 명시적으로 선언해줌
+      //[수정완료]한글자씩 밀리는 현상발생
+      const value = event.target.value;
+      setValues({ ...values, [prop]: value });
+      action(value);
     };
 
   const handleClickShowPassword = () => {

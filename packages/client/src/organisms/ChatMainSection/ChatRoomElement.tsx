@@ -9,6 +9,7 @@ import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -46,6 +47,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
   //chatpage에 있있던  비번 옮겨옴
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;
+  const navigate = useNavigate();
   const { id: roomId, name, type, image } = roomInfo;
 
   const handlePassword = (childData: string) => {
@@ -56,23 +58,24 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
     try {
       console.log(roomId, password);
       //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-      await axios.post(
+      const response = await axios.post(
         `${SERVERURL}/rooms/${roomId}/users/1`,
-        JSON.stringify({
+        {
           salt: password,
-        }),
+        },
       );
+      navigate(`${CHATROOMURL}${roomId}`);
+      console.log(response.status);
     } catch (error) {
+      alert(error);
       throw console.dir(error);
     }
   }
-
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
 
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
-    url: CHATROOMURL + roomId,
     content: '입장',
     handler: enterRoom,
   };
