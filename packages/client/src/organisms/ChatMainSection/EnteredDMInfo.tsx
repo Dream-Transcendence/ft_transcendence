@@ -25,7 +25,7 @@ function EnteredDMInfoOrganisms() {
     <RoomInfoLayout>
       <RoomInfoBox>
         {/* [axios GET 요청]해당 채팅방 정보 요청 */}
-        <InfoBoxNameModule />
+        {/* <InfoBoxNameModule /> */}
         <InfoDMBoxFunctionModule />
       </RoomInfoBox>
     </RoomInfoLayout>

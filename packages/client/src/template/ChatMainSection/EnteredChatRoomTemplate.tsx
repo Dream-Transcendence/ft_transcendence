@@ -14,7 +14,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   marginTop: '0%',
 }));
-//정보를 여기서 요청해야하나? 아니면 입장할때 요청해야하나..?
+
 function EnteredChatRoomTemplate() {
   return (
     <ChattingRoomLayout>

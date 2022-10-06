@@ -65,7 +65,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
         },
       );
       navigate(`${CHATROOMURL}${roomId}`);
-      console.log(response.status);
     } catch (error) {
       alert(error);
       throw console.dir(error);
@@ -84,7 +83,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
     <ChatRoomElementLayout>
       <RoomElementImageModule image={image} />
       <RoomInfoLayout>
-        <RoomTitleModule title={name}></RoomTitleModule>
+        <RoomTitleModule title={name} type={type}></RoomTitleModule>
         {/*[수정사항] id대신 인원수가 들어갈 예정 */}
         <RoomNumberOfPeopleModule num={roomId}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
