@@ -22,12 +22,13 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
-function JoinedDMListOrganisms() {
-  const reqUser = useRecoilValue(reqUserDataAtom);
-  const userProfileBoxProps: UserProfileBoxType = {
+function JoinedDMListOrganisms<T>() {
+  const userData = 123;
+  //DM리스트에 있는 유유
+  const userProfileBoxProps = {
     isButton: true,
     avatarType: 'circle',
-    userData: reqUser,
+    userData: { userData },
     // action?: () => void;
   };
   return (

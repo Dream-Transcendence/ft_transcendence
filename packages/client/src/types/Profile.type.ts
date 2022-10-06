@@ -7,11 +7,18 @@ export interface UserLadderType {
 export interface UserProfileBoxType {
   isButton: boolean;
   avatarType: string;
-  userData: BaseUserProfileData;
+  userData: any;
   action?: () => void;
 }
 
-export interface FriendList {
+export interface UserMatchHistoryType {
+  id: number,
+  opponent: string,
+  isWin: boolean,
+  isLadder: boolean,
+}
+
+export interface FriendType {
   id: number;
   user: {
     id: number;

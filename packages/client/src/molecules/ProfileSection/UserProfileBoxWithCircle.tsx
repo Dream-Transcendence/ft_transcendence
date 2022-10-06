@@ -10,6 +10,7 @@ import { Box, Button } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import {
   BaseUserProfileData,
+  FriendType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
 import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
@@ -52,17 +53,25 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 function UserProfileBoxWithCircle(isButton: Boolean) {
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
+  //const reqUser = useRecoilValue<FriendType>(reqUserDataAtom);
   const changeSpot = () => { };
 
   return (
     <ProfileBoxAvatarLayout>
       {ProfileAvatar({
         avatarType: 'circle',
-        avartarProps: reqUser,
+        avartarProps: {
+          id: 0,
+          user: {
+            id: 0,
+            nickname: 'string',
+            image: 'string',
+          },
+          isBlocked: true,
+        },
       })}
     </ProfileBoxAvatarLayout>
   );
 }
 
-export default UserProfileBoxWithCircle;
+// export default UserProfileBoxWithCircle;

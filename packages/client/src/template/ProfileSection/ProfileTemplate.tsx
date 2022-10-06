@@ -12,31 +12,31 @@ import {
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
-import { Navigate, Routes } from 'react-router-dom';
+import { Navigate, Routes, useParams } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import axios from 'axios';
-import { reqUserDataAtom, userDataAtom } from '../../pages/PingpongRoutePage';
 import { useEffect } from 'react';
 import { SERVERURL } from '../../configs/Link.url';
 import LandingPage from '../../pages/LandingPage';
+import { reqUserDataAtom, userDataAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileTemplate() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
+  const { userId } = useParams();
 
   return (
     <ProfileLayout>
       <Routes>
-        {user.nickname === reqUser.nickname ? (
-          <Route path={`user`} element={<UserInfo />} />
+        {`${user.id}` === userId ? (
+          <Route path={`${user.id}`} element={<UserInfo />} />
         ) : (
-          <Route path={`${reqUser.nickname}`} element={<OtherInfo />} />
+          <Route path={`${userId}`} element={<OtherInfo />} />
         )}
       </Routes>
       <FreindList />
       <UserStat />
       <MatchHistory />
-      <Popup>{SendMessageAlert(`${user.nickname === reqUser.nickname}`)}</Popup>
+      <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
     </ProfileLayout>
   );
 }

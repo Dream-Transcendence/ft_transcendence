@@ -1,8 +1,4 @@
 node_modules/
 .DS_Store
-<<<<<<< HEAD
-data/
-=======
 data/
 .env
->>>>>>> 🐛 fix(client): fix conflict

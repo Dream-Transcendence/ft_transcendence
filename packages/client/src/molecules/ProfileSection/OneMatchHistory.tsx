@@ -5,8 +5,8 @@ import { createTheme, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
-import { UserMatchHistory } from '../../organisms/ProfileMatchHistory/MatchHistory';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { UserMatchHistoryType } from '../../types/Profile.type';
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -27,12 +27,16 @@ const MatchHistoryTheme = createTheme({
       main: '#00FF00',
       contrastText: 'white',
     },
+    secondary: {
+      main: '#856801',
+      contrastText: 'white',
+    }
   },
 });
 
-function OneMatchHistory(props: { matchHistory: UserMatchHistory }) {
+function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
   const userData = useRecoilValue(userDataAtom);
-  const { id, opponent, isWin, isLadder } = props.matchHistory;
+  const { opponent, isWin, isLadder } = props.matchHistory;
   return (
     <ThemeProvider theme={MatchHistoryTheme}>
       <OneMatchHistoryLayout>

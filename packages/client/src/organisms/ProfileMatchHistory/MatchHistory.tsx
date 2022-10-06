@@ -6,6 +6,11 @@ import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { SERVERURL } from 'client/src/configs/Link.url';
+import axios from 'axios';
+import { UserMatchHistoryType } from '../../types/Profile.type';
+import { ListLayout, ListUlLayout } from '../../atoms/list/styles/ListStylesCSS';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -26,11 +31,6 @@ const TextLayout = styled('div')(({ theme }) => ({
   borderBottom: 'solid 1px',
 }));
 
-const ListLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '92%',
-}));
-
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -39,38 +39,33 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   justifySelf: 'start',
 }));
 
-export interface UserMatchHistory {
-  id: number,
-  opponent: string,
-  isWin: boolean,
-  isLadder: boolean,
-}
-
 function MatchHistory() {
-  const reqUser = useRecoilValue(reqUserDataAtom);
-  const [userMatchHistory, setUserMatchHistory] = useState<UserMatchHistory>({
+  const { userId } = useParams();
+  const [matchHistoryList, setMatchHistoryList] = useState<UserMatchHistoryType[]>([{
     id: 0,
     opponent: "UnKnown",
-    isWin: true,
-    isLadder: true,
-  })
-  useEffect(() => {
-    // async function getUserLadder() {
-    //   const response = await axios.get(`${SERVERURL}/user/${reqUser.id}/game/ladder`);
-    //   console.log('user ladder : ', response.data);
-    //   return response.data;
-    // }
-    const response = {
-      id: 1,
-      opponent: "doyun",
-      isWin: true,
-      isLadder: true,
-    }
-    try {
-      setUserMatchHistory(response)
-    } catch {
-      console.log('error : userMatchHistory');
-    }
+    isWin: false,
+    isLadder: false,
+  }])
+  // useEffect(() => {
+  //   async function getUserLadder() {
+  //     const response = await axios.get(`${SERVERURL}/users/${userId}/game/records`);
+  //     console.log('user ladder : ', response.data);
+  //     setMatchHistoryList(response.data);
+  //   }
+  //   try {
+  //     getUserLadder();
+  //   } catch {
+  //     console.log('error : userMatchHistory');
+  //   }
+  // }, [matchHistoryList]);
+
+  const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
+    return (
+      <ListLayout key={matchHistory.id}>
+        <OneMatchHistory matchHistory={matchHistory} />
+      </ListLayout>
+    )
   })
 
   return (
@@ -82,7 +77,7 @@ function MatchHistory() {
       </TextLayout>
       <ListLayout>
         <OneMatchHistoryLayout>
-          <ListGenerate element={<OneMatchHistory matchHistory={userMatchHistory} />} />
+          <ListUlLayout>{listElement}</ListUlLayout>
         </OneMatchHistoryLayout>
       </ListLayout>
     </MatchHistoryLayout>

@@ -33,12 +33,12 @@ function EditableControls() {
       <IconButton
         aria-label="ProfileNicname"
         icon={<DoneIcon />}
-        {...getSubmitButtonProps()}
+        {...getSubmitButtonProps}
       />
       <IconButton
         aria-label="ProfileNicname"
         icon={<ClearIcon />}
-        {...getCancelButtonProps()}
+        {...getCancelButtonProps}
       />
     </ButtonGroup>
   ) : (
@@ -47,7 +47,7 @@ function EditableControls() {
         aria-label="ProfileNicname"
         size="sm"
         icon={<SaveAltIcon />}
-        {...getEditButtonProps()}
+        {...getEditButtonProps}
       />
     </Flex>
   );

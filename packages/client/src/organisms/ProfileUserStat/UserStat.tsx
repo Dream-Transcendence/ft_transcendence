@@ -51,7 +51,7 @@ function UserStat() {
     } catch {
       console.log('error : userStat');
     }
-  })
+  }, [])
   return (
     <UserStatLayout>
       <UserStatLadder value={userLadder.rank} />
