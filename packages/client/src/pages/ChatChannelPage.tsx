@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
-import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -53,6 +52,7 @@ function ChatroomPage() {
         const response = await axios.get(`${SERVERURL}/rooms/channels`);
         setRoomList(response.data);
       } catch (error) {
+        alert(error);
         throw console.dir(error);
       }
     }
@@ -75,11 +75,8 @@ function ChatroomPage() {
               element={<Navigate replace to={CHANNELURL} />}
             />
             <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} />
-            <Route
-              path="room/:roomNumber"
-              element={<EnteredChatRoomTemplate />}
-            />
-            <Route path="dm/:dmNumber" element={<EnteredDMTemplate />} />
+            <Route path="room/:roomId" element={<EnteredChatRoomTemplate />} />
+            {/* <Route path="dm/:dmId" element={<EnteredDMTemplate />} /> */}
             {roomList.length ? (
               <Route
                 path="/"

@@ -51,7 +51,10 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
 
   return (
     //잠금설정에 따라 input을 보이게 또는 안보이게 설정할 것
-    <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
+    <FormControl
+      sx={{ m: 0, width: '100%', marginTop: '4%' }}
+      variant="standard"
+    >
       <InputLabel
         htmlFor="standard-adornment-password"
         variant="filled"
@@ -66,6 +69,12 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
         type={values.showPassword ? 'text' : 'password'}
         value={values.password}
         onChange={handleChange('password')}
+        //보류
+        // onKeyPress={(event) => {
+        //   if (event.key === 'Enter') {
+        //     action(values.password);
+        //   }
+        // }}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
