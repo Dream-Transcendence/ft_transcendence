@@ -76,10 +76,6 @@ function InfoChatRoomBoxFunctionModule(props: { roomInfo: any }) {
     icon: <BlockIcon />,
   };
 
-  const customSportProps: CustomIconProps = {
-    icon: <SportsKabaddiIcon />,
-  };
-
   const personalAction: LinkIconProps = {
     iconResource: personal,
   };

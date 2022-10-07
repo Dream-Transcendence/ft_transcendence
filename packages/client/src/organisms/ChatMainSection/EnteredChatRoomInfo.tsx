@@ -46,40 +46,10 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   }
 };
 
-function EnteredChatRoomInfoOrganisms() {
-  const [roomInfo, setRoomInfo] = useState<any>({
-    name: '',
-    type: 0,
-    image: '',
-  });
-  const { roomId } = useParams();
-
-  useEffect(() => {
-    async function getRoomInfo() {
-      try {
-        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-        //[수정사항] 도메인이 아직 확실하지 않아서 보류
-        const response = await axios.get(
-          `${SERVERURL}/rooms/channel/${roomId}/1`,
-        );
-        setRoomInfo(response.data);
-      } catch (error) {
-        alert(error);
-        throw console.dir(error);
-      }
-    }
-    getRoomInfo();
-  }, [roomId]);
-
-  //[수정사항] any => ChannelDto
-  const handleRoomInfo = (roomInfo: any) => {
-    setRoomInfo(roomInfo);
-  };
-
-  const roomInfoSet: RoomInfoSet = {
-    roomInfo: roomInfo,
-    handler: handleRoomInfo,
-  };
+//[수정사항] any => ChannelDto
+function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
+  const roomInfoSet = props.roomInfoSet;
+  const { roomInfo } = roomInfoSet;
 
   return (
     <RoomInfoLayout>
