@@ -11,7 +11,13 @@ import {
   LinkIconResource,
 } from 'client/src/types/Link.type';
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from 'client/src/configs/Link.url';
+import {
+  CHANNELURL,
+  OTHERPROFILEURL,
+  SERVERURL,
+} from 'client/src/configs/Link.url';
+import axios from 'axios';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -21,34 +27,35 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function InfoDMBoxFunctionModule() {
-  const personal: LinkIconResource = {
-    url: OTHERPROFILEURL,
-    icon: <PersonIcon />,
-  };
+function InfoBoxRoomFunctionModule() {
+  //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
+  const userId = 1;
+  const navigate = useNavigate();
+  const { roomId } = useParams();
 
-  const customBlockProps: CustomIconProps = {
-    icon: <BlockIcon />,
-  };
+  async function outRoom() {
+    try {
+      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+      await axios.delete(
+        `${SERVERURL}/rooms/${roomId}/channel/participants/${userId}`,
+      );
+      navigate(`${CHANNELURL}`);
+    } catch (error) {
+      alert(error);
+      throw console.dir(error);
+    }
+  }
 
-  const customSportProps: CustomIconProps = {
-    icon: <SportsKabaddiIcon />,
-  };
-
-  const personalAction: LinkIconProps = {
-    iconResource: personal,
+  const customMeetProps: CustomIconProps = {
+    icon: <MeetingRoomIcon />,
+    action: outRoom,
   };
 
   return (
     <InfoBoxFunctionLayout>
-      {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
-      {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
-      <CustomIconButton customProps={customBlockProps} />
-      {/* [axios POST 요청] 1 대 1 게임 큐에 등록 요청 */}
-      <CustomIconButton customProps={customSportProps} />
-      <LinkPageIconButton linkIconProps={personalAction} />
+      <CustomIconButton customProps={customMeetProps} />
     </InfoBoxFunctionLayout>
   );
 }
 
-export default InfoDMBoxFunctionModule;
+export default InfoBoxRoomFunctionModule;

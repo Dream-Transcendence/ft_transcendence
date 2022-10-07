@@ -12,55 +12,61 @@ import {
 } from 'client/src/types/Link.type';
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
 import {
-  CHANNELURL,
-  CHATROOMURL,
   GAMECREATEURL,
   OTHERPROFILEURL,
   SERVERURL,
 } from 'client/src/configs/Link.url';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import { DM } from '../../configs/RoomType';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
+  width: '80%',
+  height: '95%',
   flexDirection: 'row-reverse',
   display: 'flex',
   alignItems: 'center',
-  padding: '10%',
-}));
-
-const InfoFunctionLayout = styled('div')(({ theme }) => ({
-  width: '30%',
-  height: '95%',
 }));
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-
-function InfoChatRoomBoxFunctionModule(props: { roomInfo: any }) {
+//[수정사항] any => ChannelDto
+function InfoDMBoxFunctionModule() {
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
-  const userId = 1;
-  const roomInfo = props.roomInfo;
-  const navigate = useNavigate();
-  const { name, type, image } = roomInfo;
   const { roomId } = useParams();
+  //[수정사항] any => DmUserDto
+  const [DMInfo, setDMInfo] = useState<any>({});
+  const userId = 1;
 
-  async function outRoom() {
+  useEffect(() => {
+    async function getDMInfo() {
+      try {
+        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+        const response = await axios.get(
+          `${SERVERURL}/rooms/${roomId}/dm/${userId}/participants`,
+        );
+        setDMInfo(response.data);
+      } catch (error) {
+        alert(error);
+        throw console.dir(error);
+      }
+    }
+    getDMInfo();
+  }, [roomId]);
+
+  console.log(DMInfo);
+
+  async function blockUser() {
     try {
       //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-      const response = await axios.delete(
-        `${SERVERURL}/rooms/${roomId}/channel/participants/${userId}`,
-      );
-      navigate(`${CHANNELURL}`);
+      await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
+        id: DMInfo.id,
+      });
+      console.log('block!!');
     } catch (error) {
       alert(error);
       throw console.dir(error);
     }
   }
-
-  const customMeetProps: CustomIconProps = {
-    icon: <MeetingRoomIcon />,
-    action: outRoom,
-  };
 
   const personal: LinkIconResource = {
     url: OTHERPROFILEURL,
@@ -74,6 +80,7 @@ function InfoChatRoomBoxFunctionModule(props: { roomInfo: any }) {
 
   const customBlockProps: CustomIconProps = {
     icon: <BlockIcon />,
+    action: blockUser,
   };
 
   const personalAction: LinkIconProps = {
@@ -85,22 +92,12 @@ function InfoChatRoomBoxFunctionModule(props: { roomInfo: any }) {
   };
 
   return (
-    <InfoFunctionLayout>
-      {/* [axios POST 요청]방장이 나갈시, 권한위임 요청 */}
-      {/* [axios DELETE 요청]해당 채팅방 나가기 요청 */}
-      {type === DM ? (
-        <InfoBoxFunctionLayout>
-          <CustomIconButton customProps={customBlockProps} />
-          <LinkPageIconButton linkIconProps={gameAction} />
-          <LinkPageIconButton linkIconProps={personalAction} />
-        </InfoBoxFunctionLayout>
-      ) : (
-        <InfoBoxFunctionLayout>
-          <CustomIconButton customProps={customMeetProps} />
-        </InfoBoxFunctionLayout>
-      )}
-    </InfoFunctionLayout>
+    <InfoBoxFunctionLayout>
+      <CustomIconButton customProps={customBlockProps} />
+      <LinkPageIconButton linkIconProps={gameAction} />
+      <LinkPageIconButton linkIconProps={personalAction} />
+    </InfoBoxFunctionLayout>
   );
 }
 
-export default InfoChatRoomBoxFunctionModule;
+export default InfoDMBoxFunctionModule;
