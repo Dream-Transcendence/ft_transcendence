@@ -17,13 +17,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  CreateChannelDto,
   ChannelParticipantDto,
   ChannelDto,
-  CreateChannelDto,
-  RoomPasswordDto,
   PatchChannelInfoDto,
   PatchUserInfoDto,
   createDmDto,
+  RoomPasswordDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 import { DmUserDto } from '../users/dto/user.dto';
@@ -50,15 +50,15 @@ export class RoomsController {
     return this.roomService.createChannel(createChannelDto);
   }
 
-  @Get('/channels')
+  @Get('/:userId/channels')
   @ApiOperation({ summary: '공개, 보호 채널 목록' })
   @ApiOkResponse({
     description: '공개, 보호 채널 목록 가져오기 성공 type: [ChannelDto]',
     type: [ChannelDto],
   })
-  getChannels(): Promise<ChannelDto[]> {
+  getChannels(@Param('userId') userId: number): Promise<ChannelDto[]> {
     this.logger.log(`getChannels`);
-    return this.roomService.getChannels();
+    return this.roomService.getChannels(userId);
   }
 
   @Get('/channel/:roomId/:userId')
