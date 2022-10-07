@@ -14,7 +14,7 @@ import {
   SERVERURL,
 } from 'client/src/configs/Link.url';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -30,7 +30,8 @@ function InfoChatRoomBoxFunctionModule(props: { roomInfo: any }) {
   const userId = 1;
   const roomInfo = props.roomInfo;
   const navigate = useNavigate();
-  const { id: roomId, name, type, image } = roomInfo;
+  const { name, type, image } = roomInfo;
+  const { roomId } = useParams();
 
   async function outRoom() {
     try {

@@ -53,6 +53,7 @@ function ChatroomPage() {
         const response = await axios.get(`${SERVERURL}/rooms/channels`);
         setRoomList(response.data);
       } catch (error) {
+        alert(error);
         throw console.dir(error);
       }
     }

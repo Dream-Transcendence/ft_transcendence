@@ -43,11 +43,12 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
         roomInfo['salt'] = password;
         ChangeRoomInfo(roomInfoSet);
       } catch (error) {
+        alert(error);
         console.dir(error);
       }
     }
     return setChangePassword(false);
-  }, [roomInfo, password, changePassword]);
+  }, [roomInfoSet, roomInfo, password, changePassword]);
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
@@ -65,8 +66,8 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
     icon: <LockOpenIcon />,
     action: handleChangePassword,
   };
-  console.log('in pass box', type);
-  console.log('password', password);
+  // console.log('in pass box', type);
+  // console.log('password', password);
 
   return (
     <InfoBoxPasswordLayout>

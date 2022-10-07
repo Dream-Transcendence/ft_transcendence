@@ -34,13 +34,14 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
 export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   try {
     const { roomInfo, roomId } = roomInfoSet;
-    const { salt } = roomInfo;
     console.log(roomInfo);
-    const response = await axios.patch(`${SERVERURL}/rooms/${roomId}`, {
-      salt: salt,
-    });
+    const response = await axios.patch(
+      `${SERVERURL}/rooms/${roomId}`,
+      roomInfo,
+    );
     return await response.data;
   } catch (error) {
+    alert(error);
     throw await console.dir(error);
   }
 };
@@ -63,6 +64,7 @@ function EnteredChatRoomInfoOrganisms() {
         );
         setRoomInfo(response.data);
       } catch (error) {
+        alert(error);
         throw console.dir(error);
       }
     }
