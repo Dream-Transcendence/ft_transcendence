@@ -78,7 +78,9 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
         {type === DM ? (
-          <Typography color={'white'}>{name}</Typography>
+          <Typography paddingLeft={'10px'} color={'white'}>
+            {name}
+          </Typography>
         ) : (
           <Input
             disableUnderline
