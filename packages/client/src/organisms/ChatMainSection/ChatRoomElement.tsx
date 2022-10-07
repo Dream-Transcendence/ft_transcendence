@@ -56,7 +56,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
 
   async function enterRoom() {
     try {
-      console.log(roomId, password);
       //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
       const response = await axios.post(
         `${SERVERURL}/rooms/${roomId}/users/1`,

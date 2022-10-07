@@ -18,60 +18,64 @@ import { CustomIconProps } from '../../types/Link.type';
 import { PROTECTED } from '../../configs/RoomType';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { RoomInfoSet } from '../../types/Room.type';
+import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
+import { useParams } from 'react-router-dom';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
   display: 'flex',
-  flexDirection: 'row',
 }));
 
-function InfoBoxPasswordModule(props: { roomInfo: any }) {
-  console.log(props.roomInfo);
-  const { id: roomId, type } = props.roomInfo;
+function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
+  const roomInfoSet = props.roomInfoSet;
+  const { roomInfo, handler } = roomInfoSet;
+  const { name, type, image } = roomInfo;
+  const { roomId } = useParams();
   const [password, setPassword] = useState('');
+  const [changePassword, setChangePassword] = useState<boolean>(false);
+  roomInfoSet['roomId'] = roomId;
 
-  // async function changePassword() {
-  //   try {
-  //     //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-  //     const response = await axios.patch(
-  //       `${SERVERURL}/rooms/${roomId}`,
-  //       {
-  //         salt: password,
-  //       },
-  //     );
-  //     navigate(`${CHATROOMURL}${roomId}`);
-  //   } catch (error) {
-  //     alert(error);
-  //     throw console.dir(error);
-  //   }
-  // }
+  useEffect(() => {
+    if (changePassword) {
+      try {
+        roomInfo['salt'] = password;
+        ChangeRoomInfo(roomInfoSet);
+      } catch (error) {
+        console.dir(error);
+      }
+    }
+    return setChangePassword(false);
+  }, [roomInfo, password, changePassword]);
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
+  const handleChangePassword = () => {
+    setChangePassword(true);
+  };
+
   const lockIconProps: CustomIconProps = {
     icon: <LockIcon />,
-    // action:
+    action: handleChangePassword,
   };
   const lockOpenIconProps: CustomIconProps = {
     icon: <LockOpenIcon />,
-    // action:
+    action: handleChangePassword,
   };
-  console.log(type);
+  console.log('in pass box', type);
+  console.log('password', password);
 
   return (
     <InfoBoxPasswordLayout>
       {type === PROTECTED ? (
-        <div>
-          <PasswordInput handler={handlePassword} />
-          <CustomIconButton customProps={lockIconProps} />
-        </div>
+        <CustomIconButton customProps={lockIconProps} />
       ) : (
         <CustomIconButton customProps={lockOpenIconProps} />
       )}
-      {/* {CustomIconButton(<LockOpenIcon />)} 상황에 따라 아이콘 바꿀 것 */}
+      <PasswordInput handler={handlePassword} />
     </InfoBoxPasswordLayout>
   );
 }

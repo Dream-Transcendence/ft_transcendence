@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
+import { RoomInfoSet } from '../../types/Room.type';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -25,8 +26,26 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
   backgroundColor: '#003566',
 }));
 
+//[수정사항] any => ChannelDto
+/*
+ * 채팅정보를 수정하기 위한 공통 커스텀 훅
+ */
+//[수정사항] 비밀번호 변경 성공, 향후 손캉님이 공백 보낼 때, type변경해주는 로직 고쳐주면 아이콘 자동변환되게 바꿀 것
+export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
+  try {
+    const { roomInfo, roomId } = roomInfoSet;
+    const { salt } = roomInfo;
+    console.log(roomInfo);
+    const response = await axios.patch(`${SERVERURL}/rooms/${roomId}`, {
+      salt: salt,
+    });
+    return await response.data;
+  } catch (error) {
+    throw await console.dir(error);
+  }
+};
+
 function EnteredChatRoomInfoOrganisms() {
-  //[수정사항] any => ChannelDto
   const [roomInfo, setRoomInfo] = useState<any>({
     name: '',
     type: 0,
@@ -38,26 +57,35 @@ function EnteredChatRoomInfoOrganisms() {
     async function getRoomInfo() {
       try {
         //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+        //[수정사항] 도메인이 아직 확실하지 않아서 보류
         const response = await axios.get(
           `${SERVERURL}/rooms/channel/${roomId}/1`,
         );
-        //response.data의 값을 분석중이었음.20221006
         setRoomInfo(response.data);
-        console.log('?????????', response.data);
       } catch (error) {
         throw console.dir(error);
       }
     }
     getRoomInfo();
   }, [roomId]);
-  console.log('aaasadas', roomInfo);
+
+  //[수정사항] any => ChannelDto
+  const handleRoomInfo = (roomInfo: any) => {
+    setRoomInfo(roomInfo);
+  };
+
+  const roomInfoSet: RoomInfoSet = {
+    roomInfo: roomInfo,
+    handler: handleRoomInfo,
+  };
+
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
         {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
-        <InfoEditBoxNameModule roomInfo={roomInfo} />
-        <InfoBoxPasswordModule roomInfo={roomInfo} />
-        <InfoChatRoomBoxFunctionModule />
+        <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
+        <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
+        <InfoChatRoomBoxFunctionModule roomInfo={roomInfo} />
       </RoomInfoBox>
     </RoomInfoLayout>
   );

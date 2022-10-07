@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
 import { DM } from '../../configs/RoomType';
+import { RoomInfoSet } from '../../types/Room.type';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -27,8 +28,9 @@ const divStyle = {
 };
 
 //[수정사항] any => ChannelDto
-function InfoBoxNameModule(props: { roomInfo: any }) {
-  const { name, type, image } = props.roomInfo;
+function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
+  const { roomInfo, handler } = props.roomInfoSet;
+  const { name, type, image } = roomInfo;
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
@@ -45,7 +47,6 @@ function InfoBoxNameModule(props: { roomInfo: any }) {
         </IconButton>
       )}
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
-
       <FormControl>
         <Typography color={'white'}>{name}</Typography>
       </FormControl>
