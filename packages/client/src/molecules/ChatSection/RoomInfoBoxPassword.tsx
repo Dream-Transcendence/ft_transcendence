@@ -15,7 +15,7 @@ import PasswordInput from '../../atoms/input/passwordBox';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import { CustomIconProps } from '../../types/Link.type';
-import { PROTECTED } from '../../configs/RoomType';
+import { DM, PROTECTED } from '../../configs/RoomType';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useEffect, useState } from 'react';
@@ -25,7 +25,14 @@ import { useParams } from 'react-router-dom';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
+}));
+
+const InfoBoxPasswordInnerLayout = styled('div')(({ theme }) => ({
   display: 'flex',
+}));
+
+const PasswordIconLayout = styled('div')(({ theme }) => ({
+  paddingTop: '9%',
 }));
 
 function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
@@ -71,12 +78,18 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
 
   return (
     <InfoBoxPasswordLayout>
-      {type === PROTECTED ? (
-        <CustomIconButton customProps={lockIconProps} />
-      ) : (
-        <CustomIconButton customProps={lockOpenIconProps} />
+      {type !== DM && (
+        <InfoBoxPasswordInnerLayout>
+          <PasswordIconLayout>
+            {type === PROTECTED ? (
+              <CustomIconButton customProps={lockIconProps} />
+            ) : (
+              <CustomIconButton customProps={lockOpenIconProps} />
+            )}
+          </PasswordIconLayout>
+          <PasswordInput handler={handlePassword} />
+        </InfoBoxPasswordInnerLayout>
       )}
-      <PasswordInput handler={handlePassword} />
     </InfoBoxPasswordLayout>
   );
 }
