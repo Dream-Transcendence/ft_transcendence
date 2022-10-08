@@ -1,3 +1,4 @@
+import { UsePipes, ValidationPipe } from '@nestjs/common';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,7 +7,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { EnterChannelDto } from './dto/rooms.dto';
+import { EnterChannelDto, LeaveChannelDto } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 
 @WebSocketGateway(4242, {
@@ -18,15 +19,27 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   handleConnection(client: Socket) {
-    console.log('Client connected', client.id);
+    console.log('Chat Client connected', client.id);
   }
 
   handleDisconnect(client: Socket) {
-    console.log('Client disconnected', client.id);
+    console.log('Chat Client disconnected', client.id);
   }
 
   @SubscribeMessage('enterChannel')
+  // NOTE: 클래스 Validation 로직이 적용이 안됨...
+  // 별도로 로직을 짜서 적용해야 하는 지 고민
   handleEnterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
-    return this.roomService.enterChannel2(client, enterChannelDto);
+    return this.roomService.handleEnterChannel(client, enterChannelDto);
+  }
+
+  @SubscribeMessage('leaveChannel')
+  handleLeaveChannel(client: Socket, leaveChannelDto: LeaveChannelDto) {
+    return this.roomService.handleLeaveChannel(client, leaveChannelDto);
+  }
+
+  @SubscribeMessage('sendMessage')
+  handleSendMessage(client: Socket, sendMessageDto: any) {
+    return this.roomService.handleSendMessage(client, sendMessageDto);
   }
 }

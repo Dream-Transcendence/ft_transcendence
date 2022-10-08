@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDate,
   IsInt,
   IsNotEmpty,
   IsNumber,
@@ -149,7 +150,7 @@ export class GetUserRoomDto {
   RecvMessageCount: number;
 }
 
-export class createDmDto {
+export class CreateDmDto {
   @ApiProperty()
   @IsInt()
   userId: number;
@@ -210,4 +211,46 @@ export class EnterChannelDto {
   @IsString()
   @IsOptional()
   salt: string;
+}
+
+export class LeaveChannelDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+}
+
+export class SendMessageDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class UserMessageDto {
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsDate()
+  @IsNotEmpty()
+  date: Date;
+
+  @IsObject()
+  @IsNotEmpty()
+  user: UserDto;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
 }

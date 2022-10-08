@@ -23,7 +23,7 @@ import {
   RoomPasswordDto,
   PatchChannelInfoDto,
   PatchUserInfoDto,
-  createDmDto,
+  CreateDmDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 import { DmUserDto } from '../users/dto/user.dto';
@@ -158,7 +158,7 @@ export class RoomsController {
     description: 'DM 채널 생성 type: DmDto',
   })
   @ApiNotFoundResponse({ description: 'DM 참여자를 찾을 수 없습니다' })
-  createDm(@Body() createDmDto: createDmDto) {
+  createDm(@Body() createDmDto: CreateDmDto) {
     return this.roomService.createDm(createDmDto);
   }
 

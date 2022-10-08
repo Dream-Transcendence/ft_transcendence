@@ -3,18 +3,23 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
-import { ChannelParticipant, Room } from '../chats/rooms.entity';
+import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
 import {
   CreateChannelDto,
   PatchUserInfoDto,
   RoomPasswordDto,
   PatchChannelInfoDto,
-  createDmDto,
+  CreateDmDto,
   ChannelParticipantDto,
   ChannelDto,
   EnterChannelDto,
+  LeaveChannelDto,
+  SendMessageDto,
+  UserMessageDto,
 } from '../chats/dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
@@ -34,6 +39,8 @@ export class RoomService {
     private dmParticipantsRepository: Repository<DmParticipant>,
     @Inject('BLOCKS_REPOSITORY')
     private blocksRepository: Repository<Block>,
+    @Inject('MESSAGES_REPOSITORY')
+    private messagesRepository: Repository<Message>,
   ) {}
 
   // ANCHOR Room Service
@@ -230,7 +237,7 @@ export class RoomService {
   }
 
   // ANCHOR Dm Service
-  async createDm(createDmDto: createDmDto): Promise<void> {
+  async createDm(createDmDto: CreateDmDto): Promise<void> {
     const { userId, participantId } = createDmDto;
     // NOTE dm info 저장
     let dm = this.roomsRepository.create({
@@ -286,7 +293,7 @@ export class RoomService {
   // }
 
   // ANCHOR: Socket
-  async enterChannel2(client: Socket, enterChannelDto: EnterChannelDto) {
+  async handleEnterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
     let user: User = null;
     const { roomId, userId } = enterChannelDto;
     const room = await this.roomsRepository.findOneBy({ id: roomId });
@@ -322,6 +329,53 @@ export class RoomService {
         .emit('roomMessage', `${user.nickname}이(가) 입장했습니다.`);
 
     // 참여 성공
+    // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
     return { isEntered: true };
+  }
+
+  async handleLeaveChannel(client: Socket, leaveChannelDto: LeaveChannelDto) {
+    const { roomId, userId } = leaveChannelDto;
+    await this.channelParticipantsRepository.delete({
+      room: { id: roomId },
+      user: { id: userId },
+    });
+    const user = await this.usersRepository.findOneBy({ id: userId });
+
+    client
+      .to(roomId.toString())
+      .emit('roomMessage', `${user.nickname}이(가) 나갔습니다.`);
+    client.rooms.clear();
+    client.leave(roomId.toString());
+
+    return { isLeft: true };
+  }
+
+  async handleSendMessage(client: Socket, sendMessageDto: SendMessageDto) {
+    const { roomId, userId, body } = sendMessageDto;
+
+    const message = this.messagesRepository.create({
+      date: new Date(),
+      body,
+      room: await this.roomsRepository.findOneBy({ id: roomId }),
+      user: await this.usersRepository.findOneBy({ id: userId }),
+    });
+
+    // TODO: 순서 보장을 위해, 큐에 넣어서 처리하는 방식 구현 필요!
+    await this.messagesRepository.save(message);
+
+    const userMessageDto: UserMessageDto = {
+      id: message.id,
+      date: message.date,
+      user: {
+        id: message.user.id,
+        nickname: message.user.nickname,
+        image: message.user.image,
+      },
+      body: message.body,
+    };
+
+    client.to(roomId.toString()).emit('userMessage', userMessageDto);
+
+    return;
   }
 }

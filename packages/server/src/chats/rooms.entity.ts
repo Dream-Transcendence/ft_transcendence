@@ -36,6 +36,9 @@ export class Room {
 
   @OneToMany(() => DmParticipant, (dmParticipant) => dmParticipant.room)
   dmParticipants: DmParticipant[];
+
+  @OneToMany(() => Message, (message) => message.room)
+  messages: Message[];
 }
 
 @Entity()
@@ -68,5 +71,23 @@ export class DmParticipant {
   user: User;
 
   @ManyToOne(() => Room, (room) => room.dmParticipants)
+  room: Room;
+}
+
+@Entity()
+export class Message {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  date: Date;
+
+  @Column()
+  body: string;
+
+  @ManyToOne(() => User, (user) => user.messages)
+  user: User;
+
+  @ManyToOne(() => Room, (room) => room.messages)
   room: Room;
 }
