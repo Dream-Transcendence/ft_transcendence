@@ -9,7 +9,7 @@ import { Server, Socket } from 'socket.io';
 import { EnterChannelDto } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 
-@WebSocketGateway(4244, {
+@WebSocketGateway(4242, {
   namespace: 'chat',
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -27,6 +27,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('enterChannel')
   handleEnterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
-    this.roomService.enterChannel2(client, enterChannelDto);
+    return this.roomService.enterChannel2(client, enterChannelDto);
   }
 }
