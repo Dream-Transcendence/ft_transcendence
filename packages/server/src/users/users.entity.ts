@@ -1,4 +1,8 @@
-import { ChannelParticipant, DmParticipant } from '../chats/rooms.entity';
+import {
+  ChannelParticipant,
+  DmParticipant,
+  Message,
+} from '../chats/rooms.entity';
 import {
   BaseEntity,
   Column,
@@ -43,6 +47,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => DmParticipant, (dmParticipant) => dmParticipant.user)
   dmParticipants: DmParticipant[];
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
 }
 
 @Entity()

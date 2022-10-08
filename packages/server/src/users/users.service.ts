@@ -1,4 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import {
   ChannelParticipant,
@@ -360,5 +361,14 @@ export class UserService {
     });
 
     return foundUsers;
+  }
+
+  // ANCHOR: Socket
+  async handleLogOn(client: Socket, logOnDto: any) {
+    return;
+  }
+
+  async handleLogOff(client: Socket, logOffDto: any) {
+    return;
   }
 }
