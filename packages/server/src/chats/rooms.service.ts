@@ -14,10 +14,12 @@ import {
   createDmDto,
   ChannelParticipantDto,
   ChannelDto,
+  EnterChannelDto,
 } from '../chats/dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
+import { Socket } from 'socket.io';
 
 @Injectable()
 export class RoomService {
@@ -282,4 +284,44 @@ export class RoomService {
   //   }
   //   return;
   // }
+
+  // ANCHOR: Socket
+  async enterChannel2(client: Socket, enterChannelDto: EnterChannelDto) {
+    let existFlag = true;
+    const { roomId, userId } = enterChannelDto;
+    const room = await this.roomsRepository.findOneBy({ id: roomId });
+    if (!room) throw new NotFoundException(`Can't find room ${roomId}`);
+
+    let user;
+
+    // DM인 경우
+    if (room.type === 0) {
+      user = await this.dmParticipantsRepository.findOneBy({
+        id: userId,
+      });
+      // 채널인 경우
+    } else {
+      user = await this.channelParticipantsRepository.findOneBy({
+        id: userId,
+      });
+      // 유저가 없으면 참여자 DB에 추가
+      if (user === null) {
+        existFlag = false;
+        const participant = this.channelParticipantsRepository.create({
+          user: await this.usersRepository.findOneBy({ id: userId }),
+          room,
+        });
+        await this.channelParticipantsRepository.save(participant);
+      }
+    }
+    // 유저 룸 초기화 후, roomId 룸에 추가
+    client.rooms.clear();
+    client.join(roomId.toString());
+    console.log('참여해따!!!');
+    // 새 참여자라면, 입장 메세지 쏴주기
+    if (existFlag)
+      client
+        .to(roomId.toString())
+        .emit('roomMessage', `${user.nickname}이(가) 입장했습니다.`);
+  }
 }

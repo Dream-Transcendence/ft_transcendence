@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsInt,
   IsNotEmpty,
+  IsNumber,
   isObject,
   IsObject,
   IsOptional,
@@ -195,4 +196,18 @@ export class PatchUserInfoDto {
   @Max(1)
   @IsOptional()
   status?: STATUS_TYPE;
+}
+
+export class EnterChannelDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsOptional()
+  salt: string;
 }

@@ -43,13 +43,13 @@ export class ChannelParticipant {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   auth: AUTH_TYPE;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   status: STATUS_TYPE;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'timestamp' })
   statusStartDate: Date;
 
   @ManyToOne(() => User, (user) => user.channelParticipants)
