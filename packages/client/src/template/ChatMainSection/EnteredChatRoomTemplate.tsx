@@ -30,8 +30,8 @@ function EnteredChatRoomTemplate() {
   //[수정사항] any => DmUserDto
   const [DMInfo, setDMInfo] = useState<any>({
     id: 0,
-    nickname: 'string',
-    image: 'string',
+    nickname: 'default',
+    image: 'default',
     blocked: true,
   });
   const { roomId } = useParams();
