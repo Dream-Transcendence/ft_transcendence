@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -113,6 +114,21 @@ export class UsersController {
     @Body() userIdDto: UserIdDto,
   ): Promise<UserDto> {
     return this.userService.blockUser(id, userIdDto.id);
+  }
+
+  @Delete('/:id/blocks/:blockedUserId')
+  @ApiTags('유저/차단')
+  @ApiOperation({
+    summary: '유저 차단 해제 / BodyType: UserIdDto',
+    description: 'URL이 가르키는 유저 차단 해제',
+  })
+  @ApiOkResponse({ description: '유저 차단 해제 성공', type: UserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  unblockUser(
+    @Param('id') id: number,
+    @Param('blockedUserId') blockedUserId: number,
+  ): Promise<UserDto> {
+    return this.userService.unblockUser(id, blockedUserId);
   }
 
   // @Get('/:id/blocks')
