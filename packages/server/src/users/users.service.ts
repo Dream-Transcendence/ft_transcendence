@@ -364,11 +364,21 @@ export class UserService {
   }
 
   // ANCHOR: Socket
-  async handleLogOn(client: Socket, logOnDto: any) {
-    return;
-  }
+  async handleLogOn(
+    userId: number,
+    onlineUserList: number[],
+  ): Promise<number[]> {
+    const friendList: number[] = [];
+    (await this.getFriends(userId)).forEach((friend) => {
+      console.log('did i called?', friend);
+      friendList.push(friend.user.id);
+    });
+    console.log('friendList', friendList);
 
-  async handleLogOff(client: Socket, logOffDto: any) {
-    return;
+    const onlineFriends = friendList.filter((friendId) =>
+      onlineUserList.includes(friendId),
+    );
+    console.log(onlineFriends);
+    return onlineFriends;
   }
 }
