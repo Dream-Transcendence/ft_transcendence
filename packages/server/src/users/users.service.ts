@@ -184,7 +184,7 @@ export class UserService {
         id: room.id,
         name: room.name,
         image: room.image,
-        RecvMessageCount: 0,
+        recvMessageCount: 0,
       };
       channelList.push(userRoomDto);
     });
@@ -200,7 +200,7 @@ export class UserService {
         id: room.id,
         name: room.name,
         image: room.image,
-        RecvMessageCount: 0,
+        recvMessageCount: 0,
       };
       dmList.push(userRoomDto);
     });

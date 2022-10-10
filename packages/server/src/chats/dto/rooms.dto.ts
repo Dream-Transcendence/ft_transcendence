@@ -36,11 +36,22 @@ export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 // ANCHOR Channel DTO
 export class ChannelDto {
-  constructor(name: string, type: CHAT_TYPE, image: string) {
+  constructor(
+    id: number,
+    name: string,
+    type: CHAT_TYPE,
+    image: string,
+    title: string,
+  ) {
+    this.id = id;
     this.name = name;
     this.type = type;
     this.image = image;
+    this.title = title;
   }
+  @ApiProperty()
+  @IsInt()
+  id: number;
 
   @ApiProperty()
   @IsString()
@@ -55,6 +66,37 @@ export class ChannelDto {
   @ApiProperty()
   @IsUrl()
   image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+}
+export class ChannelInfoDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiProperty()
+  @IsInt()
+  personnel: number;
 }
 
 export class ChannelParticipantDto {
@@ -121,11 +163,29 @@ export class CreateChannelDto {
 }
 
 export class GetUserRoomsDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        name: 'dha',
+        image: 'https://cdn.intra.42.fr/users/dha.jpg',
+        recvMessageCount: 5,
+      },
+    ],
+  })
   @IsObject({ each: true })
   dmList: GetUserRoomDto[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 2,
+        name: '채팅방',
+        image: 'https://m.media-amazon.com/images/I/31VjU29FP+L.png',
+        recvMessageCount: 5,
+      },
+    ],
+  })
   @IsObject({ each: true })
   channelList: GetUserRoomDto[];
 }
@@ -145,7 +205,7 @@ export class GetUserRoomDto {
 
   @ApiProperty()
   @IsInt()
-  RecvMessageCount: number;
+  recvMessageCount: number;
 }
 
 export class createDmDto {
@@ -161,6 +221,7 @@ export class createDmDto {
 export class RoomPasswordDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 

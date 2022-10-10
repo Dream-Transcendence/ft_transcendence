@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Inject,
   Injectable,
@@ -9,15 +10,16 @@ import { ChannelParticipant, Room } from '../chats/rooms.entity';
 import {
   CreateChannelDto,
   PatchUserInfoDto,
-  RoomPasswordDto,
   PatchChannelInfoDto,
   createDmDto,
   ChannelParticipantDto,
   ChannelDto,
+  RoomPasswordDto,
 } from '../chats/dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
+import { ChannelInfoDto } from './dto/rooms.dto';
 
 @Injectable()
 export class RoomService {
@@ -37,12 +39,13 @@ export class RoomService {
   // ANCHOR Room Service
   async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
     const { userId, name, type, salt, participantIds } = createChannelDto;
+    // title 받아야함
     // NOTE room info 저장
     let room = this.roomsRepository.create({
       name,
       type,
       salt,
-      title: 'socket title',
+      title: 'title',
     });
     room = await this.roomsRepository.save(room);
     // Channel participants 저장
@@ -64,21 +67,50 @@ export class RoomService {
     // channel owner로 auth 변경
     await this.patchUserInfo(room.id, userId, { auth: 0 });
     delete room.salt;
-    delete room.title;
+    // delete room.title;
     return room;
   }
 
-  async getChannels(): Promise<ChannelDto[]> {
+  async getChannels(userId: number): Promise<ChannelInfoDto[]> {
     const roomType = [1, 2];
-    const channels = await this.roomsRepository.find({
+    const channelLists = await this.roomsRepository.find({
       where: { type: In(roomType) },
-      order: { id: 'DESC' },
     });
+    // 1,2인 채널
+    console.log('1,2인 채널: ', channelLists);
+    const userChannels = await this.channelParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: userId } },
+    });
+    // user가 들어간 채널
+    const userChannelIds = [];
+    userChannels.map((channel) => {
+      userChannelIds.push(channel.room.id);
+    });
+    // 유저가 들어간 채널 id
+    const channels = channelLists.filter(
+      (channel) => userChannelIds.indexOf(channel.id) === -1,
+    );
     channels.map((channel) => {
       delete channel.salt;
-      delete channel.title;
     });
-    return channels;
+    // 유저가 들어가지 않은 채널 1,2
+    const results: ChannelInfoDto[] = [];
+    const promises = channels.map(async (channel) => {
+      const personnel = await this.channelParticipantsRepository.count({
+        where: { room: { id: channel.id } },
+      });
+      const result: ChannelInfoDto = {
+        ...channel,
+        personnel,
+      };
+      results.push(result);
+    });
+    await Promise.all(promises);
+    results.sort(function (a, b) {
+      return b.id - a.id;
+    });
+    return results;
   }
 
   async getChannelInfo(roomId: number, userId: number): Promise<ChannelDto> {
@@ -97,9 +129,8 @@ export class RoomService {
       delete channel.type;
     }
     // NOTE 사용자가 owner라면 비밀번호를 설정할 수 있는 칸이 필요하기 때문에 owner일 때만 type을 준다
-    delete channel.id;
+    // delete channel.id;
     delete channel.salt;
-    delete channel.title;
     return channel;
   }
 
@@ -110,16 +141,21 @@ export class RoomService {
   ) {
     const { salt } = roomPasswordDto;
     let participant: ChannelParticipant;
+    const check = await this.channelParticipantsRepository.count({
+      where: { user: { id: userId }, room: { id: roomId } },
+    });
+    if (check)
+      throw new BadRequestException(
+        `user ${userId} is already in the room ${roomId}`,
+      );
     const room = await this.roomsRepository.findOneBy({ id: roomId });
-    if (room.type !== 2 || salt === room.salt) {
+    if (!room) throw new NotFoundException(`Cant't find room ${roomId}`);
+    if (room.type !== 2 || salt === room.salt || room.salt === '') {
       participant = this.channelParticipantsRepository.create();
       participant.user = await this.usersRepository.findOneBy({ id: userId });
       participant.room = await this.roomsRepository.findOneBy({ id: roomId });
-      if (!participant.user || !participant.room) {
-        throw new NotFoundException(
-          `Cant't find room ${roomId} or participant ${userId}`,
-        );
-      }
+      if (!participant.user)
+        throw new NotFoundException(`Cant't find participant ${userId}`);
       this.channelParticipantsRepository.save(participant);
     } else throw new ForbiddenException('Password is not correct');
   }
@@ -202,14 +238,16 @@ export class RoomService {
     patchChannelInfoDto: PatchChannelInfoDto,
   ) {
     const { name, image, salt } = patchChannelInfoDto;
-    // image 기본으로 요청 : null, image 요청이 아닐 때 undefined
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (name !== undefined) room.name = name;
     if (image !== undefined) room.image = image;
-    if (room.salt === null && salt !== undefined) room.type = 2;
-    if (room.salt !== null && salt === null) room.type = 1;
-    if (salt !== undefined) room.salt = salt;
-    // salt를 삭제하고 싶을 때 null 주기
+    if (salt && salt !== '') {
+      room.type = 2;
+      room.salt = salt;
+    } else if (salt === '') {
+      room.type = 1;
+      room.salt = null;
+    }
     await this.roomsRepository.save(room);
   }
 
@@ -271,15 +309,4 @@ export class RoomService {
     };
     return user;
   }
-
-  // async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
-  //   const deleteParticipant = await this.dmParticipantsRepository.findOne({
-  //     where: { room: { id: roomId }, user: { id: userId } },
-  //   });
-  //   console.log(deleteParticipant);
-  //   if (deleteParticipant !== undefined) {
-  //     await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
-  //   }
-  //   return;
-  // }
 }

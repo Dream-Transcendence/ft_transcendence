@@ -8,15 +8,15 @@ export class UserDto {
     this.image = image;
   }
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsInt()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'dha' })
   @IsString()
   nickname: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'https://cdn.42.fr/users/dha.jpg' })
   @IsUrl()
   image: string;
 }
@@ -27,15 +27,21 @@ export class FriendDto {
     this.isBlocked = isBlocked;
   }
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsInt()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    example: {
+      id: 1,
+      nickname: 'dha',
+      image: 'https://cdn.42.fr/users/dha.jpg',
+    },
+  })
   @IsObject()
   user: UserDto;
 
-  @ApiProperty()
+  @ApiProperty({ example: false })
   @IsBoolean()
   isBlocked: boolean;
 }
@@ -45,7 +51,7 @@ export class UserIdDto {
     this.id = id;
   }
 
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   @IsInt()
   id: number;
 }
