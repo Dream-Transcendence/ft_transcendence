@@ -15,6 +15,7 @@ import { DM } from '../../configs/RoomType';
 import { RoomInfoSet } from '../../types/Room.type';
 import { useEffect, useState } from 'react';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
+import { useParams } from 'react-router-dom';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -33,9 +34,11 @@ const divStyle = {
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
+  const { roomId } = useParams();
   const { name, type, image } = roomInfo;
   const [roomName, setRoomName] = useState<string>(name);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
+  roomInfoSet['roomId'] = roomId;
 
   useEffect(() => {
     if (changeRoomName) {
@@ -59,7 +62,6 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     setChangeRoomName(true);
   };
 
-  console.log('??', roomName);
   return (
     <InfoBoxNameLayout>
       {type === DM ? (

@@ -45,11 +45,15 @@ const Aside = styled('aside')(({ theme }) => ({
 //채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
   const [roomList, setRoomList] = useState([]);
+  const userId = 1;
 
   useEffect(() => {
     async function getRoomList() {
       try {
-        const response = await axios.get(`${SERVERURL}/rooms/channels`);
+        //api 수정됨 rooms/channles -> rooms/userid/channels
+        const response = await axios.get(
+          `${SERVERURL}/rooms/${userId}/channels`,
+        );
         setRoomList(response.data);
       } catch (error) {
         alert(error);
@@ -74,7 +78,7 @@ function ChatroomPage() {
               path="room/"
               element={<Navigate replace to={CHANNELURL} />}
             />
-            <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} />
+            {/* <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} /> */}
             <Route path="room/:roomId" element={<EnteredChatRoomTemplate />} />
             {/* <Route path="dm/:dmId" element={<EnteredDMTemplate />} /> */}
             {roomList.length ? (

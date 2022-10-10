@@ -32,14 +32,31 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
  */
 //[수정사항] 비밀번호 변경 성공, 향후 손캉님이 공백 보낼 때, type변경해주는 로직 고쳐주면 아이콘 자동변환되게 바꿀 것
 export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
+  //[수정사항] userId임시 1
   try {
-    const { roomInfo, roomId } = roomInfoSet;
-    console.log(roomInfo);
+    const { roomInfo, roomId, handler } = roomInfoSet;
     const response = await axios.patch(
       `${SERVERURL}/rooms/${roomId}`,
       roomInfo,
     );
-    return await response.data;
+    //optimistic UI를 위해 즉시 적용
+    if (
+      response.status === 200 &&
+      handler !== undefined &&
+      roomInfo['salt'] === ''
+    ) {
+      //[수정사항] any => ChannelDto
+      const room: any = { ...roomInfo, type: 1 };
+      await handler(room);
+    } else if (
+      response.status === 200 &&
+      handler !== undefined &&
+      roomInfo['salt'] !== ''
+    ) {
+      const room: any = { ...roomInfo, type: 2 };
+      await handler(room);
+    }
+    return await response.status;
   } catch (error) {
     alert(error);
     throw await console.dir(error);
@@ -57,7 +74,7 @@ function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
         {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
-        <InfoBoxFunctionModule roomInfo={roomInfo} />
+        <InfoBoxFunctionModule roomInfoSet={roomInfoSet} />
       </RoomInfoBox>
     </RoomInfoLayout>
   );

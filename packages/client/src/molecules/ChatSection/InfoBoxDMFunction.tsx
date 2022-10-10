@@ -28,44 +28,28 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
+export async function blockUser(blockId: number) {
+  const userId = 1;
+  try {
+    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+    await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
+      id: blockId,
+    });
+    console.log('block!!');
+  } catch (error) {
+    alert(error);
+    throw console.dir(error);
+  }
+}
+
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 //[수정사항] any => ChannelDto
-function InfoDMBoxFunctionModule() {
+function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
+  const dmInfo = props.dmInfo;
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
-  const { roomId } = useParams();
-  //[수정사항] any => DmUserDto
-  const [DMInfo, setDMInfo] = useState<any>({});
-  const userId = 1;
 
-  useEffect(() => {
-    async function getDMInfo() {
-      try {
-        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-        const response = await axios.get(
-          `${SERVERURL}/rooms/${roomId}/dm/${userId}/participants`,
-        );
-        setDMInfo(response.data);
-      } catch (error) {
-        alert(error);
-        throw console.dir(error);
-      }
-    }
-    getDMInfo();
-  }, [roomId]);
-
-  console.log(DMInfo);
-
-  async function blockUser() {
-    try {
-      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-      await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
-        id: DMInfo.id,
-      });
-      console.log('block!!');
-    } catch (error) {
-      alert(error);
-      throw console.dir(error);
-    }
+  function handlerBlock() {
+    blockUser(dmInfo.id);
   }
 
   const personal: LinkIconResource = {
@@ -80,7 +64,7 @@ function InfoDMBoxFunctionModule() {
 
   const customBlockProps: CustomIconProps = {
     icon: <BlockIcon />,
-    action: blockUser,
+    action: handlerBlock,
   };
 
   const personalAction: LinkIconProps = {
