@@ -28,24 +28,28 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
+export async function blockUser(blockId: number) {
+  const userId = 1;
+  try {
+    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+    await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
+      id: blockId,
+    });
+    console.log('block!!');
+  } catch (error) {
+    alert(error);
+    throw console.dir(error);
+  }
+}
+
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 //[수정사항] any => ChannelDto
 function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
   const dmInfo = props.dmInfo;
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
-  const userId = 1;
 
-  async function blockUser() {
-    try {
-      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-      await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
-        id: dmInfo.id,
-      });
-      console.log('block!!');
-    } catch (error) {
-      alert(error);
-      throw console.dir(error);
-    }
+  function handlerBlock() {
+    blockUser(dmInfo.id);
   }
 
   const personal: LinkIconResource = {
@@ -60,7 +64,7 @@ function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
 
   const customBlockProps: CustomIconProps = {
     icon: <BlockIcon />,
-    action: blockUser,
+    action: handlerBlock,
   };
 
   const personalAction: LinkIconProps = {

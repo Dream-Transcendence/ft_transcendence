@@ -8,6 +8,7 @@ import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParti
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { RoomInfoSet } from '../../types/Room.type';
+import { ParticipantInfoSet } from '../../types/Participant.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -22,6 +23,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
 }));
 
 function EnteredChatRoomTemplate() {
+  //[수정사항] any => ChannelDto
   const [roomInfo, setRoomInfo] = useState<any>({
     name: '',
     type: 5,
@@ -34,6 +36,8 @@ function EnteredChatRoomTemplate() {
     image: 'default',
     blocked: true,
   });
+  //[수정사항] any => ChannelParticipantDto
+  const [participantInfo, setParticipantInfo] = useState<any>([]);
   const { roomId } = useParams();
   const userId = 1;
 
@@ -47,8 +51,6 @@ function EnteredChatRoomTemplate() {
         );
 
         setRoomInfo(response.data);
-        console.log('res data:', response.data);
-        console.log('roomInfo: ', roomInfo);
       } catch (error) {
         alert(error);
         throw console.dir(error);
@@ -76,7 +78,25 @@ function EnteredChatRoomTemplate() {
     getDMInfo();
   }, [roomId]);
 
-  console.log(DMInfo);
+  useEffect(() => {
+    async function getParticipantInfo() {
+      try {
+        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+        //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
+        //5 === 랜더링 안됨.
+        if (roomInfo.type !== DM) {
+          const response = await axios.get(
+            `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
+          );
+          setParticipantInfo(response.data);
+        }
+      } catch (error) {
+        alert(error);
+        throw console.dir(error);
+      }
+    }
+    getParticipantInfo();
+  }, [roomId, userId]);
 
   //[수정사항] any => ChannelDto
   const handleRoomInfo = (roomInfo: any) => {
@@ -89,12 +109,18 @@ function EnteredChatRoomTemplate() {
     handler: handleRoomInfo,
   };
 
+  const participantInfoSet: ParticipantInfoSet = {
+    participantInfo: participantInfo,
+  };
+
   return (
     <ChattingRoomLayout>
       <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
       <ChatRoomFeaterLayout>
         <ChattingOrganisms />
-        {roomInfo.type !== DM && <ChatParticipantsOrganisms />}
+        {roomInfo.type !== DM && (
+          <ChatParticipantsOrganisms participantInfoSet={participantInfoSet} />
+        )}
       </ChatRoomFeaterLayout>
     </ChattingRoomLayout>
   );

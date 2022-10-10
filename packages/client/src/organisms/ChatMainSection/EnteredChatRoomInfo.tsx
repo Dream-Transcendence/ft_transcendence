@@ -35,7 +35,6 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   //[수정사항] userId임시 1
   try {
     const { roomInfo, roomId, handler } = roomInfoSet;
-    console.log(roomInfo);
     const response = await axios.patch(
       `${SERVERURL}/rooms/${roomId}`,
       roomInfo,
