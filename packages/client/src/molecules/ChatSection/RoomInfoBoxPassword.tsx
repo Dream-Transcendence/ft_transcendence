@@ -48,7 +48,7 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
     if (changePassword) {
       try {
         roomInfo['salt'] = password;
-        ChangeRoomInfo(roomInfoSet);
+        ChangeRoomInfo({ ...roomInfoSet, roomInfo: roomInfo });
       } catch (error) {
         alert(error);
         console.dir(error);

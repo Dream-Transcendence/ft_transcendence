@@ -32,14 +32,32 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
  */
 //[수정사항] 비밀번호 변경 성공, 향후 손캉님이 공백 보낼 때, type변경해주는 로직 고쳐주면 아이콘 자동변환되게 바꿀 것
 export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
+  //[수정사항] userId임시 1
   try {
-    const { roomInfo, roomId } = roomInfoSet;
+    const { roomInfo, roomId, handler } = roomInfoSet;
     console.log(roomInfo);
     const response = await axios.patch(
       `${SERVERURL}/rooms/${roomId}`,
       roomInfo,
     );
-    return await response.data;
+    //optimistic UI를 위해 즉시 적용
+    if (
+      response.status === 200 &&
+      handler !== undefined &&
+      roomInfo['salt'] === ''
+    ) {
+      //[수정사항] any => ChannelDto
+      const room: any = { ...roomInfo, type: 1 };
+      await handler(room);
+    } else if (
+      response.status === 200 &&
+      handler !== undefined &&
+      roomInfo['salt'] !== ''
+    ) {
+      const room: any = { ...roomInfo, type: 2 };
+      await handler(room);
+    }
+    return await response.status;
   } catch (error) {
     alert(error);
     throw await console.dir(error);
