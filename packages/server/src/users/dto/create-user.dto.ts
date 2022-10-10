@@ -8,15 +8,15 @@ export class CreateUserDto {
     this.email = email;
   }
 
-  @ApiProperty()
+  @ApiProperty({ example: 'dha' })
   @IsString()
   nickname: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'https://cdn.42.fr/users/dha.jpg' })
   @IsUrl()
   image: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: 'dha@student.42seoul.kr' })
   @IsEmail()
   email: string;
 }
