@@ -17,13 +17,13 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import {
+  CreateChannelDto,
   ChannelParticipantDto,
   ChannelDto,
-  CreateChannelDto,
-  RoomPasswordDto,
   PatchChannelInfoDto,
   PatchUserInfoDto,
   createDmDto,
+  RoomPasswordDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 import { DmUserDto } from '../users/dto/user.dto';
@@ -36,29 +36,29 @@ export class RoomsController {
 
   // ANCHOR Channel Controller
 
-  // @Post('/channels')
-  // @ApiOperation({ summary: '채널 생성 BodyType: CreateChannelDto' })
-  // @ApiCreatedResponse({
-  //   description: '채널 생성 성공 type: ChannelDto',
-  //   type: ChannelDto,
-  // })
-  // @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
-  // createChannel(
-  //   @Body() createChannelDto: CreateChannelDto,
-  // ): Promise<ChannelDto> {
-  //   this.logger.log(`createRoom: ${JSON.stringify(createChannelDto)}`);
-  //   return this.roomService.createChannel(createChannelDto);
-  // }
+  @Post('/channels')
+  @ApiOperation({ summary: '채널 생성 BodyType: CreateChannelDto' })
+  @ApiCreatedResponse({
+    description: '채널 생성 성공 type: ChannelDto',
+    type: ChannelDto,
+  })
+  @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
+  createChannel(
+    @Body() createChannelDto: CreateChannelDto,
+  ): Promise<ChannelDto> {
+    this.logger.log(`createRoom: ${JSON.stringify(createChannelDto)}`);
+    return this.roomService.createChannel(createChannelDto);
+  }
 
-  @Get('/channels')
+  @Get('/:userId/channels')
   @ApiOperation({ summary: '공개, 보호 채널 목록' })
   @ApiOkResponse({
     description: '공개, 보호 채널 목록 가져오기 성공 type: [ChannelDto]',
     type: [ChannelDto],
   })
-  getChannels(): Promise<ChannelDto[]> {
+  getChannels(@Param('userId') userId: number): Promise<ChannelDto[]> {
     this.logger.log(`getChannels`);
-    return this.roomService.getChannels();
+    return this.roomService.getChannels(userId);
   }
 
   @Get('/channel/:roomId/:userId')
@@ -117,6 +117,12 @@ export class RoomsController {
   //   return this.roomService.deleteChannelParticipant(roomId, userId);
   // }
 
+  @Get('/:roomId/messages')
+  @ApiOperation({ summary: '채팅방 메시지 목록' })
+  getMessages(@Param('roomId') roomId: number) {
+    return this.roomService.getMessages(roomId);
+  }
+
   @Patch('/:roomId')
   @ApiOperation({
     summary:
@@ -167,13 +173,5 @@ export class RoomsController {
     @Param('userId') userId: number,
   ) {
     return this.roomService.getDmParticipant(roomId, userId);
-  }
-
-  // ANCHOR Messages Controller
-  @Get('/:roomId/messages')
-  // 임시로 적어놓은 url
-  @ApiOperation({ summary: 'message 목록 가져오기' })
-  getMessages(@Param('roomId') roomId: number) {
-    return this.roomService.getMessages(roomId);
   }
 }

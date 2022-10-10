@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsInt,
+  IsNotEmpty,
   IsObject,
   IsOptional,
   IsString,
@@ -34,11 +35,22 @@ export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 // ANCHOR Channel DTO
 export class ChannelDto {
-  constructor(name: string, type: CHAT_TYPE, image: string) {
+  constructor(
+    id: number,
+    name: string,
+    type: CHAT_TYPE,
+    image: string,
+    title: string,
+  ) {
+    this.id = id;
     this.name = name;
     this.type = type;
     this.image = image;
+    this.title = title;
   }
+  @ApiProperty()
+  @IsInt()
+  id: number;
 
   @ApiProperty()
   @IsString()
@@ -55,12 +67,35 @@ export class ChannelDto {
   image: string;
 
   @ApiProperty()
+  @IsString()
+  title: string;
+}
+export class ChannelInfoDto {
+  @ApiProperty()
   @IsInt()
   id: number;
 
   @ApiProperty()
   @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
   title: string;
+
+  @ApiProperty()
+  @IsInt()
+  personnel: number;
 }
 
 export class ChannelParticipantDto {
@@ -122,10 +157,6 @@ export class CreateChannelDto {
   salt: string;
 
   @ApiProperty()
-  @IsString()
-  title: string;
-
-  @ApiProperty()
   @IsInt({ each: true })
   participantIds: number[];
 }
@@ -171,6 +202,7 @@ export class createDmDto {
 export class RoomPasswordDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 
@@ -207,10 +239,73 @@ export class PatchUserInfoDto {
   status?: STATUS_TYPE;
 }
 
+export class EnterChannelDto {
+  @IsInt()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsOptional()
+  salt: string;
+}
+
+export class LeaveChannelDto {
+  @IsInt()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+}
+
+export class SendMessageDto {
+  @IsInt()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsInt()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
 export class MessageDto {
+  @IsString()
+  @IsNotEmpty()
   nickname: string;
 
+  @IsUrl()
   image: string;
 
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class GetMessagesDto {
+  @ApiProperty()
+  @IsInt()
+  userId: number;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  nickname: string;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
   body: string;
 }

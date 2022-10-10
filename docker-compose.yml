@@ -41,6 +41,7 @@ services: # 컨테이너 실행을 위한 단위
     image: kingwangzzang/nestjs
     ports:
       - '3000:3000' # expose-to-the-world : only-in-the-docker
+      - '9090:9090'
     container_name: nest-app
     depends_on: # 실행 순서를 보장받고 싶을 때, 사용
       - db
