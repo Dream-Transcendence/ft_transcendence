@@ -55,7 +55,7 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   const [newRoom, setNewRoom] = useState<CreateRoomSet>({
     userId: userId,
     name: 'default',
-    type: 5,
+    type: 1,
     salt: '',
     participantIds: [],
   });
