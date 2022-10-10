@@ -11,41 +11,74 @@ import {
   LinkIconResource,
 } from 'client/src/types/Link.type';
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
-import { OTHERPROFILEURL } from 'client/src/configs/Link.url';
+import {
+  GAMECREATEURL,
+  OTHERPROFILEURL,
+  SERVERURL,
+} from 'client/src/configs/Link.url';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
-  width: '30%',
+  width: '80%',
   height: '95%',
   flexDirection: 'row-reverse',
   display: 'flex',
   alignItems: 'center',
 }));
+
+export async function blockUser(blockId: number) {
+  const userId = 1;
+  try {
+    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+    await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
+      id: blockId,
+    });
+    console.log('block!!');
+  } catch (error) {
+    alert(error);
+    throw console.dir(error);
+  }
+}
+
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function InfoDMBoxFunctionModule() {
+//[수정사항] any => ChannelDto
+function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
+  const dmInfo = props.dmInfo;
+  //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
+
+  function handlerBlock() {
+    blockUser(dmInfo.id);
+  }
+
   const personal: LinkIconResource = {
     url: OTHERPROFILEURL,
     icon: <PersonIcon />,
   };
 
-  const customBlockProps: CustomIconProps = {
-    icon: <BlockIcon />,
+  const goToGame: LinkIconResource = {
+    url: GAMECREATEURL,
+    icon: <SportsKabaddiIcon />,
   };
 
-  const customSportProps: CustomIconProps = {
-    icon: <SportsKabaddiIcon />,
+  const customBlockProps: CustomIconProps = {
+    icon: <BlockIcon />,
+    action: handlerBlock,
   };
 
   const personalAction: LinkIconProps = {
     iconResource: personal,
   };
 
+  const gameAction: LinkIconProps = {
+    iconResource: goToGame,
+  };
+
   return (
     <InfoBoxFunctionLayout>
-      {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
-      {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
       <CustomIconButton customProps={customBlockProps} />
-      {/* [axios POST 요청] 1 대 1 게임 큐에 등록 요청 */}
-      <CustomIconButton customProps={customSportProps} />
+      <LinkPageIconButton linkIconProps={gameAction} />
       <LinkPageIconButton linkIconProps={personalAction} />
     </InfoBoxFunctionLayout>
   );

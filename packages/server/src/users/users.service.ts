@@ -136,6 +136,21 @@ export class UserService {
     return block.blockedUser;
   }
 
+  async unblockUser(id: number, userId: number): Promise<UserDto> {
+    const blockRow = await this.blocksRepository.findOne({
+      relations: ['user', 'blockedUser'],
+      where: [{ user: { id: id }, blockedUser: { id: userId } }],
+    });
+
+    this.blocksRepository.delete(blockRow.id);
+    const user: UserDto = new UserDto(
+      blockRow.blockedUser.id,
+      blockRow.blockedUser.nickname,
+      blockRow.blockedUser.image,
+    );
+    return user;
+  }
+
   async getBlocks(id: number): Promise<UserDto[]> {
     //SELECT * FROM public."block"
     //LEFT JOIN "user" ON "user"."id" = id
@@ -170,7 +185,7 @@ export class UserService {
         id: room.id,
         name: room.name,
         image: room.image,
-        RecvMessageCount: 0,
+        recvMessageCount: 0,
       };
       channelList.push(userRoomDto);
     });
@@ -186,7 +201,7 @@ export class UserService {
         id: room.id,
         name: room.name,
         image: room.image,
-        RecvMessageCount: 0,
+        recvMessageCount: 0,
       };
       dmList.push(userRoomDto);
     });

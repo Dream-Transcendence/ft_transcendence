@@ -56,7 +56,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
 
   async function enterRoom() {
     try {
-      console.log(roomId, password);
       //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
       const response = await axios.post(
         `${SERVERURL}/rooms/${roomId}/users/1`,
@@ -65,7 +64,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
         },
       );
       navigate(`${CHATROOMURL}${roomId}`);
-      console.log(response.status);
     } catch (error) {
       alert(error);
       throw console.dir(error);
@@ -84,7 +82,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
     <ChatRoomElementLayout>
       <RoomElementImageModule image={image} />
       <RoomInfoLayout>
-        <RoomTitleModule title={name}></RoomTitleModule>
+        <RoomTitleModule title={name} type={type}></RoomTitleModule>
         {/*[수정사항] id대신 인원수가 들어갈 예정 */}
         <RoomNumberOfPeopleModule num={roomId}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
