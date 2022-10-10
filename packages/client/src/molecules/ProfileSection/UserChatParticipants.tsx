@@ -55,7 +55,7 @@ const customProps: CustomIconProps = {
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function UserChatParticipantsBox() {
+function UserChatParticipantsBox(props: { participantInfo: any }) {
   //props: { userData: BaseUserProfileData }) {
   // const { userData } = props;
   const mock: FriendType = {

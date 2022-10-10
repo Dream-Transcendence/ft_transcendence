@@ -9,10 +9,10 @@ import { UserProfileBoxType } from '../../types/Profile.type';
 
 const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   display: 'flex',
-  justifyContent: 'flex-start',
+  justifyContent: 'flex-start', //좌측 정렬
   textAlign: 'start',
   width: '100%',
-  height: '100%',
+  height: '20%',
   padding: '0',
   marginLeft: '0.3rem',
 }));

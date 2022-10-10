@@ -2,8 +2,8 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
-import { BaseUserProfileData, FriendType } from '../../types/Profile.type';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
+import { FriendType } from '../../types/Profile.type';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {

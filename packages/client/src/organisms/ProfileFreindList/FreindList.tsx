@@ -36,6 +36,7 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
   alignSelf: 'start',
   justifySelf: 'start',
   width: '100%',
+  height: '90%',
   borderBottom: 'solid 1px',
   borderColor: 'black',
 }));
@@ -91,15 +92,17 @@ function FreindListOrganisms() {
           freind list
         </Typography>
       </TextLayout>
-      <ListGenerateLayout>
-        {/* [axios GET 요청] 친구 리스트 불러오기 */}
-        {/* [Socket IO 요청]
+      <ProfileBoxLayout>
+        <ListGenerateLayout>
+          {/* [axios GET 요청] 친구 리스트 불러오기 */}
+          {/* [Socket IO 요청]
                 - Socket.emit으로 로그인 상태 보냄
                 - Socket.on으로 친구유저 로그인 상태 받음
                   useEffect로 마운트시 socket 열고 언마운트시 return에 socket 닫아주면 될 듯 
                    */}
-        <ListUlLayout>{listElement}</ListUlLayout>
-      </ListGenerateLayout>
+          <ListUlLayout>{listElement}</ListUlLayout>
+        </ListGenerateLayout>
+      </ProfileBoxLayout>
     </FreindListLayout>
   );
 }
