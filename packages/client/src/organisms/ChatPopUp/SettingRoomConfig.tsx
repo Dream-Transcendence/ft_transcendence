@@ -5,6 +5,11 @@ import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
 import SetChatRoomTypeModule from '../../molecules/ChatPopUp/SetChatRoomType';
 import SetChatRoomPasswordModule from '../../molecules/ChatPopUp/SetChatRoomPassword';
 import SetChatRoomInviteModule from '../../molecules/ChatPopUp/SetChatRoomInvite';
+import { CreateRoomHandlerSet, CreateRoomSet } from '../../types/Room.type';
+import { useState } from 'react';
+import { SERVERURL } from '../../configs/Link.url';
+import axios from 'axios';
+import { PROTECTED } from '../../configs/RoomType';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -24,54 +29,88 @@ const SettingRoomConfigBox = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-const SetNameLayout = styled('div')(({ theme }) => ({
-  width: '90%',
-  height: '15%',
-  border: 'solid 1px',
-  borderRadius: '10px',
-  marginBottom: '1%',
+const SetButtonLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '5%',
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'space-around',
+  justifyItems: 'center',
 }));
 
-const SetTypeLayout = styled('div')(({ theme }) => ({
-  width: '90%',
-  height: '15%',
-  border: 'solid 1px',
-  borderRadius: '10px',
-  marginBottom: '1%',
-}));
-
-const SetPasswordLayout = styled('div')(({ theme }) => ({
-  width: '90%',
-  height: '15%',
-  border: 'solid 1px',
-  borderRadius: '10px',
-  marginBottom: '1%',
-}));
-
-const SetInviteLayout = styled('div')(({ theme }) => ({
-  width: '90%',
-  height: '30%',
-  border: 'solid 1px',
-  borderRadius: '10px',
-  marginBottom: '3%',
-}));
+async function createRoom(newRoom: CreateRoomSet) {
+  try {
+    const response = await axios.post(`${SERVERURL}/rooms/channels`, newRoom);
+    console.log('res: ', response.data);
+  } catch (error) {
+    console.dir(error);
+  }
+}
 
 //일단 임시로 prop을 내려서 상태관리함 향후 교체할 예정
-function SettingRoomConfigOranisms(click: React.MouseEventHandler) {
+function SettingRoomConfigOranisms(closeModal: () => void) {
+  //[수정사항] userId => 1
+  const userId = 1;
+  //[수정사항] 나중에 방의 초기값을 만든사람 이름을 하면 좋을듯
+  const [newRoom, setNewRoom] = useState<CreateRoomSet>({
+    userId: userId,
+    name: 'default',
+    type: 5,
+    salt: '',
+    participantIds: [],
+  });
+
+  const savehandler = () => {
+    if (newRoom.participantIds.length === 0)
+      alert('인원을 1명 이상 초대하세요');
+    else {
+      closeModal();
+      createRoom(newRoom);
+      console.log('send', newRoom);
+    }
+  };
+
+  const closehandler = () => {
+    closeModal();
+  };
+
+  const handlePassword = (value: string) => {
+    setNewRoom({ ...newRoom, salt: value });
+  };
+
+  const handleType = (value: number) => {
+    setNewRoom({ ...newRoom, type: value });
+  };
+
+  const handleName = (value: string) => {
+    setNewRoom({ ...newRoom, name: value });
+  };
+
+  const handleParticipant = (value: number[]) => {
+    setNewRoom({ ...newRoom, participantIds: value });
+  };
+  console.log(newRoom.type);
   return (
     <SettingRoomConfigLayout>
       <SettingRoomConfigBox>
         <Typography variant="h4" marginBottom={2}>
           채팅방 생성
         </Typography>
-        <SetChatRoomNameModule />
-        <SetChatRoomTypeModule />
-        <SetChatRoomPasswordModule />
-        <SetChatRoomInviteModule />
+        <SetChatRoomNameModule handler={handleName} />
+        <SetChatRoomTypeModule handler={handleType} />
+        {newRoom.type === PROTECTED && (
+          <SetChatRoomPasswordModule handler={handlePassword} />
+        )}
+        <SetChatRoomInviteModule handler={handleParticipant} />
         {/* [axios POST 요청] 위 정보를 포함한 채팅방 개설 */}
-        <Button onClick={click} variant="contained">
-          저장하기
-        </Button>
+        <SetButtonLayout>
+          <Button onClick={savehandler} variant="contained">
+            저장하기
+          </Button>
+          <Button onClick={closehandler} variant="contained">
+            나가기
+          </Button>
+        </SetButtonLayout>
       </SettingRoomConfigBox>
     </SettingRoomConfigLayout>
   );
