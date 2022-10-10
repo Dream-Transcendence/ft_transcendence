@@ -163,11 +163,29 @@ export class CreateChannelDto {
 }
 
 export class GetUserRoomsDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        name: 'dha',
+        image: 'https://cdn.intra.42.fr/users/dha.jpg',
+        recvMessageCount: 5,
+      },
+    ],
+  })
   @IsObject({ each: true })
   dmList: GetUserRoomDto[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 2,
+        name: '채팅방',
+        image: 'https://m.media-amazon.com/images/I/31VjU29FP+L.png',
+        recvMessageCount: 5,
+      },
+    ],
+  })
   @IsObject({ each: true })
   channelList: GetUserRoomDto[];
 }
@@ -187,7 +205,7 @@ export class GetUserRoomDto {
 
   @ApiProperty()
   @IsInt()
-  RecvMessageCount: number;
+  recvMessageCount: number;
 }
 
 export class createDmDto {
