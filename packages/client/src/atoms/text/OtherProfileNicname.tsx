@@ -17,11 +17,11 @@ import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
+import { BaseUserProfileData } from '../../types/Profile.type';
 
-function OtherProfileNicname() {
-  const reqUser = useRecoilValue(reqUserDataAtom);
-  return <Typography>{reqUser.nickname}</Typography>;
+function OtherProfileNicname(props: { userData: BaseUserProfileData }) {
+  const { nickname } = props.userData;
+  return <Typography>{nickname}</Typography>;
 }
 
 export default OtherProfileNicname;

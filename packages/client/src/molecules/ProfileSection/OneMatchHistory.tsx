@@ -14,38 +14,23 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   alignContent: 'center',
   alignItems: 'center',
-  borderBottom: 'solid 1px',
+  border: 'solid 1px',
   width: '100%',
-  height: '12%',
+  height: '100%',
 }));
-
-const GamePlayersLayout = styled('span')(({ theme }) => ({ border: 'solid' }));
-
-const MatchHistoryTheme = createTheme({
-  palette: {
-    primary: {
-      main: '#00FF00',
-      contrastText: 'white',
-    },
-    secondary: {
-      main: '#856801',
-      contrastText: 'white',
-    }
-  },
-});
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
   const userData = useRecoilValue(userDataAtom);
   const { opponent, isWin, isLadder } = props.matchHistory;
   return (
-    <ThemeProvider theme={MatchHistoryTheme}>
-      <OneMatchHistoryLayout>
-        {MatchType(isLadder)}
-        {GamePlayer(userData.nickname)}
-        <Typography>VS</Typography>
-        {GamePlayer(opponent)}
-      </OneMatchHistoryLayout>
-    </ThemeProvider>
+    <OneMatchHistoryLayout
+      style={{ backgroundColor: isWin ? 'yellow' : 'green' }}
+    >
+      {MatchType(isLadder)}
+      {GamePlayer(userData.nickname)}
+      <Typography>VS</Typography>
+      {GamePlayer(opponent)}
+    </OneMatchHistoryLayout>
   );
 }
 

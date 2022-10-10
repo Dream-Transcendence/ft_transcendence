@@ -11,18 +11,43 @@ import OtherProfileNicname from '../../atoms/text/OtherProfileNicname';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { CustomIconProps } from '../../types/Link.type';
+import { useEffect, useState } from 'react';
+import { BaseUserProfileData } from '../../types/Profile.type';
+import axios from 'axios';
+import { SERVERURL } from '../../configs/Link.url';
+import { useParams } from 'react-router-dom';
 
 function OtherInfo() {
+  const { userId } = useParams();
+  const [userData, setUserData] = useState<BaseUserProfileData>({
+    id: 0,
+    nickname: 'noname',
+    image: 'noimage',
+  });
   const customProps: CustomIconProps = {
     icon: <PersonAddIcon />,
   };
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const response = await axios.get(
+          `${SERVERURL}/users/${userId}/profile`,
+        );
+        setUserData(response.data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    }
+    getUserData();
+  }, [userId]);
   return (
     <UserInfoLayout>
       <UserPictureLayout>
-        <ProfileImage />
+        <ProfileImage userData={userData} />
       </UserPictureLayout>
       <UserNicknameLayout>
-        <OtherProfileNicname />
+        <OtherProfileNicname userData={userData} />
       </UserNicknameLayout>
       <ProfileActionLayout>
         {/* [Socket IO 요청] 상대방에게 친구수락 팝업 뜨게할 것 */}

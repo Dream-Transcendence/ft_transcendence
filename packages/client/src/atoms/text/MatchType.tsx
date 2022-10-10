@@ -7,21 +7,20 @@ const MatchTypeLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   alignSelf: 'center',
   backgroundColor: '#00000000',
-  flexShrink: 0,
-  flexBasis: '20%',
+  flexBasis: '20%', //matchtype width %
   height: '100%',
-  padding: '0.5rem',
+  margin: '0.5rem',
   borderRight: 'solid 1px',
 }));
 
 function MatchType(matchType: boolean) {
   return (
     <MatchTypeLayout>
-      <Typography>
-        {matchType ?
-          <Typography>ladder</Typography> :
-          <Typography>1 vs 1</Typography>}
-      </Typography>
+      {matchType ? (
+        <Typography>ladder</Typography>
+      ) : (
+        <Typography>1 vs 1</Typography>
+      )}
     </MatchTypeLayout>
   );
 }

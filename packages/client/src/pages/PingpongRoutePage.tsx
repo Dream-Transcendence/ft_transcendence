@@ -43,21 +43,13 @@ const PageSection = styled('section')(({ theme }) => ({
 //     console.log('error: PingpongRoutePage()');
 //   }
 // }, [userData]);
+//닉네임 2차인증 끝나고 받은 접속 유저 정보 목업데이터
 export const userDataAtom = atom<BaseUserProfileData>({
   key: 'userData',
   default: {
     id: 4,
     nickname: 'sonkang',
     image: 'https://cdn.intra.42.fr/users/junghan.jpg',
-  },
-});
-
-export const reqUserDataAtom = atom<BaseUserProfileData>({
-  key: 'reqUserData',
-  default: {
-    id: 4,
-    nickname: 'sonkang',
-    image: 'https://cdn.intra.42.fr/users/sonkang.jpg',
   },
 });
 
@@ -72,12 +64,15 @@ function PingpongRoutePage() {
       </header>
       <Routes>
         {/* 사용자 프로필페이지 */}
-        <Route path="profile" element={<Navigate replace to={`${PROFILEURL}/${userData.id}`} />} />
+        <Route
+          path="profile"
+          element={<Navigate replace to={`${PROFILEURL}/${userData.id}`} />}
+        />
         <Route path="profile/:userId" element={<ProfilePage />} />
-        <Route path="channel" element={<ChatroomPage />} />
-        <Route path="gamecreate" element={<GameCreatePage />} />
-        <Route path="gameplay" element={<GamePlayPage />} />
-        <Route path="gameloding" element={<GameLodingPage />} />
+        <Route path="channel/*" element={<ChatroomPage />} />
+        <Route path="gamecreate/*" element={<GameCreatePage />} />
+        <Route path="gameplay/*" element={<GamePlayPage />} />
+        <Route path="gameloding/*" element={<GameLodingPage />} />
       </Routes>
     </PageSection>
   );

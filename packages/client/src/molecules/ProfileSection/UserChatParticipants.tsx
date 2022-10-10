@@ -12,7 +12,11 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { UserProfileBoxType } from '../../types/Profile.type';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 
@@ -52,15 +56,26 @@ const customProps: CustomIconProps = {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox() {
+  //props: { userData: BaseUserProfileData }) {
+  // const { userData } = props;
+  const mock: FriendType = {
+    id: 0,
+    user: {
+      id: 0,
+      nickname: 'noname',
+      image: 'noimage',
+    },
+    isBlocked: false,
+  };
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: true,
     avatarType: 'circle',
-    userData: ,//목업,
+    //참가자의 정보를 담고있는 객체 넣어주면 됩니다.
+    userData: mock,
     // action: () => {
     //   setIsUser(!isUser);
     // }
   };
-
 
   return (
     <UserProfileLayout>

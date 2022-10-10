@@ -1,23 +1,16 @@
 import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import ListGenerate from '../../atoms/list/ListGenerate';
 import { Typography } from '@mui/material';
-import { LinkComponentResource, LinkIconResource } from '../../types/Link.type';
-import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { Link, useParams } from 'react-router-dom';
-import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
-import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { OTHERPROFILE } from '../../configs/Spot.string';
-import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
+import { useParams } from 'react-router-dom';
+import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
+import { SERVERURL } from '../../configs/Link.url';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ListGenerateLayout, ListLayout, ListUlLayout } from '../../atoms/list/styles/ListStylesCSS';
+import {
+  ListGenerateLayout,
+  ListLayout,
+  ListUlLayout,
+} from '../../atoms/list/styles/ListStylesCSS';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -35,7 +28,7 @@ const FreindListLayout = styled('div')(({ theme }) => ({
 const TextLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '10%',
-  borderBottom: 'solid 1px',
+  //borderBottom: 'solid 1px',
 }));
 
 const ProfileBoxLayout = styled('div')(({ theme }) => ({
@@ -49,37 +42,47 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 
 function FreindListOrganisms() {
   const { userId } = useParams();
-  const [friendList, setFriendList] = useState<FriendType[]>([]);
-
+  const [friendList, setFriendList] = useState<FriendType[]>([
+    {
+      id: 1,
+      user: {
+        id: 1,
+        nickname: 'noname',
+        image: 'noimage',
+      },
+      isBlocked: false,
+    },
+  ]);
   useEffect(() => {
     async function getFriendList() {
-      const response = await axios.get(`${SERVERURL}/users/${userId}/friends`);
-      console.log('friend list : ', response.data);
-      setFriendList(response.data);
+      try {
+        const response = await axios.get(
+          `${SERVERURL}/users/${userId}/friends`,
+        );
+        setFriendList(response.data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
     }
-    try {
-      getFriendList();
-    } catch {
-      console.log('error : getFriendList()');
-    }
-  }, []);
+    getFriendList();
+  }, [userId]);
 
   const listElement: JSX.Element[] = friendList.map((friendData) => {
     const otherProfileBoxProp: UserProfileBoxType = {
       isButton: true,
       avatarType: 'circle',
       userData: friendData,
+      action: () => {
+        window.location.href = `http://localhost:3005/pingpong/profile/${friendData.user.id}`;
+      },
     };
     return (
-      <ListLayout key={friendData.id}>
+      <ListLayout key={friendData.user.id}>
         <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
       </ListLayout>
-    )
-  })
-  // const OtherProfile: LinkComponentResource = {
-  //   url: PROFILEURL,
-  //   component: friendBoxProps,
-  // };
+    );
+  });
 
   return (
     <FreindListLayout>

@@ -8,11 +8,11 @@ import { CustomIconProps } from '../../types/Link.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   BaseUserProfileData,
+  FriendType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
-import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
-const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
+const UserInviteProfileLayout = styled('div')(({ theme }) => ({
   margin: '1px',
   display: 'flex',
   alignItems: 'center',
@@ -20,18 +20,25 @@ const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
 }));
 
 function UserInviteProfileBox() {
+  //props: { userData: BaseUserProfileData }) {
+  //const { userData } = props;
+  const mock: FriendType = {
+    id: 0,
+    user: {
+      id: 0,
+      nickname: 'noname',
+      image: 'noimage',
+    },
+    isBlocked: false,
+  };
   const customProps: CustomIconProps = {
     icon: <CancelIcon />,
   };
 
-  const reqUser = useRecoilValue<BaseUserProfileData>(reqUserDataAtom);
-  const changeSpot = () => { };
-
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: true,
     avatarType: 'circle',
-    userData: reqUser,
-    action: changeSpot,
+    userData: mock,
   };
 
   return (

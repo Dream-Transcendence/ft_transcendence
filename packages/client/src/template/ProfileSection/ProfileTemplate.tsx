@@ -18,21 +18,14 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { SERVERURL } from '../../configs/Link.url';
 import LandingPage from '../../pages/LandingPage';
-import { reqUserDataAtom, userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileTemplate() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { userId } = useParams();
-
   return (
     <ProfileLayout>
-      <Routes>
-        {`${user.id}` === userId ? (
-          <Route path={`${user.id}`} element={<UserInfo />} />
-        ) : (
-          <Route path={`${userId}`} element={<OtherInfo />} />
-        )}
-      </Routes>
+      {`${user.id}` === userId ? <UserInfo /> : <OtherInfo />}
       <FreindList />
       <UserStat />
       <MatchHistory />

@@ -19,12 +19,15 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
 
 function UserProfileBox(props: { userProfileBoxProps: UserProfileBoxType }) {
   const { isButton, avatarType, userData, action } = props.userProfileBoxProps;
-  const { user } = userData;
-
+  // const { nickname } = userData.user;
   return (
     <UserProfileBoxLayout disabled={!isButton} onClick={action}>
       <ProfileAvatar avatarType={avatarType} avartarProps={userData} />
-      <TextBox value={user.nickname} size={'1rem'} fontColor={'black'} />
+      <TextBox
+        value={userData.user.nickname}
+        size={'1rem'}
+        fontColor={'black'}
+      />
     </UserProfileBoxLayout>
   );
 }

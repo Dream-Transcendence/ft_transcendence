@@ -26,3 +26,10 @@ export interface CustomIconProps {
   icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
   action?: () => void;
 }
+
+export interface CustomUploadProps {
+  //jungjan님이 icon안쓸 수 있다고 하여 ? 처리
+  icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
+  ref?: any;
+  action?: () => void;
+}

@@ -2,8 +2,7 @@ import { styled } from '@mui/material/styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
-import { UserProfileBoxType } from '../../types/Profile.type';
+import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
   height: '40%',
@@ -22,13 +21,22 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
-function JoinedDMListOrganisms<T>() {
-  const userData = 123;
-  //DM리스트에 있는 유유
+function JoinedDMListOrganisms() {
+  //채팅 참여자목록의 각 데이터 type형식으로 바꾸어 적용해야 합니다.
+  const userData: FriendType = {
+    id: 0,
+    user: {
+      id: 0,
+      nickname: 'noname',
+      image: 'noimage',
+    },
+    isBlocked: false,
+  };
+
   const userProfileBoxProps = {
     isButton: true,
     avatarType: 'circle',
-    userData: { userData },
+    userData: userData,
     // action?: () => void;
   };
   return (

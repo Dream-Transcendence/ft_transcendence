@@ -5,7 +5,6 @@ import { createTheme } from '@mui/material';
 import { BaseUserProfileData, FriendType } from '../../types/Profile.type';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
 
-
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',

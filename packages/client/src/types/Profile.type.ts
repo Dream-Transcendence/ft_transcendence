@@ -12,10 +12,10 @@ export interface UserProfileBoxType {
 }
 
 export interface UserMatchHistoryType {
-  id: number,
-  opponent: string,
-  isWin: boolean,
-  isLadder: boolean,
+  id: number;
+  opponent: string;
+  isWin: boolean;
+  isLadder: boolean;
 }
 
 export interface FriendType {

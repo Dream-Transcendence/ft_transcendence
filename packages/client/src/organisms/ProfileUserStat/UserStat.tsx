@@ -5,7 +5,6 @@ import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
 import { SERVERURL } from '../../configs/Link.url';
 import UserStatResult from '../../molecules/ProfileSection/StatResult';
-import { reqUserDataAtom } from '../../pages/PingpongRoutePage';
 
 const UserStatLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -29,12 +28,11 @@ const StatLadder = styled('div')(({ theme }) => ({
 }));
 
 function UserStat() {
-  const reqUser = useRecoilValue(reqUserDataAtom);
   const [userLadder, setUserLadder] = useState({
     rank: '',
     winCount: 0,
     loseCount: 0,
-  })
+  });
   useEffect(() => {
     // async function getUserLadder() {
     //   const response = await axios.get(`${SERVERURL}/user/${reqUser.id}/game/ladder`);
@@ -45,13 +43,13 @@ function UserStat() {
       rank: '🦁',
       winCount: 100,
       loseCount: 3,
-    }
+    };
     try {
-      setUserLadder(response)
+      setUserLadder(response);
     } catch {
       console.log('error : userStat');
     }
-  }, [])
+  }, []);
   return (
     <UserStatLayout>
       <UserStatLadder value={userLadder.rank} />
