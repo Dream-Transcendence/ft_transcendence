@@ -36,11 +36,22 @@ export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 // ANCHOR Channel DTO
 export class ChannelDto {
-  constructor(name: string, type: CHAT_TYPE, image: string) {
+  constructor(
+    id: number,
+    name: string,
+    type: CHAT_TYPE,
+    image: string,
+    title: string,
+  ) {
+    this.id = id;
     this.name = name;
     this.type = type;
     this.image = image;
+    this.title = title;
   }
+  @ApiProperty()
+  @IsInt()
+  id: number;
 
   @ApiProperty()
   @IsString()
@@ -55,6 +66,37 @@ export class ChannelDto {
   @ApiProperty()
   @IsUrl()
   image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+}
+export class ChannelInfoDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiProperty()
+  @IsInt()
+  personnel: number;
 }
 
 export class ChannelParticipantDto {
@@ -161,6 +203,7 @@ export class createDmDto {
 export class RoomPasswordDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 
