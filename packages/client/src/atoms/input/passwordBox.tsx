@@ -65,7 +65,6 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
       </InputLabel>
       {/* [axios POST 요청]해당 채팅방 비밀번호 확인 및 등록 */}
       <Input
-        id="standard-adornment-password"
         type={values.showPassword ? 'text' : 'password'}
         value={values.password}
         onChange={handleChange('password')}

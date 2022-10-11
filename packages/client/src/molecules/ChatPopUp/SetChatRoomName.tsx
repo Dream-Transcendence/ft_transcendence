@@ -1,5 +1,6 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useState } from 'react';
 import SearchBox from '../../atoms/input/SearchBox';
 
 /*
@@ -23,7 +24,14 @@ const NameInputStyle = {
   marginLeft: '3%',
 };
 
-function SetChatRoomNameModule() {
+function SetChatRoomNameModule(handler: { handler: (value: string) => void }) {
+  const handleName = handler.handler;
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    handleName(value);
+  };
+
   return (
     <SetNameLayout>
       <Typography margin="3%" variant="h5">
@@ -33,6 +41,7 @@ function SetChatRoomNameModule() {
         <Input
           fullWidth
           placeholder="방 이름을 입력하세요"
+          onChange={handleChange}
           style={NameInputStyle}
         ></Input>
       </InputLayout>
