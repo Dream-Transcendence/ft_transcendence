@@ -16,6 +16,7 @@ import { BaseUserProfileData } from '../../types/Profile.type';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
+import { AlternateEmailTwoTone } from '@mui/icons-material';
 
 function OtherInfo() {
   const { userId } = useParams();
@@ -26,6 +27,17 @@ function OtherInfo() {
   });
   const customProps: CustomIconProps = {
     icon: <PersonAddIcon />,
+    action: () => {
+      async function addFriend() {
+        try {//[doyun]api주소 수정 필요함
+          const response = await axios.post(`${SERVERURL}/users/${userId}friends`);
+        } catch (error) {
+          alert(error);
+
+          console.log(error);
+        }
+      }
+    }
   };
   useEffect(() => {
     async function getUserData() {
