@@ -89,7 +89,7 @@ function FreindListOrganisms() {
     <FreindListLayout>
       <TextLayout>
         <Typography variant="h6" align="center">
-          freind list
+          friend list
         </Typography>
       </TextLayout>
       <ProfileBoxLayout>
