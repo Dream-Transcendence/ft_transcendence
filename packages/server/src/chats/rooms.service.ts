@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
 import {
@@ -17,14 +11,15 @@ import {
   EnterChannelDto,
   LeaveChannelDto,
   SendMessageDto,
-  UserMessageDto,
-  RoomPasswordDto,
-} from '../chats/dto/rooms.dto';
+  ChannelInfoDto,
+  MessageDto,
+} from './dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
 import { Socket } from 'socket.io';
-import { ChannelInfoDto } from './dto/rooms.dto';
+import { v4 as uuidv4 } from 'uuid';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class RoomService {
@@ -52,7 +47,7 @@ export class RoomService {
       name,
       type,
       salt,
-      title: 'title',
+      title: uuidv4(),
     });
     room = await this.roomsRepository.save(room);
     // Channel participants 저장
@@ -74,7 +69,6 @@ export class RoomService {
     // channel owner로 auth 변경
     await this.patchUserInfo(room.id, userId, { auth: 0 });
     delete room.salt;
-    // delete room.title;
     return room;
   }
 
@@ -141,32 +135,6 @@ export class RoomService {
     return channel;
   }
 
-  async enterChannel(
-    roomId: number,
-    userId: number,
-    roomPasswordDto: RoomPasswordDto,
-  ) {
-    const { salt } = roomPasswordDto;
-    let participant: ChannelParticipant;
-    const check = await this.channelParticipantsRepository.count({
-      where: { user: { id: userId }, room: { id: roomId } },
-    });
-    if (check)
-      throw new BadRequestException(
-        `user ${userId} is already in the room ${roomId}`,
-      );
-    const room = await this.roomsRepository.findOneBy({ id: roomId });
-    if (!room) throw new NotFoundException(`Cant't find room ${roomId}`);
-    if (room.type !== 2 || salt === room.salt || room.salt === '') {
-      participant = this.channelParticipantsRepository.create();
-      participant.user = await this.usersRepository.findOneBy({ id: userId });
-      participant.room = await this.roomsRepository.findOneBy({ id: roomId });
-      if (!participant.user)
-        throw new NotFoundException(`Cant't find participant ${userId}`);
-      this.channelParticipantsRepository.save(participant);
-    } else throw new ForbiddenException('Password is not correct');
-  }
-
   async getChannelParticipants(
     userId: number,
     roomId: number,
@@ -211,34 +179,34 @@ export class RoomService {
     return [user[0], ...participants];
   }
 
-  async deleteChannelParticipant(
-    roomId: number,
-    userId: number,
-  ): Promise<void> {
-    const deleteParticipant = await this.channelParticipantsRepository.findOne({
-      where: { room: { id: roomId }, user: { id: userId } },
-    });
-    if (deleteParticipant !== null) {
-      await this.channelParticipantsRepository.delete({
-        id: deleteParticipant.id,
-      });
-    } else {
-      throw new NotFoundException(
-        `Can't not delete user ${userId} in room ${roomId}`,
-      );
-    }
-    if (deleteParticipant.auth === 0) {
-      const owner = await this.channelParticipantsRepository.findOne({
-        where: { room: { id: roomId } },
-      });
-      if (owner !== null) {
-        owner.auth = 0;
-        await this.channelParticipantsRepository.save(owner);
-      } else {
-        await this.roomsRepository.delete(roomId);
-      }
-    }
-  }
+  // async deleteChannelParticipant(
+  //   roomId: number,
+  //   userId: number,
+  // ): Promise<void> {
+  //   const deleteParticipant = await this.channelParticipantsRepository.findOne({
+  //     where: { room: { id: roomId }, user: { id: userId } },
+  //   });
+  //   if (deleteParticipant !== null) {
+  //     await this.channelParticipantsRepository.delete({
+  //       id: deleteParticipant.id,
+  //     });
+  //   } else {
+  //     throw new NotFoundException(
+  //       `Can't not delete user ${userId} in room ${roomId}`,
+  //     );
+  //   }
+  //   if (deleteParticipant.auth === 0) {
+  //     const owner = await this.channelParticipantsRepository.findOne({
+  //       where: { room: { id: roomId } },
+  //     });
+  //     if (owner !== null) {
+  //       owner.auth = 0;
+  //       await this.channelParticipantsRepository.save(owner);
+  //     } else {
+  //       await this.roomsRepository.delete(roomId);
+  //     }
+  //   }
+  // }
 
   async patchChannelInfo(
     roomId: number,
@@ -278,7 +246,7 @@ export class RoomService {
     // NOTE dm info 저장
     let dm = this.roomsRepository.create({
       type: 0,
-      // title,
+      title: uuidv4(),
     });
     dm = await this.roomsRepository.save(dm);
     // dm participants 저장
@@ -317,42 +285,28 @@ export class RoomService {
     return user;
   }
 
-  // async deleteDmParticipant(roomId: number, userId: number): Promise<void> {
-  //   const deleteParticipant = await this.dmParticipantsRepository.findOne({
-  //     where: { room: { id: roomId }, user: { id: userId } },
-  //   });
-  //   console.log(deleteParticipant);
-  //   if (deleteParticipant !== undefined) {
-  //     await this.dmParticipantsRepository.delete({ id: deleteParticipant.id });
-  //   }
-  //   return;
-  // }
-
-  // ANCHOR: Socket
-  async handleEnterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
+  // ANCHOR Socket.io
+  async enterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
     let user: User = null;
-    const { roomId, userId } = enterChannelDto;
+    const { userId, roomId, salt } = enterChannelDto;
+    let participant: ChannelParticipant;
     const room = await this.roomsRepository.findOneBy({ id: roomId });
-    if (!room) throw new NotFoundException(`Can't find room ${roomId}`);
+    if (!room) throw new WsException(`Cant't find room ${roomId}`);
 
-    // DM은 바로 입장, 채널은 아래 로직에 따라 입장
-    if (room.type !== 0) {
+    if (room.type != 0) {
       const row = await this.channelParticipantsRepository.findOne({
-        relations: ['user'],
-        where: { room: { id: roomId }, user: { id: userId } },
+        where: { user: { id: userId }, room: { id: roomId } },
       });
-      // 유저가 없으면 참여자 DB에 추가
-      if (row === null) {
-        // protected인데, salt가 틀리면 참여 불가
-        if (room.type === 2) {
-          if (room.salt !== enterChannelDto.salt) return { isEntered: false };
-        }
-        const participant = this.channelParticipantsRepository.create({
+      if (!row) {
+        if (room.type == 2 && salt !== room.salt)
+          throw new WsException('Password is not correct');
+        participant = this.channelParticipantsRepository.create({
           user: await this.usersRepository.findOneBy({ id: userId }),
           room,
         });
         user = participant.user;
-        await this.channelParticipantsRepository.save(participant);
+        console.log(participant);
+        await this.channelParticipantsRepository.insert(participant);
       }
     }
     // 유저 룸 초기화 후, roomId 룸에 추가
@@ -369,27 +323,42 @@ export class RoomService {
     return { isEntered: true };
   }
 
-  async handleLeaveChannel(client: Socket, leaveChannelDto: LeaveChannelDto) {
+  async leaveChannel(
+    client: Socket,
+    leaveChannelDto: LeaveChannelDto,
+  ): Promise<void> {
     const { roomId, userId } = leaveChannelDto;
-    await this.channelParticipantsRepository.delete({
-      room: { id: roomId },
-      user: { id: userId },
+    const deleteParticipant = await this.channelParticipantsRepository.findOne({
+      relations: { user: true, room: true },
+      where: { room: { id: roomId }, user: { id: userId } },
     });
-    const user = await this.usersRepository.findOneBy({ id: userId });
-
+    await this.channelParticipantsRepository.delete({
+      id: deleteParticipant.id,
+    });
+    if (deleteParticipant.auth === 0) {
+      const owner = await this.channelParticipantsRepository.findOne({
+        where: { room: { id: roomId } },
+      });
+      if (owner !== null) {
+        owner.auth = 0;
+        await this.channelParticipantsRepository.save(owner);
+      } else {
+        await this.roomsRepository.delete(roomId);
+      }
+    }
     client
-      .to(roomId.toString())
-      .emit('roomMessage', `${user.nickname}이(가) 나갔습니다.`);
+      .to(deleteParticipant.room.title)
+      .emit(
+        'roomMessage',
+        `${deleteParticipant.user.nickname}이(가) 방을 나갔습니다.`,
+      );
     client.rooms.clear();
-    client.leave(roomId.toString());
-
-    return { isLeft: true };
+    client.leave(deleteParticipant.room.title);
   }
 
-  async handleSendMessage(client: Socket, sendMessageDto: SendMessageDto) {
+  async sendMessage(client: Socket, sendMessageDto: SendMessageDto) {
     const { roomId, userId, body } = sendMessageDto;
-
-    const message = this.messagesRepository.create({
+    const msg = this.messagesRepository.create({
       date: new Date(),
       body,
       room: await this.roomsRepository.findOneBy({ id: roomId }),
@@ -397,21 +366,40 @@ export class RoomService {
     });
 
     // TODO: 순서 보장을 위해, 큐에 넣어서 처리하는 방식 구현 필요!
-    await this.messagesRepository.save(message);
+    await this.messagesRepository.save(msg);
 
-    const userMessageDto: UserMessageDto = {
-      id: message.id,
-      date: message.date,
+    const userMessageDto: MessageDto = {
       user: {
-        id: message.user.id,
-        nickname: message.user.nickname,
-        image: message.user.image,
+        id: msg.user.id,
+        nickname: msg.user.nickname,
+        image: msg.user.image,
       },
-      body: message.body,
+      body: msg.body,
     };
 
     client.to(roomId.toString()).emit('userMessage', userMessageDto);
 
     return;
+  }
+
+  async getMessages(roomId: number): Promise<MessageDto[]> {
+    const msgs = await this.messagesRepository.find({
+      relations: { user: true },
+      where: { room: { id: roomId } },
+      order: { id: 'ASC' },
+    });
+    const result: MessageDto[] = [];
+    msgs.map((msg) => {
+      const message = {
+        user: {
+          id: msg.user.id,
+          nickname: msg.user.nickname,
+          image: msg.user.image,
+        },
+        body: msg.body,
+      };
+      result.push(message);
+    });
+    return result;
   }
 }

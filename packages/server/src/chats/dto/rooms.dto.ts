@@ -5,7 +5,6 @@ import {
   IsInt,
   IsNotEmpty,
   IsNumber,
-  isObject,
   IsObject,
   IsOptional,
   IsString,
@@ -297,16 +296,7 @@ export class SendMessageDto {
   @IsNotEmpty()
   body: string;
 }
-
-export class UserMessageDto {
-  @IsNumber()
-  @IsNotEmpty()
-  id: number;
-
-  @IsDate()
-  @IsNotEmpty()
-  date: Date;
-
+export class MessageDto {
   @IsObject()
   @IsNotEmpty()
   user: UserDto;
