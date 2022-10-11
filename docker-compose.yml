@@ -1,13 +1,15 @@
 version: '3' # 도커 컴포즈 파일 버전
 services: # 컨테이너 실행을 위한 단위
   db: # 서비스 이름
-    image: postgres # container 생성 시, 사용할 이미지
+    container_name: postgres # container 생성 시, 사용할 이미지
+    build:
+      context: ./
+      dockerfile: Dockerfile.database
     restart: always # 재실행 설정(컨테이너가 stop 시, 언제나 재실행)
     environment: # 컨테이너에서 쓰일 환경변수를 주입
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
-    container_name: postgres-db
     ports: # container 포트 매핑
       - '5432:5432'
     # 내장 도커 볼륨을 사용하자(마운트를 안하면 기본적으로 도커 볼륨을 만든다.)
@@ -33,4 +35,3 @@ services: # 컨테이너 실행을 위한 단위
     container_name: nest-app
     depends_on: # 실행 순서를 보장받고 싶을 때, 사용
       - db
-      - pgadmin
