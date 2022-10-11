@@ -89,7 +89,6 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   const handleParticipant = (value: number[]) => {
     setNewRoom({ ...newRoom, participantIds: value });
   };
-  console.log(newRoom.type);
   return (
     <SettingRoomConfigLayout>
       <SettingRoomConfigBox>
