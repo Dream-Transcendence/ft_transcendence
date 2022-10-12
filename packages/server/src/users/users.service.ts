@@ -349,7 +349,7 @@ export class UserService {
     // WHERE "friend"."userId" = "user"."id";
     const friendRows = await this.friendsRepository.find({
       relations: { user: true, friend: true },
-      where: { user: { id: id, nickname: Like(`%${nickname}%`) } },
+      where: { user: { id: id }, friend: { nickname: Like(`%${nickname}%`) } },
     });
 
     // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
