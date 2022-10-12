@@ -1,12 +1,9 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
-import {
-  ChannelParticipant,
-  DmParticipant,
-  Room,
-} from 'src/chats/rooms.entity';
+import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { FriendDto, UserDto } from './dto/user.dto';
@@ -375,5 +372,32 @@ export class UserService {
     });
 
     return foundUsers;
+  }
+
+  // ANCHOR: Socket
+  async handleLogOn(
+    userId: number,
+    onlineUserList: number[],
+  ): Promise<ConnectionsDto> {
+    const friendRows = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: userId } },
+    });
+    const onlineFriendList: number[] = [];
+
+    friendRows.forEach((friendRow) => {
+      console.log(friendRow.friend);
+    });
+
+    console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
+
+    friendRows.forEach((friendRow) => {
+      if (onlineUserList.includes(friendRow.friend.id)) {
+        onlineFriendList.push(friendRow.friend.id);
+      }
+    });
+    console.log(`onlineFriendList: ${onlineFriendList}`);
+
+    return { connections: onlineFriendList };
   }
 }

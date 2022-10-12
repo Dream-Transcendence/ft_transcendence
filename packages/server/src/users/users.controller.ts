@@ -43,7 +43,6 @@ export class UsersController {
     type: UserDto,
   })
   addUser(@Body() createUserDto: CreateUserDto): Promise<UserDto> {
-    this.logger.log(`addUser: ${JSON.stringify(UserDto)}`);
     return this.userService.addUser(createUserDto);
   }
 

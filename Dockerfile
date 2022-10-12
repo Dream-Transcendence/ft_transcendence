@@ -1,6 +1,7 @@
+
+# Before running this Dockerfile, run 'npm i' in 'packages/server'
 FROM node:18
 
-# WORKDIR /packages/server
 WORKDIR /app/packages/server
 
 # COPY package*.json ./

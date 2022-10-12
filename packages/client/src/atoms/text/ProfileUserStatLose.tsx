@@ -11,11 +11,11 @@ const StatLoseLayout = styled('div')(({ theme }) => ({
 
 function UserStatLose(props: { value: number }) {
   const { value } = props;
-  return <StatLoseLayout>
-    <Typography variant='h6'>
-      StatLose : {value}
-    </Typography>  </StatLoseLayout>;
+  return (
+    <StatLoseLayout>
+      <Typography variant="h6">StatLose : {value}</Typography>{' '}
+    </StatLoseLayout>
+  );
 }
-
 
 export default UserStatLose;
