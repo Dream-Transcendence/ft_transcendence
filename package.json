@@ -23,6 +23,7 @@
     }
   },
   "devDependencies": {
+    "@types/socket.io": "^3.0.2",
     "@typescript-eslint/eslint-plugin": "^5.36.1",
     "@typescript-eslint/parser": "^5.36.1",
     "commitizen": "^4.2.5",

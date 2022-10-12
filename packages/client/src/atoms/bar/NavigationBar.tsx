@@ -41,7 +41,6 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
-
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
     icon: <NavProfile />,
@@ -56,7 +55,7 @@ export default function NavigationBar() {
   };
 
   const chatAction: LinkIconProps = {
-    iconResource: Channels
+    iconResource: Channels,
   };
 
   const avartarAction: LinkIconProps = {

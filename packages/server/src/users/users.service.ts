@@ -1,12 +1,9 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
-import {
-  ChannelParticipant,
-  DmParticipant,
-  Room,
-} from 'src/chats/rooms.entity';
-import { EntityNotFoundError, Like, Repository } from 'typeorm';
+import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
+import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { FriendDto, UserDto } from './dto/user.dto';
@@ -193,17 +190,25 @@ export class UserService {
       relations: { room: true },
       where: { user: { id: id } },
     });
+    console.log(dms);
     const dmRooms = dms.map((dm) => dm.room);
+    console.log(dmRooms);
     const dmList: GetUserRoomDto[] = [];
-    dmRooms.forEach((room) => {
+    const promises = dmRooms.map(async (room) => {
+      const opponent = await this.dmParticipantsRepository.findOne({
+        relations: { user: true },
+        where: { room: { id: room.id }, user: { id: Not(id) } },
+      });
+      console.log('잘 돌아가고 있니?');
       const userRoomDto: GetUserRoomDto = {
         id: room.id,
-        name: room.name,
-        image: room.image,
+        name: opponent.user.nickname,
+        image: opponent.user.image,
         recvMessageCount: 0,
       };
       dmList.push(userRoomDto);
     });
+    await Promise.all(promises);
 
     return { channelList, dmList };
   }
@@ -352,7 +357,7 @@ export class UserService {
     // WHERE "friend"."userId" = "user"."id";
     const friendRows = await this.friendsRepository.find({
       relations: { user: true, friend: true },
-      where: { user: { id: id, nickname: Like(`%${nickname}%`) } },
+      where: { user: { id: id }, friend: { nickname: Like(`%${nickname}%`) } },
     });
 
     // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
@@ -375,5 +380,32 @@ export class UserService {
     });
 
     return foundUsers;
+  }
+
+  // ANCHOR: Socket
+  async handleLogOn(
+    userId: number,
+    onlineUserList: number[],
+  ): Promise<ConnectionsDto> {
+    const friendRows = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: userId } },
+    });
+    const onlineFriendList: number[] = [];
+
+    friendRows.forEach((friendRow) => {
+      console.log(friendRow.friend);
+    });
+
+    console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
+
+    friendRows.forEach((friendRow) => {
+      if (onlineUserList.includes(friendRow.friend.id)) {
+        onlineFriendList.push(friendRow.friend.id);
+      }
+    });
+    console.log(`onlineFriendList: ${onlineFriendList}`);
+
+    return { connections: onlineFriendList };
   }
 }

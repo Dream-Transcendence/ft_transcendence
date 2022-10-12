@@ -16,9 +16,7 @@ function UserStatLadder(props: { value: string }) {
   }
   return (
     <StatLadderLayout>
-      <Typography variant='h3'>
-        {value}
-      </Typography>
+      <Typography variant="h3">{value}</Typography>
     </StatLadderLayout>
   );
 }

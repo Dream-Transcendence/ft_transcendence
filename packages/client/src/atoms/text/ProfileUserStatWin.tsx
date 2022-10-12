@@ -11,11 +11,13 @@ const StatWinLayout = styled('div')(({ theme }) => ({
 
 function UserStatWin(props: { value: number }) {
   const { value } = props;
-  return <StatWinLayout>
-    <Typography alignItems={'center'} justifyContent={'center'} variant='h6'>
-      StatWin : {value}
-    </Typography>
-  </StatWinLayout >;
+  return (
+    <StatWinLayout>
+      <Typography alignItems={'center'} justifyContent={'center'} variant="h6">
+        StatWin : {value}
+      </Typography>
+    </StatWinLayout>
+  );
 }
 
 export default UserStatWin;
