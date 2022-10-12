@@ -20,9 +20,9 @@ import {
   ChannelDto,
   PatchChannelInfoDto,
   CreateDmDto,
+  GetRoomInfoDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
-import { DmUserDto } from '../users/dto/user.dto';
 
 @ApiTags('room')
 @Controller('rooms')
@@ -57,19 +57,18 @@ export class RoomsController {
     return this.roomService.getChannels(userId);
   }
 
-  @Get('/channel/:roomId/:userId')
+  @Get('/:roomId/:userId')
   @ApiOperation({ summary: '채팅방 정보 가져오기' })
   @ApiOkResponse({
-    description: '채팅방 정보 가져오기 성공 type: ChannelDto',
-    type: ChannelDto,
+    description: '채팅방 정보 가져오기 성공 type: GetRoomInfoDto',
+    type: GetRoomInfoDto,
   })
-  @ApiNotFoundResponse({ description: '방 혹은 user를 찾을 수 없습니다' })
-  getChannelInfo(
+  getRoomInfo(
     @Param('roomId') roomId: number,
     @Param('userId') userId: number,
   ): Promise<ChannelDto> {
     this.logger.log(`getRoomInfo`);
-    return this.roomService.getChannelInfo(roomId, userId);
+    return this.roomService.getRoomInfo(roomId, userId);
   }
 
   @Get('/:roomId/channel/:userId/participants')
@@ -116,18 +115,5 @@ export class RoomsController {
   @ApiNotFoundResponse({ description: 'DM 참여자를 찾을 수 없습니다' })
   createDm(@Body() createDmDto: CreateDmDto) {
     return this.roomService.createDm(createDmDto);
-  }
-
-  @Get('/:roomId/dm/:userId/participants')
-  @ApiOperation({ summary: 'DM 참여자 목록' })
-  @ApiOkResponse({
-    description: 'DM 참여자 목록 가져오기 성공 type: DmUserDto',
-    type: DmUserDto,
-  })
-  getDmParticipant(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-  ) {
-    return this.roomService.getDmParticipant(roomId, userId);
   }
 }

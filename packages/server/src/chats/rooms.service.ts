@@ -13,9 +13,9 @@ import {
   SendMessageDto,
   ChannelInfoDto,
   MessageDto,
+  GetRoomInfoDto,
 } from './dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
-import { UserDto } from '../users/dto/user.dto';
 import { DmParticipant } from './rooms.entity';
 import { Socket } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
@@ -114,25 +114,37 @@ export class RoomService {
     return results;
   }
 
-  async getChannelInfo(roomId: number, userId: number): Promise<ChannelDto> {
-    const channel = await this.roomsRepository.findOne({
+  async getRoomInfo(roomId: number, userId: number): Promise<GetRoomInfoDto> {
+    const room = await this.roomsRepository.findOne({
       where: { id: roomId },
     });
-    const user = await this.channelParticipantsRepository.findOneBy({
-      room: { id: roomId },
-      user: { id: userId },
-    });
-    if (!user)
-      throw new NotFoundException(
-        `Cant't find room ${roomId} or participant ${userId}`,
-      );
-    if (user.auth != 0) {
-      delete channel.type;
+    // room이 dm일 떼
+    if (room.type == 0) {
+      const participant = await this.dmParticipantsRepository.findOne({
+        relations: { user: true },
+        where: { room: { id: roomId }, user: { id: Not(userId) } },
+      });
+      const blocked = await this.blocksRepository.findOne({
+        where: {
+          user: { id: userId },
+          blockedUser: { id: participant.user.id },
+        },
+      });
+      const roomInfo = {
+        id: room.id,
+        name: participant.user.nickname,
+        type: room.type,
+        image: participant.user.image,
+        title: room.title,
+        blocked: blocked !== null ? true : false,
+      };
+      return roomInfo;
     }
-    // NOTE 사용자가 owner라면 비밀번호를 설정할 수 있는 칸이 필요하기 때문에 owner일 때만 type을 준다
-    // delete channel.id;
-    delete channel.salt;
-    return channel;
+    // channelInfo
+    else {
+      delete room.salt;
+      return room;
+    }
   }
 
   async getChannelParticipants(
@@ -220,26 +232,6 @@ export class RoomService {
     });
     await Promise.all(promises);
     this.dmParticipantsRepository.save(participants);
-  }
-
-  async getDmParticipant(roomId: number, userId: number): Promise<UserDto> {
-    const participant = await this.dmParticipantsRepository.findOne({
-      relations: { user: true },
-      where: { room: { id: roomId }, user: { id: Not(userId) } },
-    });
-    const blocked = await this.blocksRepository.findOne({
-      where: {
-        user: { id: userId },
-        blockedUser: { id: participant.user.id },
-      },
-    });
-    const user = {
-      id: participant.user.id,
-      nickname: participant.user.nickname,
-      image: participant.user.image,
-      blocked: blocked !== null ? true : false,
-    };
-    return user;
   }
 
   // Message service
