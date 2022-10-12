@@ -1,7 +1,7 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
-import { EntityNotFoundError, Like, Repository } from 'typeorm';
+import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -190,17 +190,25 @@ export class UserService {
       relations: { room: true },
       where: { user: { id: id } },
     });
+    console.log(dms);
     const dmRooms = dms.map((dm) => dm.room);
+    console.log(dmRooms);
     const dmList: GetUserRoomDto[] = [];
-    dmRooms.forEach((room) => {
+    const promises = dmRooms.map(async (room) => {
+      const opponent = await this.dmParticipantsRepository.findOne({
+        relations: { user: true },
+        where: { room: { id: room.id }, user: { id: Not(id) } },
+      });
+      console.log('잘 돌아가고 있니?');
       const userRoomDto: GetUserRoomDto = {
         id: room.id,
-        name: room.name,
-        image: room.image,
+        name: opponent.user.nickname,
+        image: opponent.user.image,
         recvMessageCount: 0,
       };
       dmList.push(userRoomDto);
     });
+    await Promise.all(promises);
 
     return { channelList, dmList };
   }
