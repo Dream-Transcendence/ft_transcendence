@@ -65,7 +65,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
           salt: password,
         },
       );
-      navigate(`${CHATROOMURL}${roomId}`);
+      await navigate(`${CHATROOMURL}${roomId}`);
     } catch (error) {
       alert(error);
       throw console.dir(error);

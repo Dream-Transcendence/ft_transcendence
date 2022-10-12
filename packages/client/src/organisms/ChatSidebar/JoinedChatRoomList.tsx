@@ -48,9 +48,6 @@ function JoinedChatRoomModule() {
     setRoomList(joinedChatList.channelList);
   }, [joinedChatList.channelList, setRoomList]);
 
-  console.log('!!!!!!!', joinedChatList.channelList);
-  console.log('???????', Roomlist);
-
   const listElement: React.ReactElement[] = Roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
       nickname: room.name,
@@ -66,10 +63,8 @@ function JoinedChatRoomModule() {
       avatarType: 'circle',
       userData: profileData,
       action: enterRoom,
-      // action: () => {
-      //   window.location.href = `http://localhost:3005/pingpong/profile/${friendData.user.id}`;
-      // },;
     };
+
     return (
       <ListLayout key={room.id}>
         <UserProfileBox userProfileBoxProps={userProfileBoxProps} />

@@ -61,7 +61,7 @@ const Aside = styled('aside')(({ theme }) => ({
  */
 //[수정사항]any => 프론트에서 알려줄것
 const getRoomList = async (userId: number) => {
-  const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`, {});
+  const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`);
   return response;
 };
 

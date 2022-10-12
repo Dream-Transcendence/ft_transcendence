@@ -33,9 +33,10 @@ const divStyle = {
 //[수정사항] any => ChannelDto
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo, handler } = roomInfoSet;
+  const { roomInfo, DMInfo, handler } = roomInfoSet;
   const { roomId } = useParams();
-  const { name, type, image } = roomInfo;
+  const { name, type, image: roomImage } = roomInfo;
+  const { nickname, image: DMImage, blocked } = DMInfo;
   const [roomName, setRoomName] = useState<string>(name);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
   roomInfoSet['roomId'] = roomId;
@@ -65,7 +66,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
-        <Avatar alt="DMImg" src={image} />
+        <Avatar alt="DMImg" src={DMImage} />
       ) : (
         <IconButton
           color="primary"
@@ -74,14 +75,14 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
         >
           {/* [수정사항] 이미지 수정기능 추가해야함 */}
           <input hidden accept="image/*" type="file" />
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt="Remy Sharp" src={roomImage} />
         </IconButton>
       )}
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
         {type === DM ? (
           <Typography paddingLeft={'10px'} color={'white'}>
-            {name}
+            {nickname}
           </Typography>
         ) : (
           <Input
