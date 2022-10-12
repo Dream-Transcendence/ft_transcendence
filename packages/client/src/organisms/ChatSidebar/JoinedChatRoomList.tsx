@@ -60,7 +60,7 @@ function JoinedChatRoomModule() {
 
     const userProfileBoxProps = {
       isButton: true,
-      avatarType: 'circle',
+      avatarType: 'none',
       userData: profileData,
       action: enterRoom,
     };

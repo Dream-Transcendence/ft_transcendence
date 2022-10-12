@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
@@ -12,13 +11,8 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxDataType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
+import { useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 import { userAuth } from '../../template/ChatMainSection/EnteredChatRoomTemplate';
 import { ADMIN, OWNER } from '../../configs/userType';
@@ -44,14 +38,6 @@ const SpeedDialLayout = styled('div')((props) => ({
   marginLeft: '20%',
 }));
 
-const personal: LinkIconResource = {
-  url: PROFILEURL,
-  icon: <PersonIcon />,
-};
-const linkPersonal: LinkIconProps = {
-  iconResource: personal,
-};
-
 const customProps: CustomIconProps = {
   icon: <NotInterestedIcon />,
 };
@@ -63,19 +49,25 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
   const participantInfo = props.participantInfo;
   const { user, auth, status, blocked } = participantInfo;
   const userType = useRecoilValue(userAuth);
-  const userId = useRecoilValue(userDataAtom);
-  //props: { userData: BaseUserProfileData }) {
-  // const { userData } = props;
-  const userData: UserProfileBoxDataType = {
-    nickname: 'noname',
-    image: 'noimage',
+  const userData = useRecoilValue(userDataAtom);
+  const userInfo: UserProfileBoxDataType = {
+    nickname: user.nickname,
+    image: user.image,
+  };
+
+  const personal: LinkIconResource = {
+    url: `${PROFILEURL}/${userData.id}`,
+    icon: <PersonIcon />,
+  };
+
+  const linkPersonal: LinkIconProps = {
+    iconResource: personal,
   };
 
   const userProfileBoxProps = {
-    isButton: true,
+    isButton: false,
     avatarType: 'circle',
-    userData: userData,
-    // action?: () => void;
+    userData: userInfo,
   };
   return (
     <UserProfileLayout>
@@ -89,7 +81,7 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
         {userType !== null && (
           <SpeedDialLayout>
             {auth !== OWNER &&
-              userId !== user.id &&
+              userData.id !== user.id &&
               !(userType === ADMIN && auth === ADMIN) && (
                 <BasicSpeedDial participantInfo={participantInfo} />
               )}
