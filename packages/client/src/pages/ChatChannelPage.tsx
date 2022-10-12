@@ -5,11 +5,18 @@ import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefault
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import {
+  atom,
+  selector,
+  selectorFamily,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import { userDataAtom } from './PingpongRoutePage';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -42,17 +49,46 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
+// export const changedList = atom<string>({
+
+// });
+
+/*
+ * 리스트를 쪼개서 아톰으로 관리??
+ * 최초 랜더링 시, data 받아옴
+ *
+ */
+//[수정사항]any => 프론트에서 알려줄것
+const getRoomList = async (userId: number) => {
+  const { data } = await axios.get(`${SERVERURL}/users/${userId}/rooms`, {});
+  return data;
+};
+
+export const getJoinedChatList = selectorFamily<any, number>({
+  key: '',
+  get:
+    (userId) =>
+    async ({ get }) => {
+      try {
+        const response = await getRoomList(userId);
+        return response;
+      } catch (error) {
+        console.dir(error);
+      }
+    },
+});
+
 //채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
+  const userData = useRecoilValue(userDataAtom);
   const [roomList, setRoomList] = useState([]);
-  const userId = 1;
 
   useEffect(() => {
     async function getRoomList() {
       try {
         //api 수정됨 rooms/channles -> rooms/userid/channels
         const response = await axios.get(
-          `${SERVERURL}/rooms/${userId}/channels`,
+          `${SERVERURL}/rooms/${userData.id}/channels`,
         );
         setRoomList(response.data);
       } catch (error) {

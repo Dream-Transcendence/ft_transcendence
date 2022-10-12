@@ -10,6 +10,8 @@ import { useState } from 'react';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PROTECTED } from '../../configs/RoomType';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -50,10 +52,10 @@ async function createRoom(newRoom: CreateRoomSet) {
 //일단 임시로 prop을 내려서 상태관리함 향후 교체할 예정
 function SettingRoomConfigOranisms(closeModal: () => void) {
   //[수정사항] userId => 1
-  const userId = 1;
+  const userData = useRecoilValue(userDataAtom);
   //[수정사항] 나중에 방의 초기값을 만든사람 이름을 하면 좋을듯
   const [newRoom, setNewRoom] = useState<CreateRoomSet>({
-    userId: userId,
+    userId: userData.id,
     name: 'default',
     type: 1,
     salt: '',

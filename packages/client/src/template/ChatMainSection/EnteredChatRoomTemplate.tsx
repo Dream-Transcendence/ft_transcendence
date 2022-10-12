@@ -9,6 +9,8 @@ import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { RoomInfoSet } from '../../types/Room.type';
 import { ParticipantInfoSet } from '../../types/Participant.type';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -39,15 +41,14 @@ function EnteredChatRoomTemplate() {
   //[수정사항] any => ChannelParticipantDto
   const [participantInfo, setParticipantInfo] = useState<any>([]);
   const { roomId } = useParams();
-  const userId = 1;
+  const userData = useRecoilValue(userDataAtom);
 
   useEffect(() => {
     async function getRoomInfo() {
       try {
-        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
         //[수정사항] 도메인이 아직 확실하지 않아서 보류
         const response = await axios.get(
-          `${SERVERURL}/rooms/channel/${roomId}/${userId}`,
+          `${SERVERURL}/rooms/channel/${roomId}/${userData.id}`,
         );
 
         setRoomInfo(response.data);
@@ -62,11 +63,10 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     async function getDMInfo() {
       try {
-        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
         //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
         if (roomInfo.type === DM) {
           const response = await axios.get(
-            `${SERVERURL}/rooms/${roomId}/dm/${userId}/participants`,
+            `${SERVERURL}/rooms/${roomId}/dm/${userData.id}/participants`,
           );
           setDMInfo(response.data);
         }
@@ -81,12 +81,11 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     async function getParticipantInfo() {
       try {
-        //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
         //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
         //5 === 랜더링 안됨.
         if (roomInfo.type !== DM) {
           const response = await axios.get(
-            `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
+            `${SERVERURL}/rooms/${roomId}/channel/${userData.id}/participants`,
           );
           setParticipantInfo(response.data);
         }
@@ -96,7 +95,7 @@ function EnteredChatRoomTemplate() {
       }
     }
     getParticipantInfo();
-  }, [roomId, userId]);
+  }, [roomId, userData.id]);
 
   //[수정사항] any => ChannelDto
   const handleRoomInfo = (roomInfo: any) => {
