@@ -100,6 +100,34 @@ export class ChannelInfoDto {
   personnel: number;
 }
 
+export class GetRoomInfoDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  blocked?: boolean;
+}
+
 export class ChannelParticipantDto {
   constructor(
     user: UserDto,
