@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
-import ProfileNicname from '../../atoms/text/ProfileNickname';
+import ProfileNicname from '../../atoms/input/ProfileNickname';
 import {
   ProfileActionLayout,
   UserInfoLayout,
@@ -15,10 +15,11 @@ import { CustomIconProps, CustomUploadProps } from '../../types/Link.type';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -29,11 +30,7 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 
 function UserInfo() {
   const { userId } = useParams();
-  const [userData, setUserData] = useState<BaseUserProfileData>({
-    id: 0,
-    nickname: 'noname',
-    image: 'noimage',
-  });
+  const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
 
   // const refImage = useRef<HTMLInputElement>(null);
   // const uploadHandler = () => {
@@ -52,19 +49,19 @@ function UserInfo() {
         const response = await axios.get(
           `${SERVERURL}/users/${userId}/profile`,
         );
-        setUserData(response.data);
+        setUser(response.data);
       } catch (error) {
         alert(error);
         console.log(error);
       }
     }
     getUserData();
-  }, [userId]);
+  }, [userId, setUser]);
 
   return (
     <UserInfoLayout>
       <UserPictureLayout>
-        <ProfileImage userData={userData} />
+        <ProfileImage userData={user} />
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
