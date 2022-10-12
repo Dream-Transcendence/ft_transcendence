@@ -19,7 +19,6 @@ import {
   ChannelParticipantDto,
   ChannelDto,
   PatchChannelInfoDto,
-  PatchUserInfoDto,
   CreateDmDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
@@ -106,20 +105,6 @@ export class RoomsController {
   ) {
     this.logger.log('patchChannelInfo');
     return this.roomService.patchChannelInfo(roomId, patchChannelInfoDto);
-  }
-
-  @Patch('/:roomId/users/:userId')
-  @ApiOperation({
-    summary: '채팅 유저 권한, 상태 변경 BodyType: PatchUserInfoDto',
-  })
-  @ApiOkResponse({ description: '채팅 유저 권한, 상태 변경 성공' })
-  patchUserInfo(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-    @Body() patchUserInfoDto: PatchUserInfoDto,
-  ) {
-    this.logger.log('patchUserAuth');
-    return this.roomService.patchUserInfo(roomId, userId, patchUserInfoDto);
   }
 
   // ANCHOR DM Controller

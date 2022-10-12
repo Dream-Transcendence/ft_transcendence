@@ -41,7 +41,6 @@ export class RoomService {
   // ANCHOR Room Service
   async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
     const { userId, name, type, salt, participantIds } = createChannelDto;
-    // title 받아야함
     // NOTE room info 저장
     let room = this.roomsRepository.create({
       name,
@@ -67,7 +66,8 @@ export class RoomService {
     await Promise.all(promises);
     await this.channelParticipantsRepository.save(participants);
     // channel owner로 auth 변경
-    await this.patchUserInfo(room.id, userId, { auth: 0 });
+    participants[0].auth = 0;
+    await this.channelParticipantsRepository.save(participants[0]);
     delete room.salt;
     return room;
   }
@@ -179,35 +179,6 @@ export class RoomService {
     return [user[0], ...participants];
   }
 
-  // async deleteChannelParticipant(
-  //   roomId: number,
-  //   userId: number,
-  // ): Promise<void> {
-  //   const deleteParticipant = await this.channelParticipantsRepository.findOne({
-  //     where: { room: { id: roomId }, user: { id: userId } },
-  //   });
-  //   if (deleteParticipant !== null) {
-  //     await this.channelParticipantsRepository.delete({
-  //       id: deleteParticipant.id,
-  //     });
-  //   } else {
-  //     throw new NotFoundException(
-  //       `Can't not delete user ${userId} in room ${roomId}`,
-  //     );
-  //   }
-  //   if (deleteParticipant.auth === 0) {
-  //     const owner = await this.channelParticipantsRepository.findOne({
-  //       where: { room: { id: roomId } },
-  //     });
-  //     if (owner !== null) {
-  //       owner.auth = 0;
-  //       await this.channelParticipantsRepository.save(owner);
-  //     } else {
-  //       await this.roomsRepository.delete(roomId);
-  //     }
-  //   }
-  // }
-
   async patchChannelInfo(
     roomId: number,
     patchChannelInfoDto: PatchChannelInfoDto,
@@ -224,20 +195,6 @@ export class RoomService {
       room.salt = null;
     }
     await this.roomsRepository.save(room);
-  }
-
-  async patchUserInfo(
-    roomId: number,
-    userId: number,
-    patchUserInfoDto: PatchUserInfoDto,
-  ): Promise<void> {
-    const { auth, status } = patchUserInfoDto;
-    const user = await this.channelParticipantsRepository.findOne({
-      where: { room: { id: roomId }, user: { id: userId } },
-    });
-    if (auth !== undefined) user.auth = auth;
-    if (status !== undefined) user.status = auth;
-    await this.channelParticipantsRepository.save(user);
   }
 
   // ANCHOR Dm Service
@@ -285,6 +242,28 @@ export class RoomService {
     return user;
   }
 
+  // Message service
+  async getMessages(roomId: number): Promise<MessageDto[]> {
+    const msgs = await this.messagesRepository.find({
+      relations: { user: true },
+      where: { room: { id: roomId } },
+      order: { id: 'ASC' },
+    });
+    const result: MessageDto[] = [];
+    msgs.map((msg) => {
+      const message = {
+        user: {
+          id: msg.user.id,
+          nickname: msg.user.nickname,
+          image: msg.user.image,
+        },
+        body: msg.body,
+      };
+      result.push(message);
+    });
+    return result;
+  }
+
   // ANCHOR Socket.io
   async enterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
     let user: User = null;
@@ -311,11 +290,11 @@ export class RoomService {
     }
     // 유저 룸 초기화 후, roomId 룸에 추가
     client.rooms.clear();
-    client.join(roomId.toString());
+    client.join(room.title);
     // 새 참여자라면, 입장 메세지 쏴주기
     if (user)
       client
-        .to(roomId.toString())
+        .to(room.title)
         .emit('roomMessage', `${user.nickname}이(가) 입장했습니다.`);
 
     // 참여 성공
@@ -329,12 +308,29 @@ export class RoomService {
   ): Promise<void> {
     const { roomId, userId } = leaveChannelDto;
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
-      relations: { user: true, room: true },
+      relations: { room: true },
       where: { room: { id: roomId }, user: { id: userId } },
     });
+    client.leave(deleteParticipant.room.title);
+    client.rooms.clear();
+  }
+
+  async deleteChannelParticipant(
+    client: Socket,
+    leaveChannelDto: LeaveChannelDto,
+  ): Promise<void> {
+    const { roomId, userId } = leaveChannelDto;
+    const deleteParticipant = await this.channelParticipantsRepository.findOne({
+      relations: { room: true, user: true },
+      where: { room: { id: roomId }, user: { id: userId } },
+    });
+    const title = deleteParticipant.room.title;
     await this.channelParticipantsRepository.delete({
       id: deleteParticipant.id,
     });
+    client.leave(deleteParticipant.room.title);
+    client.rooms.clear();
+
     if (deleteParticipant.auth === 0) {
       const owner = await this.channelParticipantsRepository.findOne({
         where: { room: { id: roomId } },
@@ -343,17 +339,21 @@ export class RoomService {
         owner.auth = 0;
         await this.channelParticipantsRepository.save(owner);
       } else {
+        const msgs = await this.messagesRepository.findBy({
+          room: { id: roomId },
+        });
+        const ids = msgs.map((msg) => msg.id);
+        await this.messagesRepository.delete(ids);
         await this.roomsRepository.delete(roomId);
+        return;
       }
     }
     client
-      .to(deleteParticipant.room.title)
+      .to(title)
       .emit(
         'roomMessage',
         `${deleteParticipant.user.nickname}이(가) 방을 나갔습니다.`,
       );
-    client.rooms.clear();
-    client.leave(deleteParticipant.room.title);
   }
 
   async sendMessage(client: Socket, sendMessageDto: SendMessageDto) {
@@ -365,9 +365,7 @@ export class RoomService {
       user: await this.usersRepository.findOneBy({ id: userId }),
     });
 
-    // TODO: 순서 보장을 위해, 큐에 넣어서 처리하는 방식 구현 필요!
     await this.messagesRepository.save(msg);
-
     const userMessageDto: MessageDto = {
       user: {
         id: msg.user.id,
@@ -376,30 +374,24 @@ export class RoomService {
       },
       body: msg.body,
     };
-
-    client.to(roomId.toString()).emit('userMessage', userMessageDto);
-
-    return;
+    client.to(msg.room.title).emit('userMessage', userMessageDto);
   }
 
-  async getMessages(roomId: number): Promise<MessageDto[]> {
-    const msgs = await this.messagesRepository.find({
-      relations: { user: true },
-      where: { room: { id: roomId } },
-      order: { id: 'ASC' },
+  async patchUserInfo(client: Socket, patchUserInfoDto: PatchUserInfoDto) {
+    const { userId, roomId, auth, status } = patchUserInfoDto;
+    const user = await this.channelParticipantsRepository.findOne({
+      relations: { room: true },
+      where: { room: { id: roomId }, user: { id: userId } },
     });
-    const result: MessageDto[] = [];
-    msgs.map((msg) => {
-      const message = {
-        user: {
-          id: msg.user.id,
-          nickname: msg.user.nickname,
-          image: msg.user.image,
-        },
-        body: msg.body,
-      };
-      result.push(message);
-    });
-    return result;
+    if (auth !== undefined) user.auth = auth;
+    if (status !== undefined) user.status = status;
+    await this.channelParticipantsRepository.save(user);
+    client
+      .to(user.room.title)
+      // .emit('patchUserInfo', await this.getChannelParticipants(userId, roomId));
+      .emit(
+        'patchMessage',
+        `참여자 ${user.user.nickname}의 auth 혹은 status가 변경되었습니다.`,
+      );
   }
 }

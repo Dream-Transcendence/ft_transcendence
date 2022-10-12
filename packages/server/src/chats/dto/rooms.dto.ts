@@ -244,6 +244,14 @@ export class PatchChannelInfoDto {
 }
 
 export class PatchUserInfoDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
   @ApiProperty()
   @IsInt()
   @Min(0)

@@ -11,6 +11,7 @@ import {
   EnterChannelDto,
   LeaveChannelDto,
   SendMessageDto,
+  PatchUserInfoDto,
 } from './dto/rooms.dto';
 
 @WebSocketGateway(4242, { namespace: 'chat' })
@@ -43,11 +44,27 @@ export class RoomsGateway {
     await this.roomService.leaveChannel(client, leaveChannelDto);
   }
 
+  @SubscribeMessage('deleteChannelParticipant')
+  async deleteChannelParticipant(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() leaveChannelDto: LeaveChannelDto,
+  ) {
+    await this.roomService.deleteChannelParticipant(client, leaveChannelDto);
+  }
+
   @SubscribeMessage('sendMessage')
   async sendMessage(
     @ConnectedSocket() client: Socket,
     @MessageBody() sendMessageDto: SendMessageDto,
   ) {
     await this.roomService.sendMessage(client, sendMessageDto);
+  }
+
+  @SubscribeMessage('patchUserInfo')
+  async patchUserInfo(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() patchUserInfoDto: PatchUserInfoDto,
+  ) {
+    await this.roomService.patchUserInfo(client, patchUserInfoDto);
   }
 }
