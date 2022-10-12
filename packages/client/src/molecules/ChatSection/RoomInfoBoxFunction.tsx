@@ -13,7 +13,7 @@ const InfoFunctionLayout = styled('div')(({ theme }) => ({
 
 function InfoBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo, DMInfo, handler } = roomInfoSet;
+  const { roomInfo, handler } = roomInfoSet;
   const { name, type, image } = roomInfo;
 
   return (
@@ -21,7 +21,7 @@ function InfoBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       {/* [axios POST 요청]방장이 나갈시, 권한위임 요청 */}
       {/* [axios DELETE 요청]해당 채팅방 나가기 요청 */}
       {type === DM ? (
-        <InfoDMBoxFunctionModule dmInfo={DMInfo} />
+        <InfoDMBoxFunctionModule roomInfo={roomInfo} />
       ) : (
         <InfoBoxRoomFunctionModule />
       )}

@@ -33,10 +33,9 @@ const divStyle = {
 //[수정사항] any => ChannelDto
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo, DMInfo, handler } = roomInfoSet;
+  const { roomInfo, handler } = roomInfoSet;
   const { roomId } = useParams();
   const { name, type, image: roomImage } = roomInfo;
-  const { nickname, image: DMImage, blocked } = DMInfo;
   const [roomName, setRoomName] = useState<string>(name);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
   roomInfoSet['roomId'] = roomId;
@@ -66,7 +65,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
-        <Avatar alt="DMImg" src={DMImage} />
+        <Avatar alt="DMImg" src={roomImage} />
       ) : (
         <IconButton
           color="primary"
@@ -82,7 +81,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
       <FormControl>
         {type === DM ? (
           <Typography paddingLeft={'10px'} color={'white'}>
-            {nickname}
+            {name}
           </Typography>
         ) : (
           <Input

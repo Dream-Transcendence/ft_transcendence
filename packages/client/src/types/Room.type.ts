@@ -1,8 +1,8 @@
 export interface RoomInfoSet {
   //[수정사항] any => ChannelDto
   //[수정사항] any => DmUserDto
-  roomInfo: any;
-  DMInfo: any;
+  //[수정사항] any => participantDto
+  roomInfo: GetRoomInfoDto;
   roomId?: string;
   handler?: (roomInfo: any) => void;
 }
@@ -25,4 +25,14 @@ export interface RoomList {
   name: string;
   image: string;
   recvMessageCount: number;
+}
+
+export interface GetRoomInfoDto {
+  id: number;
+  name: string;
+  type: number;
+  image: string;
+  title: string;
+  salt?: string;
+  blocked?: boolean;
 }

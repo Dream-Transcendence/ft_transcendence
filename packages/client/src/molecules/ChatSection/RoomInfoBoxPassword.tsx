@@ -22,6 +22,10 @@ import { useEffect, useState } from 'react';
 import { RoomInfoSet } from '../../types/Room.type';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { useParams } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { OWNER } from '../../configs/userType';
+import { userAuth } from '../../template/ChatMainSection/EnteredChatRoomTemplate';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -38,11 +42,14 @@ const PasswordIconLayout = styled('div')(({ theme }) => ({
 function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
+  const userData = useRecoilValue(userDataAtom);
   const { name, type, image } = roomInfo;
   const { roomId } = useParams();
   const [password, setPassword] = useState('');
   const [changePassword, setChangePassword] = useState<boolean>(false);
+  const userType = useRecoilValue(userAuth);
   roomInfoSet['roomId'] = roomId;
+  //[수정사항]
 
   useEffect(() => {
     if (changePassword) {
@@ -73,12 +80,10 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
     icon: <LockOpenIcon />,
     action: handleChangePassword,
   };
-  // console.log('in pass box', type);
-  // console.log('password', password);
 
   return (
     <InfoBoxPasswordLayout>
-      {type !== DM && (
+      {type !== DM && userType === OWNER && (
         <InfoBoxPasswordInnerLayout>
           <PasswordIconLayout>
             {type === PROTECTED ? (

@@ -20,6 +20,9 @@ import {
 } from '../../types/Profile.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
+import { userAuth } from '../../template/ChatMainSection/EnteredChatRoomTemplate';
+import { ADMIN, OWNER } from '../../configs/userType';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -57,6 +60,10 @@ const customProps: CustomIconProps = {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox(props: { participantInfo: any }) {
+  const participantInfo = props.participantInfo;
+  const { user, auth, status, blocked } = participantInfo;
+  const userType = useRecoilValue(userAuth);
+  const userId = useRecoilValue(userDataAtom);
   //props: { userData: BaseUserProfileData }) {
   // const { userData } = props;
   const userData: UserProfileBoxDataType = {
@@ -79,9 +86,15 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
         {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
         <CustomIconButton customProps={customProps} />
         {/* admin 권한에 따라 활성/비활성화 */}
-        <SpeedDialLayout>
-          <BasicSpeedDial />
-        </SpeedDialLayout>
+        {userType !== null && (
+          <SpeedDialLayout>
+            {auth !== OWNER &&
+              userId !== user.id &&
+              !(userType === ADMIN && auth === ADMIN) && (
+                <BasicSpeedDial participantInfo={participantInfo} />
+              )}
+          </SpeedDialLayout>
+        )}
       </UserFuntionLayout>
     </UserProfileLayout>
   );

@@ -2,7 +2,7 @@ import { ThemeProvider, Typography } from '@mui/material';
 import { styled, responsiveFontSizes, createTheme } from '@mui/material/styles';
 
 interface NumOfPeopleProps {
-  num: string;
+  num: number;
 }
 
 const RoomNumberOfPeopleLayout = styled('div')(({ theme }) => ({

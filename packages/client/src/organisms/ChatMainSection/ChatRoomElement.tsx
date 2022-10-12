@@ -12,6 +12,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { GetRoomInfoDto } from '../../types/Room.type';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -44,8 +45,7 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-//[수정사항] DTO 확정되면 수정할 것 any => ChannelDto
-function ChatRoomElementOrganisms(props: { roomInfo: any }) {
+function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   //chatpage에 있있던  비번 옮겨옴
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;

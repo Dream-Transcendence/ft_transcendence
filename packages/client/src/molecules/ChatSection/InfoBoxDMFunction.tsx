@@ -41,13 +41,13 @@ export async function blockUser(blockId: number, userId: number) {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 //[수정사항] any => ChannelDto
-function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
+function InfoDMBoxFunctionModule(props: { roomInfo: any }) {
   const userData = useRecoilValue(userDataAtom);
-  const dmInfo = props.dmInfo;
+  const roomInfo = props.roomInfo;
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
 
   function handlerBlock() {
-    blockUser(dmInfo.id, userData.id);
+    blockUser(roomInfo.id, userData.id);
   }
 
   const personal: LinkIconResource = {
