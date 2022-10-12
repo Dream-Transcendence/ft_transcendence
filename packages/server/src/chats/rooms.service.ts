@@ -383,15 +383,45 @@ export class RoomService {
       relations: { room: true },
       where: { room: { id: roomId }, user: { id: userId } },
     });
-    if (auth !== undefined) user.auth = auth;
-    if (status !== undefined) user.status = status;
+    let patchedColumn = '';
+    let patchedValue = '';
+    if (auth !== undefined) {
+      user.auth = auth;
+      patchedColumn = 'auth';
+      switch (auth) {
+        case null:
+          patchedValue = 'User';
+          break;
+        case 0:
+          patchedValue = 'Owner';
+          break;
+        case 1:
+          patchedValue = 'Admin';
+          break;
+      }
+    }
+    if (status !== undefined) {
+      user.status = status;
+      user.statusStartDate = new Date();
+      patchedColumn = 'status';
+      switch (status) {
+        case null:
+          patchedValue = 'Normal';
+          break;
+        case 0:
+          patchedValue = 'Mute';
+          break;
+        case 1:
+          patchedValue = 'Ban';
+          break;
+      }
+    }
     await this.channelParticipantsRepository.save(user);
     client
       .to(user.room.title)
-      // .emit('patchUserInfo', await this.getChannelParticipants(userId, roomId));
       .emit(
         'patchMessage',
-        `참여자 ${user.user.nickname}의 auth 혹은 status가 변경되었습니다.`,
+        `참여자 ${user.user.nickname}의 ${patchedColumn}이(가) ${patchedValue}(으)로 변경되었습니다.`,
       );
   }
 }

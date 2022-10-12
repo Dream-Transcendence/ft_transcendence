@@ -6,7 +6,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { logOffDto, LogOnDto } from './dto/connect-user.dto';
+import { ConnectionDto } from './dto/connect-user.dto';
 import { UserService } from './users.service';
 
 @WebSocketGateway(4242, {
@@ -35,19 +35,15 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('logOn')
-  async handleLogOn(client: Socket, logOnDto: LogOnDto) {
+  async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
     const onlineUserList = Array.from(this.connectionList.values());
 
-    this.connectionList.set(client.id, logOnDto.userId);
-    client.broadcast.emit('detectLogOn', logOnDto);
+    this.connectionList.set(client.id, connectionDto.userId);
+    client.broadcast.emit('detectLogOn', connectionDto);
 
-    console.log('connectionList', this.connectionList);
-
-    return {
-      onlineFriendList: await this.userService.handleLogOn(
-        logOnDto.userId,
-        onlineUserList,
-      ),
-    };
+    return await this.userService.handleLogOn(
+      connectionDto.userId,
+      onlineUserList,
+    );
   }
 }

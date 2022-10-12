@@ -1,11 +1,7 @@
-export class LogOnDto {
+export class ConnectionDto {
   userId: number;
 }
 
-export class logOffDto {
-  userId: number;
-}
-
-export class ConnectionListDto {
-  connectionList: Map<string, number>;
+export class ConnectionsDto {
+  connections: number[];
 }
