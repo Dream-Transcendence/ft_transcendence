@@ -56,7 +56,7 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
   };
 
   const personal: LinkIconResource = {
-    url: `${PROFILEURL}/${userData.id}`,
+    url: `${PROFILEURL}/${user.id}`,
     icon: <PersonIcon />,
   };
 
