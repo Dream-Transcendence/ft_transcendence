@@ -29,13 +29,21 @@ export default function GameOption() {
         <FormGroup>
           <FormControlLabel
             control={
-              <Checkbox checked={powerUp} onChange={handleChange} name="powerup" />
+              <Checkbox
+                checked={powerUp}
+                onChange={handleChange}
+                name="powerup"
+              />
             }
             label="Power Up"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={speedUp} onChange={handleChange} name="speedup" />
+              <Checkbox
+                checked={speedUp}
+                onChange={handleChange}
+                name="speedup"
+              />
             }
             label="Speed Up"
           />

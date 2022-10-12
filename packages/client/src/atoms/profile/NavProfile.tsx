@@ -11,5 +11,6 @@ export default function NavProfile() {
   return (
     <ProfileAvatarLayout>
       <Avatar alt={user.nickname} src={user.image} />
-    </ProfileAvatarLayout>);
+    </ProfileAvatarLayout>
+  );
 }

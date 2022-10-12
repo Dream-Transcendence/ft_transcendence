@@ -11,11 +11,7 @@ import {
   LinkIconResource,
 } from 'client/src/types/Link.type';
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
-import {
-  GAMECREATEURL,
-  PROFILEURL,
-  SERVERURL,
-} from '../../configs/Link.url';
+import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';

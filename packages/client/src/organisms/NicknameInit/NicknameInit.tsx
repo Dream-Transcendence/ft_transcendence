@@ -15,11 +15,11 @@ const NicknameInitLayout = styled('section')(({ theme }) => ({
 }));
 
 function NicknameInit() {
-  const [nickname, setNickname] = useState<string | null>(null);;
+  const [nickname, setNickname] = useState<string | null>(null);
 
   const confirmNicknameHandler = (nickname: string): void => {
     setNickname(nickname);
-  }
+  };
   return (
     <NicknameInitLayout>
       <NickNameTextField />
