@@ -9,6 +9,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   BaseUserProfileData,
   FriendType,
+  UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
 
@@ -22,23 +23,20 @@ const UserInviteProfileLayout = styled('div')(({ theme }) => ({
 function UserInviteProfileBox() {
   //props: { userData: BaseUserProfileData }) {
   //const { userData } = props;
-  const mock: FriendType = {
-    id: 0,
-    user: {
-      id: 0,
-      nickname: 'noname',
-      image: 'noimage',
-    },
-    isBlocked: false,
-  };
-  const customProps: CustomIconProps = {
-    icon: <CancelIcon />,
+  const userData: UserProfileBoxDataType = {
+    nickname: 'noname',
+    image: 'noimage',
   };
 
-  const userProfileBoxProps: UserProfileBoxType = {
+  const userProfileBoxProps = {
     isButton: true,
     avatarType: 'circle',
-    userData: mock,
+    userData: userData,
+    // action?: () => void;
+  };
+
+  const customProps: CustomIconProps = {
+    icon: <CancelIcon />,
   };
 
   return (

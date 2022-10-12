@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
-import { FriendType } from '../../types/Profile.type';
+import { FriendType, UserProfileBoxDataType } from '../../types/Profile.type';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -37,10 +37,10 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 
 function ProfileAvatar(props: {
   avatarType: String | undefined;
-  avartarProps: FriendType;
+  avartarProps: UserProfileBoxDataType;
 }) {
   const { avatarType, avartarProps } = props;
-  const { user } = avartarProps;
+  const { nickname, image } = avartarProps;
   if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
@@ -49,14 +49,14 @@ function ProfileAvatar(props: {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar alt={user.nickname} src={user.image} />
+          <Avatar alt={nickname} src={image} />
         </StyledBadge>
       </ProfileAvatarLayout>
     );
   } else {
     return (
       <ProfileAvatarLayout>
-        <Avatar alt={user.nickname} src={user.image} />
+        <Avatar alt={nickname} src={image} />
       </ProfileAvatarLayout>
     );
   }

@@ -2,7 +2,11 @@ import { styled } from '@mui/material/styles';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
+import {
+  FriendType,
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
   height: '40%',
@@ -23,14 +27,10 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 
 function JoinedDMListOrganisms() {
   //채팅 참여자목록의 각 데이터 type형식으로 바꾸어 적용해야 합니다.
-  const userData: FriendType = {
-    id: 0,
-    user: {
-      id: 0,
-      nickname: 'noname',
-      image: 'noimage',
-    },
-    isBlocked: false,
+  //isblock은 공통사항이긴하지만 컴포넌트의 상태를 나타내는 것들은 한번 컴포넌트를 감싸서 표시해주기로 하였으므로, 기본 값에서 제외시켰습니다.
+  const userData: UserProfileBoxDataType = {
+    nickname: 'noname',
+    image: 'noimage',
   };
 
   const userProfileBoxProps = {

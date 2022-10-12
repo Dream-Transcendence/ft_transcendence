@@ -70,10 +70,14 @@ function FreindListOrganisms() {
   }, [userId]);
 
   const listElement: JSX.Element[] = friendList.map((friendData) => {
+    const userData = {
+      nickname: friendData.user.nickname,
+      image: friendData.user.image,
+    };
     const otherProfileBoxProp: UserProfileBoxType = {
       isButton: true,
       avatarType: 'circle',
-      userData: friendData,
+      userData: userData,
       action: () => {
         window.location.href = `http://localhost:3005/pingpong/profile/${friendData.user.id}`;
       },

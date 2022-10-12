@@ -17,33 +17,53 @@ import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 function OtherInfo() {
-  const { userId } = useParams();
+  const { id } = useRecoilValue(userDataAtom);
+  const { userId: otherId } = useParams();
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
     nickname: 'noname',
     image: 'noimage',
   });
+  async function addFriend() {
+    try {
+      /**
+       * 1. 소켓으로 친구 요청 메시지를 보내기
+       * 2. 요청 전송완료 alert 띄워 주어야 함
+       * 3. 수락시 post 보내기
+       */
+      const responseReq = await axios.post(
+        `${SERVERURL}/users/${id}/requests`,
+        {
+          id: otherId,
+        },
+      );
+      if (responseReq.status === 409) {
+        console.log('already friend');
+      }
+      const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
+        id: otherId,
+      });
+      if (responseAdd.status === 201) {
+        console.log('친구추가 완료');
+      }
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
+  }
   const customProps: CustomIconProps = {
     icon: <PersonAddIcon />,
-    action: () => {
-      async function addFriend() {
-        try {//[doyun]api주소 수정 필요함
-          const response = await axios.post(`${SERVERURL}/users/${userId}friends`);
-        } catch (error) {
-          alert(error);
-
-          console.log(error);
-        }
-      }
-    }
+    action: addFriend,
   };
   useEffect(() => {
     async function getUserData() {
       try {
         const response = await axios.get(
-          `${SERVERURL}/users/${userId}/profile`,
+          `${SERVERURL}/users/${otherId}/profile`,
         );
         setUserData(response.data);
       } catch (error) {
@@ -52,7 +72,7 @@ function OtherInfo() {
       }
     }
     getUserData();
-  }, [userId]);
+  }, [otherId]);
   return (
     <UserInfoLayout>
       <UserPictureLayout>

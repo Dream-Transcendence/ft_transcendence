@@ -15,6 +15,7 @@ import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import {
   BaseUserProfileData,
   FriendType,
+  UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -58,25 +59,17 @@ const customProps: CustomIconProps = {
 function UserChatParticipantsBox(props: { participantInfo: any }) {
   //props: { userData: BaseUserProfileData }) {
   // const { userData } = props;
-  const mock: FriendType = {
-    id: 0,
-    user: {
-      id: 0,
-      nickname: 'noname',
-      image: 'noimage',
-    },
-    isBlocked: false,
-  };
-  const userProfileBoxProps: UserProfileBoxType = {
-    isButton: true,
-    avatarType: 'circle',
-    //참가자의 정보를 담고있는 객체 넣어주면 됩니다.
-    userData: mock,
-    // action: () => {
-    //   setIsUser(!isUser);
-    // }
+  const userData: UserProfileBoxDataType = {
+    nickname: 'noname',
+    image: 'noimage',
   };
 
+  const userProfileBoxProps = {
+    isButton: true,
+    avatarType: 'circle',
+    userData: userData,
+    // action?: () => void;
+  };
   return (
     <UserProfileLayout>
       <UserProfileBox userProfileBoxProps={userProfileBoxProps} />

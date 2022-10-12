@@ -4,10 +4,15 @@ export interface UserLadderType {
   loseCount: number;
 }
 
+export interface UserProfileBoxDataType {
+  nickname: string;
+  image: string;
+}
+
 export interface UserProfileBoxType {
   isButton: boolean;
   avatarType: string;
-  userData: any;
+  userData: UserProfileBoxDataType;
   action?: () => void;
 }
 

@@ -17,7 +17,7 @@ function SecondAuthSwitch() {
   const { userId } = useParams();
   const [isAuth, setIsAuth] = useState<UserSecondAuth>({
     authenticated: false,
-  })
+  });
 
   useEffect(() => {
     async function getSecondAuth() {
@@ -34,23 +34,23 @@ function SecondAuthSwitch() {
     getSecondAuth();
   }, [userId]);
 
-  const togleAuth = () => {
-    async function changeAuth() {
-      try {
-        const response = await axios.post(`${SERVERURL}/users/${userId}/2nd-auth`);
-        if (response.status === 200) {
-          setIsAuth((preAuth) => {
-            let newAuth = {...preAuth};
-            newAuth.authenticated = !preAuth.authenticated;
-            return newAuth;
-          });
-        }
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
+  async function changeAuth() {
+    try {
+      //[doyun]api구현되면 db 업데이트 해줄 예정
+      // const response = await axios.post(
+      //   `${SERVERURL}/users/${userId}/2nd-auth`,
+      // );
+      // if (response.status === 200) {
+      setIsAuth((preAuth) => {
+        let newAuth = { ...preAuth };
+        newAuth.authenticated = !preAuth.authenticated;
+        return newAuth;
+      });
+      // }
+    } catch (error) {
+      alert(error);
+      console.log(error);
     }
-    changeAuth();
   }
 
   return (
@@ -63,11 +63,11 @@ function SecondAuthSwitch() {
             inputProps={{ 'aria-label': 'controlled' }}
             color="default"
             checked={isAuth.authenticated}
-            onClick={togleAuth}
+            onClick={changeAuth}
           />
         }
         label="2차 인증"
-      // [axios PATCH 요청] 2차 인증 상태 변경
+        // [axios PATCH 요청] 2차 인증 상태 변경
       />
     </SecondAuthSwitchLayout>
   );
