@@ -11,11 +11,7 @@ import {
   LinkIconResource,
 } from 'client/src/types/Link.type';
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
-import {
-  CHANNELURL,
-  OTHERPROFILEURL,
-  SERVERURL,
-} from 'client/src/configs/Link.url';
+import { CHANNELURL, SERVERURL } from 'client/src/configs/Link.url';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 

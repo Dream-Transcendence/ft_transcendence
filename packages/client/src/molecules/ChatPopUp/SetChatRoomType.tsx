@@ -1,6 +1,7 @@
 import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
+import { PUBLIC } from '../../configs/RoomType';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -16,17 +17,20 @@ const SetTypeLayout = styled('div')(({ theme }) => ({
 }));
 
 const RadilButtonLayout = styled('div')(({ theme }) => ({
-  marginLeft: '30%',
+  paddingRight: '5%',
+  paddingLeft: '25%',
 }));
 
-function SetChatRoomTypeModule() {
+function SetChatRoomTypeModule(handler: { handler: (value: number) => void }) {
+  const handleType = handler.handler;
+
   return (
     <SetTypeLayout>
       <Typography marginLeft="3%" variant="h5">
         채팅방 설정
       </Typography>
       <RadilButtonLayout>
-        <RadioGroupButton first="공개" second="보호" third="비공개" />
+        <RadioGroupButton first="1" second="2" third="3" handler={handleType} />
       </RadilButtonLayout>
     </SetTypeLayout>
   );

@@ -12,7 +12,8 @@ export const databaseProviders = [
         password: 'postgres',
         database: 'postgres',
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-        synchronize: true,
+        // NOTE: synchronize는 개발용으로만 사용하고, 배포시에는 false 로 설정해야 함
+        synchronize: false,
         logging: true,
         // NOTE console창에 query log를 볼 수 있는 option
       });

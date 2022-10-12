@@ -4,17 +4,9 @@ FROM node:18
 
 WORKDIR /app/packages/server
 
-CMD [ "npm", "run", "start:dev" ]
-
-
-# NOTE: For eval
-# FROM node:18
-
-# WORKDIR /packages/server
 # COPY package*.json ./
-
 # RUN npm install -g @nestjs/cli
-# COPY . /
+# COPY . /app
 # RUN npm install
 
-# CMD [ "npm", "run", "start:dev" ]
+CMD [ "npm", "run", "start:dev" ]

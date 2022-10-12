@@ -16,6 +16,9 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import styled from '@emotion/styled';
 import { Edit } from '@mui/icons-material';
 import { TextField } from '@mui/material';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { BaseUserProfileData } from '../../types/Profile.type';
 
 function EditableControls() {
   const {
@@ -30,12 +33,12 @@ function EditableControls() {
       <IconButton
         aria-label="ProfileNicname"
         icon={<DoneIcon />}
-        {...getSubmitButtonProps()}
+        {...getSubmitButtonProps}
       />
       <IconButton
         aria-label="ProfileNicname"
         icon={<ClearIcon />}
-        {...getCancelButtonProps()}
+        {...getCancelButtonProps}
       />
     </ButtonGroup>
   ) : (
@@ -44,28 +47,29 @@ function EditableControls() {
         aria-label="ProfileNicname"
         size="sm"
         icon={<SaveAltIcon />}
-        {...getEditButtonProps()}
+        {...getEditButtonProps}
       />
     </Flex>
   );
 }
 
+const ProfileNicnameLayout = styled('span')(({ theme }) => ({
+  display: 'flex',
+  width: '100%',
+  height: '100%',
+  paddingLeft: '0.5rem',
+}));
+
 function ProfileNicname() {
   /* Here's a custom control */
-
-  const ProfileNicnameLayout = styled('text')(({ theme }) => ({
-    display: 'flex',
-    width: '100%',
-    height: '100%',
-    paddingLeft: '0.5rem',
-  }));
+  const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
 
   return (
     //[axios GET 요청] 프로필 이름
     <Editable
       textAlign="center"
-      defaultValue="sonkang ⚡️"
-      fontSize="2xl"
+      defaultValue={`${user.nickname}`}
+      fontSize="1.5rem"
       isPreviewFocusable={false}
       padding="1rea"
     >

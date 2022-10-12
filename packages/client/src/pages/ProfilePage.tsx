@@ -1,8 +1,7 @@
-import styled from '@emotion/styled';
-import NavigationBar from '../atoms/bar/NavigationBar';
+import { atom } from 'recoil';
 import ProfileTemplate from '../template/ProfileSection/ProfileTemplate';
+import { BaseUserProfileData } from '../types/Profile.type';
 import { ProfilePageLayout } from './PageStyles/ProfilePageCss';
-
 
 function ProfilePage() {
   return (

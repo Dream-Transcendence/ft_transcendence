@@ -1,5 +1,9 @@
 import styled from '@emotion/styled';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
+import { SERVERURL } from '../../configs/Link.url';
 import UserStatResult from '../../molecules/ProfileSection/StatResult';
 
 const UserStatLayout = styled('div')(({ theme }) => ({
@@ -24,10 +28,32 @@ const StatLadder = styled('div')(({ theme }) => ({
 }));
 
 function UserStat() {
+  const [userLadder, setUserLadder] = useState({
+    rank: '',
+    winCount: 0,
+    loseCount: 0,
+  });
+  useEffect(() => {
+    // async function getUserLadder() {
+    //   const response = await axios.get(`${SERVERURL}/user/${reqUser.id}/game/ladder`);
+    //   console.log('user ladder : ', response.data);
+    //   return response.data;
+    // }
+    const response = {
+      rank: '🦁',
+      winCount: 100,
+      loseCount: 3,
+    };
+    try {
+      setUserLadder(response);
+    } catch {
+      console.log('error : userStat');
+    }
+  }, []);
   return (
     <UserStatLayout>
-      <UserStatLadder />
-      <UserStatResult />
+      <UserStatLadder value={userLadder.rank} />
+      <UserStatResult userLadder={userLadder} />
     </UserStatLayout>
   );
 }

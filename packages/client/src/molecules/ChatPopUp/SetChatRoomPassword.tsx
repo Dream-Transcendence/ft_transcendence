@@ -2,6 +2,7 @@ import { Input, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchBox from '../../atoms/input/SearchBox';
 import PasswordInput from '../../atoms/input/passwordBox';
+import { useState } from 'react';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -10,30 +11,31 @@ import PasswordInput from '../../atoms/input/passwordBox';
  */
 const SetPasswordLayout = styled('div')(({ theme }) => ({
   width: '90%',
-  height: '15%',
+  height: '10%',
+  display: 'flex',
   backgroundColor: '#7B61FF66',
   borderRadius: '10px',
   marginBottom: '1%',
 }));
 
-const NameInputStyle = {
-  marginLeft: '3%',
-};
-
 const PasswordInputLayout = styled('div')(({ theme }) => ({
-  width: '90%',
-  height: '40%',
-  marginLeft: '2%',
+  width: '50%',
+  height: '10%',
+  paddingBottom: '100%',
 }));
 
-function SetChatRoomPasswordModule() {
+function SetChatRoomPasswordModule(handler: {
+  handler: (props: string) => void;
+}) {
+  const handlePassword = handler.handler;
+
   return (
     <SetPasswordLayout>
-      <Typography margin="3%" variant="h5">
+      <Typography margin="3%" variant="h6">
         비밀번호 입력
       </Typography>
       <PasswordInputLayout>
-        {/* <PasswordInput handler={handler} /> */}
+        <PasswordInput handler={handlePassword} />
       </PasswordInputLayout>
     </SetPasswordLayout>
   );

@@ -2,11 +2,8 @@ import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
-
-const ProfileAvatarLayout = styled(Badge)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-}));
+import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
+import { FriendType, UserProfileBoxDataType } from '../../types/Profile.type';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -38,9 +35,12 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function ProfileAvatar(props: { avatarType: String | undefined }) {
-  const { avatarType } = props;
-
+function ProfileAvatar(props: {
+  avatarType: String | undefined;
+  avartarProps: UserProfileBoxDataType;
+}) {
+  const { avatarType, avartarProps } = props;
+  const { nickname, image } = avartarProps;
   if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
@@ -49,14 +49,14 @@ function ProfileAvatar(props: { avatarType: String | undefined }) {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
         >
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+          <Avatar alt={nickname} src={image} />
         </StyledBadge>
       </ProfileAvatarLayout>
     );
   } else {
     return (
       <ProfileAvatarLayout>
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+        <Avatar alt={nickname} src={image} />
       </ProfileAvatarLayout>
     );
   }

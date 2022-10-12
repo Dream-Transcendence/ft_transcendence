@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 
 const MatchTypeLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -6,17 +7,20 @@ const MatchTypeLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   alignSelf: 'center',
   backgroundColor: '#00000000',
-  flexShrink: 0,
-  flexBasis: '20%',
+  flexBasis: '20%', //matchtype width %
   height: '100%',
-  padding: '0.5rem',
-  borderRight: 'solid 1px'
+  margin: '0.5rem',
+  borderRight: 'solid 1px',
 }));
 
-function MatchType(matchType: String) {
+function MatchType(matchType: boolean) {
   return (
     <MatchTypeLayout>
-      <text>{matchType}</text>
+      {matchType ? (
+        <Typography>ladder</Typography>
+      ) : (
+        <Typography>1 vs 1</Typography>
+      )}
     </MatchTypeLayout>
   );
 }

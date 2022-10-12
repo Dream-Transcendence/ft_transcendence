@@ -6,3 +6,16 @@ export interface RoomInfoSet {
   roomId?: string;
   handler?: (roomInfo: any) => void;
 }
+
+export interface CreateRoomHandlerSet {
+  savehandler: () => void;
+  closehandler: () => void;
+}
+
+export interface CreateRoomSet {
+  userId: number;
+  name: string;
+  type: number;
+  salt: string;
+  participantIds: number[];
+}
