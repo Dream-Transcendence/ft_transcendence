@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 
 const StatWinLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -8,8 +9,13 @@ const StatWinLayout = styled('div')(({ theme }) => ({
   border: 'solid 1px',
 }));
 
-function UserStatWin() {
-  return <StatWinLayout>StatWin</StatWinLayout>;
+function UserStatWin(props: { value: number }) {
+  const { value } = props;
+  return <StatWinLayout>
+    <Typography alignItems={'center'} justifyContent={'center'} variant='h6'>
+      StatWin : {value}
+    </Typography>
+  </StatWinLayout >;
 }
 
 export default UserStatWin;

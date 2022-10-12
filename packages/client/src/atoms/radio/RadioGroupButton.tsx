@@ -12,9 +12,15 @@ interface RadioProps {
   first: string;
   second: string;
   third: string;
+  handler: (value: number) => void;
 }
 
-function RadioGroupButton({ first, second, third }: RadioProps) {
+function RadioGroupButton({ first, second, third, handler }: RadioProps) {
+  const handleType = handler;
+  const handleChange = (event: React.SyntheticEvent<Element, Event>) => {
+    const data = event.target as HTMLInputElement;
+    handleType(+data.value);
+  };
   return (
     <FormControl>
       <RadioGroup
@@ -25,18 +31,21 @@ function RadioGroupButton({ first, second, third }: RadioProps) {
       >
         <FormControlLabel
           value={first}
+          onChange={handleChange}
           control={<Radio size="medium" />}
-          label={first}
+          label="공개"
         />
         <FormControlLabel
           value={second}
+          onChange={handleChange}
           control={<Radio size="medium" />}
-          label={second}
+          label="보호"
         />
         <FormControlLabel
           value={third}
+          onChange={handleChange}
           control={<Radio size="medium" />}
-          label={third}
+          label="비공개"
         />
       </RadioGroup>
     </FormControl>

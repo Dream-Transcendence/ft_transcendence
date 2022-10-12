@@ -5,36 +5,31 @@ import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
 import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 import ReceiveMessageAlert from '../../molecules/CommonSection/ReceiveMessageAlert';
 import SendMessageAlert from '../../molecules/CommonSection/SendMessageAlert';
-import { Footer as Popup, ProfileLayout } from '../../pages/PageStyles/ProfilePageCss';
+import {
+  Footer as Popup,
+  ProfileLayout,
+} from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
-import { atom, RecoilState, useRecoilState, useRecoilValue } from 'recoil';
-import { baseUserProfileData, isUserProfilePage } from '../../pages/PingpongRoutePage';
-import { BaseUserProfileData, IsUserProfilePage } from '../../types/Profile.type';
-
-// interface userState {
-//   isLogin: boolean,
-//   image: string,
-//   secondAuth: boolean,
-//   freineds
-//   stat
-//   history
-// }
-
-//하위 컴포넌트에서
-
+import { BaseUserProfileData } from '../../types/Profile.type';
+import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { Navigate, Routes, useParams } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { SERVERURL } from '../../configs/Link.url';
+import LandingPage from '../../pages/LandingPage';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileTemplate() {
-  const [userData, setUserState] = useRecoilState<BaseUserProfileData>(baseUserProfileData);
-  const isUser = useRecoilValue<IsUserProfilePage>(isUserProfilePage);
-
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const { userId } = useParams();
   return (
     <ProfileLayout>
-      {isUser && <UserInfo />}
-      {!isUser && <OtherInfo />}
+      {`${user.id}` === userId ? <UserInfo /> : <OtherInfo />}
       <FreindList />
       <UserStat />
       <MatchHistory />
-      <Popup>{SendMessageAlert('친구')}</Popup>
+      <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
     </ProfileLayout>
   );
 }

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Logger,
   Param,
@@ -65,7 +66,7 @@ export class UsersController {
     summary: '유저 정보 수정  / BodyType: PatchUserDto',
     description: '닉네임 또는 이미지 업데이트(수정할 객체만 담아서 요청)',
   })
-  @ApiOkResponse({ description: '유저 정보 수정 성공' })
+  @ApiOkResponse({ description: '유저 정보 수정 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiConflictResponse({ description: '이미 있는 닉네임으로 변경 시도' })
   patchUser(
@@ -115,20 +116,20 @@ export class UsersController {
     return this.userService.blockUser(id, userIdDto.id);
   }
 
-  // @Get('/:id/blocks')
-  // @ApiTags('유저/차단')
-  // @ApiOperation({
-  //   summary: '유저 차단 목록 가져오기',
-  //   description: '유저 차단 목록을 가져올 이유가 없음, 삭제 예정',
-  // })
-  // @ApiOkResponse({
-  //   description: '유저 차단 목록 가져오기 성공',
-  //   type: [UserDto],
-  // })
-  // @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  // getBlocks(@Param('id') id: number): Promise<UserDto[]> {
-  //   return this.userService.getBlocks(id);
-  // }
+  @Delete('/:id/blocks/:blockedUserId')
+  @ApiTags('유저/차단')
+  @ApiOperation({
+    summary: '유저 차단 해제 / BodyType: UserIdDto',
+    description: 'URL이 가르키는 유저 차단 해제',
+  })
+  @ApiOkResponse({ description: '유저 차단 해제 성공', type: UserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  unblockUser(
+    @Param('id') id: number,
+    @Param('blockedUserId') blockedUserId: number,
+  ): Promise<UserDto> {
+    return this.userService.unblockUser(id, blockedUserId);
+  }
 
   @Get('/:id/rooms')
   @ApiTags('유저/채팅')
@@ -138,36 +139,7 @@ export class UsersController {
   })
   @ApiOkResponse({
     description: '유저의 대화방 목록 가져오기 성공',
-    // NOTE: 스키마가 너무 길어서 따로 뺄 수 있는 방법 확인 필요!
-    schema: {
-      type: 'object',
-      properties: {
-        dmList: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              name: { type: 'string' },
-              image: { type: 'string' },
-              RecvMessageCount: { type: 'number' },
-            },
-          },
-        },
-        chatList: {
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              name: { type: 'string' },
-              image: { type: 'string' },
-              RecvMessageCount: { type: 'number' },
-            },
-          },
-        },
-      },
-    },
+    type: GetUserRoomsDto,
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getRooms(@Param('id') id: number): Promise<GetUserRoomsDto> {
@@ -280,7 +252,7 @@ export class UsersController {
   @ApiTags('유저/검색')
   @ApiQuery({ name: 'nickname', required: true })
   @ApiOperation({ summary: '친구 검색' })
-  @ApiOkResponse({ description: '친구 검색 성공' })
+  @ApiOkResponse({ description: '친구 검색 성공', type: [UserDto] })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   searchFriend(
     @Param('id') id: number,

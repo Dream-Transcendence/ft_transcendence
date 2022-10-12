@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { TextField } from '@mui/material';
 
-const NickNameTextFieldLayout = styled('text')(({ theme }) => ({
+const NickNameTextFieldLayout = styled('span')(({ theme }) => ({
   alignSelf: 'center',
   backgroundColor: '#00ff0000',
   width: '100%',

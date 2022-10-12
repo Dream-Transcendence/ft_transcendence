@@ -1,13 +1,15 @@
-import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
-import EnteredDMTemplate from '../template/ChatMainSection/EnteredDMTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import { Route, Routes } from 'react-router-dom';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
+import { LineAxisOutlined } from '@mui/icons-material';
+import axios from 'axios';
+import styled from '@emotion/styled';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -24,6 +26,7 @@ const MainSection = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
+  backgroundColor: '#6BADE2',
   flex: 1,
 }));
 
@@ -39,20 +42,28 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
-export const isopenRoom = atom<string | null>({
-  key: 'checkOpenRoom',
-  default: null,
-});
-
+//채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
-  //나중에 room의 배열로 바꿀 것 비동기 요청
-  let existenceRoom: boolean = true;
-  //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
-  // const [openRoom, setOpenRoom] = useState<string | null>(null);
-  const openRoom = useRecoilValue(isopenRoom);
-  //채팅방 유무 검사하는 비동기요청
+  const [roomList, setRoomList] = useState([]);
+  const userId = 1;
 
-  //existenceRoom =
+  useEffect(() => {
+    async function getRoomList() {
+      try {
+        //api 수정됨 rooms/channles -> rooms/userid/channels
+        const response = await axios.get(
+          `${SERVERURL}/rooms/${userId}/channels`,
+        );
+        setRoomList(response.data);
+      } catch (error) {
+        alert(error);
+        throw console.dir(error);
+      }
+    }
+    getRoomList();
+  }, []);
+
+  //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (
     <ChatChannel>
       <MainSection>
@@ -62,16 +73,23 @@ function ChatroomPage() {
         <Section>
           {/* 채팅방의 유무에 따라 보여줄 것 */}
           {/* 향후 api에 따라 조정될 조건입니다. */}
-          {openRoom ? (
-            <Routes>
-              <Route path="room/*" element={<EnteredChatRoomTemplate />} />
-              <Route path="DM/*" element={<EnteredDMTemplate />} />
-            </Routes>
-          ) : existenceRoom ? (
-            <ChatRoomListTemplate />
-          ) : (
-            <ChatRoomDefaultTemplate />
-          )}
+          <Routes>
+            <Route
+              path="room/"
+              element={<Navigate replace to={CHANNELURL} />}
+            />
+            {/* <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} /> */}
+            <Route path="room/:roomId" element={<EnteredChatRoomTemplate />} />
+            {/* <Route path="dm/:dmId" element={<EnteredDMTemplate />} /> */}
+            {roomList.length ? (
+              <Route
+                path="/"
+                element={<ChatRoomListTemplate roomList={roomList} />}
+              />
+            ) : (
+              <Route path="/" element={<ChatRoomDefaultTemplate />} />
+            )}
+          </Routes>
         </Section>
       </MainSection>
       <footer></footer>

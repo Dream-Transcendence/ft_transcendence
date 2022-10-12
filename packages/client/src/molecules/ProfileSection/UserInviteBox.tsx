@@ -5,11 +5,15 @@ import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserProfileBox from './UserProfileBox';
 import { CustomIconProps } from '../../types/Link.type';
-import { useRecoilState } from 'recoil';
-import { UserProfileBoxTypes } from '../../types/Profile.type';
-import { baseUserProfileData } from '../../pages/PingpongRoutePage';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
 
-const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
+const UserInviteProfileLayout = styled('div')(({ theme }) => ({
   margin: '1px',
   display: 'flex',
   alignItems: 'center',
@@ -17,20 +21,23 @@ const UserInviteProfileLayout = styled(Badge)(({ theme }) => ({
 }));
 
 function UserInviteProfileBox() {
+  //props: { userData: BaseUserProfileData }) {
+  //const { userData } = props;
+  const userData: UserProfileBoxDataType = {
+    nickname: 'noname',
+    image: 'noimage',
+  };
+
+  const userProfileBoxProps = {
+    isButton: true,
+    avatarType: 'circle',
+    userData: userData,
+    // action?: () => void;
+  };
+
   const customProps: CustomIconProps = {
     icon: <CancelIcon />,
   };
-
-  const [isUser, setIsUser] = useRecoilState(baseUserProfileData);
-
-  const userProfileBoxProps: UserProfileBoxTypes = {
-    isButton: true,
-    avatarType: "circle",
-    // action: () => {
-    //   setIsUser(!isUser);
-    // }
-  }
-
 
   return (
     <UserInviteProfileLayout>

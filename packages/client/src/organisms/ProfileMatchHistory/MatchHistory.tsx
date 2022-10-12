@@ -1,9 +1,19 @@
 import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import * as React from 'react';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import OneMatchHistory from '../../molecules/ProfileSection/OneMatchHistory';
 import { Typography } from '@mui/material';
+import { useRecoilValue } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { SERVERURL } from 'client/src/configs/Link.url';
+import axios from 'axios';
+import { UserMatchHistoryType } from '../../types/Profile.type';
+import {
+  ListGenerateLayout,
+  ListLayout,
+  ListUlLayout,
+} from '../../atoms/list/styles/ListStylesCSS';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -21,25 +31,29 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
 const TextLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '8%',
-  borderBottom: 'solid 1px',
-}));
-
-const ListLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '92%',
-}));
-
-const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
-  width: '100%',
-  height: '100%',
-  display: 'flex',
-  alignSelf: 'start',
-  justifySelf: 'start',
+  //borderBottom: 'solid 1px',
 }));
 
 function MatchHistory() {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
+  const { userId } = useParams();
+  const [matchHistoryList, setMatchHistoryList] = useState<
+    UserMatchHistoryType[]
+  >([
+    {
+      id: 0,
+      opponent: 'UnKnown',
+      isWin: false,
+      isLadder: false,
+    },
+  ]);
+
+  const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
+    return (
+      <ListLayout key={matchHistory.id}>
+        <OneMatchHistory matchHistory={matchHistory} />
+      </ListLayout>
+    );
+  });
 
   return (
     <MatchHistoryLayout>
@@ -48,12 +62,9 @@ function MatchHistory() {
           MatchHistory
         </Typography>
       </TextLayout>
-      <ListLayout>
-        {/* [axios GET 요청] 레더 정보 리스트 불러오기 */}
-        <OneMatchHistoryLayout>
-          <ListGenerate element={<OneMatchHistory />} />
-        </OneMatchHistoryLayout>
-      </ListLayout>
+      <ListGenerateLayout>
+        <ListUlLayout>{listElement}</ListUlLayout>
+      </ListGenerateLayout>
     </MatchHistoryLayout>
   );
 }

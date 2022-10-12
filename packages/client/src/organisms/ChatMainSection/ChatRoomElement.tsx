@@ -1,18 +1,19 @@
 import { styled } from '@mui/material/styles';
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
 import PasswordInput from '../../atoms/input/passwordBox';
 import RoomNumberOfPeopleModule from '../../molecules/ChatSection/RoomElementNumOfPeople';
 import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { CHATROOMURL } from '../../configs/Link.url';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { isopenRoom } from '../../pages/ChatChannelPage';
+import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { PROTECTED } from '../../configs/RoomType';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
-  height: '20%',
+  height: '100%',
   marginBottom: '1%',
   borderRadius: '3px',
   backgroundColor: '#1976D2',
@@ -35,38 +36,59 @@ const PasswordInputLayout = styled('div')(({ theme }) => ({
 
 const EnterButtonLayout = styled('div')(({ theme }) => ({
   width: '15%',
-  height: '40%',
+  height: '100%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
 }));
 
-function ChatRoomElementOrganisms() {
-  const setOpenRoom = useSetRecoilState(isopenRoom);
-  const OpenNCloseRoom = (id: string | null) => setOpenRoom(id);
+//[수정사항] DTO 확정되면 수정할 것 any => ChannelDto
+function ChatRoomElementOrganisms(props: { roomInfo: any }) {
+  //chatpage에 있있던  비번 옮겨옴
+  const [password, setPassword] = useState('');
+  const roomInfo = props.roomInfo;
+  const navigate = useNavigate();
+  const { id: roomId, name, type, image } = roomInfo;
 
-  //항후, 방 넘버를 토대로 정보를 구성할 것임.
-  const openRoomHandler = (): void => {
-    OpenNCloseRoom('open');
+  const handlePassword = (childData: string) => {
+    setPassword(childData);
   };
+
+  async function enterRoom() {
+    try {
+      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+      const response = await axios.post(
+        `${SERVERURL}/rooms/${roomId}/users/1`,
+        {
+          salt: password,
+        },
+      );
+      navigate(`${CHATROOMURL}${roomId}`);
+    } catch (error) {
+      alert(error);
+      throw console.dir(error);
+    }
+  }
+  //항후, 방 넘버를 토대로 정보를 구성할 것임.
+  //api 호출해서 룸 번호 알아냄
 
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
-    url: CHATROOMURL,
     content: '입장',
-    handler: openRoomHandler,
+    handler: enterRoom,
   };
 
   return (
     <ChatRoomElementLayout>
-      <RoomElementImageModule image="/static/images/avatar/1.jpg" />
+      <RoomElementImageModule image={image} />
       <RoomInfoLayout>
-        <RoomTitleModule title="방 이름"></RoomTitleModule>
-        <RoomNumberOfPeopleModule num="6"></RoomNumberOfPeopleModule>
+        <RoomTitleModule title={name} type={type}></RoomTitleModule>
+        {/*[수정사항] id대신 인원수가 들어갈 예정 */}
+        <RoomNumberOfPeopleModule num={roomId}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
-        <PasswordInput />
+        {type === PROTECTED && <PasswordInput handler={handlePassword} />}
       </PasswordInputLayout>
       {/* [axios POST 요청] 타입에 따라 입장 여부확인(어떤 성격의 채팅방인지 전달) 후, 입장 요청 */}
       <EnterButtonLayout>

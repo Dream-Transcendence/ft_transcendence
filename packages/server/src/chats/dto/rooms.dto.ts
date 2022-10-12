@@ -1,6 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString, IsUrl, Max, Min } from 'class-validator';
-import { RoomDto } from './room.dto';
+import {
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  isObject,
+  IsObject,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Max,
+  Min,
+} from 'class-validator';
+import { UserDto } from '../../users/dto/user.dto';
 
 // FIXME[epic=sonkang] union type들 모아두는 파일들 따로 만들기
 const CHAT_TYPE = {
@@ -24,6 +35,108 @@ const STATUS_TYPE = {
 export type STATUS_TYPE = typeof STATUS_TYPE[keyof typeof STATUS_TYPE];
 
 // ANCHOR Channel DTO
+export class ChannelDto {
+  constructor(
+    id: number,
+    name: string,
+    type: CHAT_TYPE,
+    image: string,
+    title: string,
+  ) {
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.image = image;
+    this.title = title;
+  }
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+}
+export class ChannelInfoDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type?: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiProperty()
+  @IsInt()
+  personnel: number;
+}
+
+export class ChannelParticipantDto {
+  constructor(
+    user: UserDto,
+    auth: AUTH_TYPE,
+    status: STATUS_TYPE,
+    // statusStartDate: Date,
+    blocked: boolean,
+  ) {
+    this.user = user;
+    this.auth = auth;
+    this.status = status;
+    // this.statusStartDate = statusStartDate;
+    this.blocked = blocked;
+  }
+
+  @ApiProperty()
+  @IsObject()
+  user: UserDto;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  auth: AUTH_TYPE;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  status: STATUS_TYPE;
+
+  // @ApiProperty()
+  // statusStartDate: Date;
+
+  @ApiProperty()
+  @IsBoolean()
+  blocked: boolean;
+}
 export class CreateChannelDto {
   @ApiProperty()
   @IsInt()
@@ -40,38 +153,59 @@ export class CreateChannelDto {
   type: CHAT_TYPE;
 
   @ApiProperty()
+  @IsOptional()
   @IsString()
   salt: string;
 
   @ApiProperty()
-  @IsNotEmpty()
-  title: string;
-
-  @ApiProperty()
-  @IsInt()
+  @IsInt({ each: true })
   participantIds: number[];
 }
 
 export class GetUserRoomsDto {
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        name: 'dha',
+        image: 'https://cdn.intra.42.fr/users/dha.jpg',
+        recvMessageCount: 5,
+      },
+    ],
+  })
+  @IsObject({ each: true })
   dmList: GetUserRoomDto[];
 
-  @ApiProperty()
+  @ApiProperty({
+    example: [
+      {
+        id: 2,
+        name: '채팅방',
+        image: 'https://m.media-amazon.com/images/I/31VjU29FP+L.png',
+        recvMessageCount: 5,
+      },
+    ],
+  })
+  @IsObject({ each: true })
   channelList: GetUserRoomDto[];
 }
 
 export class GetUserRoomDto {
   @ApiProperty()
+  @IsInt()
   id: number;
 
   @ApiProperty()
+  @IsString()
   name: string;
 
   @ApiProperty()
+  @IsUrl()
   image: string;
 
   @ApiProperty()
-  RecvMessageCount: number;
+  @IsInt()
+  recvMessageCount: number;
 }
 
 export class createDmDto {
@@ -82,30 +216,29 @@ export class createDmDto {
   @ApiProperty()
   @IsInt()
   participantId: number;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  title: string;
 }
 
 export class RoomPasswordDto {
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 
-export class PatchRoomInfoDto {
+export class PatchChannelInfoDto {
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   name: string;
 
   @ApiProperty()
   @IsUrl()
+  @IsOptional()
   image: string;
 
   @ApiProperty()
   @IsString()
+  @IsOptional()
   salt: string;
 }
 
@@ -114,11 +247,13 @@ export class PatchUserInfoDto {
   @IsInt()
   @Min(0)
   @Max(1)
+  @IsOptional()
   auth?: AUTH_TYPE;
 
   @ApiProperty()
   @IsInt()
   @Min(0)
   @Max(1)
+  @IsOptional()
   status?: STATUS_TYPE;
 }

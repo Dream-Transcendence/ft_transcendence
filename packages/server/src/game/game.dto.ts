@@ -1,26 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserDto } from 'src/users/dto/user.dto';
 
 export class GameLadderDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   rank: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 3 })
   winCount: number;
 
-  @ApiProperty()
+  @ApiProperty({ example: 2 })
   loseCount: number;
 }
 
 export class GameRecordDto {
-  @ApiProperty()
+  @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty()
-  opponent: string;
+  @ApiProperty({
+    example: { id: 1, nickname: 'dha', image: 'https://cdn.42.fr/dha.jpg' },
+  })
+  opponent: UserDto;
 
-  @ApiProperty()
+  @ApiProperty({ example: true })
   isWin: boolean;
 
-  @ApiProperty()
+  @ApiProperty({ example: true })
   isLadder: boolean;
 }

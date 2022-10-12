@@ -1,13 +1,19 @@
-import { Avatar, IconButton } from "@mui/material";
-import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
+import { Avatar, IconButton } from '@mui/material';
+import { CustomUploadProps } from '../../../types/Link.type';
 
-function FileUploadButton() {
-    return (
-        <IconButton color="primary" aria-label="upload picture" component="label">
-            <input hidden accept="image/*" type="file" />
-            <AddPhotoAlternateTowToneIcon color="disabled" />
-        </IconButton>
-    )
+function FileUploadButton(props: { uploadProps: CustomUploadProps }) {
+  const { icon, ref, action } = props.uploadProps;
+  return (
+    <IconButton
+      color="primary"
+      aria-label="upload picture"
+      component="label"
+      onClick={action}
+    >
+      <input hidden accept="image/*" type="file" ref={ref} />
+      {icon}
+    </IconButton>
+  );
 }
 
 export default FileUploadButton;

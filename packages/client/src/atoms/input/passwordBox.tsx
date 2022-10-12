@@ -17,7 +17,8 @@ interface State {
   showPassword: boolean;
 }
 
-function PasswordInput() {
+function PasswordInput(handler: { handler: (props: string) => void }) {
+  const action = handler.handler;
   const [values, setValues] = React.useState<State>({
     amount: '',
     password: '',
@@ -28,7 +29,11 @@ function PasswordInput() {
 
   const handleChange =
     (prop: keyof State) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setValues({ ...values, [prop]: event.target.value });
+      //동기적으로 바꾸기 위해 event.value를 명시적으로 선언해줌
+      //[수정완료]한글자씩 밀리는 현상발생
+      const value = event.target.value;
+      setValues({ ...values, [prop]: value });
+      action(value);
     };
 
   const handleClickShowPassword = () => {
@@ -46,7 +51,10 @@ function PasswordInput() {
 
   return (
     //잠금설정에 따라 input을 보이게 또는 안보이게 설정할 것
-    <FormControl sx={{ m: 0, width: '100%' }} variant="standard">
+    <FormControl
+      sx={{ m: 0, width: '100%', marginTop: '4%' }}
+      variant="standard"
+    >
       <InputLabel
         htmlFor="standard-adornment-password"
         variant="filled"
@@ -58,9 +66,15 @@ function PasswordInput() {
       {/* [axios POST 요청]해당 채팅방 비밀번호 확인 및 등록 */}
       <Input
         id="standard-adornment-password"
-        type={values.showPassword ? 'text' : 'password'}
+        type={values.showPassword ? 'span' : 'password'}
         value={values.password}
         onChange={handleChange('password')}
+        //보류
+        // onKeyPress={(event) => {
+        //   if (event.key === 'Enter') {
+        //     action(values.password);
+        //   }
+        // }}
         endAdornment={
           <InputAdornment position="end">
             <IconButton

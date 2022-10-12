@@ -12,8 +12,13 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { UserProfileBoxTypes } from '../../types/Profile.type';
-import { useRecoilState } from 'recoil';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
@@ -50,16 +55,21 @@ const customProps: CustomIconProps = {
 
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
-const userProfileBoxProps: UserProfileBoxTypes = {
-  isButton: true,
-  avatarType: "circle",
-  // action: () => {
-  //   setIsUser(!isUser);
-  // }
-}
-
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function UserChatParticipantsBox() {
+function UserChatParticipantsBox(props: { participantInfo: any }) {
+  //props: { userData: BaseUserProfileData }) {
+  // const { userData } = props;
+  const userData: UserProfileBoxDataType = {
+    nickname: 'noname',
+    image: 'noimage',
+  };
+
+  const userProfileBoxProps = {
+    isButton: true,
+    avatarType: 'circle',
+    userData: userData,
+    // action?: () => void;
+  };
   return (
     <UserProfileLayout>
       <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
