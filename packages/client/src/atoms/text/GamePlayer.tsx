@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Typography } from '@mui/material';
 
 const GamePlayerLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -14,7 +15,7 @@ const GamePlayerLayout = styled('div')(({ theme }) => ({
 function GamePlayer(player: String) {
   return (
     <GamePlayerLayout>
-      <text>{player}</text>
+      <Typography>{player}</Typography>
     </GamePlayerLayout>
   );
 }

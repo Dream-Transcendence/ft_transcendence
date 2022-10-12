@@ -13,9 +13,9 @@ import {
 import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
 import {
   GAMECREATEURL,
-  OTHERPROFILEURL,
+  PROFILEURL,
   SERVERURL,
-} from 'client/src/configs/Link.url';
+} from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -53,7 +53,7 @@ function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
   }
 
   const personal: LinkIconResource = {
-    url: OTHERPROFILEURL,
+    url: PROFILEURL,
     icon: <PersonIcon />,
   };
 

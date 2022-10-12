@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
@@ -10,6 +9,7 @@ import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
 import { LineAxisOutlined } from '@mui/icons-material';
 import axios from 'axios';
+import styled from '@emotion/styled';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',

@@ -3,8 +3,8 @@ import { LinkComponentResource, LinkIconResource } from '../../../types/Link.typ
 import CustomIconButton from '../icon/CustomIconButtion';
 
 
-function LinkPageComponentButton(props: { LinkComponentResource: LinkComponentResource }) {
-    const { url, component } = props.LinkComponentResource;
+function LinkPageComponentButton(props: { LinkComponentprops: LinkComponentResource }) {
+    const { url, component } = props.LinkComponentprops;
 
     return (
         <Link style={{ textDecoration: 'none' }} to={url}>

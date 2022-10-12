@@ -5,18 +5,31 @@ import UserInfo from '../../organisms/ProfileUserInfo/UserInfo';
 import MatchHistory from '../../organisms/ProfileMatchHistory/MatchHistory';
 import ReceiveMessageAlert from '../../molecules/CommonSection/ReceiveMessageAlert';
 import SendMessageAlert from '../../molecules/CommonSection/SendMessageAlert';
-import { Footer, ProfileLayout } from '../../pages/PageStyles/ProfilePageCss';
+import {
+  Footer as Popup,
+  ProfileLayout,
+} from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
+import { BaseUserProfileData } from '../../types/Profile.type';
+import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { Navigate, Routes, useParams } from 'react-router-dom';
+import { Route } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect } from 'react';
+import { SERVERURL } from '../../configs/Link.url';
+import LandingPage from '../../pages/LandingPage';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileTemplate() {
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const { userId } = useParams();
   return (
     <ProfileLayout>
-      <UserInfo />
+      {`${user.id}` === userId ? <UserInfo /> : <OtherInfo />}
       <FreindList />
       <UserStat />
       <MatchHistory />
-      {/* Footer는 팝업의 성격에 맞지 않아 수정될 예정 by doyun */}
-      <Footer>{SendMessageAlert('친구')}</Footer>
+      <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
     </ProfileLayout>
   );
 }

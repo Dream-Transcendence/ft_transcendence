@@ -1,9 +1,11 @@
 import styled from '@emotion/styled';
 import { useState } from 'react';
+import { useRecoilState } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
 import { PROFILEURL } from '../configs/Link.url';
 import { LinkComponentResource } from '../types/Link.type';
+import { userDataAtom } from './PingpongRoutePage';
 
 const MainSection = styled.section`
   background: #6bade2;
@@ -32,6 +34,8 @@ const EnterButton = styled.button`
 `;
 
 function LandingPage() {
+  const [user, setUser] = useRecoilState(userDataAtom);
+
   const Enter: LinkComponentResource = {
     url: PROFILEURL,
     // [axios GET 요청] 서버 측으로 로그인시도 전달
@@ -39,7 +43,7 @@ function LandingPage() {
   };
   return (
     <MainSection>
-      <LinkPageComponentButton LinkComponentResource={Enter} />
+      <LinkPageComponentButton LinkComponentprops={Enter} />
     </MainSection>
   );
 }
