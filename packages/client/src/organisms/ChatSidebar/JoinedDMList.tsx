@@ -35,7 +35,7 @@ function JoinedDMListOrganisms() {
 
   const userProfileBoxProps = {
     isButton: true,
-    avatarType: 'circle',
+    avatarType: 'none',
     userData: userData,
     // action?: () => void;
   };

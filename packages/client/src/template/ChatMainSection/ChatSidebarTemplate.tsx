@@ -5,9 +5,10 @@ import CreateChatRoomModule from '../../molecules/ChatSidebar/CreateChatRoom';
 import JoinedDMListOrganisms from '../../organisms/ChatSidebar/JoinedDMList';
 import { Typography } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
-import { useRecoilValue } from 'recoil';
+import { atom, atomFamily, useRecoilValue } from 'recoil';
 import { getJoinedChatList } from '../../pages/ChatChannelPage';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { RoomList } from '../../types/Room.type';
 
 const ChatSidebarLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -18,11 +19,6 @@ const ChatSidebarLayout = styled('div')(({ theme }) => ({
 }));
 
 function ChatSidebarTemplate() {
-  const userData = useRecoilValue(userDataAtom);
-  const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
-
-  console.log('!!!!!!!!!!!!!!!!!!!!!!!!', joinedChatList);
-
   return (
     <ChatSidebarLayout>
       <SearchBoxModule />

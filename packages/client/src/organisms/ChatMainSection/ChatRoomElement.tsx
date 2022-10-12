@@ -10,6 +10,8 @@ import { PROTECTED } from '../../configs/RoomType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -48,6 +50,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;
   const navigate = useNavigate();
+  const userData = useRecoilValue(userDataAtom);
   const { id: roomId, name, type, image } = roomInfo;
 
   const handlePassword = (childData: string) => {
@@ -57,7 +60,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
   async function enterRoom() {
     try {
       const response = await axios.post(
-        `${SERVERURL}/rooms/${roomId}/users/1`,
+        `${SERVERURL}/rooms/${roomId}/users/${userData.id}`,
         {
           salt: password,
         },

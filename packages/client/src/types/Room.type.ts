@@ -19,3 +19,10 @@ export interface CreateRoomSet {
   salt: string;
   participantIds: number[];
 }
+
+export interface RoomList {
+  id: number;
+  name: string;
+  image: string;
+  recvMessageCount: number;
+}
