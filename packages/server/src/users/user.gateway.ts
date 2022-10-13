@@ -21,17 +21,34 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private connectionList = new Map<string, number>();
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     console.log('User Client connected', client.id);
   }
 
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     console.log('User Client disconnected', client.id);
 
     const userId = this.connectionList.get(client.id);
-    if (userId) this.connectionList.delete(client.id);
+    const onlineUserList = Array.from(this.connectionList.values());
 
-    client.broadcast.emit('detectLogOff', { userId: userId });
+    const onlineFriendList = await this.userService.handleLogOn(
+      userId,
+      onlineUserList,
+    );
+
+    let count = 0;
+    for (const value of onlineUserList) if (value === userId) count++;
+
+    // NOTE: 2개 이상일 땐, 다른 클라이언트에서 로그인 되어있는 상태
+    if (count === 1) {
+      for (const [key, value] of this.connectionList) {
+        if (onlineFriendList.connections.includes(value)) {
+          this.server.to(key).emit('detectLogOff', { userId: userId });
+        }
+      }
+    }
+
+    this.connectionList.delete(client.id);
   }
 
   @SubscribeMessage('logOn')
@@ -39,11 +56,18 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const onlineUserList = Array.from(this.connectionList.values());
 
     this.connectionList.set(client.id, connectionDto.userId);
-    client.broadcast.emit('detectLogOn', connectionDto);
 
-    return await this.userService.handleLogOn(
+    const onlineFriendList = await this.userService.handleLogOn(
       connectionDto.userId,
       onlineUserList,
     );
+
+    for (const [key, value] of this.connectionList) {
+      if (onlineFriendList.connections.includes(value)) {
+        this.server.to(key).emit('detectLogOn', connectionDto);
+      }
+    }
+
+    return onlineFriendList;
   }
 }
