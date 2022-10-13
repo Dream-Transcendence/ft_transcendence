@@ -55,6 +55,7 @@ export const userDataAtom = atom<BaseUserProfileData>({
 
 function PingpongRoutePage() {
   const userData = useRecoilValue(userDataAtom);
+
   return (
     <PageSection>
       <header>

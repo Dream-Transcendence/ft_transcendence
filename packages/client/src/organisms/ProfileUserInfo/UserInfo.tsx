@@ -31,16 +31,41 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 function UserInfo() {
   const { userId } = useParams();
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
+  const [userImage, setUserImage] = useState<EventTarget & HTMLInputElement>();
 
-  // const refImage = useRef<HTMLInputElement>(null);
-  // const uploadHandler = () => {
-  //   console.log('hi');
-  //   // refImage.current.value = image;
-  // };
-  const fileUpProps: CustomUploadProps = {
+  async function changeUserImage() {
+   try {
+    //  const imageData = new FormData();
+    //  imageData.append('file', userImage);
+    console.log(userImage);
+     const response = await axios.patch(`${SERVERURL}/users/${userId}/profile`, {image: userImage});
+     if (response.status === 200) {
+       console.log('이미지 변경 성공');
+     }
+   } catch (error) {
+     alert(error);
+     console.log(error);
+   }
+  }
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setUserImage(event.currentTarget);
+      console.log('aa', event.currentTarget);
+      // console.log(event.target.files[0]);
+      // let url = URL.createObjectURL(event.target.files[0]);
+      // setUserImage(url);
+      // console.log(url);
+    }
+  }
+  const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
-    // ref: { refImage },
-    // action: uploadHandler,
+    action: handleChange,
+  };
+
+  const fileUploadProps: CustomUploadProps = {
+    icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
+    action: changeUserImage,
   };
 
   useEffect(() => {
@@ -65,7 +90,8 @@ function UserInfo() {
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
-          <FileUploadButton uploadProps={fileUpProps} />
+          <FileUploadButton uploadProps={fileChangeProps} />
+          <FileUploadButton uploadProps={fileUploadProps} />
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>

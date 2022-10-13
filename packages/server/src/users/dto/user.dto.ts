@@ -17,7 +17,7 @@ export class UserDto {
   nickname: string;
 
   @ApiProperty({ example: 'https://cdn.42.fr/users/dha.jpg' })
-  @IsUrl()
+  // @IsUrl()
   image: string;
 }
 

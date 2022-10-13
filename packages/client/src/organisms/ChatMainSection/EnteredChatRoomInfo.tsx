@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import InfoBoxFunctionModule from 'client/src/molecules/ChatSection/RoomInfoBoxFunction';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
 import { useEffect, useState } from 'react';
@@ -8,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { RoomInfoSet } from '../../types/Room.type';
+import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
