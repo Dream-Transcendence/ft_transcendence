@@ -4,11 +4,6 @@ import JoinedChatRoomModule from '../../organisms/ChatSidebar/JoinedChatRoomList
 import CreateChatRoomModule from '../../molecules/ChatSidebar/CreateChatRoom';
 import JoinedDMListOrganisms from '../../organisms/ChatSidebar/JoinedDMList';
 import { Typography } from '@mui/material';
-import { blueGrey } from '@mui/material/colors';
-import { atom, atomFamily, useRecoilValue } from 'recoil';
-import { getJoinedChatList } from '../../pages/ChatChannelPage';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { RoomList } from '../../types/Room.type';
 
 const ChatSidebarLayout = styled('div')(({ theme }) => ({
   width: '100%',

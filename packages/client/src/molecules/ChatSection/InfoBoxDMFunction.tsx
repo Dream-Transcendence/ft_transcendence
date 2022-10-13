@@ -1,22 +1,21 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from 'client/src/atoms/button/icon/CustomIconButtion';
 import BlockIcon from '@mui/icons-material/Block';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import PasswordInput from 'client/src/atoms/input/passwordBox';
-import {
-  CustomIconProps,
-  LinkIconProps,
-  LinkIconResource,
-} from 'client/src/types/Link.type';
-import LinkPageIconButton from 'client/src/atoms/button/linkPage/LinkPageIconButton';
 import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import {
+  CustomIconProps,
+  LinkIconProps,
+  LinkIconResource,
+} from '../../types/Link.type';
+import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',

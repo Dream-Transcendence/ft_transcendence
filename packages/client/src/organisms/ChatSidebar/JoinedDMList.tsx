@@ -2,20 +2,15 @@ import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import ListGenerate from '../../atoms/list/ListGenerate';
 import {
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { DMList, getJoinedChatList } from '../../pages/ChatChannelPage';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import {
-  FriendType,
-  UserProfileBoxDataType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
+import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
   height: '40%',
@@ -39,14 +34,14 @@ function JoinedDMListOrganisms() {
   //isblock은 공통사항이긴하지만 컴포넌트의 상태를 나타내는 것들은 한번 컴포넌트를 감싸서 표시해주기로 하였으므로, 기본 값에서 제외시켰습니다.
 
   const userData = useRecoilValue(userDataAtom);
-  const [Roomlist, setRoomList] = useRecoilState(DMList);
+  const [roomlist, setRoomList] = useRecoilState(DMList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const navigate = useNavigate();
   useEffect(() => {
     setRoomList(joinedChatList.dmList);
   }, [joinedChatList.dmList, setRoomList]);
 
-  const listElement: React.ReactElement[] = Roomlist.map((room: any) => {
+  const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
       nickname: room.name,
       image: room.image,

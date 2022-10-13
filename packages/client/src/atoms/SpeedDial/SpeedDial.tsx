@@ -1,19 +1,12 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
 import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
-import FileCopyIcon from '@mui/icons-material/FileCopyOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import PrintIcon from '@mui/icons-material/Print';
-import ShareIcon from '@mui/icons-material/Share';
 import StarRateIcon from '@mui/icons-material/StarRate';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-import { userAuth } from '../../template/ChatMainSection/EnteredChatRoomTemplate';
 import { useRecoilValue } from 'recoil';
 import { OWNER } from '../../configs/userType';
+import { userAuth } from '../../recoil/chat.recoil';
 
 const AdminActions = [
   { icon: <RemoveCircleIcon />, name: 'User Ban' },
@@ -27,7 +20,6 @@ const OwnerActions = [
 ];
 
 export default function BasicSpeedDial(props: { participantInfo: any }) {
-  const { user, auth, status, blocked } = props.participantInfo;
   const userType = useRecoilValue(userAuth);
   return (
     //admin의 등급에 따라 아이콘 구분

@@ -47,7 +47,7 @@ const PageSection = styled('section')(({ theme }) => ({
 export const userDataAtom = atom<BaseUserProfileData>({
   key: 'userData',
   default: {
-    id: 1,
+    id: 2,
     nickname: 'dha',
     image: 'https://cdn.intra.42.fr/users/dha.jpg',
   },

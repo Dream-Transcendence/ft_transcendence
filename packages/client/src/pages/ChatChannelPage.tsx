@@ -1,23 +1,14 @@
-import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import {
-  atom,
-  selector,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
-import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
-import { LineAxisOutlined } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { CHANNELURL, SERVERURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { userDataAtom } from './PingpongRoutePage';
-import { RoomList } from '../types/Room.type';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -50,47 +41,10 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
-// export const changedList = atom<string>({
-
-// });
-
 /*
  * 리스트를 쪼개서 아톰으로 관리??
  * 최초 랜더링 시, data 받아옴
- *
  */
-//[수정사항]any => 프론트에서 알려줄것
-const getRoomList = async (userId: number) => {
-  const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`);
-  return response;
-};
-
-//[수정사항] 전역으로 사용하는 데이터의 파일구조를 바꿀 것
-//현재 유저가 가입된 채팅방의 리스트를 받아옵니다.
-export const getJoinedChatList = selectorFamily<any, number>({
-  key: '',
-  get:
-    (userId) =>
-    async ({ get }) => {
-      try {
-        const response = await getRoomList(userId);
-        return response.data;
-      } catch (error) {
-        console.dir(error);
-      }
-    },
-});
-
-//[수정사항] any=>chatRoomList 타입
-export const DMList = atom<RoomList[]>({
-  key: 'DMList',
-  default: [],
-});
-
-export const chatRoomList = atom<RoomList[]>({
-  key: 'chatRoomList',
-  default: [],
-});
 
 //채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {

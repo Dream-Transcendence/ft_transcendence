@@ -9,13 +9,9 @@ import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { ParticipantInfoSet } from '../../types/Participant.type';
-import {
-  atom,
-  useRecoilState,
-  useRecoilValue,
-  useSetRecoilState,
-} from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userAuth } from '../../recoil/chat.recoil';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -28,11 +24,6 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   marginTop: '0%',
 }));
-
-export const userAuth = atom<number | null>({
-  key: 'userType',
-  default: null,
-});
 
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
