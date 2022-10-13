@@ -1,5 +1,4 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from 'client/src/atoms/button/icon/CustomIconButtion';
 import {
   Avatar,
   Typography,

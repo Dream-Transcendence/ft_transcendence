@@ -6,7 +6,6 @@ import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { SERVERURL } from 'client/src/configs/Link.url';
 import axios from 'axios';
 import { UserMatchHistoryType } from '../../types/Profile.type';
 import {

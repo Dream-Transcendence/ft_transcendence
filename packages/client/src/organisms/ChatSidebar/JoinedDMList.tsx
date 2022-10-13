@@ -1,12 +1,16 @@
 import { styled } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import ListGenerate from '../../atoms/list/ListGenerate';
-import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import {
-  FriendType,
-  UserProfileBoxDataType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
+  ListGenerateLayout,
+  ListLayout,
+  ListUlLayout,
+} from '../../atoms/list/styles/ListStylesCSS';
+import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
   height: '40%',
@@ -28,17 +32,38 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
 function JoinedDMListOrganisms() {
   //채팅 참여자목록의 각 데이터 type형식으로 바꾸어 적용해야 합니다.
   //isblock은 공통사항이긴하지만 컴포넌트의 상태를 나타내는 것들은 한번 컴포넌트를 감싸서 표시해주기로 하였으므로, 기본 값에서 제외시켰습니다.
-  const userData: UserProfileBoxDataType = {
-    nickname: 'noname',
-    image: 'noimage',
-  };
 
-  const userProfileBoxProps = {
-    isButton: true,
-    avatarType: 'circle',
-    userData: userData,
-    // action?: () => void;
-  };
+  const userData = useRecoilValue(userDataAtom);
+  const [roomlist, setRoomList] = useRecoilState(DMList);
+  const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
+  const navigate = useNavigate();
+  useEffect(() => {
+    setRoomList(joinedChatList.dmList);
+  }, [joinedChatList.dmList, setRoomList]);
+
+  const listElement: React.ReactElement[] = roomlist.map((room: any) => {
+    const profileData: UserProfileBoxDataType = {
+      nickname: room.name,
+      image: room.image,
+    };
+
+    const enterRoom = () => {
+      navigate(`/pingpong/channel/room/${room.id}`);
+    };
+
+    const userProfileBoxProps = {
+      isButton: true,
+      avatarType: 'circle',
+      userData: profileData,
+      action: enterRoom,
+    };
+    return (
+      <ListLayout key={room.id}>
+        <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+      </ListLayout>
+    );
+  });
+
   return (
     <JoinedChatListLayout>
       {/* [axios GET 요청] 현재 개설된 DM 리스트 요청 */}
@@ -48,7 +73,9 @@ function JoinedDMListOrganisms() {
                 - Socket.emit으로 로그인 상태 보냄
                 - Socket.on으로  DM유저 로그인 상태 받음
                    */}
-        <ListGenerate element={UserProfileBox({ userProfileBoxProps })} />
+        <ListGenerateLayout>
+          <ListUlLayout>{listElement}</ListUlLayout>
+        </ListGenerateLayout>
       </JoinedDMBox>
     </JoinedChatListLayout>
   );

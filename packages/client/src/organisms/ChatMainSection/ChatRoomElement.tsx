@@ -10,6 +10,9 @@ import { PROTECTED } from '../../configs/RoomType';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { GetRoomInfoDto } from '../../types/Room.type';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -42,12 +45,12 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-//[수정사항] DTO 확정되면 수정할 것 any => ChannelDto
-function ChatRoomElementOrganisms(props: { roomInfo: any }) {
+function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   //chatpage에 있있던  비번 옮겨옴
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;
   const navigate = useNavigate();
+  const userData = useRecoilValue(userDataAtom);
   const { id: roomId, name, type, image } = roomInfo;
 
   const handlePassword = (childData: string) => {
@@ -56,14 +59,13 @@ function ChatRoomElementOrganisms(props: { roomInfo: any }) {
 
   async function enterRoom() {
     try {
-      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
       const response = await axios.post(
-        `${SERVERURL}/rooms/${roomId}/users/1`,
+        `${SERVERURL}/rooms/${roomId}/users/${userData.id}`,
         {
           salt: password,
         },
       );
-      navigate(`${CHATROOMURL}${roomId}`);
+      await navigate(`${CHATROOMURL}${roomId}`);
     } catch (error) {
       alert(error);
       throw console.dir(error);
