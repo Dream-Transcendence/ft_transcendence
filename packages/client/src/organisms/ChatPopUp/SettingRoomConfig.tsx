@@ -43,7 +43,6 @@ const SetButtonLayout = styled('div')(({ theme }) => ({
 async function createRoom(newRoom: CreateRoomSet) {
   try {
     const response = await axios.post(`${SERVERURL}/rooms/channels`, newRoom);
-    console.log('res: ', response.data);
   } catch (error) {
     console.dir(error);
   }

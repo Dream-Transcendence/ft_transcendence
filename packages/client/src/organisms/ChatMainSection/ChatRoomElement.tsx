@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { GetRoomInfoDto } from '../../types/Room.type';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, enterChannel } from '../../socket/event';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -51,24 +53,45 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const roomInfo = props.roomInfo;
   const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
+  const [socket] = useSocket(chatNameSpace);
   const { id: roomId, name, type, image } = roomInfo;
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
-  async function enterRoom() {
+  function enterRoom() {
     try {
-      const response = await axios.post(
-        `${SERVERURL}/rooms/${roomId}/users/${userData.id}`,
+      // const response = await axios.post(
+      //   `${SERVERURL}/rooms/${roomId}/users/${userData.id}`,
+      //   {
+      //     salt: password,
+      //   },
+      // );
+      console.log('sonking ! enter!!!', {
+        userId: userData.id,
+        roomId: roomId,
+        salt: password,
+      });
+      //[수정사항] any => 무슨타입이오나
+      socket.emit(
+        `${enterChannel}`,
         {
+          userId: userData.id,
+          roomId: roomId,
           salt: password,
         },
+        (response: any) => {
+          console.log('enter new room success ', response); // "got it"
+          navigate(`${CHATROOMURL}${roomId}`);
+        },
       );
-      await navigate(`${CHATROOMURL}${roomId}`);
+      alert('room error');
+      // disconnect();
     } catch (error) {
+      console.log('in socker return error!', error);
       alert(error);
-      throw console.dir(error);
+      throw console.dir('??', error);
     }
   }
   //항후, 방 넘버를 토대로 정보를 구성할 것임.

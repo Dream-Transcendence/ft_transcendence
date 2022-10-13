@@ -14,7 +14,7 @@ import {
   PatchUserInfoDto,
 } from './dto/rooms.dto';
 
-@WebSocketGateway(4242, { namespace: 'chat' })
+@WebSocketGateway(4242, { namespace: 'chat', cors: true })
 export class RoomsGateway {
   constructor(private readonly roomService: RoomService) {}
   @WebSocketServer()

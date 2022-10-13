@@ -9,6 +9,8 @@ import { CHANNELURL, SERVERURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import { userDataAtom } from './PingpongRoutePage';
+import useSocket from '../socket/useSocket';
+import { chatNameSpace } from '../socket/event';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -50,6 +52,7 @@ const Aside = styled('aside')(({ theme }) => ({
 function ChatroomPage() {
   const userData = useRecoilValue(userDataAtom);
   const [roomList, setRoomList] = useState([]);
+  const [socket, connect, disconnect] = useSocket(chatNameSpace);
 
   useEffect(() => {
     async function getRoomList() {
@@ -65,6 +68,13 @@ function ChatroomPage() {
       }
     }
     getRoomList();
+  }, []);
+
+  useEffect(() => {
+    async function setChatSocketConnect() {
+      connect();
+    }
+    setChatSocketConnect();
   }, []);
 
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것

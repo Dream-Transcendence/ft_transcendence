@@ -10,6 +10,8 @@ import {
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
+import { chatNameSpace, enterChannel } from '../../socket/event';
+import useSocket from '../../socket/useSocket';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
 
 const JoinedChatListLayout = styled('div')(({ theme }) => ({
@@ -37,6 +39,8 @@ function JoinedDMListOrganisms() {
   const [roomlist, setRoomList] = useRecoilState(DMList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const navigate = useNavigate();
+  const [socket] = useSocket(chatNameSpace);
+
   useEffect(() => {
     setRoomList(joinedChatList.dmList);
   }, [joinedChatList.dmList, setRoomList]);
@@ -48,7 +52,19 @@ function JoinedDMListOrganisms() {
     };
 
     const enterRoom = () => {
-      navigate(`/pingpong/channel/room/${room.id}`);
+      socket.emit(
+        `${enterChannel}`,
+        {
+          userId: userData.id,
+          roomId: room.id,
+          salt: '',
+        },
+        (response: any) => {
+          console.log('enter DM success ', response); // "got it"
+          navigate(`/pingpong/channel/room/${room.id}`);
+        },
+      );
+      alert('dm error');
     };
 
     const userProfileBoxProps = {

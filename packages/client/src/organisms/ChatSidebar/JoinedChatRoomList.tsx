@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -10,6 +10,8 @@ import {
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { chatRoomList, getJoinedChatList } from '../../recoil/chat.recoil';
+import { chatNameSpace, enterChannel } from '../../socket/event';
+import useSocket from '../../socket/useSocket';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
 
 const JoinedChatRoomLayout = styled('div')(({ theme }) => ({
@@ -39,6 +41,9 @@ function JoinedChatRoomModule() {
   const userData = useRecoilValue(userDataAtom);
   const [roomlist, setRoomList] = useRecoilState(chatRoomList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
+  const [socket] = useSocket(chatNameSpace);
+  const [error, setError] = useState(false);
+  let res = false;
   const navigate = useNavigate();
   useEffect(() => {
     setRoomList(joinedChatList.channelList);
@@ -50,8 +55,24 @@ function JoinedChatRoomModule() {
       image: room.image,
     };
 
-    const enterRoom = () => {
-      navigate(`/pingpong/channel/room/${room.id}`);
+    //error 소켓 보내줘!
+    const enterRoom = async () => {
+      await socket.emit(
+        `${enterChannel}`,
+        {
+          userId: userData.id,
+          roomId: room.id,
+        },
+        (err: any, response: any) => {
+          console.log('enter room success ', response); // "got it"
+          console.log('!!', err);
+          res = response.isEntered;
+          setError(true);
+          navigate(`/pingpong/channel/room/${room.id}`);
+        },
+      );
+      console.log(error);
+      if (!error) alert('error');
     };
 
     const userProfileBoxProps = {

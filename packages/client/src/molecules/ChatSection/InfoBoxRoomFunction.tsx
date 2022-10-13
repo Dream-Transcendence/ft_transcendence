@@ -10,6 +10,8 @@ import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { CHANNELURL, SERVERURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, enterChannel, leaveChannel } from '../../socket/event';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -23,13 +25,25 @@ function InfoBoxRoomFunctionModule() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const { roomId } = useParams();
+  const [socket] = useSocket(chatNameSpace);
 
   async function outRoom() {
     try {
-      await axios.delete(
-        `${SERVERURL}/rooms/${roomId}/channel/participants/${userData.id}`,
+      await socket.emit(
+        `${leaveChannel}`,
+        {
+          userId: userData.id,
+          roomId: roomId,
+        },
+        (response: any) => {
+          console.log('in socket return! ', response); // "got it"
+          navigate(`${CHANNELURL}`);
+        },
       );
-      navigate(`${CHANNELURL}`);
+      // await axios.delete(
+      //   `${SERVERURL}/rooms/${roomId}/channel/participants/${userData.id}`,
+      // );
+      // navigate(`${CHANNELURL}`);
     } catch (error) {
       alert(error);
       throw console.dir(error);
