@@ -21,7 +21,7 @@ import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { ReadMoreRounded } from '@mui/icons-material';
-
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
@@ -32,15 +32,17 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 function UserInfo() {
   const { userId } = useParams();
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-
+  const [userImage, setUserImage] = useState('');
   async function changeUserImage() {
     try {
       const response = await axios.patch(
         `${SERVERURL}/users/${userId}/profile`,
-        { image: user.image },
+        { image: userImage },
       );
       if (response.status === 200) {
+        setUser({ ...user, image: userImage });
         console.log('이미지 변경 성공');
+        console.log(user.image);
       }
     } catch (error) {
       alert(error);
@@ -61,26 +63,31 @@ function UserInfo() {
       const file = event.target.files[0];
       if (file) {
         reader.readAsDataURL(file);
-        reader.onloadend = () => {
+        reader.onloadend = () => { //비동기 로직임
           if (reader.result) {
             if (typeof reader.result === 'string') {
-              setUser({ ...user, image: reader.result });
-              changeUserImage();
+              // setUser({ ...user, image: reader.result });
+              setUserImage(reader.result);
             } else {
               alert('처리할 수 없는 이미지입니다.')
             }
           }
-          console.log('target.value : ', event.target.value);
-          console.log('123', reader.result);
         }
+        // changeUserImage(); //비동기 로직 끝난 뒤 그 값을 받아야 함
       }
     }
+  };
+
+  const fileUploadProps: CustomIconProps = {
+    icon: <FileUploadIcon color="disabled" />,
+    action: changeUserImage,
   };
 
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
     action: handleChange,
   };
+
 
   useEffect(() => {
     async function getUserData() {
@@ -104,7 +111,10 @@ function UserInfo() {
         <UserPictureButtonLayout>
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
-          <FileUploadButton uploadProps={fileChangeProps} />
+          <span>
+            <FileUploadButton uploadProps={fileChangeProps} />
+            <CustomIconButton customProps={fileUploadProps} />
+          </span>
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>
