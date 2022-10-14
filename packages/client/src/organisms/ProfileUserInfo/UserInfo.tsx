@@ -31,33 +31,47 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 function UserInfo() {
   const { userId } = useParams();
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [userImage, setUserImage] = useState<EventTarget & HTMLInputElement>();
+  const [userImage, setUserImage] = useState<string>('');
 
   async function changeUserImage() {
-   try {
-    //  const imageData = new FormData();
-    //  imageData.append('file', userImage);
-    console.log(userImage);
-     const response = await axios.patch(`${SERVERURL}/users/${userId}/profile`, {image: userImage});
-     if (response.status === 200) {
-       console.log('이미지 변경 성공');
-     }
-   } catch (error) {
-     alert(error);
-     console.log(error);
-   }
+    try {
+      // const imageData = new FormData();
+      // imageData.set('file', userImage, 'filenames');
+      // console.log(imageData.get('file'));
+      console.log(userImage);
+      setUser({ ...user, image: userImage });
+
+      const response = await axios.patch(
+        `${SERVERURL}/users/${userId}/profile`,
+        { image: userImage },
+      );
+      if (response.status === 200) {
+        console.log('이미지 변경 성공');
+        setUser({ ...user, image: userImage });
+      }
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setUserImage(event.currentTarget);
-      console.log('aa', event.currentTarget);
-      // console.log(event.target.files[0]);
-      // let url = URL.createObjectURL(event.target.files[0]);
-      // setUserImage(url);
-      // console.log(url);
+      // const file = event.target.files[0];
+      // const reader = new FileReader();
+      // console.log(reader);
+      // reader.readAsDataURL(file);
+      // setUserImage(reader.result);
+      // console.log(userImage);
+      // console.log('aa', event.currentTarget.files[0]);
+
+      console.log(event.target.files[0]);
+      let url = URL.createObjectURL(event.target.files[0]);
+      setUserImage(url);
+      console.log(url);
     }
-  }
+  };
+
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
     action: handleChange,
