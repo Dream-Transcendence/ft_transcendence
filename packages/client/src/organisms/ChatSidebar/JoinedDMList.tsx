@@ -64,7 +64,6 @@ function JoinedDMListOrganisms() {
           navigate(`/pingpong/channel/room/${room.id}`);
         },
       );
-      alert('dm error');
     };
 
     const userProfileBoxProps = {

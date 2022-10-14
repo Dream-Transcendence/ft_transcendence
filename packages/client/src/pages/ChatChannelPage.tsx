@@ -70,12 +70,17 @@ function ChatroomPage() {
     getRoomList();
   }, []);
 
+  //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
+  //채팅관련 소켓 네임스페이스(chat) 연결작업
   useEffect(() => {
-    async function setChatSocketConnect() {
+    function setChatSocketConnect() {
       connect();
     }
     setChatSocketConnect();
-  }, []);
+    return () => {
+      disconnect();
+    };
+  }, [socket, connect, disconnect]);
 
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (

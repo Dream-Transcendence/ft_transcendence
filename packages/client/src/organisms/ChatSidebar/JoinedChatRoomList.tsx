@@ -42,8 +42,8 @@ function JoinedChatRoomModule() {
   const [roomlist, setRoomList] = useRecoilState(chatRoomList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const [socket] = useSocket(chatNameSpace);
-  const [error, setError] = useState(false);
-  let res = false;
+  // const [error, setError] = useState(false);
+  // let res = false;
   const navigate = useNavigate();
   useEffect(() => {
     setRoomList(joinedChatList.channelList);
@@ -55,24 +55,19 @@ function JoinedChatRoomModule() {
       image: room.image,
     };
 
-    //error 소켓 보내줘!
-    const enterRoom = async () => {
-      await socket.emit(
+    //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
+    const enterRoom = () => {
+      socket.emit(
         `${enterChannel}`,
         {
           userId: userData.id,
           roomId: room.id,
         },
-        (err: any, response: any) => {
-          console.log('enter room success ', response); // "got it"
-          console.log('!!', err);
-          res = response.isEntered;
-          setError(true);
+        (response: any) => {
+          console.log('enter room success ', response);
           navigate(`/pingpong/channel/room/${room.id}`);
         },
       );
-      console.log(error);
-      if (!error) alert('error');
     };
 
     const userProfileBoxProps = {
