@@ -20,6 +20,7 @@ import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { ReadMoreRounded } from '@mui/icons-material';
 
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -31,23 +32,15 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 function UserInfo() {
   const { userId } = useParams();
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [userImage, setUserImage] = useState<string>('');
 
   async function changeUserImage() {
     try {
-      // const imageData = new FormData();
-      // imageData.set('file', userImage, 'filenames');
-      // console.log(imageData.get('file'));
-      console.log(userImage);
-      setUser({ ...user, image: userImage });
-
       const response = await axios.patch(
         `${SERVERURL}/users/${userId}/profile`,
-        { image: userImage },
+        { image: user.image },
       );
       if (response.status === 200) {
         console.log('이미지 변경 성공');
-        setUser({ ...user, image: userImage });
       }
     } catch (error) {
       alert(error);
@@ -55,31 +48,38 @@ function UserInfo() {
     }
   }
 
+  let reader = new FileReader();
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      // const file = event.target.files[0];
-      // const reader = new FileReader();
-      // console.log(reader);
-      // reader.readAsDataURL(file);
-      // setUserImage(reader.result);
-      // console.log(userImage);
-      // console.log('aa', event.currentTarget.files[0]);
-
-      console.log(event.target.files[0]);
-      let url = URL.createObjectURL(event.target.files[0]);
-      setUserImage(url);
-      console.log(url);
+      //blob으로 저장하여 이미지의 생명이 짧음, formData로 보내야 할 것 같은데 서버의 받는 구조가 바뀌어야 함
+      //기본 이미지의 타입은 string인데 formData는 객체임.
+      //-> reader로 구현하였음.
+      // console.log(event.target.files[0]);
+      // let url = URL.createObjectURL(event.target.files[0]);
+      // setUserImage(url);
+      const file = event.target.files[0];
+      if (file) {
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+          if (reader.result) {
+            if (typeof reader.result === 'string') {
+              setUser({ ...user, image: reader.result });
+              changeUserImage();
+            } else {
+              alert('처리할 수 없는 이미지입니다.')
+            }
+          }
+          console.log('target.value : ', event.target.value);
+          console.log('123', reader.result);
+        }
+      }
     }
   };
 
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
     action: handleChange,
-  };
-
-  const fileUploadProps: CustomUploadProps = {
-    icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
-    action: changeUserImage,
   };
 
   useEffect(() => {
@@ -105,7 +105,6 @@ function UserInfo() {
           {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
               - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
           <FileUploadButton uploadProps={fileChangeProps} />
-          <FileUploadButton uploadProps={fileUploadProps} />
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>

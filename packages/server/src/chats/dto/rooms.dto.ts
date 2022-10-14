@@ -64,7 +64,7 @@ export class ChannelDto {
   type?: CHAT_TYPE;
 
   @ApiProperty()
-  @IsUrl()
+  //@IsUrl()
   image: string;
 
   @ApiProperty()
@@ -87,7 +87,7 @@ export class ChannelInfoDto {
   type?: CHAT_TYPE;
 
   @ApiProperty()
-  @IsUrl()
+  //@IsUrl()
   image: string;
 
   @ApiProperty()
@@ -200,7 +200,7 @@ export class GetUserRoomDto {
   name: string;
 
   @ApiProperty()
-  @IsUrl()
+  //@IsUrl()
   image: string;
 
   @ApiProperty()
@@ -232,7 +232,7 @@ export class PatchChannelInfoDto {
   name: string;
 
   @ApiProperty()
-  @IsUrl()
+  //@IsUrl()
   @IsOptional()
   image: string;
 
