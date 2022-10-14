@@ -42,7 +42,15 @@ export class RoomService {
   async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
     const { userId, name, type, salt, participantIds } = createChannelDto;
     // NOTE room info 저장
+    let roomRowId = 1;
+    const maxRoomId = await this.roomsRepository
+      .createQueryBuilder('room')
+      .select('MAX(room.id)', 'id')
+      .getRawOne();
+    if (maxRoomId != null) roomRowId = maxRoomId.id + 1;
+
     let room = this.roomsRepository.create({
+      id: roomRowId,
       name,
       type,
       salt,
@@ -50,11 +58,21 @@ export class RoomService {
     });
     room = await this.roomsRepository.save(room);
     // Channel participants 저장
+    let index = 1;
+    let participantRowId = 1;
+    const maxParticipantId = await this.channelParticipantsRepository
+      .createQueryBuilder('channelParticipant')
+      .select('MAX(channelParticipant.id)', 'id')
+      .getRawOne();
+    if (maxParticipantId != null) participantRowId = maxParticipantId.id + 1;
+
     const participants: ChannelParticipant[] = [];
     const Ids = [userId, ...participantIds];
     const promises = Ids.map(async (id) => {
       const participant: ChannelParticipant =
-        this.channelParticipantsRepository.create();
+        this.channelParticipantsRepository.create({
+          id: participantRowId + index++,
+        });
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = room;
       if (!participant.user) {
@@ -213,16 +231,35 @@ export class RoomService {
   async createDm(createDmDto: CreateDmDto): Promise<void> {
     const { userId, participantId } = createDmDto;
     // NOTE dm info 저장
+    let roomRowId = 1;
+    const maxRoomId = await this.roomsRepository
+      .createQueryBuilder('room')
+      .select('MAX(room.id)', 'id')
+      .getRawOne();
+    if (maxRoomId != null) roomRowId = maxRoomId.id + 1;
+
     let dm = this.roomsRepository.create({
+      id: roomRowId,
       type: 0,
       title: uuidv4(),
     });
     dm = await this.roomsRepository.save(dm);
+
     // dm participants 저장
+    let index = 1;
+    let participantRowId = 1;
+    const maxParticipantId = await this.dmParticipantsRepository
+      .createQueryBuilder('dmParticipant')
+      .select('MAX(dmParticipant.id)', 'id')
+      .getRawOne();
+    if (maxParticipantId != null) participantRowId = maxParticipantId.id + 1;
+
     const participants: DmParticipant[] = [];
     const Ids = [participantId, userId];
     const promises = Ids.map(async (id) => {
-      const participant: DmParticipant = this.dmParticipantsRepository.create();
+      const participant: DmParticipant = this.dmParticipantsRepository.create({
+        id: participantRowId + index++,
+      });
       participant.user = await this.usersRepository.findOneBy({ id });
       participant.room = dm;
       if (!participant.user) {
@@ -350,7 +387,16 @@ export class RoomService {
 
   async sendMessage(client: Socket, sendMessageDto: SendMessageDto) {
     const { roomId, userId, body } = sendMessageDto;
+
+    let rowId = 1;
+    const maxId = await this.messagesRepository
+      .createQueryBuilder('message')
+      .select('MAX(message.id)', 'id')
+      .getRawOne();
+    if (maxId.id) rowId = maxId.id + 1;
+
     const msg = this.messagesRepository.create({
+      id: rowId,
       date: new Date(),
       body,
       room: await this.roomsRepository.findOneBy({ id: roomId }),

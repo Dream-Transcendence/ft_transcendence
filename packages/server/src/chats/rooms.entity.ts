@@ -3,6 +3,7 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AUTH_TYPE, CHAT_TYPE, STATUS_TYPE } from './dto/rooms.dto';
@@ -10,7 +11,7 @@ import { User } from '../users/users.entity';
 
 @Entity()
 export class Room {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({ nullable: true })
@@ -43,7 +44,7 @@ export class Room {
 
 @Entity()
 export class ChannelParticipant {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({ nullable: true, type: 'integer' })
@@ -64,7 +65,7 @@ export class ChannelParticipant {
 
 @Entity()
 export class DmParticipant {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.dmParticipants)
@@ -76,7 +77,7 @@ export class DmParticipant {
 
 @Entity()
 export class Message {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()

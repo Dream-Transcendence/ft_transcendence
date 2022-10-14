@@ -33,13 +33,32 @@ export class UserService {
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const { nickname, image, email } = createUserDto;
 
+    // FIXME: 테스트용
+    let id = 1;
+    const maxUserId = await this.usersRepository
+      .createQueryBuilder('user')
+      .select('MAX(user.id)', 'id')
+      .getRawOne();
+    if (maxUserId.id !== null) id = maxUserId.id + 1;
+
+    console.log(maxUserId.id);
     let user = this.usersRepository.create({
+      id,
       nickname,
       image,
     });
     user = await this.usersRepository.save(user);
 
+    // FIXME: 테스트용
+    let authId = 1;
+    const maxAuthId = await this.authRepository
+      .createQueryBuilder('auth')
+      .select('MAX(auth.id)', 'id')
+      .getRawOne();
+    if (maxAuthId.id !== null) authId = maxAuthId.id + 1;
+
     const auth = this.authRepository.create({
+      id: authId,
       email,
       authenticated: false,
       user,
@@ -122,7 +141,16 @@ export class UserService {
     });
     if (blockedUser === null) throw new EntityNotFoundError(User, id);
 
+    // FIXME: 테스트용
+    let blockId = 1;
+    const maxBlockId = await this.blocksRepository
+      .createQueryBuilder('block')
+      .select('MAX(block.id)', 'id')
+      .getRawOne();
+    if (maxBlockId != null) blockId = maxBlockId.id + 1;
+
     let block = this.blocksRepository.create({
+      id: blockId,
       blockedTime: new Date(),
       user: user,
       blockedUser: blockedUser,
@@ -226,11 +254,20 @@ export class UserService {
     });
     if (friend === null) throw new EntityNotFoundError(User, friendId);
 
+    let rowId = 1;
+    const maxFriendId = await this.friendsRepository
+      .createQueryBuilder('friend')
+      .select('MAX(friend.id)', 'id')
+      .getRawOne();
+    if (maxFriendId != null) rowId = maxFriendId.id + 1;
+
     const row1 = this.friendsRepository.create({
+      id: rowId + 1,
       user: user,
       friend: friend,
     });
     const row2 = this.friendsRepository.create({
+      id: rowId + 2,
       user: friend,
       friend: user,
     });
@@ -296,7 +333,15 @@ export class UserService {
     if (duplicateRequestCheck !== null || duplicateFriendCheck !== null)
       throw new ConflictException();
 
+    let rowId = 1;
+    const maxRequestId = await this.requestsRepository
+      .createQueryBuilder('request')
+      .select('MAX(request.id)', 'id')
+      .getRawOne();
+    if (maxRequestId != null) rowId = maxRequestId.id + 1;
+
     const row = this.requestsRepository.create({
+      id: rowId,
       requestor: user,
       responser: responser,
     });
