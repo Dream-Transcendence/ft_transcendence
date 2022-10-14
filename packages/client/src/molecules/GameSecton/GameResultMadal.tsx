@@ -78,7 +78,7 @@ function GameResultModal() {
     avatarType: 'default',
     userData: user,
   };
-
+  //추후에 userdata 변경 예정
   const otherProfileBoxProps: UserProfileBoxType = {
     isButton: false,
     avatarType: 'circle',

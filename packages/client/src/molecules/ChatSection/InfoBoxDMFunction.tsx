@@ -7,15 +7,11 @@ import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
+import { CustomIconProps, LinkIconProps, LinkIconResource } from '../../types/Link.type';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import {
-  CustomIconProps,
-  LinkIconProps,
-  LinkIconResource,
-} from '../../types/Link.type';
-import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',

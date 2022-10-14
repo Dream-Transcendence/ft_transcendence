@@ -71,6 +71,7 @@ function FreindListOrganisms() {
 
   const listElement: JSX.Element[] = friendList.map((friendData) => {
     const userData = {
+      id: friendData.user.id,
       nickname: friendData.user.nickname,
       image: friendData.user.image,
     };

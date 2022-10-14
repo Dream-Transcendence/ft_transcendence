@@ -5,6 +5,7 @@ import NavigationBar from '../atoms/bar/NavigationBar';
 import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
 import { PROFILEURL } from '../configs/Link.url';
 import { LinkComponentResource } from '../types/Link.type';
+import { BaseUserProfileData } from '../types/Profile.type';
 import { userDataAtom } from './PingpongRoutePage';
 
 const MainSection = styled.section`
@@ -34,7 +35,7 @@ const EnterButton = styled.button`
 `;
 
 function LandingPage() {
-  const [user, setUser] = useRecoilState(userDataAtom);
+  const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
 
   const Enter: LinkComponentResource = {
     url: PROFILEURL,

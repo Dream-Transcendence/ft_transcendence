@@ -1,3 +1,5 @@
+import { FormEvent } from "react";
+
 export interface LinkIconResource {
   url: string;
   icon: React.ReactElement;
@@ -31,5 +33,5 @@ export interface CustomUploadProps {
   //jungjan님이 icon안쓸 수 있다고 하여 ? 처리
   icon?: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
   ref?: any;
-  action?: () => void;
+  action: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }

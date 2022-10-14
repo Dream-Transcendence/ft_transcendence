@@ -13,6 +13,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
+import ProfileImage from '../../atoms/profile/ProfileImage';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
