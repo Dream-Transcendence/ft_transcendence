@@ -11,6 +11,7 @@ import {
   ManyToOne,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
   Unique,
 } from 'typeorm';
@@ -24,7 +25,8 @@ export class User extends BaseEntity {
   }
 
   //TODO: 42API 제공 id를 사용하기 때문에, 추후 PrimaryColumn()으로 수정
-  @PrimaryGeneratedColumn()
+  // @PrimaryGeneratedColumn({ type: 'int' })
+  @PrimaryColumn()
   id: number;
 
   @Column({ unique: true })
@@ -55,7 +57,8 @@ export class User extends BaseEntity {
 @Entity()
 @Unique(['user', 'blockedUser'])
 export class Block extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  // @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
@@ -70,7 +73,7 @@ export class Block extends BaseEntity {
 
 @Entity()
 export class Auth extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
@@ -87,7 +90,8 @@ export class Auth extends BaseEntity {
 @Entity()
 @Unique(['user', 'friend'])
 export class Friend extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  // @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.friends)
@@ -100,7 +104,8 @@ export class Friend extends BaseEntity {
 @Entity()
 @Unique(['requestor', 'responser'])
 export class Request extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  // @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.friends)
