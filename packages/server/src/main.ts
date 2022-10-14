@@ -6,7 +6,10 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 
 export class SocketIoAdapter extends IoAdapter {
   createIOServer(port: number, options?: any): any {
-    const server = super.createIOServer(port, options);
+    const server = super.createIOServer(port, {
+      ...options,
+      cors: { origin: true },
+    });
 
     return server;
   }
@@ -25,7 +28,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.useWebSocketAdapter(new IoAdapter(app));
+  // app.useWebSocketAdapter(new IoAdapter(app));
   const config = new DocumentBuilder()
     .setTitle('API design example')
     .setDescription('Example')

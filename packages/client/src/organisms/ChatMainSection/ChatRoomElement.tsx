@@ -5,14 +5,15 @@ import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { GetRoomInfoDto } from '../../types/Room.type';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, enterChannel } from '../../socket/event';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -51,25 +52,36 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const roomInfo = props.roomInfo;
   const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
+  const [socket] = useSocket(chatNameSpace);
   const { id: roomId, name, type, image } = roomInfo;
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
-  async function enterRoom() {
-    try {
-      const response = await axios.post(
-        `${SERVERURL}/rooms/${roomId}/users/${userData.id}`,
-        {
-          salt: password,
-        },
-      );
-      await navigate(`${CHATROOMURL}${roomId}`);
-    } catch (error) {
-      alert(error);
-      throw console.dir(error);
-    }
+  function enterRoom() {
+    console.log('sonking ! enter!!!', {
+      userId: userData.id,
+      roomId: roomId,
+      salt: password,
+    });
+    //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
+    socket.emit(
+      `${enterChannel}`,
+      {
+        userId: userData.id,
+        roomId: roomId,
+        salt: password,
+      },
+      (response: any) => {
+        console.log('enter new room success ', response); // "got it"
+        navigate(`${CHATROOMURL}${roomId}`);
+      },
+    );
+    //방을 잘못 들어갈 경우 에러처리
+    socket.on('exception', (response: any) => {
+      alert(response.message);
+    });
   }
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄

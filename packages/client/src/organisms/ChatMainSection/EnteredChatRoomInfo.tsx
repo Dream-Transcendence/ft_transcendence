@@ -1,9 +1,6 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
@@ -67,7 +64,6 @@ function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
-        {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
         <InfoBoxRoomFunctionModule />

@@ -27,10 +27,10 @@ const PasswordIconLayout = styled('div')(({ theme }) => ({
 
 function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo } = roomInfoSet;
+  const { roomInfo, handler } = roomInfoSet;
   const { type } = roomInfo;
   const { roomId } = useParams();
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState<string>('');
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const userType = useRecoilValue(userAuth);
   roomInfoSet['roomId'] = roomId;
@@ -39,7 +39,10 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
   useEffect(() => {
     if (changePassword) {
       try {
-        roomInfo['salt'] = password;
+        if (handler !== undefined) {
+          const room = { ...roomInfo, salt: password };
+          handler(room);
+        }
         ChangeRoomInfo({ ...roomInfoSet, roomInfo: roomInfo });
       } catch (error) {
         alert(error);
