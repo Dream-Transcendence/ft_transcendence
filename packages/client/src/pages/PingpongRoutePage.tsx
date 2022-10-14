@@ -81,6 +81,7 @@ function PingpongRoutePage() {
     return () => {
       socket.off('exception');
       disconnect();
+      //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
   }, [userData.id, socket, connect, disconnect]);
 
