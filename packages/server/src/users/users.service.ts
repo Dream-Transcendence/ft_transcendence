@@ -1,12 +1,9 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
-import {
-  ChannelParticipant,
-  DmParticipant,
-  Room,
-} from 'src/chats/rooms.entity';
-import { EntityNotFoundError, Like, Repository } from 'typeorm';
+import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
+import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
+import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { FriendDto, UserDto } from './dto/user.dto';
@@ -36,13 +33,32 @@ export class UserService {
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const { nickname, image, email } = createUserDto;
 
+    // FIXME: 테스트용
+    let id = 1;
+    const maxUserId = await this.usersRepository
+      .createQueryBuilder('user')
+      .select('MAX(user.id)', 'id')
+      .getRawOne();
+    if (maxUserId.id !== null) id = maxUserId.id + 1;
+
+    console.log(maxUserId.id);
     let user = this.usersRepository.create({
+      id,
       nickname,
       image,
     });
     user = await this.usersRepository.save(user);
 
+    // FIXME: 테스트용
+    let authId = 1;
+    const maxAuthId = await this.authRepository
+      .createQueryBuilder('auth')
+      .select('MAX(auth.id)', 'id')
+      .getRawOne();
+    if (maxAuthId.id !== null) authId = maxAuthId.id + 1;
+
     const auth = this.authRepository.create({
+      id: authId,
       email,
       authenticated: false,
       user,
@@ -125,7 +141,16 @@ export class UserService {
     });
     if (blockedUser === null) throw new EntityNotFoundError(User, id);
 
+    // FIXME: 테스트용
+    let blockId = 1;
+    const maxBlockId = await this.blocksRepository
+      .createQueryBuilder('block')
+      .select('MAX(block.id)', 'id')
+      .getRawOne();
+    if (maxBlockId != null) blockId = maxBlockId.id + 1;
+
     let block = this.blocksRepository.create({
+      id: blockId,
       blockedTime: new Date(),
       user: user,
       blockedUser: blockedUser,
@@ -193,17 +218,25 @@ export class UserService {
       relations: { room: true },
       where: { user: { id: id } },
     });
+    console.log(dms);
     const dmRooms = dms.map((dm) => dm.room);
+    console.log(dmRooms);
     const dmList: GetUserRoomDto[] = [];
-    dmRooms.forEach((room) => {
+    const promises = dmRooms.map(async (room) => {
+      const opponent = await this.dmParticipantsRepository.findOne({
+        relations: { user: true },
+        where: { room: { id: room.id }, user: { id: Not(id) } },
+      });
+      console.log('잘 돌아가고 있니?');
       const userRoomDto: GetUserRoomDto = {
         id: room.id,
-        name: room.name,
-        image: room.image,
+        name: opponent.user.nickname,
+        image: opponent.user.image,
         recvMessageCount: 0,
       };
       dmList.push(userRoomDto);
     });
+    await Promise.all(promises);
 
     return { channelList, dmList };
   }
@@ -221,11 +254,20 @@ export class UserService {
     });
     if (friend === null) throw new EntityNotFoundError(User, friendId);
 
+    let rowId = 1;
+    const maxFriendId = await this.friendsRepository
+      .createQueryBuilder('friend')
+      .select('MAX(friend.id)', 'id')
+      .getRawOne();
+    if (maxFriendId != null) rowId = maxFriendId.id + 1;
+
     const row1 = this.friendsRepository.create({
+      id: rowId + 1,
       user: user,
       friend: friend,
     });
     const row2 = this.friendsRepository.create({
+      id: rowId + 2,
       user: friend,
       friend: user,
     });
@@ -291,7 +333,15 @@ export class UserService {
     if (duplicateRequestCheck !== null || duplicateFriendCheck !== null)
       throw new ConflictException();
 
+    let rowId = 1;
+    const maxRequestId = await this.requestsRepository
+      .createQueryBuilder('request')
+      .select('MAX(request.id)', 'id')
+      .getRawOne();
+    if (maxRequestId != null) rowId = maxRequestId.id + 1;
+
     const row = this.requestsRepository.create({
+      id: rowId,
       requestor: user,
       responser: responser,
     });
@@ -352,7 +402,7 @@ export class UserService {
     // WHERE "friend"."userId" = "user"."id";
     const friendRows = await this.friendsRepository.find({
       relations: { user: true, friend: true },
-      where: { user: { id: id, nickname: Like(`%${nickname}%`) } },
+      where: { user: { id: id }, friend: { nickname: Like(`%${nickname}%`) } },
     });
 
     // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
@@ -375,5 +425,32 @@ export class UserService {
     });
 
     return foundUsers;
+  }
+
+  // ANCHOR: Socket
+  async handleLogOn(
+    userId: number,
+    onlineUserList: number[],
+  ): Promise<ConnectionsDto> {
+    const friendRows = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: userId } },
+    });
+    const onlineFriendList: number[] = [];
+
+    friendRows.forEach((friendRow) => {
+      console.log(friendRow.friend);
+    });
+
+    console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
+
+    friendRows.forEach((friendRow) => {
+      if (onlineUserList.includes(friendRow.friend.id)) {
+        onlineFriendList.push(friendRow.friend.id);
+      }
+    });
+    console.log(`onlineFriendList: ${onlineFriendList}`);
+
+    return { connections: onlineFriendList };
   }
 }

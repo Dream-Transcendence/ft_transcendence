@@ -1,13 +1,13 @@
 import { styled } from '@mui/material/styles';
-import BlockIcon from '@mui/icons-material/Block';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
-import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import { CHANNELURL, SERVERURL } from '../../configs/Link.url';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { CHANNELURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, deleteChannelParticipant } from '../../socket/event';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -18,16 +18,24 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
 }));
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function InfoBoxRoomFunctionModule() {
-  //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
-  const userId = 1;
+  const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const { roomId } = useParams();
+  const [socket] = useSocket(chatNameSpace);
 
-  async function outRoom() {
+  //채팅방을 나가는 작업 네임스페이스(ws://localhost:4242/chat)
+  function outRoom() {
     try {
-      //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
-      await axios.delete(
-        `${SERVERURL}/rooms/${roomId}/channel/participants/${userId}`,
+      socket.emit(
+        `${deleteChannelParticipant}`,
+        {
+          userId: userData.id,
+          roomId: roomId,
+        },
+        (response: any) => {
+          console.log('deleteChannel!! ', response); // "got it"
+          navigate(`${CHANNELURL}`);
+        },
       );
       navigate(`${CHANNELURL}`);
     } catch (error) {

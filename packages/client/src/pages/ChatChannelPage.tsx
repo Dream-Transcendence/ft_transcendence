@@ -1,15 +1,16 @@
-import NavigationBar from '../atoms/bar/NavigationBar';
 import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate';
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
-import { CHANNELURL, CHATROOMURL, SERVERURL } from '../configs/Link.url';
-import { LineAxisOutlined } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { CHANNELURL, SERVERURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
+import { userDataAtom } from './PingpongRoutePage';
+import useSocket from '../socket/useSocket';
+import { chatNameSpace } from '../socket/event';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -42,17 +43,23 @@ const Aside = styled('aside')(({ theme }) => ({
   backgroundColor: '#194DD2',
 }));
 
+/*
+ * 리스트를 쪼개서 아톰으로 관리??
+ * 최초 랜더링 시, data 받아옴
+ */
+
 //채팅방 리스트 받아오는 비동기요청
 function ChatroomPage() {
+  const userData = useRecoilValue(userDataAtom);
   const [roomList, setRoomList] = useState([]);
-  const userId = 1;
+  const [socket, connect, disconnect] = useSocket(chatNameSpace);
 
   useEffect(() => {
     async function getRoomList() {
       try {
         //api 수정됨 rooms/channles -> rooms/userid/channels
         const response = await axios.get(
-          `${SERVERURL}/rooms/${userId}/channels`,
+          `${SERVERURL}/rooms/${userData.id}/channels`,
         );
         setRoomList(response.data);
       } catch (error) {
@@ -62,6 +69,18 @@ function ChatroomPage() {
     }
     getRoomList();
   }, []);
+
+  //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
+  //채팅관련 소켓 네임스페이스(chat) 연결작업
+  useEffect(() => {
+    function setChatSocketConnect() {
+      connect();
+    }
+    setChatSocketConnect();
+    return () => {
+      disconnect();
+    };
+  }, [socket, connect, disconnect]);
 
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (

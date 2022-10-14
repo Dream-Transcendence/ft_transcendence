@@ -3,6 +3,7 @@ import {
   Entity,
   ManyToOne,
   OneToMany,
+  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { AUTH_TYPE, CHAT_TYPE, STATUS_TYPE } from './dto/rooms.dto';
@@ -10,7 +11,7 @@ import { User } from '../users/users.entity';
 
 @Entity()
 export class Room {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column({ nullable: true })
@@ -36,20 +37,23 @@ export class Room {
 
   @OneToMany(() => DmParticipant, (dmParticipant) => dmParticipant.room)
   dmParticipants: DmParticipant[];
+
+  @OneToMany(() => Message, (message) => message.room)
+  messages: Message[];
 }
 
 @Entity()
 export class ChannelParticipant {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   auth: AUTH_TYPE;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'integer' })
   status: STATUS_TYPE;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'timestamp' })
   statusStartDate: Date;
 
   @ManyToOne(() => User, (user) => user.channelParticipants)
@@ -61,12 +65,30 @@ export class ChannelParticipant {
 
 @Entity()
 export class DmParticipant {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @ManyToOne(() => User, (user) => user.dmParticipants)
   user: User;
 
   @ManyToOne(() => Room, (room) => room.dmParticipants)
+  room: Room;
+}
+
+@Entity()
+export class Message {
+  @PrimaryColumn()
+  id: number;
+
+  @Column()
+  date: Date;
+
+  @Column()
+  body: string;
+
+  @ManyToOne(() => User, (user) => user.messages)
+  user: User;
+
+  @ManyToOne(() => Room, (room) => room.messages)
   room: Room;
 }

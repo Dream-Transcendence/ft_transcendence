@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
+  IsDate,
   IsInt,
   IsNotEmpty,
-  isObject,
+  IsNumber,
   IsObject,
   IsOptional,
   IsString,
@@ -97,6 +98,34 @@ export class ChannelInfoDto {
   @ApiProperty()
   @IsInt()
   personnel: number;
+}
+
+export class GetRoomInfoDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(3)
+  type: CHAT_TYPE;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+
+  @ApiProperty()
+  @IsString()
+  title: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  blocked?: boolean;
 }
 
 export class ChannelParticipantDto {
@@ -208,7 +237,7 @@ export class GetUserRoomDto {
   recvMessageCount: number;
 }
 
-export class createDmDto {
+export class CreateDmDto {
   @ApiProperty()
   @IsInt()
   userId: number;
@@ -243,6 +272,14 @@ export class PatchChannelInfoDto {
 }
 
 export class PatchUserInfoDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
   @ApiProperty()
   @IsInt()
   @Min(0)
@@ -256,4 +293,51 @@ export class PatchUserInfoDto {
   @Max(1)
   @IsOptional()
   status?: STATUS_TYPE;
+}
+
+export class EnterChannelDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsOptional()
+  salt: string;
+}
+
+export class LeaveChannelDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+}
+
+export class SendMessageDto {
+  @IsNumber()
+  @IsNotEmpty()
+  roomId: number;
+
+  @IsNumber()
+  @IsNotEmpty()
+  userId: number;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+export class MessageDto {
+  @IsObject()
+  @IsNotEmpty()
+  user: UserDto;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
 }

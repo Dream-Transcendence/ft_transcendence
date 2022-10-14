@@ -1,13 +1,10 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
-import { RoomInfoSet } from '../../types/Room.type';
-import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
+import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
+import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -26,7 +23,6 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
   backgroundColor: '#003566',
 }));
 
-//[수정사항] any => ChannelDto
 /*
  * 채팅정보를 수정하기 위한 공통 커스텀 훅
  */
@@ -45,8 +41,7 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
       handler !== undefined &&
       roomInfo['salt'] === ''
     ) {
-      //[수정사항] any => ChannelDto
-      const room: any = { ...roomInfo, type: 1 };
+      const room: GetRoomInfoDto = { ...roomInfo, type: 1 };
       await handler(room);
     } else if (
       response.status === 200 &&
@@ -63,18 +58,15 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   }
 };
 
-//[수정사항] any => ChannelDto
 function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo } = roomInfoSet;
 
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
-        {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
-        <InfoBoxFunctionModule roomInfoSet={roomInfoSet} />
+        <InfoBoxRoomFunctionModule />
       </RoomInfoBox>
     </RoomInfoLayout>
   );

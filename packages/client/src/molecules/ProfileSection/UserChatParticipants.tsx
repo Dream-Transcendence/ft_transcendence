@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
@@ -12,14 +11,12 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxDataType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
+import { useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
+import { ADMIN, OWNER } from '../../configs/userType';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userAuth } from '../../recoil/chat.recoil';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -41,14 +38,6 @@ const SpeedDialLayout = styled('div')((props) => ({
   marginLeft: '20%',
 }));
 
-const personal: LinkIconResource = {
-  url: PROFILEURL,
-  icon: <PersonIcon />,
-};
-const linkPersonal: LinkIconProps = {
-  iconResource: personal,
-};
-
 const customProps: CustomIconProps = {
   icon: <NotInterestedIcon />,
 };
@@ -57,18 +46,28 @@ const customProps: CustomIconProps = {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox(props: { participantInfo: any }) {
-  //props: { userData: BaseUserProfileData }) {
-  // const { userData } = props;
-  const userData: UserProfileBoxDataType = {
-    nickname: 'noname',
-    image: 'noimage',
+  const participantInfo = props.participantInfo;
+  const { user, auth } = participantInfo;
+  const userType = useRecoilValue(userAuth);
+  const userData = useRecoilValue(userDataAtom);
+  const userInfo: UserProfileBoxDataType = {
+    nickname: user.nickname,
+    image: user.image,
+  };
+
+  const personal: LinkIconResource = {
+    url: `${PROFILEURL}/${user.id}`,
+    icon: <PersonIcon />,
+  };
+
+  const linkPersonal: LinkIconProps = {
+    iconResource: personal,
   };
 
   const userProfileBoxProps = {
-    isButton: true,
+    isButton: false,
     avatarType: 'circle',
-    userData: userData,
-    // action?: () => void;
+    userData: userInfo,
   };
   return (
     <UserProfileLayout>
@@ -79,9 +78,15 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
         {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
         <CustomIconButton customProps={customProps} />
         {/* admin 권한에 따라 활성/비활성화 */}
-        <SpeedDialLayout>
-          <BasicSpeedDial />
-        </SpeedDialLayout>
+        {userType !== null && (
+          <SpeedDialLayout>
+            {auth !== OWNER &&
+              userData.id !== user.id &&
+              !(userType === ADMIN && auth === ADMIN) && (
+                <BasicSpeedDial participantInfo={participantInfo} />
+              )}
+          </SpeedDialLayout>
+        )}
       </UserFuntionLayout>
     </UserProfileLayout>
   );

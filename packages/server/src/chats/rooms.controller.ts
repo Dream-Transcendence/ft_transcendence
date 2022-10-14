@@ -1,16 +1,14 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
-  Logger,
   Param,
+  Logger,
   Patch,
   Post,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
-  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -21,12 +19,10 @@ import {
   ChannelParticipantDto,
   ChannelDto,
   PatchChannelInfoDto,
-  PatchUserInfoDto,
-  createDmDto,
-  RoomPasswordDto,
+  CreateDmDto,
+  GetRoomInfoDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
-import { DmUserDto } from '../users/dto/user.dto';
 
 @ApiTags('room')
 @Controller('rooms')
@@ -61,33 +57,18 @@ export class RoomsController {
     return this.roomService.getChannels(userId);
   }
 
-  @Get('/channel/:roomId/:userId')
+  @Get('/:roomId/:userId')
   @ApiOperation({ summary: '채팅방 정보 가져오기' })
   @ApiOkResponse({
-    description: '채팅방 정보 가져오기 성공 type: ChannelDto',
-    type: ChannelDto,
+    description: '채팅방 정보 가져오기 성공 type: GetRoomInfoDto',
+    type: GetRoomInfoDto,
   })
-  @ApiNotFoundResponse({ description: '방 혹은 user를 찾을 수 없습니다' })
-  getChannelInfo(
+  getRoomInfo(
     @Param('roomId') roomId: number,
     @Param('userId') userId: number,
   ): Promise<ChannelDto> {
     this.logger.log(`getRoomInfo`);
-    return this.roomService.getChannelInfo(roomId, userId);
-  }
-
-  @Post('/:roomId/users/:userId')
-  @ApiOperation({ summary: '채팅방 입장 BodyType: RoomPasswordDto' })
-  @ApiOkResponse({ description: '채팅방 입장 성공' })
-  @ApiNotFoundResponse({ description: '방 혹은 user를 찾을 수 없습니다' })
-  @ApiForbiddenResponse({ description: '비밀번호가 맞지 않습니다' })
-  enterChannel(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-    @Body() roomPasswordDto: RoomPasswordDto,
-  ) {
-    // NOTE 비밀번호가 없을 때는 빈 객체 혹은 null을 보내기
-    return this.roomService.enterChannel(roomId, userId, roomPasswordDto);
+    return this.roomService.getRoomInfo(roomId, userId);
   }
 
   @Get('/:roomId/channel/:userId/participants')
@@ -105,22 +86,10 @@ export class RoomsController {
     return this.roomService.getChannelParticipants(userId, roomId);
   }
 
-  @Delete('/:roomId/channel/participants/:userId')
-  @ApiOperation({ summary: '채널 참여자 삭제' })
-  @ApiOkResponse({ description: '채널 참여자 삭제 성공' })
-  @ApiNotFoundResponse({ description: '채널 참여자를 찾을 수 없습니다' })
-  deleteChannelParticipant(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-  ) {
-    this.logger.log('deleteChannelParticipant');
-    return this.roomService.deleteChannelParticipant(roomId, userId);
-  }
-
   @Get('/:roomId/messages')
   @ApiOperation({ summary: '채팅방 메시지 목록' })
   getMessages(@Param('roomId') roomId: number) {
-    return;
+    return this.roomService.getMessages(roomId);
   }
 
   @Patch('/:roomId')
@@ -137,20 +106,6 @@ export class RoomsController {
     return this.roomService.patchChannelInfo(roomId, patchChannelInfoDto);
   }
 
-  @Patch('/:roomId/users/:userId')
-  @ApiOperation({
-    summary: '채팅 유저 권한, 상태 변경 BodyType: PatchUserInfoDto',
-  })
-  @ApiOkResponse({ description: '채팅 유저 권한, 상태 변경 성공' })
-  patchUserInfo(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-    @Body() patchUserInfoDto: PatchUserInfoDto,
-  ) {
-    this.logger.log('patchUserAuth');
-    return this.roomService.patchUserInfo(roomId, userId, patchUserInfoDto);
-  }
-
   // ANCHOR DM Controller
   @Post('/dm')
   @ApiOperation({ summary: 'DM 채널 생성 BodyType: createDmDto' })
@@ -158,20 +113,7 @@ export class RoomsController {
     description: 'DM 채널 생성 type: DmDto',
   })
   @ApiNotFoundResponse({ description: 'DM 참여자를 찾을 수 없습니다' })
-  createDm(@Body() createDmDto: createDmDto) {
+  createDm(@Body() createDmDto: CreateDmDto) {
     return this.roomService.createDm(createDmDto);
-  }
-
-  @Get('/:roomId/dm/:userId/participants')
-  @ApiOperation({ summary: 'DM 참여자 목록' })
-  @ApiOkResponse({
-    description: 'DM 참여자 목록 가져오기 성공 type: DmUserDto',
-    type: DmUserDto,
-  })
-  getDmParticipant(
-    @Param('roomId') roomId: number,
-    @Param('userId') userId: number,
-  ) {
-    return this.roomService.getDmParticipant(roomId, userId);
   }
 }

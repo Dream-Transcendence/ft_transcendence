@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import BlockIcon from '@mui/icons-material/Block';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
+import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -9,6 +10,8 @@ import { useEffect, useState } from 'react';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { CustomIconProps, LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -18,8 +21,7 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-export async function blockUser(blockId: number) {
-  const userId = 1;
+export async function blockUser(blockId: number, userId: number) {
   try {
     //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
     await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
@@ -34,12 +36,13 @@ export async function blockUser(blockId: number) {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 //[수정사항] any => ChannelDto
-function InfoDMBoxFunctionModule(props: { dmInfo: any }) {
-  const dmInfo = props.dmInfo;
+function InfoDMBoxFunctionModule(props: { roomInfo: any }) {
+  const userData = useRecoilValue(userDataAtom);
+  const roomInfo = props.roomInfo;
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
 
   function handlerBlock() {
-    blockUser(dmInfo.id);
+    blockUser(roomInfo.id, userData.id);
   }
 
   const personal: LinkIconResource = {
