@@ -8,13 +8,13 @@ import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParti
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
-import { ParticipantInfoSet } from '../../types/Participant.type';
+import {
+  ParticipantInfo,
+  ParticipantInfoSet,
+} from '../../types/Participant.type';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth } from '../../recoil/chat.recoil';
-import { Socket } from 'socket.io-client';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace, enterChannel } from '../../socket/event';
 import { COMMON } from '../../configs/userType';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
@@ -40,7 +40,7 @@ function EnteredChatRoomTemplate() {
   });
   const [personnel, setPersonnel] = useState<number>(0);
   //[수정사항] any => ChannelParticipantDto
-  const [participantInfo, setParticipantInfo] = useState<any>([]);
+  const [participantInfo, setParticipantInfo] = useState<ParticipantInfo[]>([]);
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
   const setUserType = useSetRecoilState(userAuth);
@@ -86,7 +86,7 @@ function EnteredChatRoomTemplate() {
   const useFindUser = () => {
     let type;
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
-      type = participantInfo.find((participant: any) => {
+      type = participantInfo.find((participant: ParticipantInfo) => {
         if (participant === null) return false;
         return participant.user.id === userData.id;
       });
