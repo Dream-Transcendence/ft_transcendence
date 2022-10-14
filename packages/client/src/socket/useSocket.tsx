@@ -18,9 +18,9 @@ export const useSocket = (
   }
 
   // if (sockets[nameSpace].connected) {
-  sockets[nameSpace].onAny((event, ...args) => {
-    console.log(event, args);
-  });
+  // sockets[nameSpace].onAny((event, ...args) => {
+  //   console.log(event, args);
+  // });
   // }
 
   // const auth = () => {
