@@ -15,6 +15,8 @@ import {
 } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
+import { chatNameSpace, logOn, userNameSpace } from '../socket/event';
+import useSocket from '../socket/useSocket';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
@@ -47,14 +49,42 @@ const PageSection = styled('section')(({ theme }) => ({
 export const userDataAtom = atom<BaseUserProfileData>({
   key: 'userData',
   default: {
-    id: 2,
+    id: 1,
     nickname: 'dha',
     image: 'https://cdn.intra.42.fr/users/dha.jpg',
   },
 });
 
 function PingpongRoutePage() {
+  const [socket, connect, disconnect] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
+
+  //로그온 정보 날리기 친구정보 가져다줄것
+  //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
+  useEffect(() => {
+    function setChatSocketConnect() {
+      connect();
+      socket.emit(
+        `${logOn}`,
+        {
+          userId: userData.id,
+        },
+        (response: any) => {
+          console.log('logOn user:', response);
+        },
+      );
+      socket.on('exception', (response: any) => {
+        alert(response.message);
+      });
+    }
+    setChatSocketConnect();
+    return () => {
+      socket.off('exception');
+      disconnect();
+      //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
+    };
+  }, [userData.id, socket, connect, disconnect]);
+
   return (
     <PageSection>
       <header>

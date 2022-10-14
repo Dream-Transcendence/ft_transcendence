@@ -1,15 +1,13 @@
 import { styled } from '@mui/material/styles';
-import BlockIcon from '@mui/icons-material/Block';
-import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
-import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { CHANNELURL, SERVERURL } from '../../configs/Link.url';
+import { CHANNELURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, deleteChannelParticipant } from '../../socket/event';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -23,11 +21,21 @@ function InfoBoxRoomFunctionModule() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const { roomId } = useParams();
+  const [socket] = useSocket(chatNameSpace);
 
-  async function outRoom() {
+  //채팅방을 나가는 작업 네임스페이스(ws://localhost:4242/chat)
+  function outRoom() {
     try {
-      await axios.delete(
-        `${SERVERURL}/rooms/${roomId}/channel/participants/${userData.id}`,
+      socket.emit(
+        `${deleteChannelParticipant}`,
+        {
+          userId: userData.id,
+          roomId: roomId,
+        },
+        (response: any) => {
+          console.log('deleteChannel!! ', response); // "got it"
+          navigate(`${CHANNELURL}`);
+        },
       );
       navigate(`${CHANNELURL}`);
     } catch (error) {

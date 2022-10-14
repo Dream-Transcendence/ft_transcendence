@@ -8,6 +8,10 @@ import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace } from '../../socket/event';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -67,7 +71,6 @@ function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
   return (
     <RoomInfoLayout>
       <RoomInfoBox>
-        {/* [axios GET 요청]해당 채팅방 정보 요청 내부에서 나눠 받을지, 한꺼번에 받을지 고민중 */}
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
         <InfoBoxRoomFunctionModule />

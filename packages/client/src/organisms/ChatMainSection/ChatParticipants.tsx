@@ -30,18 +30,21 @@ function ChatParticipantsOrganisms(prop: {
   participantInfoSet: ParticipantInfoSet;
 }) {
   const participantInfoSet = prop.participantInfoSet;
+  //[수정사항] 임시조건문 아예 DM일땐 들어오면 안됨.
   return (
     <ChatParticipantsLayout>
-      <ChatParticipantBox>
-        <ParticipantsBoxTitle>
-          <Typography color="white" marginTop={1}>
-            채팅방 인원
-          </Typography>
-          <ChatParticipantsListOrganisms
-            participantInfoSet={participantInfoSet}
-          />
-        </ParticipantsBoxTitle>
-      </ChatParticipantBox>
+      {participantInfoSet.participantInfo[0] !== null && (
+        <ChatParticipantBox>
+          <ParticipantsBoxTitle>
+            <Typography color="white" marginTop={1}>
+              채팅방 인원
+            </Typography>
+            <ChatParticipantsListOrganisms
+              participantInfoSet={participantInfoSet}
+            />
+          </ParticipantsBoxTitle>
+        </ChatParticipantBox>
+      )}
     </ChatParticipantsLayout>
   );
 }
