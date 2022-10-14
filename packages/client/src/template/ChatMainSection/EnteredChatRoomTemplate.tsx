@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CHANNELURL, SERVERURL, SOCKETURL } from '../../configs/Link.url';
+import { SERVERURL } from '../../configs/Link.url';
 import { DM } from '../../configs/RoomType';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
@@ -12,9 +12,6 @@ import { ParticipantInfoSet } from '../../types/Participant.type';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth } from '../../recoil/chat.recoil';
-import { Socket } from 'socket.io-client';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace, enterChannel } from '../../socket/event';
 import { COMMON } from '../../configs/userType';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({

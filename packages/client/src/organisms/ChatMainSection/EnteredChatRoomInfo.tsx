@@ -1,17 +1,10 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace } from '../../socket/event';
-import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',

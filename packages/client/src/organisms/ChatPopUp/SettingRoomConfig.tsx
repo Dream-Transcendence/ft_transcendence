@@ -1,11 +1,10 @@
-import { Typography, Button, TextField, Input } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SetChatRoomNameModule from '../../molecules/ChatPopUp/SetChatRoomName';
-import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
 import SetChatRoomTypeModule from '../../molecules/ChatPopUp/SetChatRoomType';
 import SetChatRoomPasswordModule from '../../molecules/ChatPopUp/SetChatRoomPassword';
 import SetChatRoomInviteModule from '../../molecules/ChatPopUp/SetChatRoomInvite';
-import { CreateRoomHandlerSet, CreateRoomSet } from '../../types/Room.type';
+import { CreateRoomSet } from '../../types/Room.type';
 import { useState } from 'react';
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
