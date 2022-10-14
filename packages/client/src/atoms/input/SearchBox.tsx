@@ -1,6 +1,8 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+import { useState } from 'react';
+import AutoComplateSerchBox from './AutoCompleteSerchBox';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -42,16 +44,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+
 function SearchBox() {
+  const [inputValue, setInputValue] = useState('');
+  // const handlerChange = (event: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
+  //   setInputValue(event.target.value);
+  // }
   return (
     <Search>
       <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper>
-      <StyledInputBase
+      <AutoComplateSerchBox></AutoComplateSerchBox>
+      {/* <StyledInputBase
         placeholder="유저찾기…"
         inputProps={{ 'aria-label': 'search' }}
-      />
+        // onChange={}
+      /> */}
       {/* [axios GET 요청] Input value에 따른 인원목록 */}
       {/* 리스트 추가 후, 해당 유저 페이지로 연결하는 로직 구현해야함 */}
     </Search>
