@@ -328,6 +328,7 @@ export class RoomService {
 
     // 참여 성공
     // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
+    console.log('하... 어ㅔㅐㅗ 아노대니??');
     return { isEntered: true };
   }
 
@@ -347,7 +348,7 @@ export class RoomService {
   async deleteChannelParticipant(
     client: Socket,
     leaveChannelDto: LeaveChannelDto,
-  ): Promise<void> {
+  ) {
     const { roomId, userId } = leaveChannelDto;
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
       relations: { room: true, user: true },
@@ -374,7 +375,7 @@ export class RoomService {
         const ids = msgs.map((msg) => msg.id);
         await this.messagesRepository.delete(ids);
         await this.roomsRepository.delete(roomId);
-        return;
+        return { isDeleted: true };
       }
     }
     client
@@ -383,6 +384,12 @@ export class RoomService {
         'roomMessage',
         `${deleteParticipant.user.nickname}이(가) 방을 나갔습니다.`,
       );
+    client.emit(
+      'roomMessage',
+      `${deleteParticipant.user.nickname}이(가) 방을 나갔 ekrh..dho gksrmf dkscuwlsirh`,
+    );
+    console.log('DHO???????????????????????????');
+    return { isDeleted: true };
   }
 
   async sendMessage(client: Socket, sendMessageDto: SendMessageDto) {

@@ -36,7 +36,9 @@ function EnteredChatRoomTemplate() {
     type: 5,
     image: '',
     title: '',
+    personnel: 0,
   });
+  const [personnel, setPersonnel] = useState<number>(0);
   //[수정사항] any => ChannelParticipantDto
   const [participantInfo, setParticipantInfo] = useState<any>([]);
   const { roomId } = useParams();
@@ -101,17 +103,19 @@ function EnteredChatRoomTemplate() {
   // effect처리하지 않으니 위 에러발생
   useEffect(() => {
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
-      if (participantInfo.length !== 0) {
+      const count: number = participantInfo.length;
+      if (count !== 0) {
+        setPersonnel(count);
         setUserType(useFindUser);
       }
     }
   }, [participantInfo.length, setUserType]);
 
   const roomInfoSet: RoomInfoSet = {
-    roomInfo: roomInfo,
+    roomInfo: { ...roomInfo, personnel: personnel },
     handler: handleRoomInfo,
   };
-
+  //룸 정보에 인원수 넣을ㄷ것
   const participantInfoSet: ParticipantInfoSet = {
     participantInfo: participantInfo,
   };

@@ -23,7 +23,7 @@ function InfoBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       {type === DM ? (
         <InfoDMBoxFunctionModule roomInfo={roomInfo} />
       ) : (
-        <InfoBoxRoomFunctionModule />
+        <InfoBoxRoomFunctionModule roomInfoSet={roomInfoSet} />
       )}
     </InfoFunctionLayout>
   );

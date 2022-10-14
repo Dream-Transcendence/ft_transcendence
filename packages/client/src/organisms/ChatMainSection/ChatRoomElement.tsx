@@ -5,16 +5,16 @@ import RoomTitleModule from '../../molecules/ChatSection/RoomElementTitle';
 import RoomElementImageModule from '../../molecules/ChatSection/RoomElementImage';
 import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { GetRoomInfoDto } from '../../types/Room.type';
+import { GetRoomInfoDto, RoomList } from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, enterChannel } from '../../socket/event';
+import { chatRoomList } from '../../recoil/chat.recoil';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -54,12 +54,15 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
   const [socket] = useSocket(chatNameSpace);
-  const { id: roomId, name, type, image } = roomInfo;
+  const { id: roomId, name, type, image, personnel } = roomInfo;
+  const [roomList, setRoomList] = useRecoilState(chatRoomList);
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
+  //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
+  //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
   function enterRoom() {
     console.log('sonking ! enter!!!', {
       userId: userData.id,
@@ -76,6 +79,10 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       },
       (response: any) => {
         console.log('enter new room success ', response); // "got it"
+        //임시 데이터 생성
+        //[수정사항] optimistic UI를 위한 작업
+        const newRoom: RoomList = { ...roomInfo, recvMessageCount: 0 };
+        setRoomList([...roomList, newRoom]);
         navigate(`${CHATROOMURL}${roomId}`);
       },
     );
@@ -99,7 +106,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       <RoomInfoLayout>
         <RoomTitleModule title={name} type={type}></RoomTitleModule>
         {/*[수정사항] id대신 인원수가 들어갈 예정 */}
-        <RoomNumberOfPeopleModule num={roomId}></RoomNumberOfPeopleModule>
+        <RoomNumberOfPeopleModule num={personnel}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>

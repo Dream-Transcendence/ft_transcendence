@@ -27,12 +27,22 @@ export interface RoomList {
   recvMessageCount: number;
 }
 
+export interface UnJoinedRoomList {
+  id: number;
+  name: string;
+  type: number;
+  title: string;
+  image: string;
+  personnel: number;
+}
+
 export interface GetRoomInfoDto {
   id: number;
   name: string;
   type: number;
   image: string;
   title: string;
+  personnel: number;
   salt?: string;
   blocked?: boolean;
 }

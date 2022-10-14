@@ -73,7 +73,7 @@ function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
       <RoomInfoBox>
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
-        <InfoBoxRoomFunctionModule />
+        <InfoBoxRoomFunctionModule roomInfoSet={roomInfoSet} />
       </RoomInfoBox>
     </RoomInfoLayout>
   );

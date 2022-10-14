@@ -49,7 +49,10 @@ export class RoomsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() leaveChannelDto: LeaveChannelDto,
   ) {
-    await this.roomService.deleteChannelParticipant(client, leaveChannelDto);
+    return await this.roomService.deleteChannelParticipant(
+      client,
+      leaveChannelDto,
+    );
   }
 
   @SubscribeMessage('sendMessage')
