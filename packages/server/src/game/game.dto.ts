@@ -1,5 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from 'src/users/dto/user.dto';
+import { User } from 'src/users/users.entity';
+import internal from 'stream';
+
+const GAME_MODE = {
+  ladder: 0,
+  normal: 1,
+  powerUp: 2,
+  sizeUp: 3,
+} as const;
+export type GAME_MODE = typeof GAME_MODE[keyof typeof GAME_MODE];
 
 export class GameLadderDto {
   @ApiProperty({ example: 1 })
@@ -26,4 +36,19 @@ export class GameRecordDto {
 
   @ApiProperty({ example: true })
   isLadder: boolean;
+}
+
+export class GameRoomDto {
+  id: string;
+
+  leftPlayer: UserDto;
+  rightPlayer: UserDto;
+
+  mode: number;
+}
+
+export class MatchDto {
+  userId: number;
+
+  mode: GAME_MODE;
 }
