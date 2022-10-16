@@ -1,6 +1,6 @@
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
-import ProfileNicname from '../../atoms/input/ProfileNickname';
+import ProfileNickname from '../../atoms/input/ProfileNickname';
 import {
   ProfileActionLayout,
   UserInfoLayout,

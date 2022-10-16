@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
-import ProfileNicname from '../../atoms/input/ProfileNickname';
+import ProfileNickname from '../../atoms/input/ProfileNickname';
 import {
   ProfileActionLayout,
   UserInfoLayout,
@@ -31,7 +31,9 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 
 function UserInfo() {
   const { userId } = useParams();
+
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
+  const [userNickname, setUserNickname] = useState(user.nickname);
   const [userImage, setUserImage] = useState('');
   async function changeUserImage() {
     try {
@@ -63,16 +65,17 @@ function UserInfo() {
       const file = event.target.files[0];
       if (file) {
         reader.readAsDataURL(file);
-        reader.onloadend = () => { //비동기 로직임
+        reader.onloadend = () => {
+          //비동기 로직임
           if (reader.result) {
             if (typeof reader.result === 'string') {
               // setUser({ ...user, image: reader.result });
               setUserImage(reader.result);
             } else {
-              alert('처리할 수 없는 이미지입니다.')
+              alert('처리할 수 없는 이미지입니다.');
             }
           }
-        }
+        };
         // changeUserImage(); //비동기 로직 끝난 뒤 그 값을 받아야 함
       }
     }
@@ -88,21 +91,21 @@ function UserInfo() {
     action: handleChange,
   };
 
-
-  useEffect(() => {
-    async function getUserData() {
-      try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/profile`,
-        );
-        setUser(response.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
-    getUserData();
-  }, [userId, setUser]);
+  // useEffect(() => {
+  //   async function getUserData() {
+  //     try {
+  //       const response = await axios.get(
+  //         `${SERVERURL}/users/${userId}/profile`,
+  //       );
+  //       setUser(response.data);
+  //       console.log(response.data);
+  //     } catch (error) {
+  //       alert(error);
+  //       console.log(error);
+  //     }
+  //   }
+  //   getUserData();
+  // }, []);
 
   return (
     <UserInfoLayout>
@@ -118,7 +121,7 @@ function UserInfo() {
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>
-        <ProfileNicname />
+        <ProfileNickname />
       </UserNicknameLayout>
       <ProfileActionLayout>
         <SecondAuthSwitch />
