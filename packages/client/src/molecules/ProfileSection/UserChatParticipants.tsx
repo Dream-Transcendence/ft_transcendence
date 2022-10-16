@@ -17,7 +17,12 @@ import { PROFILEURL } from '../../configs/Link.url';
 import { ADMIN, OWNER } from '../../configs/userType';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth } from '../../recoil/chat.recoil';
-import { ParticipantInfo } from '../../types/Participant.type';
+import {
+  ParticipantInfo,
+  ParticipantInfoNState,
+} from '../../types/Participant.type';
+import { useState } from 'react';
+import { MUTE } from '../../configs/Status.case';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -34,10 +39,34 @@ const UserFuntionLayout = styled('div')(({ theme }) => ({
   marginLeft: '20%',
 }));
 
-const UserStateLayout = styled('div')(({ theme }) => ({
+const UserStateLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '40%',
+  display: 'flex',
   paddingRight: '10%',
+}));
+
+const OwnerBadge = styled('span')(({ theme }) => ({
+  marginTop: '1%',
+  height: '20px',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '1',
+}));
+
+const AdminBadge = styled('span')(({ theme }) => ({
+  marginTop: '1%',
+  height: '20px',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '1',
+}));
+
+const MuteBadge = styled('span')(({ theme }) => ({
+  marginTop: '10%',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '2',
 }));
 
 const SpeedDialLayout = styled('div')((props) => ({
@@ -52,11 +81,14 @@ const customProps: CustomIconProps = {
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function UserChatParticipantsBox(props: { participantInfo: ParticipantInfo }) {
-  const participantInfo = props.participantInfo;
-  const { user, auth } = participantInfo;
+function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
+  const { participantInfo, handler } = participantInfoNState;
+  const { user, auth, status } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
+
+  //const isBan = useState();
+
   const userInfo: UserProfileBoxDataType = {
     nickname: user.nickname,
     image: user.image,
@@ -80,6 +112,9 @@ function UserChatParticipantsBox(props: { participantInfo: ParticipantInfo }) {
     <UserProfileLayout>
       <UserStateLayout>
         {/* 조건에 따라 왕관, 뮤트 , 밴 작업할 것 */}
+        {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
+        {auth === OWNER && <AdminBadge>👑</AdminBadge>}
+        {status === MUTE && <MuteBadge>🔇</MuteBadge>}
         <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       </UserStateLayout>
       <UserFuntionLayout>
@@ -93,7 +128,7 @@ function UserChatParticipantsBox(props: { participantInfo: ParticipantInfo }) {
             {auth !== OWNER &&
               userData.id !== user.id &&
               !(userType === ADMIN && auth === ADMIN) && (
-                <BasicSpeedDial participantInfo={participantInfo} />
+                <BasicSpeedDial participantInfoNState={participantInfoNState} />
               )}
           </SpeedDialLayout>
         )}

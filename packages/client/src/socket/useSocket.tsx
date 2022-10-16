@@ -2,7 +2,6 @@ import io, { Socket } from 'socket.io-client';
 import { useCallback } from 'react';
 import { SOCKETURL } from '../configs/Link.url';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
-
 const sockets: { [key: string]: Socket<DefaultEventsMap, DefaultEventsMap> } =
   {};
 

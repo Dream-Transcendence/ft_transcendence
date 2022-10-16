@@ -32,7 +32,7 @@ const getRoomList = async (userId: number) => {
 };
 
 export const getJoinedChatList = selectorFamily<any, number>({
-  key: '',
+  key: 'getJoinedChatList',
   get:
     (userId) =>
     async ({ get }) => {
@@ -51,7 +51,7 @@ const getUnJoinedRoomList = async (userId: number) => {
 };
 
 export const getUnJoinedChatList = selectorFamily<any, number>({
-  key: '',
+  key: 'getUnJoinedChatList',
   get:
     (userId) =>
     async ({ get }) => {

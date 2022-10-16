@@ -5,56 +5,150 @@ import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { useRecoilValue } from 'recoil';
-import { OWNER } from '../../configs/userType';
+import { OWNER, ADMIN, COMMON } from '../../configs/userType';
 import { userAuth } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { chatNameSpace, patchUserInfo } from '../../socket/event';
 import { useParams } from 'react-router-dom';
-import { ParticipantInfo } from '../../types/Participant.type';
+import {
+  ChangeParticipantInfo,
+  ParticipantInfo,
+  ParticipantInfoNState,
+} from '../../types/Participant.type';
 import useSocket from '../../socket/useSocket';
+import { useState } from 'react';
+import { BAN, MUTE, NONE } from '../../configs/Status.case';
+
+//와.. 뭐지 react-dom.development.js:16317 Uncaught Error: Too many re-renders. React limits the number of renders to prevent an infinite loop 에러 발생
+//아래의 코드가 문제인듯하다.
+// const checkStatus = (
+//   auth: number | null,
+//   status: number | null,
+//   AdminSetter: (state: boolean) => void,
+//   MuteSetter: (state: boolean) => void,
+// ) => {
+//   if (status === MUTE) MuteSetter(true);
+//   else if (status === BAN) console.log('ban!!!!!!');
+//   else if (auth === ADMIN) AdminSetter(true);
+// };
+
+const changeParticipant = (
+  participantInfo: ParticipantInfo,
+  key: string,
+  value: number | null,
+) => {
+  return { ...participantInfo, [key]: value };
+};
 
 export default function BasicSpeedDial(props: {
-  participantInfo: ParticipantInfo;
+  participantInfoNState: ParticipantInfoNState;
 }) {
-  const participantInfo = props.participantInfo;
+  const {
+    participantInfo,
+    handler: setParticipantInfos,
+    participantInfoArray,
+  } = props.participantInfoNState;
   const { user, auth, status, blocked } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
-  const userId = useParams();
+  const { roomId } = useParams();
   const [socket] = useSocket(chatNameSpace);
+  const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
+    (participant) => participant.user.id !== participantInfo.user.id,
+  );
 
-  const onOffCrown = () => {};
+  const [isAdmin, setIsAdmin] = useState(false);
+  //const isBan = useState();
+  const [isMute, setIsMute] = useState(false);
 
-  const KickOff = () => {};
+  const setInfo = (authValue: number | null, statusValue: number | null) => {
+    return {
+      userId: user.id,
+      roomId: Number(roomId),
+      auth: authValue,
+      status: statusValue,
+    };
+  };
 
-  const OnMute = () => {};
+  const onOffCrown = () => {
+    console.log('Admin!!!!!!!!!');
+    if (participantInfo.auth === ADMIN)
+      setParticipantInfos([
+        ...filteredParticipants,
+        changeParticipant(participantInfo, 'auth', COMMON),
+      ]);
+    else if (participantInfo.auth === COMMON)
+      setParticipantInfos([
+        ...filteredParticipants,
+        changeParticipant(participantInfo, 'auth', ADMIN),
+      ]);
+  };
+
+  const KickOff = () => {
+    setParticipantInfos([
+      ...filteredParticipants,
+      changeParticipant(participantInfo, 'status', BAN),
+    ]);
+  };
+
+  const OnMute = () => {
+    // if (!isMute) setIsMute(true);
+    // else alert('이미 음소거 처리되었습니다.');
+    setParticipantInfos([
+      ...filteredParticipants,
+      changeParticipant(participantInfo, 'status', MUTE),
+    ]);
+    console.log('mute!!!!!!!!!!!');
+  };
+
+  const OnUnMute = () => {
+    // if (!isMute) setIsMute(true);
+    // else alert('이미 음소거 처리되었습니다.');
+    setParticipantInfos([
+      ...filteredParticipants,
+      changeParticipant(participantInfo, 'status', 8),
+    ]);
+    console.log();
+    console.log('unmute!!!!!!!!!!!');
+  };
 
   const handleAdmin = () => {
-    setUserState(onOffCrown);
+    let info: ChangeParticipantInfo;
+    if (auth === ADMIN) {
+      info = setInfo(COMMON, status);
+    } else {
+      info = setInfo(ADMIN, status);
+    }
+    setUserState(info, onOffCrown);
   };
 
   const handleBan = () => {
-    setUserState(KickOff);
+    const info = setInfo(auth, BAN);
+    setUserState(info, KickOff);
   };
 
   const handleMute = () => {
-    setUserState(OnMute);
+    if (status !== MUTE) {
+      const info = setInfo(auth, MUTE);
+      setUserState(info, OnMute);
+      setTimeout(() => {
+        const info = setInfo(auth, NONE);
+        setUserState(info, OnUnMute);
+      }, 30000);
+    }
+    // set비동기처리 30초
+    //interval로 남은시간처리..?
   };
 
-  const setUserState = (action: () => void) => {
-    socket.emit(
-      `${patchUserInfo}`,
-      {
-        userId: userData.id,
-        roomId: userId,
-        auth: auth,
-        status: status,
-      },
-      (response: any) => {
-        console.log('state changed ', response);
-        action();
-      },
-    );
+  const setUserState = (info: ChangeParticipantInfo, action: () => void) => {
+    socket.emit(`${patchUserInfo}`, info, (response: any) => {
+      console.log('state changed ', response);
+      // action();
+    });
+    socket.on('exception', (response: any) => {
+      alert(`변경불가 \n 사유: ${response.message}`);
+    });
+    action();
   };
 
   const AdminActions = [
@@ -90,6 +184,7 @@ export default function BasicSpeedDial(props: {
               key={action.name}
               icon={action.icon}
               tooltipTitle={action.name}
+              onClick={action.action}
             />
           ))
         : AdminActions.map((action) => (
@@ -97,6 +192,7 @@ export default function BasicSpeedDial(props: {
               key={action.name}
               icon={action.icon}
               tooltipTitle={action.name}
+              onClick={action.action}
             />
           ))}
     </SpeedDial>

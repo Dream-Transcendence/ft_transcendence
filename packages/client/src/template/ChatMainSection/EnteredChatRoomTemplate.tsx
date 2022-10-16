@@ -29,6 +29,13 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   marginTop: '0%',
 }));
 
+// export const fetchParticipantData = async (roomId: string, userId: number) => {
+//   const response = await axios.get(
+//     `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
+//   );
+//   setParticipantInfo(response.data);
+// };
+
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
     id: 0,
@@ -118,6 +125,7 @@ function EnteredChatRoomTemplate() {
   //룸 정보에 인원수 넣을ㄷ것
   const participantInfoSet: ParticipantInfoSet = {
     participantInfo: participantInfo,
+    handler: setParticipantInfo,
   };
 
   return (
