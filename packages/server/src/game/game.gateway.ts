@@ -11,10 +11,35 @@ import { Socket, Server } from 'socket.io';
 import { Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
-import { GameRoomDto, MatchDto } from './game.dto';
+import { GameInfoDto, GameRoomDto, MatchDto, RoomTitleDto } from './game.dto';
 
 class MatchingInfo {
   constructor(public readonly userId: number, public readonly socket: Socket) {}
+}
+
+class GameInfo {
+  constructor() {
+    this.score = { left: 0, right: 0 };
+    this.ballPos = { x: 0, y: 0 };
+    this.ballSpeed = { x: 0, y: 0 };
+    this.paddlePos = { left: 0, right: 0 };
+    this.mode = 0;
+  }
+
+  score: { left: number; right: number };
+  ballPos: { x: number; y: number };
+  ballSpeed: { x: number; y: number };
+  paddlePos: { left: number; right: number };
+  mode: number;
+
+  public getDto(): GameInfoDto {
+    return {
+      score: this.score,
+      ballPos: this.ballPos,
+      paddlePos: this.paddlePos,
+      mode: this.mode,
+    };
+  }
 }
 
 @WebSocketGateway(4242, {
@@ -28,6 +53,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   server: Server;
 
   private matchingQueue: MatchingInfo[][] = [];
+  private gameInfoMap: Map<string, GameInfo> = new Map();
 
   handleConnection() {
     console.log('Game Client connected');
@@ -46,6 +72,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         new MatchingInfo(matchDto.userId, client),
       );
     } else {
+      // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
       this.matchingQueue.map((eachQueue) => {
         eachQueue.map((matchingInfo) => {
           if (matchingInfo.userId === matchDto.userId)
@@ -92,5 +119,25 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // NOTE: 리스트에서 해당 유저를 삭제하기만 하면 되는데, 응답을 보내야할까?
     this.matchingQueue[matchDto.mode].splice(index, 1);
     client.disconnect();
+  }
+
+  @SubscribeMessage('start')
+  async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
+    console.log('Game Client start', roomTitleDto);
+    // NOTE: 게임 시작
+
+    const gameInfo = new GameInfo();
+    this.gameInfoMap.set(roomTitleDto.title, gameInfo);
+
+    this.server
+      .to(roomTitleDto.title)
+      .emit('start', this.gameInfoMap[roomTitleDto.title].getDto());
+
+    // NOTE: 게임 시작 후, 게임 정보를 주기적으로 보내줘야 함
+    setInterval(() => {
+      this.server
+        .to(roomTitleDto.title)
+        .emit('gameInfo', this.gameInfoMap[roomTitleDto.title].getDto());
+    }, 1000 / 60);
   }
 }

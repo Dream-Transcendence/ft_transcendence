@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from 'src/users/dto/user.dto';
-import { User } from 'src/users/users.entity';
-import internal from 'stream';
 
 const GAME_MODE = {
   ladder: 0,
@@ -51,4 +49,15 @@ export class MatchDto {
   userId: number;
 
   mode: GAME_MODE;
+}
+
+export class RoomTitleDto {
+  title: string;
+}
+
+export class GameInfoDto {
+  score: { left: number; right: number };
+  ballPos: { x: number; y: number };
+  paddlePos: { left: number; right: number };
+  mode: number;
 }
