@@ -141,7 +141,7 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
         {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
         {auth === OWNER && <AdminBadge>👑</AdminBadge>}
         {status === MUTE && <MuteBadge>🔇</MuteBadge>}
-        {UNBLOCK && (
+        {participantInfo.blocked === BLOCK && (
           <BlockBadge>
             <BlockCloss />
           </BlockBadge>

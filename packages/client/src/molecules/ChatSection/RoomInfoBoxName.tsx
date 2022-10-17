@@ -16,6 +16,7 @@ import { RoomInfoSet } from '../../types/Room.type';
 import { useEffect, useState } from 'react';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { useParams } from 'react-router-dom';
+import { BLOCK } from '../../configs/Block.case';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -24,6 +25,37 @@ const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   marginLeft: '2%',
+}));
+
+const UserStateLayout = styled('section')(({ theme }) => ({
+  width: '4%',
+  display: 'flex',
+  alignContent: 'center',
+  paddingRight: '8%',
+}));
+
+const BlockBadge = styled('span')(({ theme }) => ({
+  marginLeft: '-0.25%',
+  marginTop: '-0.2%',
+  height: '40px',
+  width: '40px',
+  border: 'solid red',
+  borderRadius: '100%',
+  position: 'absolute',
+  backgroundColor: '#f3333355',
+  zIndex: '1',
+}));
+
+const BlockCloss = styled('span')(({ theme }) => ({
+  marginTop: '48%',
+  marginLeft: '0%',
+  height: '3px',
+  width: '40px',
+  position: 'absolute',
+
+  transform: 'rotate(-40deg)',
+  backgroundColor: '#f33333',
+  zIndex: '1',
 }));
 
 const divStyle = {
@@ -61,11 +93,19 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     roomInfo['name'] = roomName;
     setChangeRoomName(true);
   };
+  console.log(roomInfo.blocked);
 
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
-        <Avatar alt="DMImg" src={roomImage} />
+        <UserStateLayout>
+          {roomInfo.blocked === BLOCK && (
+            <BlockBadge>
+              <BlockCloss />
+            </BlockBadge>
+          )}
+          <Avatar alt="DMImg" src={roomImage} />
+        </UserStateLayout>
       ) : (
         <IconButton
           color="primary"
