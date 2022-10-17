@@ -36,14 +36,6 @@ export class RoomsGateway {
     return await this.roomService.enterChannel(client, enterChannelDto);
   }
 
-  @SubscribeMessage('leaveChannel')
-  async leaveChannel(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() leaveChannelDto: LeaveChannelDto,
-  ) {
-    await this.roomService.leaveChannel(client, leaveChannelDto);
-  }
-
   @SubscribeMessage('deleteChannelParticipant')
   async deleteChannelParticipant(
     @ConnectedSocket() client: Socket,

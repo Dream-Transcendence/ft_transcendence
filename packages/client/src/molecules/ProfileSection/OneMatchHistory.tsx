@@ -6,7 +6,7 @@ import { useRecoilValue } from 'recoil';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { UserMatchHistoryType } from '../../types/Profile.type';
+import { BaseUserProfileData, UserMatchHistoryType } from '../../types/Profile.type';
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -20,7 +20,7 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
 }));
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
-  const userData = useRecoilValue(userDataAtom);
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { opponent, isWin, isLadder } = props.matchHistory;
   return (
     <OneMatchHistoryLayout

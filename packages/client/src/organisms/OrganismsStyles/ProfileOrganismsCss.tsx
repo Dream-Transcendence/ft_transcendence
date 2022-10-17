@@ -21,10 +21,12 @@ export const UserPictureLayout = styled('div')(({ theme }) => ({
 
 export const UserNicknameLayout = styled('div')(({ theme }) => ({
   height: '20%',
+  width: '100%',
   border: 'solid 1px',
 }));
 
 export const ProfileActionLayout = styled('div')(({ theme }) => ({
   height: '20%',
+  width: '100%',
   border: 'solid 1px',
 }));

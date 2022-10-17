@@ -1,28 +1,17 @@
 import styled from '@emotion/styled';
-import { LineAxisOutlined } from '@mui/icons-material';
-import axios from 'axios';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import {
-  atom,
-  atomFamily,
-  RecoilState,
-  selector,
-  selectorFamily,
-  useRecoilState,
-  useRecoilValue,
-} from 'recoil';
+import { atom, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
-import { chatNameSpace, logOn, userNameSpace } from '../socket/event';
+import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLodingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
-import LandingPage from './LandingPage';
 import ProfilePage from './ProfilePage';
 
 const PageSection = styled('section')(({ theme }) => ({

@@ -8,7 +8,7 @@ export class PatchUserDto {
   nickname: string;
 
   @ApiProperty({ example: 'https://cdn.42.fr/users/dha.jpg' })
-  @IsUrl()
+  // //@IsUrl()
   @IsOptional()
   image: string;
 }

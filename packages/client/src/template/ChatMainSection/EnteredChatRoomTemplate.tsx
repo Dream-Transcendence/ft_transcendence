@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { CHANNELURL, SERVERURL, SOCKETURL } from '../../configs/Link.url';
+import { SERVERURL } from '../../configs/Link.url';
 import { DM } from '../../configs/RoomType';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
