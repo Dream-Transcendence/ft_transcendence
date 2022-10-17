@@ -5,6 +5,9 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
+import { useRecoilValue } from 'recoil';
+import { userStatus } from '../../recoil/chat.recoil';
+import { MUTE } from '../../configs/Status.case';
 
 const ChattingLayout = styled('div')(({ theme }) => ({
   width: '75%',
@@ -16,6 +19,7 @@ const ChattingLayout = styled('div')(({ theme }) => ({
 function ChattingOrganisms(prop: any) {
   const { roomId } = useParams();
   const [MessageHistory, setMessageHistory] = useState();
+  const userState = useRecoilValue(userStatus);
 
   useEffect(() => {
     async function getMessageHistory() {
@@ -26,7 +30,7 @@ function ChattingOrganisms(prop: any) {
 
   return (
     <ChattingLayout>
-      <ChatInputModule></ChatInputModule>
+      {userState !== MUTE && <ChatInputModule></ChatInputModule>}
       <ChatLogListOrganisms />
     </ChattingLayout>
   );

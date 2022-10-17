@@ -84,13 +84,16 @@ export default function BasicSpeedDial(props: {
       ]);
   };
 
+  //[검증사항]ban은 로그인 구현 후, 검증가능
   const KickOff = () => {
     setParticipantInfos([
       ...filteredParticipants,
       changeParticipant(participantInfo, 'status', BAN),
     ]);
+    console.log('ban!!!!!!!!!!!');
   };
 
+  //[검증사항]mute는 로그인 구현 후, 검증가능
   const OnMute = () => {
     // if (!isMute) setIsMute(true);
     // else alert('이미 음소거 처리되었습니다.');
@@ -123,18 +126,28 @@ export default function BasicSpeedDial(props: {
   };
 
   const handleBan = () => {
-    const info = setInfo(auth, BAN);
-    setUserState(info, KickOff);
+    if (status !== BAN) {
+      const info = setInfo(auth, BAN);
+      setUserState(info, KickOff);
+      setTimeout(async () => {
+        const info = await setInfo(auth, NONE);
+        setUserState(info, OnUnMute);
+      }, 5000);
+    }
   };
 
   const handleMute = () => {
-    if (status !== MUTE) {
+    if (auth === ADMIN) {
+      alert('관리자 권한을 해제한 뒤, 음소거 가능합니다.');
+      return;
+    }
+    if (status !== MUTE && status !== BAN) {
       const info = setInfo(auth, MUTE);
       setUserState(info, OnMute);
-      setTimeout(() => {
-        const info = setInfo(auth, NONE);
+      setTimeout(async () => {
+        const info = await setInfo(auth, NONE);
         setUserState(info, OnUnMute);
-      }, 30000);
+      }, 5000);
     }
     // set비동기처리 30초
     //interval로 남은시간처리..?

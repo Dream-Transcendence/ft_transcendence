@@ -45,4 +45,6 @@ export interface GetRoomInfoDto {
   personnel: number;
   salt?: string;
   blocked?: boolean;
+  auth: number | null;
+  status: number | null;
 }

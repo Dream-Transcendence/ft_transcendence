@@ -132,6 +132,12 @@ export class GetRoomInfoDto {
   @Min(0)
   @Max(1)
   auth?: AUTH_TYPE;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  status?: STATUS_TYPE;
 }
 
 export class ChannelParticipantDto {

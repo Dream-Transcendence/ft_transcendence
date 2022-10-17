@@ -169,6 +169,7 @@ export class RoomService {
         image: room.image,
         title: room.title,
         auth: user.auth,
+        status: user.status,
       };
       return roomInfo;
     }
