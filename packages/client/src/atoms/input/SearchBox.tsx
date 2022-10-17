@@ -4,6 +4,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 import AutoComplateSerchBox from './AutoCompleteSerchBox';
 import { Flex } from '@chakra-ui/react';
+import { SearchPropsType } from '../../types/search.type';
+import { SERVERURL } from '../../configs/Link.url';
 
 const Search = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -57,13 +59,21 @@ function SearchBox() {
   // const handlerChange = (event: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
   //   setInputValue(event.target.value);
   // }
+  const searchProps: SearchPropsType = {
+    url: `${SERVERURL}/users/search`,
+    prams: {
+      nickname: 'hi'
+    },
+    fn: () => {},
+    action: () => {},
+  } 
   return (
     <Search>
       {/* <SearchIconWrapper>
         <SearchIcon />
       </SearchIconWrapper> */}
       <AutoWrapper>
-        <AutoComplateSerchBox />
+        <AutoComplateSerchBox searchProps={searchProps}/>
       </AutoWrapper>
       {/* <StyledInputBase
         placeholder="유저찾기…"
