@@ -18,12 +18,17 @@ const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
 function ChatParticipantsListOrganisms(prop: {
   participantInfoSet: ParticipantInfoSet;
 }) {
-  const { participantInfo } = prop.participantInfoSet;
-  const listElement: React.ReactElement[] = participantInfo.map(
+  const { participantInfo: participantArray, handler } =
+    prop.participantInfoSet;
+  const listElement: React.ReactElement[] = participantArray.map(
     (participant: any) => {
       return (
         <ListLayout key={participant.user.id}>
-          <UserChatParticipantsBox participantInfo={participant} />
+          <UserChatParticipantsBox
+            participantInfo={participant}
+            participantInfoArray={participantArray}
+            handler={handler}
+          />
         </ListLayout>
       );
     },
@@ -38,7 +43,6 @@ function ChatParticipantsListOrganisms(prop: {
       <ListGenerateLayout>
         <ListUlLayout>{listElement}</ListUlLayout>
       </ListGenerateLayout>
-      {/* <ListGenerate element={<UserChatParticipantsBox />} /> */}
     </ChatParticipantsListLayout>
   );
 }

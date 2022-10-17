@@ -126,6 +126,18 @@ export class GetRoomInfoDto {
   @ApiProperty()
   @IsBoolean()
   blocked?: boolean;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  auth?: AUTH_TYPE;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  status?: STATUS_TYPE;
 }
 
 export class ChannelParticipantDto {
@@ -195,19 +207,6 @@ export class GetUserRoomsDto {
   @ApiProperty({
     example: [
       {
-        id: 1,
-        name: 'dha',
-        image: 'https://cdn.intra.42.fr/users/dha.jpg',
-        recvMessageCount: 5,
-      },
-    ],
-  })
-  @IsObject({ each: true })
-  dmList: GetUserRoomDto[];
-
-  @ApiProperty({
-    example: [
-      {
         id: 2,
         name: '채팅방',
         image: 'https://m.media-amazon.com/images/I/31VjU29FP+L.png',
@@ -217,6 +216,20 @@ export class GetUserRoomsDto {
   })
   @IsObject({ each: true })
   channelList: GetUserRoomDto[];
+
+  @ApiProperty({
+    example: [
+      {
+        id: 1,
+        name: 'dha',
+        image: 'https://cdn.intra.42.fr/users/dha.jpg',
+        recvMessageCount: 5,
+        blocked: false,
+      },
+    ],
+  })
+  @IsObject({ each: true })
+  dmList: GetUserRoomDto[];
 }
 
 export class GetUserRoomDto {
@@ -235,6 +248,11 @@ export class GetUserRoomDto {
   @ApiProperty()
   @IsInt()
   recvMessageCount: number;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsBoolean()
+  blocked?: boolean;
 }
 
 export class CreateDmDto {

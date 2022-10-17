@@ -4,17 +4,31 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { SERVERURL } from '../../configs/Link.url';
 import { DM } from '../../configs/RoomType';
+import { BAN } from '../../configs/Status.case';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
 import ChattingOrganisms from '../../organisms/ChatMainSection/Chatting';
 import EnteredChatRoomInfoOrganisms from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
-import { ParticipantInfoSet } from '../../types/Participant.type';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  ParticipantInfo,
+  ParticipantInfoSet,
+} from '../../types/Participant.type';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { userAuth } from '../../recoil/chat.recoil';
+import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+}));
+
+const ChattingBanLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+}));
+
+const BannedLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
 }));
@@ -26,6 +40,13 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   marginTop: '0%',
 }));
 
+// export const fetchParticipantData = async (roomId: string, userId: number) => {
+//   const response = await axios.get(
+//     `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
+//   );
+//   setParticipantInfo(response.data);
+// };
+
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
     id: 0,
@@ -33,12 +54,17 @@ function EnteredChatRoomTemplate() {
     type: 5,
     image: '',
     title: '',
+    personnel: 0,
+    auth: null,
+    status: null,
   });
+  const [personnel, setPersonnel] = useState<number>(0);
   //[수정사항] any => ChannelParticipantDto
-  const [participantInfo, setParticipantInfo] = useState<any>([]);
+  const [participantInfo, setParticipantInfo] = useState<ParticipantInfo[]>([]);
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
-  const setUserType = useSetRecoilState(userAuth);
+  const [userType, setUserType] = useRecoilState(userAuth);
+  const [userState, setUserState] = useRecoilState(userStatus);
 
   useEffect(() => {
     async function getRoomInfo() {
@@ -78,16 +104,28 @@ function EnteredChatRoomTemplate() {
   //참여자데이터를 토대로 본인의 타입이 어떤 타입인지 찾는 함수
   // [수정사항] 임시로 participantInfo가 데이터가 null을 가지고 있는지 체크하는데, backapi에서 user타입을 가져와야 구분가능
   //수정해야하는 사항 participant의 타입으로
-  const useFindUser = () => {
+  const useFindUserAuth = () => {
     let type;
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
-      type = participantInfo.find((participant: any) => {
+      type = participantInfo.find((participant: ParticipantInfo) => {
         if (participant === null) return false;
         return participant.user.id === userData.id;
       });
     }
     if (type === undefined) return COMMON;
     else return type.auth;
+  };
+
+  const useFindUserStatus = () => {
+    let type;
+    if (roomInfo.type !== DM && roomInfo.type !== 5) {
+      type = participantInfo.find((participant: ParticipantInfo) => {
+        if (participant === null) return false;
+        return participant.user.id === userData.id;
+      });
+    }
+    if (type === undefined) return COMMON;
+    else return type.status;
   };
 
   const handleRoomInfo = (roomInfo: GetRoomInfoDto) => {
@@ -98,30 +136,42 @@ function EnteredChatRoomTemplate() {
   // effect처리하지 않으니 위 에러발생
   useEffect(() => {
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
-      if (participantInfo.length !== 0) {
-        setUserType(useFindUser);
+      const count: number = participantInfo.length;
+      if (count !== 0) {
+        setPersonnel(count);
+        setUserType(useFindUserAuth);
+        setUserState(useFindUserStatus);
       }
     }
   }, [participantInfo.length, setUserType]);
 
   const roomInfoSet: RoomInfoSet = {
-    roomInfo: roomInfo,
+    roomInfo: { ...roomInfo, personnel: personnel },
     handler: handleRoomInfo,
   };
-
+  //룸 정보에 인원수 넣을ㄷ것
   const participantInfoSet: ParticipantInfoSet = {
     participantInfo: participantInfo,
+    handler: setParticipantInfo,
   };
-
+  console.log('???', userState);
   return (
     <ChattingRoomLayout>
-      <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
-      <ChatRoomFeaterLayout>
-        <ChattingOrganisms />
-        {roomInfo.type !== DM && roomInfo.type !== 5 && (
-          <ChatParticipantsOrganisms participantInfoSet={participantInfoSet} />
-        )}
-      </ChatRoomFeaterLayout>
+      {userState !== BAN ? (
+        <ChattingBanLayout>
+          <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
+          <ChatRoomFeaterLayout>
+            <ChattingOrganisms />
+            {roomInfo.type !== DM && roomInfo.type !== 5 && (
+              <ChatParticipantsOrganisms
+                participantInfoSet={participantInfoSet}
+              />
+            )}
+          </ChatRoomFeaterLayout>
+        </ChattingBanLayout>
+      ) : (
+        <BannedLayout>😛</BannedLayout>
+      )}
     </ChattingRoomLayout>
   );
 }

@@ -9,11 +9,16 @@ import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { GetRoomInfoDto } from '../../types/Room.type';
+import {
+  GetRoomInfoDto,
+  RoomList,
+  UnJoinedRoomList,
+} from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, enterChannel } from '../../socket/event';
+import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -53,12 +58,22 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
   const [socket] = useSocket(chatNameSpace);
-  const { id: roomId, name, type, image } = roomInfo;
+  const { id: roomId, name, type, image, personnel } = roomInfo;
+  const [joinedRoomList, setJoinedRoomList] = useRecoilState(chatRoomList);
+  const [unJoinedList, setUnJoinedList] = useRecoilState(unJoinedRoomList);
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
+  const filterPopRoom = () => {
+    return unJoinedList.filter((room: UnJoinedRoomList) => {
+      if (roomId !== undefined) return room.id !== +roomId;
+      return false;
+    });
+  };
+  //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
+  //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
   function enterRoom() {
     console.log('sonking ! enter!!!', {
       userId: userData.id,
@@ -75,6 +90,11 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       },
       (response: any) => {
         console.log('enter new room success ', response); // "got it"
+        //임시 데이터 생성
+        //[수정사항] optimistic UI를 위한 작업
+        const newRoom: RoomList = { ...roomInfo, recvMessageCount: 0 };
+        setJoinedRoomList([...joinedRoomList, newRoom]);
+        setUnJoinedList([...filterPopRoom()]); //버튼클릭고장
         navigate(`${CHATROOMURL}${roomId}`);
       },
     );
@@ -98,7 +118,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       <RoomInfoLayout>
         <RoomTitleModule title={name} type={type}></RoomTitleModule>
         {/*[수정사항] id대신 인원수가 들어갈 예정 */}
-        <RoomNumberOfPeopleModule num={roomId}></RoomNumberOfPeopleModule>
+        <RoomNumberOfPeopleModule num={personnel}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>

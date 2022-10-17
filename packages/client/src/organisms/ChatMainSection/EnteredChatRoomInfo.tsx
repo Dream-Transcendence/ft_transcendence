@@ -5,6 +5,11 @@ import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace } from '../../socket/event';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -66,7 +71,7 @@ function EnteredChatRoomInfoOrganisms(props: { roomInfoSet: RoomInfoSet }) {
       <RoomInfoBox>
         <InfoEditBoxNameModule roomInfoSet={roomInfoSet} />
         <InfoBoxPasswordModule roomInfoSet={roomInfoSet} />
-        <InfoBoxRoomFunctionModule />
+        <InfoBoxFunctionModule roomInfoSet={roomInfoSet} />
       </RoomInfoBox>
     </RoomInfoLayout>
   );
