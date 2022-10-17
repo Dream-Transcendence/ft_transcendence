@@ -308,7 +308,16 @@ export class RoomService {
       if (!row) {
         if (room.type == 2 && salt !== room.salt)
           throw new WsException('Password is not correct');
+
+        const maxId = await this.channelParticipantsRepository
+          .createQueryBuilder('channelParticipant')
+          .select('MAX(channelParticipant.id)', 'id')
+          .getRawOne();
+        let index = 1;
+        if (maxId != null) index = maxId.id + 1;
+
         participant = this.channelParticipantsRepository.create({
+          id: index,
           user: await this.usersRepository.findOneBy({ id: userId }),
           room,
         });
