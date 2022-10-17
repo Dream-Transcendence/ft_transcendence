@@ -9,6 +9,12 @@ const GAME_MODE = {
 } as const;
 export type GAME_MODE = typeof GAME_MODE[keyof typeof GAME_MODE];
 
+const MOVE_DIR = {
+  up: 0,
+  down: 1,
+} as const;
+export type MOVE_DIR = typeof MOVE_DIR[keyof typeof MOVE_DIR];
+
 export class GameLadderDto {
   @ApiProperty({ example: 1 })
   rank: number;
@@ -59,5 +65,11 @@ export class GameInfoDto {
   score: { left: number; right: number };
   ballPos: { x: number; y: number };
   paddlePos: { left: number; right: number };
-  mode: number;
+  mode: GAME_MODE;
+}
+
+export class MovePaddleDto {
+  title: string;
+  playerId: number;
+  moveDir: MOVE_DIR;
 }

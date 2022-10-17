@@ -11,14 +11,23 @@ import { Socket, Server } from 'socket.io';
 import { Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from 'src/users/users.entity';
-import { GameInfoDto, GameRoomDto, MatchDto, RoomTitleDto } from './game.dto';
+import {
+  GameInfoDto,
+  GameRoomDto,
+  GAME_MODE,
+  MatchDto,
+  MovePaddleDto,
+  RoomTitleDto,
+} from './game.dto';
 
 class MatchingInfo {
   constructor(public readonly userId: number, public readonly socket: Socket) {}
 }
 
 class GameInfo {
-  constructor() {
+  constructor(private player1: User, private player2: User) {
+    this.roomId = uuidv4();
+    this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
     this.ballPos = { x: 0, y: 0 };
     this.ballSpeed = { x: 0, y: 0 };
@@ -26,13 +35,32 @@ class GameInfo {
     this.mode = 0;
   }
 
+  roomId: string;
+  player: { left: User; right: User };
   score: { left: number; right: number };
   ballPos: { x: number; y: number };
   ballSpeed: { x: number; y: number };
   paddlePos: { left: number; right: number };
-  mode: number;
+  mode: GAME_MODE;
 
-  public getDto(): GameInfoDto {
+  public getGameRoomDto(): GameRoomDto {
+    return {
+      id: this.roomId,
+      leftPlayer: {
+        id: this.player.left.id,
+        nickname: this.player.left.nickname,
+        image: this.player.left.image,
+      },
+      rightPlayer: {
+        id: this.player.right.id,
+        nickname: this.player.right.nickname,
+        image: this.player.right.image,
+      },
+      mode: this.mode,
+    };
+  }
+
+  public getGameInfoDto(): GameInfoDto {
     return {
       score: this.score,
       ballPos: this.ballPos,
@@ -88,24 +116,15 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       const player2 = await this.userRepository.findOneBy({
         id: opponent.userId,
       });
-      const gameRoomDto: GameRoomDto = {
-        id: uuidv4(),
-        leftPlayer: {
-          id: player1.id,
-          nickname: player1.nickname,
-          image: player1.image,
-        },
-        rightPlayer: {
-          id: player2.id,
-          nickname: player2.nickname,
-          image: player2.image,
-        },
-        mode: matchDto.mode,
-      };
-      client.join(gameRoomDto.id);
-      opponent.socket.join(gameRoomDto.id);
+      const gameInfo = new GameInfo(player1, player2);
+      this.gameInfoMap[matchDto.mode].set(gameInfo.roomId, gameInfo);
 
-      this.server.to(gameRoomDto.id).emit('matched', gameRoomDto);
+      client.join(gameInfo.roomId);
+      opponent.socket.join(gameInfo.roomId);
+
+      this.server
+        .to(gameInfo.roomId)
+        .emit('matched', gameInfo.getGameRoomDto());
     }
   }
 
@@ -123,21 +142,33 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('start')
   async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
+    const { title } = roomTitleDto;
     console.log('Game Client start', roomTitleDto);
     // NOTE: 게임 시작
-
-    const gameInfo = new GameInfo();
-    this.gameInfoMap.set(roomTitleDto.title, gameInfo);
-
-    this.server
-      .to(roomTitleDto.title)
-      .emit('start', this.gameInfoMap[roomTitleDto.title].getDto());
+    // this.server
+    //   .to(title)
+    //   .emit('start', this.gameInfoMap[title].getGameInfoDto());
 
     // NOTE: 게임 시작 후, 게임 정보를 주기적으로 보내줘야 함
+    // TODO: 게임 로직 또는 함수 추가 후 업데이트
     setInterval(() => {
       this.server
-        .to(roomTitleDto.title)
-        .emit('gameInfo', this.gameInfoMap[roomTitleDto.title].getDto());
+        .to(title)
+        .emit('gameInfo', this.gameInfoMap[title].getGameInfoDto());
     }, 1000 / 60);
+  }
+
+  @SubscribeMessage('movePaddle')
+  async handleMovePaddle(client: Socket, movePaddleDto: MovePaddleDto) {
+    const { title, playerId, moveDir } = movePaddleDto;
+
+    let movement = 7;
+    if (moveDir) movement = -movement;
+
+    if (playerId === this.gameInfoMap[title].player.left.id) {
+      this.gameInfoMap[title].paddlePos.left += movement;
+    } else {
+      this.gameInfoMap[title].paddlePos.right += movement;
+    }
   }
 }
