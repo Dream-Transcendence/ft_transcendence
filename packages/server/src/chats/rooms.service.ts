@@ -96,7 +96,6 @@ export class RoomService {
       where: { type: In(roomType) },
     });
     // 1,2인 채널
-    console.log('1,2인 채널: ', channelLists);
     const userChannels = await this.channelParticipantsRepository.find({
       relations: { room: true },
       where: { user: { id: userId } },
@@ -136,7 +135,7 @@ export class RoomService {
     const room = await this.roomsRepository.findOne({
       where: { id: roomId },
     });
-    // room이 dm일 떼
+    // room이 dm일 때
     if (room.type == 0) {
       const participant = await this.dmParticipantsRepository.findOne({
         relations: { user: true },
@@ -160,8 +159,18 @@ export class RoomService {
     }
     // channelInfo
     else {
-      delete room.salt;
-      return room;
+      const user = await this.channelParticipantsRepository.findOne({
+        where: { room: { id: roomId }, user: { id: userId } },
+      });
+      const roomInfo = {
+        id: room.id,
+        name: room.name,
+        type: room.type,
+        image: room.image,
+        title: room.title,
+        auth: user.auth,
+      };
+      return roomInfo;
     }
   }
 
@@ -313,7 +322,6 @@ export class RoomService {
           room,
         });
         user = participant.user;
-        console.log(participant);
         await this.channelParticipantsRepository.insert(participant);
       }
     }
@@ -331,23 +339,10 @@ export class RoomService {
     return { isEntered: true };
   }
 
-  async leaveChannel(
-    client: Socket,
-    leaveChannelDto: LeaveChannelDto,
-  ): Promise<void> {
-    const { roomId, userId } = leaveChannelDto;
-    const deleteParticipant = await this.channelParticipantsRepository.findOne({
-      relations: { room: true },
-      where: { room: { id: roomId }, user: { id: userId } },
-    });
-    client.leave(deleteParticipant.room.title);
-    client.rooms.clear();
-  }
-
   async deleteChannelParticipant(
     client: Socket,
     leaveChannelDto: LeaveChannelDto,
-  ): Promise<void> {
+  ) {
     const { roomId, userId } = leaveChannelDto;
     const deleteParticipant = await this.channelParticipantsRepository.findOne({
       relations: { room: true, user: true },
@@ -374,7 +369,7 @@ export class RoomService {
         const ids = msgs.map((msg) => msg.id);
         await this.messagesRepository.delete(ids);
         await this.roomsRepository.delete(roomId);
-        return;
+        return { isDeleted: true };
       }
     }
     client
@@ -383,6 +378,7 @@ export class RoomService {
         'roomMessage',
         `${deleteParticipant.user.nickname}이(가) 방을 나갔습니다.`,
       );
+    return { isDeleted: true };
   }
 
   async sendMessage(client: Socket, sendMessageDto: SendMessageDto) {
@@ -418,7 +414,7 @@ export class RoomService {
   async patchUserInfo(client: Socket, patchUserInfoDto: PatchUserInfoDto) {
     const { userId, roomId, auth, status } = patchUserInfoDto;
     const user = await this.channelParticipantsRepository.findOne({
-      relations: { room: true },
+      relations: { room: true, user: true },
       where: { room: { id: roomId }, user: { id: userId } },
     });
     let patchedColumn = '';

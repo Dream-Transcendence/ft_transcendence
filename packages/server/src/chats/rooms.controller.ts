@@ -57,6 +57,13 @@ export class RoomsController {
     return this.roomService.getChannels(userId);
   }
 
+  @Get('/messages/:roomId')
+  @ApiOperation({ summary: '채팅방 메시지 목록' })
+  getMessages(@Param('roomId') roomId: number) {
+    this.logger.log(`getMessages`);
+    return this.roomService.getMessages(roomId);
+  }
+
   @Get('/:roomId/:userId')
   @ApiOperation({ summary: '채팅방 정보 가져오기' })
   @ApiOkResponse({
@@ -84,12 +91,6 @@ export class RoomsController {
   ): Promise<ChannelParticipantDto[]> {
     this.logger.log('getChannelParticipants');
     return this.roomService.getChannelParticipants(userId, roomId);
-  }
-
-  @Get('/:roomId/messages')
-  @ApiOperation({ summary: '채팅방 메시지 목록' })
-  getMessages(@Param('roomId') roomId: number) {
-    return this.roomService.getMessages(roomId);
   }
 
   @Patch('/:roomId')
