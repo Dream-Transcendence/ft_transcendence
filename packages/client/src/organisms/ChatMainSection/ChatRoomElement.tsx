@@ -11,10 +11,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { GetRoomInfoDto, RoomList } from '../../types/Room.type';
+import {
+  GetRoomInfoDto,
+  RoomList,
+  UnJoinedRoomList,
+} from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, enterChannel } from '../../socket/event';
-import { chatRoomList } from '../../recoil/chat.recoil';
+import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -55,12 +59,19 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const userData = useRecoilValue(userDataAtom);
   const [socket] = useSocket(chatNameSpace);
   const { id: roomId, name, type, image, personnel } = roomInfo;
-  const [roomList, setRoomList] = useRecoilState(chatRoomList);
+  const [joinedRoomList, setJoinedRoomList] = useRecoilState(chatRoomList);
+  const [unJoinedList, setUnJoinedList] = useRecoilState(unJoinedRoomList);
 
   const handlePassword = (childData: string) => {
     setPassword(childData);
   };
 
+  const filterPopRoom = () => {
+    return unJoinedList.filter((room: UnJoinedRoomList) => {
+      if (roomId !== undefined) return room.id !== +roomId;
+      return false;
+    });
+  };
   //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
   //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
   function enterRoom() {
@@ -82,7 +93,8 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
         //임시 데이터 생성
         //[수정사항] optimistic UI를 위한 작업
         const newRoom: RoomList = { ...roomInfo, recvMessageCount: 0 };
-        setRoomList([...roomList, newRoom]);
+        setJoinedRoomList([...joinedRoomList, newRoom]);
+        setUnJoinedList([...filterPopRoom()]); //버튼클릭고장
         navigate(`${CHATROOMURL}${roomId}`);
       },
     );

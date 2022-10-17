@@ -70,7 +70,7 @@ function ChatroomPage() {
     return () => {
       disconnect();
     };
-  }, [socket, connect, disconnect]);
+  }, []);
 
   //임시로 스트링 타입으로 설정 향후, room정보 값을 바꿀 것
   return (

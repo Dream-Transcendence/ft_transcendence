@@ -29,8 +29,15 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const [unJoinedList, setUnJoinedList] = useRecoilState(unJoinedRoomList);
   const [joinedList, setJoinedList] = useRecoilState(chatRoomList);
 
-  const filterPopRoom = () => {
+  const filterPopJoinedRoom = () => {
     return joinedList.filter((room: RoomList) => {
+      if (roomId !== undefined) return room.id !== +roomId;
+      return false;
+    });
+  };
+
+  const filterPopUnJoinedRoom = () => {
+    return unJoinedList.filter((room: UnJoinedRoomList) => {
       if (roomId !== undefined) return room.id !== +roomId;
       return false;
     });
@@ -38,6 +45,11 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   //채팅방을 나가는 작업 네임스페이스(ws://localhost:4242/chat)
   function outRoom() {
+    console.log('out room!', {
+      userId: userData.id,
+      roomId: Number(roomId),
+    });
+    console.log('in out !', socket);
     socket.emit(
       `${deleteChannelParticipant}`,
       {
@@ -46,16 +58,15 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       },
       (response: any) => {
         console.log('deleteChannel!! ', response); // "got it"
-        //joinedroomlist에서 삭제해야하고, 최초 방목록에도 추가해야함
-        //최초 방목록을 전역으로 뺄까 고민중 방을 생성하는 작업을 할때도 마찬가지로 추가를 해줘야하기 때문
         //[수정사항] optimistic UI를 위한 작업
-        const RemoveFromJoinedRoom = filterPopRoom();
+        const RemoveFromJoinedRoom = filterPopJoinedRoom();
         console.log(RemoveFromJoinedRoom);
         setJoinedList([...RemoveFromJoinedRoom]);
         const addToUnJoinedRoom: UnJoinedRoomList = {
           ...roomInfo,
+          personnel: roomInfo.personnel - 1,
         };
-        setUnJoinedList([...unJoinedList, addToUnJoinedRoom]);
+        setUnJoinedList([...filterPopUnJoinedRoom(), addToUnJoinedRoom]);
         navigate(`${CHANNELURL}`);
       },
     );
@@ -67,14 +78,14 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     });
   }
 
-  const customMeetProps: CustomIconProps = {
+  const outRoomProps: CustomIconProps = {
     icon: <MeetingRoomIcon />,
     action: outRoom,
   };
 
   return (
     <InfoBoxFunctionLayout>
-      <CustomIconButton customProps={customMeetProps} />
+      <CustomIconButton customProps={outRoomProps} />
     </InfoBoxFunctionLayout>
   );
 }

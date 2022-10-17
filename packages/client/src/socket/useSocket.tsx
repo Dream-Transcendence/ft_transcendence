@@ -9,11 +9,11 @@ export const useSocket = (
   nameSpace: string,
 ): [Socket<DefaultEventsMap, DefaultEventsMap>, () => void, () => void] => {
   if (!sockets[nameSpace]) {
-    console.log('rerender', nameSpace);
     sockets[nameSpace] = io(`${SOCKETURL}/${nameSpace}`, {
       autoConnect: false,
       transports: ['websocket'],
     });
+    console.log('rerender', nameSpace, sockets[nameSpace]);
   }
 
   // if (sockets[nameSpace].connected) {
