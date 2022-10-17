@@ -72,4 +72,21 @@ export class MovePaddleDto {
   title: string;
   playerId: number;
   moveDir: MOVE_DIR;
+  // 변하지 않는 변수는 따로 빼도 좋을듯
+}
+export interface Game {
+  // ballRadius: number;
+  x: number;
+  y: number;
+  dx: number;
+  dy: number;
+  // canvasWidth: number;
+  // canvasHeight: number;
+  leftPaddleY: number;
+  rightPaddleY: number;
+  // paddleWidth: number;
+  // paddleHeight: number;
+  leftScore: number;
+  rightScore: number;
+  // 게임 참가자 userId도 저장
 }
