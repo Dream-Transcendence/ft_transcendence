@@ -126,6 +126,12 @@ export class GetRoomInfoDto {
   @ApiProperty()
   @IsBoolean()
   blocked?: boolean;
+
+  @ApiProperty()
+  @IsInt()
+  @Min(0)
+  @Max(1)
+  auth?: AUTH_TYPE;
 }
 
 export class ChannelParticipantDto {
