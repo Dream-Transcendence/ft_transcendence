@@ -10,8 +10,8 @@ import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { SearchPropsType } from '../../types/search.type';
 
 function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
-  const {url, prams, fn, action} = props.searchProps;
-  const navigate = useNavigate();
+  const {url, listParams, action} = props.searchProps;
+  const {value: parentTarget, setValue: setParentTarget} = listParams;
   const {nickname : atomNickname} = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
   const [value, setValue] = useState<string | null>(null);
@@ -19,7 +19,7 @@ function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
   useEffect(() => {
     async function getSearchUser() {
       try {
-        const response = await axios.get(`${SERVERURL}/users/search`, {
+        const response = await axios.get(`${url}`, {
           params: {
             nickname: value,
           },
@@ -55,7 +55,8 @@ function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
       });
       if (target) {
         setValue(target.nickname);
-        navigate(`${PROFILEURL}/${target?.id}`);
+        setParentTarget(target.id);
+        // navigate(`${PROFILEURL}/${target?.id}`);
       }
     }
   };

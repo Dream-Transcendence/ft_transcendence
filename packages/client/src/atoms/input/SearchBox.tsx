@@ -1,11 +1,13 @@
 import { styled, alpha } from '@mui/material/styles';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AutoComplateSerchBox from './AutoCompleteSerchBox';
 import { Flex } from '@chakra-ui/react';
 import { SearchPropsType } from '../../types/search.type';
-import { SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { BaseUserProfileData } from '../../types/Profile.type';
 
 const Search = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -55,31 +57,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 function SearchBox() {
-  const [inputValue, setInputValue] = useState('');
-  // const handlerChange = (event: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
-  //   setInputValue(event.target.value);
-  // }
+  const [target, setTarget] = useState<number>(0);
+  const navigate = useNavigate();
   const searchProps: SearchPropsType = {
     url: `${SERVERURL}/users/search`,
-    prams: {
-      nickname: 'hi'
+    listParams: {
+      value: target,
+      setValue: setTarget,
     },
-    fn: () => {},
-    action: () => {},
-  } 
+  }
+
+  useEffect(() => {
+    if (target > 0)
+      navigate(`${PROFILEURL}/${target}`);
+  }, [target])
+
   return (
     <Search>
-      {/* <SearchIconWrapper>
-        <SearchIcon />
-      </SearchIconWrapper> */}
       <AutoWrapper>
         <AutoComplateSerchBox searchProps={searchProps}/>
       </AutoWrapper>
-      {/* <StyledInputBase
-        placeholder="유저찾기…"
-        inputProps={{ 'aria-label': 'search' }}
-        // onChange={}
-      /> */}
       {/* [axios GET 요청] Input value에 따른 인원목록 */}
       {/* 리스트 추가 후, 해당 유저 페이지로 연결하는 로직 구현해야함 */}
     </Search>

@@ -1,9 +1,8 @@
 export interface SearchPropsType {
     url: string;
-    prams: {
-        id?: number;
-        nickname: string;
-    }
-    fn: () => void;
-    action: () => void;
-  }
+    listParams: {
+        value: number
+        setValue: React.Dispatch<React.SetStateAction<number>>,
+        },
+    action?: () => void;
+}
