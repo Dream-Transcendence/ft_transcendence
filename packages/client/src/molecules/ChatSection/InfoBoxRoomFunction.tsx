@@ -17,6 +17,7 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   flexDirection: 'row-reverse',
   display: 'flex',
   alignItems: 'center',
+  float: 'right',
 }));
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {

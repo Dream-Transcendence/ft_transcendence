@@ -1,4 +1,4 @@
-import { styled } from '@mui/material/styles';
+import { keyframes, styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
@@ -23,6 +23,8 @@ import {
 } from '../../types/Participant.type';
 import { useState } from 'react';
 import { MUTE } from '../../configs/Status.case';
+import { BLOCK, UNBLOCK } from '../../configs/Block.case';
+import { Rotate90DegreesCcw } from '@mui/icons-material';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -51,7 +53,7 @@ const OwnerBadge = styled('span')(({ theme }) => ({
   height: '20px',
   width: '20px',
   position: 'absolute',
-  zIndex: '1',
+  zIndex: '2',
 }));
 
 const AdminBadge = styled('span')(({ theme }) => ({
@@ -59,7 +61,7 @@ const AdminBadge = styled('span')(({ theme }) => ({
   height: '20px',
   width: '20px',
   position: 'absolute',
-  zIndex: '1',
+  zIndex: '2',
 }));
 
 const MuteBadge = styled('span')(({ theme }) => ({
@@ -67,6 +69,30 @@ const MuteBadge = styled('span')(({ theme }) => ({
   width: '20px',
   position: 'absolute',
   zIndex: '2',
+}));
+
+const BlockBadge = styled('span')(({ theme }) => ({
+  marginTop: '3%',
+  marginLeft: '1%',
+  height: '40px',
+  width: '40px',
+  border: 'solid red',
+  borderRadius: '100%',
+  position: 'absolute',
+  backgroundColor: '#f3333355',
+  zIndex: '1',
+}));
+
+const BlockCloss = styled('span')(({ theme }) => ({
+  marginTop: '48%',
+  marginLeft: '0%',
+  height: '3px',
+  width: '40px',
+  position: 'absolute',
+
+  transform: 'rotate(-40deg)',
+  backgroundColor: '#f33333',
+  zIndex: '1',
 }));
 
 const SpeedDialLayout = styled('div')((props) => ({
@@ -115,6 +141,11 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
         {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
         {auth === OWNER && <AdminBadge>👑</AdminBadge>}
         {status === MUTE && <MuteBadge>🔇</MuteBadge>}
+        {UNBLOCK && (
+          <BlockBadge>
+            <BlockCloss />
+          </BlockBadge>
+        )}
         <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       </UserStateLayout>
       <UserFuntionLayout>
