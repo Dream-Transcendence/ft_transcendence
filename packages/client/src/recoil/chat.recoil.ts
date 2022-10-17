@@ -1,9 +1,8 @@
 import axios from 'axios';
 import { atom, selectorFamily } from 'recoil';
 import { SERVERURL } from '../configs/Link.url';
-import { RoomList } from '../types/Room.type';
+import { RoomList, UnJoinedRoomList } from '../types/Room.type';
 
-//[수정사항] any=>chatRoomList 타입
 export const DMList = atom<RoomList[]>({
   key: 'DMList',
   default: [],
@@ -14,8 +13,19 @@ export const chatRoomList = atom<RoomList[]>({
   default: [],
 });
 
+//[수정사항] any=> 비동기로 받는 unJoinedRoomList 타입
+export const unJoinedRoomList = atom<UnJoinedRoomList[]>({
+  key: 'unJoinedRoomList',
+  default: [],
+});
+
 export const userAuth = atom<number | null>({
   key: 'userType',
+  default: null,
+});
+
+export const userStatus = atom<number | null>({
+  key: 'userStatus',
   default: null,
 });
 
@@ -27,12 +37,31 @@ const getRoomList = async (userId: number) => {
 };
 
 export const getJoinedChatList = selectorFamily<any, number>({
-  key: '',
+  key: 'getJoinedChatList',
   get:
     (userId) =>
     async ({ get }) => {
       try {
         const response = await getRoomList(userId);
+        return response.data;
+      } catch (error) {
+        console.dir(error);
+      }
+    },
+});
+
+const getUnJoinedRoomList = async (userId: number) => {
+  const response = await axios.get(`${SERVERURL}/rooms/${userId}/channels`);
+  return response;
+};
+
+export const getUnJoinedChatList = selectorFamily<any, number>({
+  key: 'getUnJoinedChatList',
+  get:
+    (userId) =>
+    async ({ get }) => {
+      try {
+        const response = await getUnJoinedRoomList(userId);
         return response.data;
       } catch (error) {
         console.dir(error);

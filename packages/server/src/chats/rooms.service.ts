@@ -169,6 +169,7 @@ export class RoomService {
         image: room.image,
         title: room.title,
         auth: user.auth,
+        status: user.status,
       };
       return roomInfo;
     }
@@ -345,6 +346,7 @@ export class RoomService {
 
     // 참여 성공
     // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
+    console.log('하... 어ㅔㅐㅗ 아노대니??');
     return { isEntered: true };
   }
 

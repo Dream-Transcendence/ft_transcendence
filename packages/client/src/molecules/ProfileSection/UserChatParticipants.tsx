@@ -1,9 +1,9 @@
-import { styled } from '@mui/material/styles';
+import { keyframes, styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonIcon from '@mui/icons-material/Person';
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import BlockIcon from '@mui/icons-material/Block';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 import {
   CustomIconProps,
@@ -17,6 +17,15 @@ import { PROFILEURL } from '../../configs/Link.url';
 import { ADMIN, OWNER } from '../../configs/userType';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth } from '../../recoil/chat.recoil';
+import {
+  ParticipantInfo,
+  ParticipantInfoNState,
+} from '../../types/Participant.type';
+import { useState } from 'react';
+import { MUTE } from '../../configs/Status.case';
+import { BLOCK, UNBLOCK } from '../../configs/Block.case';
+import { Rotate90DegreesCcw } from '@mui/icons-material';
+import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -33,23 +42,80 @@ const UserFuntionLayout = styled('div')(({ theme }) => ({
   marginLeft: '20%',
 }));
 
+const UserStateLayout = styled('section')(({ theme }) => ({
+  height: '100%',
+  width: '40%',
+  display: 'flex',
+  paddingRight: '10%',
+}));
+
+const OwnerBadge = styled('span')(({ theme }) => ({
+  marginTop: '1%',
+  height: '20px',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '2',
+}));
+
+const AdminBadge = styled('span')(({ theme }) => ({
+  marginTop: '1%',
+  height: '20px',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '2',
+}));
+
+const MuteBadge = styled('span')(({ theme }) => ({
+  marginTop: '10%',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '2',
+}));
+
+const BlockBadge = styled('span')(({ theme }) => ({
+  marginTop: '3%',
+  marginLeft: '1%',
+  height: '40px',
+  width: '40px',
+  border: 'solid red',
+  borderRadius: '100%',
+  position: 'absolute',
+  backgroundColor: '#f3333355',
+  zIndex: '1',
+}));
+
+const BlockCloss = styled('span')(({ theme }) => ({
+  marginTop: '48%',
+  marginLeft: '0%',
+  height: '3px',
+  width: '40px',
+  position: 'absolute',
+
+  transform: 'rotate(-40deg)',
+  backgroundColor: '#f33333',
+  zIndex: '1',
+}));
+
 const SpeedDialLayout = styled('div')((props) => ({
   // display: 'none',
   marginLeft: '20%',
 }));
 
-const customProps: CustomIconProps = {
-  icon: <NotInterestedIcon />,
-};
-
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-function UserChatParticipantsBox(props: { participantInfo: any }) {
-  const participantInfo = props.participantInfo;
-  const { user, auth } = participantInfo;
+function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
+  const { participantInfo, participantInfoArray, handler } =
+    participantInfoNState;
+  const { user, auth, status, blocked } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
+  const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
+    (participant) => participant.user.id !== participantInfo.user.id,
+  );
+
+  //const isBan = useState();
+
   const userInfo: UserProfileBoxDataType = {
     nickname: user.nickname,
     image: user.image,
@@ -69,9 +135,39 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
     avatarType: 'circle',
     userData: userInfo,
   };
+
+  const setBlock = () => {
+    const block = { ...participantInfo, blocked: true };
+    if (handler !== undefined) handler([...filteredParticipants, block]);
+  };
+  const setUnBlock = () => {
+    const unBlock = { ...participantInfo, blocked: false };
+    if (handler !== undefined) handler([...filteredParticipants, unBlock]);
+  };
+  function handlerBlock() {
+    if (blocked === UNBLOCK) blockUser(user.id, userData.id, setBlock);
+    else if (blocked === BLOCK) unBlockUser(user.id, userData.id, setUnBlock);
+  }
+
+  const customProps: CustomIconProps = {
+    icon: <BlockIcon />,
+    action: handlerBlock,
+  };
+
   return (
     <UserProfileLayout>
-      <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+      <UserStateLayout>
+        {/* 조건에 따라 왕관, 뮤트 , 밴 작업할 것 */}
+        {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
+        {auth === OWNER && <AdminBadge>👑</AdminBadge>}
+        {status === MUTE && <MuteBadge>🔇</MuteBadge>}
+        {participantInfo.blocked === BLOCK && (
+          <BlockBadge>
+            <BlockCloss />
+          </BlockBadge>
+        )}
+        <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+      </UserStateLayout>
       <UserFuntionLayout>
         <LinkPageIconButton linkIconProps={linkPersonal} />
         {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
@@ -83,7 +179,7 @@ function UserChatParticipantsBox(props: { participantInfo: any }) {
             {auth !== OWNER &&
               userData.id !== user.id &&
               !(userType === ADMIN && auth === ADMIN) && (
-                <BasicSpeedDial participantInfo={participantInfo} />
+                <BasicSpeedDial participantInfoNState={participantInfoNState} />
               )}
           </SpeedDialLayout>
         )}

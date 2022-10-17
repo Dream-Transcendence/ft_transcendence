@@ -16,6 +16,8 @@ import { RoomInfoSet } from '../../types/Room.type';
 import { useEffect, useState } from 'react';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { useParams } from 'react-router-dom';
+import { BLOCK } from '../../configs/Block.case';
+import axios from 'axios';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -24,6 +26,37 @@ const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   flexDirection: 'row',
   alignItems: 'center',
   marginLeft: '2%',
+}));
+
+const UserStateLayout = styled('section')(({ theme }) => ({
+  width: '4%',
+  display: 'flex',
+  alignContent: 'center',
+  paddingRight: '8%',
+}));
+
+const BlockBadge = styled('span')(({ theme }) => ({
+  marginLeft: '-0.25%',
+  marginTop: '-0.2%',
+  height: '40px',
+  width: '40px',
+  border: 'solid red',
+  borderRadius: '100%',
+  position: 'absolute',
+  backgroundColor: '#f3333355',
+  zIndex: '1',
+}));
+
+const BlockCloss = styled('span')(({ theme }) => ({
+  marginTop: '48%',
+  marginLeft: '0%',
+  height: '3px',
+  width: '40px',
+  position: 'absolute',
+
+  transform: 'rotate(-40deg)',
+  backgroundColor: '#f33333',
+  zIndex: '1',
 }));
 
 const divStyle = {
@@ -35,8 +68,9 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
   const { roomId } = useParams();
-  const { name, type, image: roomImage } = roomInfo;
+  const { name, type, image } = roomInfo;
   const [roomName, setRoomName] = useState<string>(name);
+  const [roomImage, setRoomImage] = useState<string>(image);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
   roomInfoSet['roomId'] = roomId;
 
@@ -57,6 +91,20 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     setRoomName(value);
   };
 
+  const handleRoomImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const file = event.target.files[0];
+      console.log(file);
+      const fd = new FormData();
+      setRoomImage(file.name);
+      console.log('image', roomImage);
+      roomInfo['image'] = roomImage;
+      fd.append('image', file, roomImage);
+      console.log(fd, '이미지 변경할할거유');
+      //api부를 위치
+    }
+  };
+
   const handleChangeRoomName = () => {
     roomInfo['name'] = roomName;
     setChangeRoomName(true);
@@ -65,7 +113,14 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
-        <Avatar alt="DMImg" src={roomImage} />
+        <UserStateLayout>
+          {roomInfo.blocked === BLOCK && (
+            <BlockBadge>
+              <BlockCloss />
+            </BlockBadge>
+          )}
+          <Avatar alt="DMImg" src={roomImage} />
+        </UserStateLayout>
       ) : (
         <IconButton
           color="primary"
@@ -73,7 +128,12 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
           component="label"
         >
           {/* [수정사항] 이미지 수정기능 추가해야함 */}
-          <input hidden accept="image/*" type="file" />
+          <input
+            hidden
+            accept="image/*"
+            type="file"
+            onChange={handleRoomImage}
+          />
           <Avatar alt="Remy Sharp" src={roomImage} />
         </IconButton>
       )}

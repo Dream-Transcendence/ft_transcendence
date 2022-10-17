@@ -61,7 +61,10 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   });
 
   const savehandler = () => {
-    if (newRoom.participantIds.length === 0)
+    console.log('!!', newRoom.type, newRoom.salt);
+    if (newRoom.type === 2 && newRoom.salt === '')
+      alert('비밀번호를 입력하세요');
+    else if (newRoom.participantIds.length === 0)
       alert('인원을 1명 이상 초대하세요');
     else {
       closeModal();
