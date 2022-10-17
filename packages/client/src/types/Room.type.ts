@@ -4,7 +4,7 @@ export interface RoomInfoSet {
   //[수정사항] any => participantDto
   roomInfo: GetRoomInfoDto;
   roomId?: string;
-  handler?: (roomInfo: any) => void;
+  handler?: (roomInfo: GetRoomInfoDto) => void;
 }
 
 export interface CreateRoomHandlerSet {

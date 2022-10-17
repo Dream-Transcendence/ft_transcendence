@@ -8,10 +8,17 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
-import { CustomIconProps, LinkIconProps, LinkIconResource } from '../../types/Link.type';
+import {
+  CustomIconProps,
+  LinkIconProps,
+  LinkIconResource,
+} from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userAuth } from '../../recoil/chat.recoil';
+import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
+import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -21,13 +28,34 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-export async function blockUser(blockId: number, userId: number) {
+export async function blockUser(
+  blockId: number,
+  userId: number,
+  setBlock: () => void,
+) {
   try {
     //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
     await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
       id: blockId,
     });
     console.log('block!!');
+    setBlock();
+  } catch (error) {
+    alert(error);
+    throw console.dir(error);
+  }
+}
+
+export async function unBlockUser(
+  blockId: number,
+  userId: number,
+  setUnBlock: () => void,
+) {
+  try {
+    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
+    await axios.delete(`${SERVERURL}/users/${userId}/blocks/${blockId}`);
+    console.log('unblock!!');
+    setUnBlock();
   } catch (error) {
     alert(error);
     throw console.dir(error);
@@ -36,13 +64,25 @@ export async function blockUser(blockId: number, userId: number) {
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 //[수정사항] any => ChannelDto
-function InfoDMBoxFunctionModule(props: { roomInfo: any }) {
+function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
+  const roomInfoSet = props.roomInfoSet;
   const userData = useRecoilValue(userDataAtom);
-  const roomInfo = props.roomInfo;
+  const { roomInfo, handler } = roomInfoSet;
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
 
+  const setBlock = () => {
+    const block = { ...roomInfo, blocked: true };
+    if (handler !== undefined) handler(block);
+  };
+  const setUnBlock = () => {
+    const unBlock = { ...roomInfo, blocked: false };
+    if (handler !== undefined) handler(unBlock);
+  };
   function handlerBlock() {
-    blockUser(roomInfo.id, userData.id);
+    if (roomInfo.blocked === UNBLOCK)
+      blockUser(roomInfo.id, userData.id, setBlock);
+    else if (roomInfo.blocked === BLOCK)
+      unBlockUser(roomInfo.id, userData.id, setUnBlock);
   }
 
   const personal: LinkIconResource = {

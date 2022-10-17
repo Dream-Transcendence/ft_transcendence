@@ -21,7 +21,7 @@ function InfoBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       {/* [axios POST 요청]방장이 나갈시, 권한위임 요청 */}
       {/* [axios DELETE 요청]해당 채팅방 나가기 요청 */}
       {type === DM ? (
-        <InfoDMBoxFunctionModule roomInfo={roomInfo} />
+        <InfoDMBoxFunctionModule roomInfoSet={roomInfoSet} />
       ) : (
         <InfoBoxRoomFunctionModule roomInfoSet={roomInfoSet} />
       )}

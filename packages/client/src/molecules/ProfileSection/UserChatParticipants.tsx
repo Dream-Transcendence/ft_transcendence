@@ -3,7 +3,7 @@ import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonIcon from '@mui/icons-material/Person';
-import NotInterestedIcon from '@mui/icons-material/NotInterested';
+import BlockIcon from '@mui/icons-material/Block';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
 import {
   CustomIconProps,
@@ -25,6 +25,7 @@ import { useState } from 'react';
 import { MUTE } from '../../configs/Status.case';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { Rotate90DegreesCcw } from '@mui/icons-material';
+import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -100,18 +101,18 @@ const SpeedDialLayout = styled('div')((props) => ({
   marginLeft: '20%',
 }));
 
-const customProps: CustomIconProps = {
-  icon: <NotInterestedIcon />,
-};
-
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
-  const { participantInfo, handler } = participantInfoNState;
-  const { user, auth, status } = participantInfo;
+  const { participantInfo, participantInfoArray, handler } =
+    participantInfoNState;
+  const { user, auth, status, blocked } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
+  const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
+    (participant) => participant.user.id !== participantInfo.user.id,
+  );
 
   //const isBan = useState();
 
@@ -134,6 +135,25 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
     avatarType: 'circle',
     userData: userInfo,
   };
+
+  const setBlock = () => {
+    const block = { ...participantInfo, blocked: true };
+    if (handler !== undefined) handler([...filteredParticipants, block]);
+  };
+  const setUnBlock = () => {
+    const unBlock = { ...participantInfo, blocked: false };
+    if (handler !== undefined) handler([...filteredParticipants, unBlock]);
+  };
+  function handlerBlock() {
+    if (blocked === UNBLOCK) blockUser(user.id, userData.id, setBlock);
+    else if (blocked === BLOCK) unBlockUser(user.id, userData.id, setUnBlock);
+  }
+
+  const customProps: CustomIconProps = {
+    icon: <BlockIcon />,
+    action: handlerBlock,
+  };
+
   return (
     <UserProfileLayout>
       <UserStateLayout>
