@@ -218,21 +218,25 @@ export class UserService {
       relations: { room: true },
       where: { user: { id: id } },
     });
-    console.log(dms);
     const dmRooms = dms.map((dm) => dm.room);
-    console.log(dmRooms);
     const dmList: GetUserRoomDto[] = [];
     const promises = dmRooms.map(async (room) => {
       const opponent = await this.dmParticipantsRepository.findOne({
         relations: { user: true },
         where: { room: { id: room.id }, user: { id: Not(id) } },
       });
+      const row = await this.blocksRepository.findOne({
+        where: { user: { id: id }, blockedUser: { id: opponent.user.id } },
+      });
+
       console.log('잘 돌아가고 있니?');
       const userRoomDto: GetUserRoomDto = {
         id: room.id,
         name: opponent.user.nickname,
         image: opponent.user.image,
+        // TODO: recvMessageCount 로직 추가
         recvMessageCount: 0,
+        blocked: row !== null,
       };
       dmList.push(userRoomDto);
     });
