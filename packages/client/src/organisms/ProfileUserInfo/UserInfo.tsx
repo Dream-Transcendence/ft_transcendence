@@ -33,7 +33,6 @@ function UserInfo() {
   const { userId } = useParams();
 
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [userNickname, setUserNickname] = useState(user.nickname);
   const [userImage, setUserImage] = useState('');
   async function changeUserImage() {
     try {

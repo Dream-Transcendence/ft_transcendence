@@ -3,8 +3,10 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import { useState } from 'react';
 import AutoComplateSerchBox from './AutoCompleteSerchBox';
+import { Flex } from '@chakra-ui/react';
 
 const Search = styled('div')(({ theme }) => ({
+  display: 'flex',
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -20,8 +22,14 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
   position: 'absolute',
-  pointerEvents: 'none',
   display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+}));
+
+const AutoWrapper = styled('div')(({ theme }) => ({
+  height: '100%',
+  position: 'relative',
   alignItems: 'center',
   justifyContent: 'center',
 }));
@@ -44,7 +52,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-
 function SearchBox() {
   const [inputValue, setInputValue] = useState('');
   // const handlerChange = (event: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -52,10 +59,12 @@ function SearchBox() {
   // }
   return (
     <Search>
-      <SearchIconWrapper>
+      {/* <SearchIconWrapper>
         <SearchIcon />
-      </SearchIconWrapper>
-      <AutoComplateSerchBox></AutoComplateSerchBox>
+      </SearchIconWrapper> */}
+      <AutoWrapper>
+        <AutoComplateSerchBox />
+      </AutoWrapper>
       {/* <StyledInputBase
         placeholder="유저찾기…"
         inputProps={{ 'aria-label': 'search' }}
