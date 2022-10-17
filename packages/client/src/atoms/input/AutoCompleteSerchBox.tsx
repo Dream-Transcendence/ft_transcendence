@@ -10,8 +10,8 @@ import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { SearchPropsType } from '../../types/search.type';
 
 function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
-  const {url, listParams, action} = props.searchProps;
-  const {value: parentTarget, setValue: setParentTarget} = listParams;
+  const {url, listParams, action} = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.
+  const {value: parentTarget, setValue: setParentTarget} = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
   const {nickname : atomNickname} = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
   const [value, setValue] = useState<string | null>(null);
