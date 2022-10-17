@@ -8,6 +8,12 @@ export const ListLayout = styled('li')(() => ({
   bgcolor: '#00000000',
 }));
 
+export const ListChatLayout = styled('li')(() => ({
+  width: '100%',
+  height: '10%',
+  bgcolor: '#00000000',
+}));
+
 export const ListUlLayout = styled('ul')(({ theme }) => ({
   height: '100%',
   position: 'relative',

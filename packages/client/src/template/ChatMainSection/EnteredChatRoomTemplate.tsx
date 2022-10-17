@@ -74,6 +74,7 @@ function EnteredChatRoomTemplate() {
           `${SERVERURL}/rooms/${roomId}/${userData.id}`,
         );
         setRoomInfo(response.data);
+        setUserState(roomInfo.status);
       } catch (error) {
         alert(error);
         throw console.dir(error);
@@ -154,7 +155,7 @@ function EnteredChatRoomTemplate() {
     participantInfo: participantInfo,
     handler: setParticipantInfo,
   };
-  console.log('???', userState);
+
   return (
     <ChattingRoomLayout>
       {userState !== BAN ? (

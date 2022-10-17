@@ -40,7 +40,7 @@ const changeParticipant = (
   return { ...participantInfo, [key]: value };
 };
 
-export default function BasicSpeedDial(props: {
+function BasicSpeedDial(props: {
   participantInfoNState: ParticipantInfoNState;
 }) {
   const {
@@ -211,3 +211,5 @@ export default function BasicSpeedDial(props: {
     </SpeedDial>
   );
 }
+
+export default BasicSpeedDial;

@@ -7,6 +7,7 @@ CREATE TABLE "request" ("id" SERIAL NOT NULL, "requestorId" integer, "responserI
 CREATE TABLE "room" ("id" SERIAL NOT NULL, "name" character varying, "type" integer NOT NULL, "salt" character varying, "title" character varying, "image" character varying, CONSTRAINT "PK_c6d46db005d623e691b2fbcba23" PRIMARY KEY ("id"));
 CREATE TABLE "channel_participant" ("id" SERIAL NOT NULL, "auth" integer, "status" integer, "statusStartDate" TIMESTAMP, "userId" integer, "roomId" integer, CONSTRAINT "PK_ae5e5f3f9ce9a1968392ebb6b08" PRIMARY KEY ("id"));
 CREATE TABLE "dm_participant" ("id" SERIAL NOT NULL, "userId" integer, "roomId" integer, CONSTRAINT "PK_7400786b0fd136d7e1b7e5d6802" PRIMARY KEY ("id"));
+CREATE TABLE "message" ("id" integer NOT NULL, "date" TIMESTAMP NOT NULL, "body" character varying NOT NULL, "userId" integer, "roomId" integer, CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id"));
 ALTER TABLE "block" ADD CONSTRAINT "FK_b7c8985f27f5b0d1820832318da" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "block" ADD CONSTRAINT "FK_c9a8df2f7cbbae1cda940694409" FOREIGN KEY ("blockedUserId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "auth" ADD CONSTRAINT "FK_373ead146f110f04dad60848154" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -18,7 +19,9 @@ ALTER TABLE "channel_participant" ADD CONSTRAINT "FK_64393df3b0cdfd3e26a8a999ab6
 ALTER TABLE "channel_participant" ADD CONSTRAINT "FK_025192a457f55e0f49868a1bed4" FOREIGN KEY ("roomId") REFERENCES "room"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "dm_participant" ADD CONSTRAINT "FK_a05c42c34e7c204da3911b2a781" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "dm_participant" ADD CONSTRAINT "FK_0530689ed4b0bca1dd9fc3dc613" FOREIGN KEY ("roomId") REFERENCES "room"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
-
+ALTER TABLE "message" ADD CONSTRAINT "FK_446251f8ceb2132af01b68eb593" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "message" ADD CONSTRAINT "FK_fdfe54a21d1542c564384b74d5c" FOREIGN KEY ("roomId") REFERENCES "room"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+​
 INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://cdn.intra.42.fr/users/dha.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (1, 'dha@student.42seoul.kr', true, 1);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (2, 'junghan', 'https://cdn.intra.42.fr/users/junghan.jpg');
@@ -31,10 +34,10 @@ INSERT INTO "user" ("id", "nickname", "image") VALUES (5, 'hybae', 'https://cdn.
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (5, 'hybae@student.42seoul.kr', false, 5);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (6, 'huchoi', 'https://cdn.intra.42.fr/users/huchoi.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (6, 'huchoi@student.42seoul.kr', false, 6);
-
+​
 INSERT INTO "block" ("id", "blockedTime", "userId", "blockedUserId") VALUES (1, '2022-10-10 00:00:00', 1, 2);
 INSERT INTO "block" ("id", "blockedTime", "userId", "blockedUserId") VALUES (2, '2022-10-10 00:00:00', 3, 4);
-
+​
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (1, 1, 2);
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (2, 2, 1);
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (3, 1, 3);
@@ -47,19 +50,19 @@ INSERT INTO "friend" ("id", "userId", "friendId") VALUES (9, 2, 3);
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (10, 3, 2);
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (11, 2, 4);
 INSERT INTO "friend" ("id", "userId", "friendId") VALUES (12, 4, 2);
-
+​
 INSERT INTO "request" ("id", "requestorId", "responserId") VALUES (1, 2, 5);
 INSERT INTO "request" ("id", "requestorId", "responserId") VALUES (2, 3, 5);
-
+​
 INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (1, '42seoul', 1, NULL, NULL, NULL);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (1, 0, NULL, NULL, 1, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (2, NULL, NULL, NULL, 2, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (3, NULL, NULL, NULL, 4, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (4, 1, 1, NULL, 4, 1);
-
+​
 INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (2, '42tokyo', 1, NULL, NULL, NULL);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (5, 0, NULL, NULL, 2, 2);
-
+​
 INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (3, NULL, 0, NULL, NULL, NULL);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (1, 1, 3);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (2, 2, 3);

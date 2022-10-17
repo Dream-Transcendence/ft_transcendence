@@ -119,7 +119,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
               <BlockCloss />
             </BlockBadge>
           )}
-          <Avatar alt="DMImg" src={roomImage} />
+          <Avatar alt="DMImg" src={roomInfo.image} />
         </UserStateLayout>
       ) : (
         <IconButton
