@@ -121,7 +121,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
         id: opponent.userId,
       });
       const gameInfo = new GameInfo(player1, player2);
-      this.gameInfoMap[matchDto.mode].set(gameInfo.roomId, gameInfo);
+      this.gameInfoMap.set(gameInfo.roomId, gameInfo);
 
       client.join(gameInfo.roomId);
       opponent.socket.join(gameInfo.roomId);
