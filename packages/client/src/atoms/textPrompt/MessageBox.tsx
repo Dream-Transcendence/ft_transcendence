@@ -11,6 +11,11 @@ import { ThemeProvider, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 
+const TextBoxLayout = styled('section')(() => ({
+  height: '100%',
+  width: '80%',
+}));
+
 const TextBox = styled('div')(() => ({
   height: '90%',
   width: '100%',
@@ -25,18 +30,19 @@ const ListTextLayout = styled('div')(({ theme }) => ({
 
 const OtherTextInput = styled('section')(({ theme }) => ({
   overflow: 'auto',
-  width: '80%',
-  backgroundColor: '#5154ff',
+  width: '60%',
+  backgroundColor: '#003566',
   borderRadius: '0px 10px 10px 10px',
   justifyContent: 'center',
 }));
 
 const OwnTextInput = styled('section')(({ theme }) => ({
   overflow: 'auto',
-  width: '80%',
-  backgroundColor: '#003566',
-  borderRadius: '0px 10px 10px 10px',
+  width: '60%',
+  backgroundColor: '#5154ff',
+  borderRadius: '10px 0px 10px 10px',
   justifyContent: 'center',
+  float: 'right',
 }));
 
 function MessageBox(prop: { message: ReceivedMessage }) {
@@ -44,31 +50,31 @@ function MessageBox(prop: { message: ReceivedMessage }) {
   const userData = useRecoilValue(userDataAtom);
   console.log('hi', msg, userData.id);
   return (
-    <TextBox>
-      <ListItemAvatar>
-        <Avatar alt={'messgae img'} src={msg.user.image}></Avatar>
-      </ListItemAvatar>
-      <ListTextLayout>
-        <Typography color={'gray'} fontSize={7}>
-          {msg.user.nickname}
-        </Typography>
-        {/* <OtherListTextBox> */}
-        {msg.user.id === userData.id ? (
-          <OtherTextInput>
-            <Typography padding={'8%'} color={'white'} fontSize={12}>
-              {msg.body}
+    <TextBoxLayout>
+      {msg.user.id === userData.id ? (
+        <OwnTextInput>
+          <Typography padding={'8%'} color={'white'} fontSize={12}>
+            {msg.body}
+          </Typography>
+        </OwnTextInput>
+      ) : (
+        <TextBox>
+          <ListItemAvatar>
+            <Avatar alt={'messgae img'} src={msg.user.image}></Avatar>
+          </ListItemAvatar>
+          <ListTextLayout>
+            <Typography color={'gray'} fontSize={7}>
+              {msg.user.nickname}
             </Typography>
-          </OtherTextInput>
-        ) : (
-          <OwnTextInput>
-            <Typography padding={'8%'} color={'white'} fontSize={12}>
-              {msg.body}
-            </Typography>
-          </OwnTextInput>
-        )}
-        {/* </OtherListTextBox> */}
-      </ListTextLayout>
-    </TextBox>
+            <OtherTextInput>
+              <Typography padding={'8%'} color={'white'} fontSize={12}>
+                {msg.body}
+              </Typography>
+            </OtherTextInput>
+          </ListTextLayout>
+        </TextBox>
+      )}
+    </TextBoxLayout>
   );
 }
 

@@ -4,6 +4,7 @@ import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
 import MessageBox from '../../atoms/textPrompt/MessageBox';
 import {
   ListChatLayout,
+  ListChatUlLayout,
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
@@ -29,7 +30,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     <ChatLogLayout>
       {/* [axios GET 요청]해당 채팅방의 모든 로그 요청 */}
       <ListGenerateLayout>
-        <ListUlLayout>{listElement}</ListUlLayout>
+        <ListChatUlLayout>{listElement}</ListChatUlLayout>
       </ListGenerateLayout>
     </ChatLogLayout>
   );
