@@ -50,7 +50,6 @@ function useSearch(
       createDM(target);
       //[수정사항]여러개 생성되는문제 백에서 막아줄것!
     } else if (target > 0 && type === PUBLIC) {
-      console.log('click', newParticipants, target);
       if (newParticipants.every((Participant) => Participant !== target)) {
         const partiArray = [...newParticipants, target];
         setNewParticipant(partiArray);

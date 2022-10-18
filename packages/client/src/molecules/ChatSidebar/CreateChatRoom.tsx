@@ -2,12 +2,8 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 import SettingRoomConfigOranisms from '../../organisms/ChatPopUp/SettingRoomConfig';
-import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { newParticipant } from '../../recoil/chat.recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const CreateChatRoomLayout = styled('div')(({ theme }) => ({
@@ -26,7 +22,6 @@ const AsideButtonBox = styled('div')(({ theme }) => ({
 
 function CreateChatRoomModule() {
   const [open, setOpen] = React.useState(false);
-  const [newParticipants, setNewParticipant] = useRecoilState(newParticipant);
   const user = useRecoilValue(userDataAtom);
   const handleClose = () => {
     setOpen(false);

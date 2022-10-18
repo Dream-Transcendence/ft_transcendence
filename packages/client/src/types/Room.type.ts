@@ -31,6 +31,8 @@ export interface HandleInviteList {
   addedParticipantList: RoomList[];
   setAddedParticipantList: (roomList: RoomList[]) => void;
   handleParticipant: (numList: number[]) => void;
+  newParticipantList: number[];
+  setNewParticipantList: (numList: number[]) => void;
 }
 
 export interface UnJoinedRoomList {

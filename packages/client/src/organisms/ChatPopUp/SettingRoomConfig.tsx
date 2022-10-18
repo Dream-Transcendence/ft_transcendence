@@ -9,13 +9,13 @@ import {
   HandleInviteList,
   RoomList,
 } from '../../types/Room.type';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PROTECTED } from '../../configs/RoomType';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { chatRoomList } from '../../recoil/chat.recoil';
+import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
 import { useNavigate } from 'react-router-dom';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
@@ -61,13 +61,13 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   const [addedParticipantList, setAddedParticipantList] = useState<RoomList[]>(
     [],
   );
+  const [newParticipantList, setNewParticipantList] =
+    useRecoilState(newParticipant);
   const navigate = useNavigate();
 
   async function createRoom(newRoom: CreateRoomSet) {
     try {
       await axios.post(`${SERVERURL}/rooms/channels`, newRoom).then((res) => {
-        console.log('response: ', res);
-        console.log('response: ', res.data.id);
         setNewRoom({
           userId: userData.id,
           name: '',
@@ -82,8 +82,7 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
           recvMessageCount: 0,
         };
         setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
-        setAddedParticipantList([]);
-        closeModal();
+        resetAddedParticipantList();
         navigate(`${CHATROOMURL}${res.data.id}`);
       });
     } catch (error) {
@@ -98,20 +97,17 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
       alert('인원을 1명 이상 초대하세요');
     else {
       createRoom(newRoom);
+      closeModal();
     }
   };
 
-  const closehandler = () => {
-    setNewRoom({
-      userId: userData.id,
-      name: '',
-      type: 1,
-      salt: '',
-      participantIds: [],
-    });
-    console.log('!!!>???나기깉ㅌㄴ!!!!!!!!!', addedParticipantList);
+  const resetAddedParticipantList = () => {
     setAddedParticipantList([]);
-    console.log('!!!나기깉ㅌㄴ!!!!!!!!!', addedParticipantList);
+    setNewParticipantList([]);
+  };
+
+  const closehandler = () => {
+    resetAddedParticipantList();
     closeModal();
   };
 
@@ -138,8 +134,9 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
     addedParticipantList: addedParticipantList,
     setAddedParticipantList: setAddedParticipantList,
     handleParticipant: handleParticipant,
+    newParticipantList: newParticipantList,
+    setNewParticipantList: setNewParticipantList,
   };
-  console.log('!!!!!!!!!!!!', addedParticipantList);
   return (
     <SettingRoomConfigLayout>
       <SettingRoomConfigBox>

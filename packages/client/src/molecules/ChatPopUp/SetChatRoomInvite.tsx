@@ -72,9 +72,10 @@ function SetChatRoomInviteModule(props: {
   const {
     addedParticipantList,
     setAddedParticipantList,
+    newParticipantList,
+    setNewParticipantList,
     handleParticipant: handler,
   } = props.handleInviteList;
-  const [ParticipantList, setParticipantList] = useRecoilState(newParticipant);
   const handleParticipant = handler;
   const user = useRecoilValue(userDataAtom);
   const searchProps = useSearch(
@@ -102,14 +103,14 @@ function SetChatRoomInviteModule(props: {
   }
 
   useEffect(() => {
-    ParticipantList.map((id) => {
+    newParticipantList.map((id) => {
       if (addedParticipantList.every(checkInArray(id))) {
         getAddedParticpant(id);
-        handleParticipant([...ParticipantList]);
+        handleParticipant([...newParticipantList]);
       }
       return;
     });
-  }, [ParticipantList, addedParticipantList]);
+  }, [newParticipantList, addedParticipantList, getAddedParticpant]);
 
   const listElement: React.ReactElement[] = addedParticipantList.map(
     (addedParticipant: RoomList) => {
@@ -123,10 +124,12 @@ function SetChatRoomInviteModule(props: {
         userData: profileInfo,
       };
       const cancelInvite = () => {
-        const popParticipantList = ParticipantList.filter((popParticipant) => {
-          return popParticipant !== addedParticipant.id;
-        });
-        setParticipantList([...popParticipantList]);
+        const popParticipantList = newParticipantList.filter(
+          (popParticipant) => {
+            return popParticipant !== addedParticipant.id;
+          },
+        );
+        setNewParticipantList([...popParticipantList]);
         handleParticipant([...popParticipantList]);
         const popDisplayParticipantList = addedParticipantList.filter(
           (Participant) => Participant.id !== addedParticipant.id,
@@ -147,7 +150,6 @@ function SetChatRoomInviteModule(props: {
       );
     },
   );
-
   //[수정사항] 검색 컴포넌트 완성 후, 작업할 예정
   return (
     <SetInviteLayout>
