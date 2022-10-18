@@ -134,6 +134,7 @@ export class GameService {
             this.gameInfoMap.get(title).getGameScoreDto(),
           );
           this.schedulerRegistry.deleteInterval(title);
+          return;
         }
       }
       if (
