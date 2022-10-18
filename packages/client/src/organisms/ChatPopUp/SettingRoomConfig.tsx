@@ -4,7 +4,11 @@ import SetChatRoomNameModule from '../../molecules/ChatPopUp/SetChatRoomName';
 import SetChatRoomTypeModule from '../../molecules/ChatPopUp/SetChatRoomType';
 import SetChatRoomPasswordModule from '../../molecules/ChatPopUp/SetChatRoomPassword';
 import SetChatRoomInviteModule from '../../molecules/ChatPopUp/SetChatRoomInvite';
-import { CreateRoomSet, RoomList } from '../../types/Room.type';
+import {
+  CreateRoomSet,
+  HandleInviteList,
+  RoomList,
+} from '../../types/Room.type';
 import { useState } from 'react';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
@@ -54,16 +58,13 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
     salt: '',
     participantIds: [],
   });
+  const [addedParticipantList, setAddedParticipantList] = useState<RoomList[]>(
+    [],
+  );
   const navigate = useNavigate();
 
   async function createRoom(newRoom: CreateRoomSet) {
     try {
-      const joinedRoom: RoomList = {
-        id: newRoom.userId,
-        name: newRoom.name,
-        image: '',
-        recvMessageCount: 0,
-      };
       await axios.post(`${SERVERURL}/rooms/channels`, newRoom).then((res) => {
         console.log('response: ', res);
         console.log('response: ', res.data.id);
@@ -74,7 +75,14 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
           salt: '',
           participantIds: [],
         });
+        const joinedRoom: RoomList = {
+          id: res.data.id,
+          name: newRoom.name,
+          image: '',
+          recvMessageCount: 0,
+        };
         setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
+        setAddedParticipantList([]);
         closeModal();
         navigate(`${CHATROOMURL}${res.data.id}`);
       });
@@ -101,6 +109,9 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
       salt: '',
       participantIds: [],
     });
+    console.log('!!!>???나기깉ㅌㄴ!!!!!!!!!', addedParticipantList);
+    setAddedParticipantList([]);
+    console.log('!!!나기깉ㅌㄴ!!!!!!!!!', addedParticipantList);
     closeModal();
   };
 
@@ -122,6 +133,13 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
     deepCopyRoom.participantIds = value;
     setNewRoom({ ...deepCopyRoom });
   };
+
+  const handleInviteList: HandleInviteList = {
+    addedParticipantList: addedParticipantList,
+    setAddedParticipantList: setAddedParticipantList,
+    handleParticipant: handleParticipant,
+  };
+  console.log('!!!!!!!!!!!!', addedParticipantList);
   return (
     <SettingRoomConfigLayout>
       <SettingRoomConfigBox>
@@ -133,7 +151,7 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
         {newRoom.type === PROTECTED && (
           <SetChatRoomPasswordModule handler={handlePassword} />
         )}
-        <SetChatRoomInviteModule handler={handleParticipant} />
+        <SetChatRoomInviteModule handleInviteList={handleInviteList} />
         {/* [axios POST 요청] 위 정보를 포함한 채팅방 개설 */}
         <SetButtonLayout>
           <Button onClick={savehandler} variant="contained">

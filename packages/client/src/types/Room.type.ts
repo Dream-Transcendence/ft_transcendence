@@ -27,6 +27,12 @@ export interface RoomList {
   recvMessageCount: number;
 }
 
+export interface HandleInviteList {
+  addedParticipantList: RoomList[];
+  setAddedParticipantList: (roomList: RoomList[]) => void;
+  handleParticipant: (numList: number[]) => void;
+}
+
 export interface UnJoinedRoomList {
   id: number;
   name: string;

@@ -20,7 +20,7 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import axios from 'axios';
-import { RoomList } from '../../types/Room.type';
+import { HandleInviteList, RoomList } from '../../types/Room.type';
 import UserChatParticipantsBox from '../ProfileSection/UserChatParticipants';
 import {
   UserProfileBoxDataType,
@@ -66,15 +66,17 @@ const CustomIconButtonLayout = styled('div')(({ theme }) => ({
   zIndex: '2',
 }));
 
-function SetChatRoomInviteModule(handler: {
-  handler: (value: number[]) => void;
+function SetChatRoomInviteModule(props: {
+  handleInviteList: HandleInviteList;
 }) {
+  const {
+    addedParticipantList,
+    setAddedParticipantList,
+    handleParticipant: handler,
+  } = props.handleInviteList;
   const [ParticipantList, setParticipantList] = useRecoilState(newParticipant);
-  const handleParticipant = handler.handler;
+  const handleParticipant = handler;
   const user = useRecoilValue(userDataAtom);
-  const [addedParticipantList, setAddedParticipantList] = useState<RoomList[]>(
-    [],
-  );
   const searchProps = useSearch(
     `${SERVERURL}/users/${user.id}/friends/search`,
     CHATROOMURL,
@@ -130,8 +132,6 @@ function SetChatRoomInviteModule(handler: {
           (Participant) => Participant.id !== addedParticipant.id,
         );
         setAddedParticipantList([...popDisplayParticipantList]);
-        console.log('!!!!!@!!!!', popDisplayParticipantList);
-        console.log('!!!!@!', popParticipantList);
       };
       const cancleProps: CustomIconProps = {
         icon: <CancelIcon />,
