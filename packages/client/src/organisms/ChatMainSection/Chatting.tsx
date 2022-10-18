@@ -26,7 +26,6 @@ function ChattingOrganisms(prop: any) {
     async function getMessageHistory() {
       const response = await axios.get(`${SERVERURL}/rooms/messages/${roomId}`);
       setMessageHistory(response.data);
-      console.log('get message', response.data);
     }
     getMessageHistory();
   }, [roomId]);

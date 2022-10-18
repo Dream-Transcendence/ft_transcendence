@@ -111,7 +111,6 @@ function BasicSpeedDial(props: {
       ...filteredParticipants,
       changeParticipant(participantInfo, 'status', 8),
     ]);
-    console.log();
     console.log('unmute!!!!!!!!!!!');
   };
 
@@ -155,7 +154,6 @@ function BasicSpeedDial(props: {
 
   const setUserState = (info: ChangeParticipantInfo, action: () => void) => {
     socket.emit(`${patchUserInfo}`, info, (response: any) => {
-      console.log('state changed ', response);
       // action();
     });
     socket.on('exception', (response: any) => {

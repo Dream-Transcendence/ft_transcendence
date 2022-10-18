@@ -9,10 +9,10 @@ import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { SearchPropsType } from '../../types/search.type';
 
-function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
-  const {url, listParams, action} = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.
-  const {value: parentTarget, setValue: setParentTarget} = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
-  const {nickname : atomNickname} = useRecoilValue(userDataAtom);
+function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
+  const { url, listParams, action } = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.
+  const { value: parentTarget, setValue: setParentTarget } = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
+  const { nickname: atomNickname } = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
   const [value, setValue] = useState<string | null>(null);
 
@@ -49,10 +49,10 @@ function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
   const handleEvent = (e: any) => {
     if (e.key === 'Enter') {
       const target = userList.find((user) => {
-        if (e.target.value)
-          return user.nickname.includes(e.target.value);
-        return atomNickname //값이 이상하면 기본 값으로 초기화
+        if (e.target.value) return user.nickname.includes(e.target.value);
+        return atomNickname; //값이 이상하면 기본 값으로 초기화
       });
+
       if (target) {
         setValue(target.nickname);
         setParentTarget(target.id);
@@ -69,7 +69,6 @@ function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
         onChange={(event, newValue) => {
           setValue(newValue);
         }}
-        id="free-solo-dialog-demo"
         options={nicknameList} //옵션 배열
         getOptionLabel={(option) => {
           //값 입력시 해당하는 list출력
@@ -86,11 +85,13 @@ function AutoComplateSerchBox(props: {searchProps: SearchPropsType}) {
         clearOnBlur //검색 재개
         // props: The props to apply on the li element.
         // option: The option to render.
-        renderOption={(props, option) => <li {...props} >{option}</li>} //search list
-        sx={{ width: 200 }}
+        renderOption={(props, option) => <li {...props}>{option}</li>} //search list
+        sx={{ width: '100%' }}
         freeSolo //이 속성을 주지 않으면 배열에 없는 값을 입력했을 때 not option이 표시됨
         //입력을 렌더링
-        renderInput={(params) => <TextField {...params} label="Search" onKeyDown={handleEvent}/>}
+        renderInput={(params) => (
+          <TextField {...params} label="Search" onKeyDown={handleEvent} />
+        )}
       />
     </Fragment>
   );
