@@ -45,18 +45,17 @@ export class GameRecordDto {
 }
 
 export class GameRoomDto {
-  id: string;
-
+  title: string;
   leftPlayer: UserDto;
   rightPlayer: UserDto;
-
+  ballPos: { x: number; y: number };
+  paddlePos: { left: number; right: number };
+  score: { left: number; right: number };
   mode: number;
 }
 
 export class MatchDto {
   userId: number;
-
-  mode: GAME_MODE;
 }
 
 export class RoomTitleDto {
@@ -64,10 +63,11 @@ export class RoomTitleDto {
 }
 
 export class GameInfoDto {
-  score: { left: number; right: number };
   ballPos: { x: number; y: number };
   paddlePos: { left: number; right: number };
-  mode: GAME_MODE;
+}
+export class GameScoreDto {
+  score: { left: number; right: number };
 }
 
 export class MovePaddleDto {
@@ -101,7 +101,7 @@ export class GameInfo {
 
   public getGameRoomDto(title: string): GameRoomDto {
     return {
-      id: title,
+      title: title,
       leftPlayer: {
         id: this.player.left.id,
         nickname: this.player.left.nickname,
@@ -112,16 +112,32 @@ export class GameInfo {
         nickname: this.player.right.nickname,
         image: this.player.right.image,
       },
+      ballPos: { x: this.ballPos.x, y: this.ballPos.y },
+      paddlePos: { left: this.paddlePos.left, right: this.paddlePos.right },
+      score: { left: this.score.left, right: this.score.right },
       mode: this.mode,
     };
   }
 
+  // public getGameInfoDto(): GameInfoDto {
+  //   return {
+  //     score: this.score,
+  //     ballPos: this.ballPos,
+  //     paddlePos: this.paddlePos,
+  //     mode: this.mode,
+  //   };
+  // }
+
   public getGameInfoDto(): GameInfoDto {
     return {
-      score: this.score,
       ballPos: this.ballPos,
       paddlePos: this.paddlePos,
-      mode: this.mode,
+    };
+  }
+
+  public getGameScoreDto(): GameScoreDto {
+    return {
+      score: this.score,
     };
   }
 }

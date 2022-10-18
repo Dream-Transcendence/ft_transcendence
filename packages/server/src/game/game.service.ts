@@ -19,7 +19,7 @@ export class GameService {
     @Inject('USERS_REPOSITORY') private userRepository: Repository<User>,
     private schedulerRegistry: SchedulerRegistry,
   ) {}
-  private matchingQueue: MatchingInfo[][] = Array.from(Array(4), () => []);
+  private matchingQueue: MatchingInfo[] = [];
   private gameInfoMap: Map<string, GameInfo> = new Map();
 
   ballRadius = 10;
@@ -33,24 +33,21 @@ export class GameService {
     client.emit('gameMessage', data);
   }
 
+  // 매칭에는 게임설정이 없다
   async handleMatch(client: Socket, matchDto: MatchDto) {
     console.log('Game Client match', matchDto);
     // NOTE: 유저가 매칭을 요청하면, 매칭 대기열에 추가
 
     // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
-    this.matchingQueue.map((eachQueue) => {
-      eachQueue.map((matchingInfo) => {
-        if (matchingInfo.userId === matchDto.userId)
-          throw new WsException('이미 매칭 대기열에 있습니다.');
-      });
+    this.matchingQueue.map((matchingInfo) => {
+      if (matchingInfo.userId === matchDto.userId)
+        throw new WsException('이미 매칭 대기열에 있습니다.');
     });
-    if (this.matchingQueue[matchDto.mode].length === 0) {
-      this.matchingQueue[matchDto.mode].push(
-        new MatchingInfo(matchDto.userId, client),
-      );
+    if (this.matchingQueue.length === 0) {
+      this.matchingQueue.push(new MatchingInfo(matchDto.userId, client));
     } else {
       // NOTE: 매칭 대기열에 유저가 있으면, 매칭(로직이 문제 없는 지 고민해봐야 함)
-      const opponent = this.matchingQueue[matchDto.mode].shift();
+      const opponent = this.matchingQueue.shift();
       const player1 = await this.userRepository.findOneBy({
         id: matchDto.userId,
       });
@@ -65,21 +62,20 @@ export class GameService {
       opponent.socket.join(title);
 
       this.gameInfoMap.set(title, gameInfo); // this.server
-      //   .to(gameInfo.title)
-      //   .emit('matched', gameInfo.getGameRoomDto());
       this.emitToEveryone(client, title, gameInfo.getGameRoomDto(title));
-      // emit event gameMessage로 통일
     }
   }
 
   async handleCancel(client: Socket, matchDto: MatchDto) {
     console.log('Game Client cancel', matchDto);
-    const index = this.matchingQueue[matchDto.mode].findIndex(
+    const index = this.matchingQueue.findIndex(
       (matchingInfo) => matchingInfo.socket.id === client.id,
     );
     // NOTE: 리스트에서 해당 유저를 삭제하기만 하면 되는데, 응답을 보내야할까?
-    this.matchingQueue[matchDto.mode].splice(index, 1);
+    this.matchingQueue.splice(index, 1);
     client.disconnect();
+    return { isCanceled: true };
+    // NOTE disconnect를 할지 방에서만 빼낼지 고민
   }
 
   async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
@@ -132,11 +128,11 @@ export class GameService {
           ) {
             message = '#############게임 끝################';
           }
-          this.emitToEveryone(client, title, {
-            leftScore: this.gameInfoMap.get(title).score.left,
-            rightScore: this.gameInfoMap.get(title).score.right,
-            message,
-          });
+          this.emitToEveryone(
+            client,
+            title,
+            this.gameInfoMap.get(title).getGameScoreDto(),
+          );
           this.schedulerRegistry.deleteInterval(title);
           return;
         }
@@ -152,13 +148,11 @@ export class GameService {
         this.gameInfoMap.get(title).ballSpeed.x;
       this.gameInfoMap.get(title).ballPos.y +=
         this.gameInfoMap.get(title).ballSpeed.y;
-      this.emitToEveryone(client, title, {
-        title: title,
-        x: x,
-        y: y,
-        leftPaddleY: leftPaddleY,
-        rightPaddleY: rightPaddleY,
-      });
+      this.emitToEveryone(
+        client,
+        title,
+        this.gameInfoMap.get(title).getGameInfoDto(),
+      );
     };
 
     const interval = setInterval(callback, milliseconds);
