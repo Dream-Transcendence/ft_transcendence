@@ -8,11 +8,29 @@ export const ListLayout = styled('li')(() => ({
   bgcolor: '#00000000',
 }));
 
+export const ListChatLayout = styled('li')(() => ({
+  width: '100%',
+  height: '80%',
+  flex: 'auto',
+  paddingTop: '1%',
+  paddingBottom: '2%',
+  bgcolor: '#00000000',
+}));
+
 export const ListUlLayout = styled('ul')(({ theme }) => ({
   height: '100%',
   position: 'relative',
-  padding: 1,
+  padding: 3,
   overflow: 'auto',
+}));
+
+export const ListChatUlLayout = styled('ul')(({ theme }) => ({
+  position: 'relative',
+  padding: 3,
+  overflow: 'auto',
+  listStyle: 'none',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 export const ListGenerateLayout = styled('div')(({ theme }) => ({

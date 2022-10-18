@@ -41,6 +41,7 @@ function ProfileAvatar(props: {
 }) {
   const { avatarType, avartarProps } = props;
   const { nickname, image } = avartarProps;
+
   if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
