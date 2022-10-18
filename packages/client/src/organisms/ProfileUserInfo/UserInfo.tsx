@@ -90,22 +90,6 @@ function UserInfo() {
     action: handleChange,
   };
 
-  // useEffect(() => {
-  //   async function getUserData() {
-  //     try {
-  //       const response = await axios.get(
-  //         `${SERVERURL}/users/${userId}/profile`,
-  //       );
-  //       setUser(response.data);
-  //       console.log(response.data);
-  //     } catch (error) {
-  //       alert(error);
-  //       console.log(error);
-  //     }
-  //   }
-  //   getUserData();
-  // }, []);
-
   return (
     <UserInfoLayout>
       <UserPictureLayout>

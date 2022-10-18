@@ -22,9 +22,13 @@ import {
   CHANNELURL,
   CHATROOMURL,
   GAMECREATEURL,
+  GAMELOADINGURL,
   PROFILEURL,
 } from '../../configs/Link.url';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import useSocket from '../../socket/useSocket';
+import { gameLadderMatch, gameNameSpace } from '../../socket/event';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -35,18 +39,23 @@ const NavLayout = styled('section')(({ theme }) => ({
 
 const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
+  width: '30%',
+  height: '10%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'right',
 }));
 
 export default function NavigationBar() {
+
+
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: GAMECREATEURL,
+    url: GAMELOADINGURL,
+    // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const Channels: LinkIconResource = {
@@ -64,6 +73,7 @@ export default function NavigationBar() {
 
   const ladderAction: LinkIconProps = {
     iconResource: Ladder,
+    // action: 
   };
 
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
