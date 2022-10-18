@@ -265,6 +265,20 @@ export class CreateDmDto {
   participantId: number;
 }
 
+export class DmDto {
+  @ApiProperty()
+  @IsInt()
+  id: number;
+
+  @ApiProperty()
+  @IsString()
+  name: string;
+
+  @ApiProperty()
+  @IsUrl()
+  image: string;
+}
+
 export class RoomPasswordDto {
   @ApiProperty()
   @IsString()

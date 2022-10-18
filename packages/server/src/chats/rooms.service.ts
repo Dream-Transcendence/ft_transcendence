@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
 import {
@@ -14,6 +19,7 @@ import {
   ChannelInfoDto,
   MessageDto,
   GetRoomInfoDto,
+  DmDto,
 } from './dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { DmParticipant } from './rooms.entity';
@@ -238,8 +244,21 @@ export class RoomService {
   }
 
   // ANCHOR Dm Service
-  async createDm(createDmDto: CreateDmDto): Promise<void> {
+  async createDm(createDmDto: CreateDmDto): Promise<DmDto> {
     const { userId, participantId } = createDmDto;
+
+    const userDmRow = await this.dmParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: userId } },
+    });
+    const participantDmRow = await this.dmParticipantsRepository.find({
+      relations: { room: true },
+      where: { user: { id: participantId } },
+    });
+    const userDmIds = userDmRow.map((row) => row.room.id);
+    const participantDmIds = participantDmRow.map((row) => row.room.id);
+    const exist = userDmIds.filter((row) => participantDmIds.includes(row));
+    if (exist.length) throw new ConflictException(`Dm channel already exists`);
     // NOTE dm info 저장
     let roomRowId = 1;
     const maxRoomId = await this.roomsRepository
@@ -279,6 +298,12 @@ export class RoomService {
     });
     await Promise.all(promises);
     this.dmParticipantsRepository.save(participants);
+    const dmDto = {
+      id: roomRowId,
+      name: participants[0].user.nickname,
+      image: participants[0].user.image,
+    };
+    return dmDto;
   }
 
   // Message service
@@ -346,7 +371,6 @@ export class RoomService {
 
     // 참여 성공
     // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
-    console.log('하... 어ㅔㅐㅗ 아노대니??');
     return { isEntered: true };
   }
 
