@@ -1,6 +1,6 @@
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
-import ProfileNicname from '../../atoms/input/ProfileNickname';
+import ProfileNickname from '../../atoms/input/ProfileNickname';
 import {
   ProfileActionLayout,
   UserInfoLayout,
@@ -45,18 +45,16 @@ function OtherInfo() {
   async function checkIsFriend() {
     try {
       //친구 찾는 로직 수정되면 테스트 해보기
-      // const friendList = await axios.post(
-      //   `${SERVERURL}/users/${id}/friends/search`,
-      //   {
-      //     id: id,
-      //     nickname: userData.nickname,
-      //   },
-      // );
-      // if (friendList.data.length > 0) {
-      //   console.log('already friend');
-      //   return true;
-      // }
-      return false;
+      const friendList = await axios.get(
+        `${SERVERURL}/users/${id}/friends`);
+      const friendId = friendList.data.find((friend: FriendType) => {
+          return friend.user.id === id;
+        })
+      if (friendId !== undefined) {
+        await setIsFriend(true);
+      } else {
+        await setIsFriend(false);
+      }
     } catch (error) {
       alert(error);
       console.log(error);
@@ -67,10 +65,10 @@ function OtherInfo() {
     getUserData();
   }, [otherId]);
 
-  useEffect(() => {
-    const promise = checkIsFriend();
-    promise.then((result) => setIsFriend(result));
-  });
+  // useEffect(() => {
+  //   const promise = checkIsFriend();
+  //   promise.then((result) => setIsFriend(result));
+  // });
 
   async function addFriend() {
     try {
@@ -109,8 +107,10 @@ function OtherInfo() {
     icon: <Diversity1Icon />,
     action: () => {
       alert('이미 친구입니다.');
+      console.log('이미 친친구구입입니다.');
     },
   };
+  // console.log(isFriend);
 
   return (
     <UserInfoLayout>
@@ -122,8 +122,9 @@ function OtherInfo() {
       </UserNicknameLayout>
       <ProfileActionLayout>
         {/* [Socket IO 요청] 상대방에게 친구수락 팝업 뜨게할 것 */}
-        <CustomIconButton customProps={addFriendProps} />
-        <CustomIconButton customProps={alreadFriendProps} />
+        {isFriend ? 
+          <CustomIconButton customProps={alreadFriendProps} />:
+          <CustomIconButton customProps={addFriendProps} /> }
       </ProfileActionLayout>
     </UserInfoLayout>
   );

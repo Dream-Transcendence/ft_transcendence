@@ -11,13 +11,8 @@ import {
 } from '../../pages/PageStyles/ProfilePageCss';
 import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 import { BaseUserProfileData } from '../../types/Profile.type';
-import { atom, selector, useRecoilState, useRecoilValue } from 'recoil';
-import { Navigate, Routes, useParams } from 'react-router-dom';
-import { Route } from 'react-router-dom';
-import axios from 'axios';
-import { useEffect } from 'react';
-import { SERVERURL } from '../../configs/Link.url';
-import LandingPage from '../../pages/LandingPage';
+import { useRecoilValue } from 'recoil';
+import { useParams } from 'react-router-dom';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 function ProfileTemplate() {
