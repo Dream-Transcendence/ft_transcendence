@@ -9,10 +9,11 @@ import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CustomIconButton from '../button/icon/CustomIconButtion';
 import EditIcon from '@mui/icons-material/Edit';
 import { CustomIconProps } from '../../types/Link.type';
+import { useParams } from 'react-router-dom';
 
 const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   display: 'flex',
@@ -21,10 +22,11 @@ const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   backgroundColor: 'green',
 }));
 
-function ProfileNicname() {
+function ProfileNickname() {
+  const { userId } = useParams();
   /* Here's a custom control */
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(user.nickname);
 
   async function changeName(value: string) {
     try {
@@ -49,8 +51,10 @@ function ProfileNicname() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+
     setNickname(value);
     console.log('change', value);
+    console.log('user', user);
   };
 
   const handleClick = () => {
@@ -62,9 +66,32 @@ function ProfileNicname() {
     event.preventDefault();
   };
 
+  useEffect(() => {
+    async function getUserData() {
+      try {
+        const response = await axios.get(
+          `${SERVERURL}/users/${userId}/profile`,
+        );
+        setUser(response.data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    }
+    getUserData();
+  }, []);
+
+  //useEffect(() => {
+  // if (user.nickname !== 'dha') {
+  //   console.info('if', user);
+  // } else {
+  //   console.info('else', user);
+  // }
+  //setUser(response.data);
+  //}, [user.nickname]);
+
   return (
     //[axios GET 요청] 프로필 이름
-
     <ProfileNicnameLayout>
       {/* [axios PATCH 요청] 본인의 프로필 변경 */}
       <Input
@@ -87,4 +114,4 @@ function ProfileNicname() {
   );
 }
 
-export default ProfileNicname;
+export default ProfileNickname;
