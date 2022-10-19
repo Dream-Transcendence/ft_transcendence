@@ -373,3 +373,17 @@ export class MessageDto {
   @IsNotEmpty()
   body: string;
 }
+
+export class GetMessageDto {
+  @IsObject()
+  @IsNotEmpty()
+  user: UserDto;
+
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
