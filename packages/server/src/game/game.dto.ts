@@ -55,7 +55,24 @@ export class GameRoomDto {
 }
 
 export class MatchDto {
+  title: string;
+
   userId: number;
+
+  mode: GAME_MODE;
+}
+
+export class MatchInfo {
+  constructor(socket: Socket, userId: number, mode: GAME_MODE) {
+    this.socket = socket;
+    this.userId = userId;
+    this.mode = mode;
+  }
+  socket: Socket;
+
+  userId: number;
+
+  mode: GAME_MODE;
 }
 
 export class RoomTitleDto {
@@ -82,13 +99,17 @@ export class MatchingInfo {
 }
 
 export class GameInfo {
-  constructor(private player1: User, private player2: User) {
+  constructor(
+    private player1: User,
+    private player2: User,
+    private mode: GAME_MODE,
+  ) {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
     this.ballPos = { x: 240, y: 125 };
     this.ballSpeed = { x: 3, y: -3 };
     this.paddlePos = { left: (250 - 75) / 2, right: (250 - 75) / 2 };
-    this.mode = 0;
+    // this.mode = mode;
     // mode도 받기
   }
 
@@ -97,7 +118,7 @@ export class GameInfo {
   ballPos: { x: number; y: number };
   ballSpeed: { x: number; y: number };
   paddlePos: { left: number; right: number };
-  mode: GAME_MODE;
+  // mode: GAME_MODE;
 
   public getGameRoomDto(title: string): GameRoomDto {
     return {
