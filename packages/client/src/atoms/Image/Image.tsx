@@ -1,15 +1,4 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 import styled from '@emotion/styled';
-
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1549388604-817d15aa0110',
-    title: 'Bed',
-  },
-];
 
 const ImageLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -25,7 +14,7 @@ function ImageComponent(props: { title: string; image: string }) {
         src={`${
           image
             ? image
-            : 'https://images.unsplash.com/photo-1549388604-817d15aa0110'
+            : '/Users/doyun/goinfre/ft_transcendence/packages/client/src/assets/pong.png'
         }`}
         alt={title ? title : 'image'}
         loading="lazy"

@@ -62,9 +62,7 @@ function SearchBox(prop: { searchProps: SearchPropsType }) {
 
   return (
     <Search>
-      <AutoWrapper>
         <AutoComplateSerchBox searchProps={searchProps} />
-      </AutoWrapper>
       {/* [axios GET 요청] Input value에 따른 인원목록 */}
       {/* 리스트 추가 후, 해당 유저 페이지로 연결하는 로직 구현해야함 */}
     </Search>

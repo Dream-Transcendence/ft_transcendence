@@ -5,15 +5,16 @@ import { DefaultEventsMap } from '@socket.io/component-emitter';
 const sockets: { [key: string]: Socket<DefaultEventsMap, DefaultEventsMap> } =
   {};
 
-export const useSocket = (
+const useSocket = (
   nameSpace: string,
 ): [Socket<DefaultEventsMap, DefaultEventsMap>, () => void, () => void] => {
   if (!sockets[nameSpace]) {
+    console.log('namespace!: ', nameSpace);
     sockets[nameSpace] = io(`${SOCKETURL}/${nameSpace}`, {
       autoConnect: false,
       transports: ['websocket'],
     });
-    console.log('rerender', nameSpace, sockets[nameSpace]);
+    console.log('socket object!: ',  sockets[nameSpace]);
   }
 
   // if (sockets[nameSpace].connected) {
@@ -37,6 +38,7 @@ export const useSocket = (
         sockets[nameSpace].connected,
       );
       sockets[nameSpace].connect();
+      
     }
   };
 

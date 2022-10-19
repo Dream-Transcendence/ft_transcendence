@@ -10,7 +10,7 @@ import useSocket from '../socket/useSocket';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
-import GameLodingPage from './GameLodingPage';
+import GameLoadingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
 import ProfilePage from './ProfilePage';
 
@@ -90,8 +90,8 @@ function PingpongRoutePage() {
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="gamecreate/*" element={<GameCreatePage />} />
-        <Route path="gameplay/*" element={<GamePlayPage />} />
-        <Route path="gameloding/*" element={<GameLodingPage />} />
+        <Route path="gameplay/:userId" element={<GamePlayPage />} />
+        <Route path="gameloading/*" element={<GameLoadingPage />} />
       </Routes>
     </PageSection>
   );

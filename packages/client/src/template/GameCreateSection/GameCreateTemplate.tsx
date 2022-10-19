@@ -56,6 +56,7 @@ function GameCreateTemplate(props: { buttonType: string | undefined }) {
         <TextBox value={'Enjoy Game!'} size={'3rem'} fontColor={'black'} />
       </GameHeaderLayout>
       <GameSectionLayout>
+        {/* mpa, option */}
         <GameCreateMainOrganism />
       </GameSectionLayout>
       <GameFooterLayout>

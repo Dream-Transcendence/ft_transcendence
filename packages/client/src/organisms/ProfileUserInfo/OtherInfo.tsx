@@ -47,13 +47,14 @@ function OtherInfo() {
       //친구 찾는 로직 수정되면 테스트 해보기
       const friendList = await axios.get(
         `${SERVERURL}/users/${id}/friends`);
-      const friendId = friendList.data.find((friend: FriendType) => {
-          return friend.user.id === id;
-        })
-      if (friendId !== undefined) {
-        await setIsFriend(true);
+      const friend = friendList.data.find((friend: FriendType) => {
+        return friend.user.id === Number(otherId);
+      })
+      console.log(friend);
+      if (friend !== undefined) {
+        setIsFriend(true);
       } else {
-        await setIsFriend(false);
+      setIsFriend(false);
       }
     } catch (error) {
       alert(error);
@@ -65,11 +66,42 @@ function OtherInfo() {
     getUserData();
   }, [otherId]);
 
-  // useEffect(() => {
-  //   const promise = checkIsFriend();
-  //   promise.then((result) => setIsFriend(result));
-  // });
+  useEffect(() => {
+    checkIsFriend();
+  }, [otherId]);
 
+  async function sendRequestFriend() {
+    try {
+      const responseReq = await axios.post(
+        `${SERVERURL}/users/${id}/requests`,
+        {
+          id: Number(otherId),
+        },
+      );
+      if (responseReq.status === 200) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      alert(error);
+      console.log(error);
+    }
+  }
+  async function addRequestFriend() {
+    try {
+      const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
+        id: Number(otherId),
+      });
+      if (responseAdd.status === 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch(error: any) {
+      alert(error);
+      console.log(error);
+    } 
+  }
   async function addFriend() {
     try {
       /**
@@ -77,20 +109,17 @@ function OtherInfo() {
        * 2. 요청 전송완료 alert 띄워 주어야 함
        * 3. 수락시 post 보내기
        */
-      const responseReq = await axios.post(
-        `${SERVERURL}/users/${id}/requests`,
-        {
-          id: otherId,
-        },
-      );
-      if (responseReq.status === 409) {
-        console.log('already friend');
-      }
-      const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
-        id: otherId,
-      });
-      if (responseAdd.status === 201) {
-        console.log('친구추가 완료');
+      //친구 요청
+      const sendReq = await sendRequestFriend();
+      console.log('11', sendReq);
+      if (!sendReq) { //비동기 처리에 의해서 값 변경이 바로 안되어 반대로 처리해둠 추후 요청 확인을 받는 것으로 처리할 예정
+        //요청을 보낸 쪽이 확인 응답을 받고 다시 추가 요청을 보내는데 수신 쪽에서 확인을 받고 친구 추가를 바로 하면 될 것 같음
+        //
+        const addReq = await addRequestFriend();
+        if (addReq) {
+          alert('친구 추가 완료');
+          console.log('친구 추가 완료');
+        }
       }
     } catch (error) {
       alert(error);
@@ -107,7 +136,7 @@ function OtherInfo() {
     icon: <Diversity1Icon />,
     action: () => {
       alert('이미 친구입니다.');
-      console.log('이미 친친구구입입니다.');
+      console.log('이미 친구입니다.');
     },
   };
   // console.log(isFriend);
