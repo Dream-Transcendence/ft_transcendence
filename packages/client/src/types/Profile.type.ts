@@ -1,52 +1,54 @@
 export interface UserLadderType {
-  rank: string;
-  winCount: number;
-  loseCount: number;
+  rank: string,
+  winCount: number,
+  loseCount: number,
 }
 
 export interface UserProfileBoxDataType {
-  nickname: string;
-  image: string;
+  id: number,
+  nickname: string,
+  image: string,
 }
 
 export interface UserProfileBoxType {
-  isButton: boolean;
-  avatarType: string;
-  userData: UserProfileBoxDataType;
-  action?: () => void;
+  isButton: boolean,
+  avatarType: string,
+  userData: UserProfileBoxDataType,
+  action?: () => void,
 }
 
+
 export interface UserMatchHistoryType {
-  id: number;
-  opponent: string;
-  isWin: boolean;
-  isLadder: boolean;
+  id: number,
+  opponent: string,
+  isWin: boolean,
+  isLadder: boolean,
 }
 
 export interface FriendType {
-  id: number;
+  id: number,
   user: {
-    id: number;
-    nickname: string;
-    image: string;
-  };
-  isBlocked: boolean;
+    id: number,
+    nickname: string,
+    image: string,
+  },
+  isBlocked: boolean,
 }
 
 export interface BaseUserProfileData {
-  id: number;
-  nickname: string;
-  image: string;
+  id: number,
+  nickname: string,
+  image: string,
 }
 
 export interface OnlyUserData {
-  secondAuth: boolean;
+  secondAuth: boolean,
 }
 
 export interface OtherUserData {
-  isFriend: boolean;
+  isFriend: boolean,
 }
 
 export interface UserSecondAuth {
-  authenticated: boolean;
+  authenticated: boolean,
 }

@@ -115,6 +115,7 @@ function SetChatRoomInviteModule(props: {
   const listElement: React.ReactElement[] = addedParticipantList.map(
     (addedParticipant: RoomList) => {
       const profileInfo: UserProfileBoxDataType = {
+        id: addedParticipant.id,
         nickname: addedParticipant.name,
         image: addedParticipant.image,
       };

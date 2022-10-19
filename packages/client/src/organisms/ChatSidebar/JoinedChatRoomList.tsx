@@ -51,6 +51,7 @@ function JoinedChatRoomModule() {
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
+      id: room.name,
       nickname: room.name,
       image: room.image,
     };

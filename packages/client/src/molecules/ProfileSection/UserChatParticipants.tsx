@@ -117,6 +117,7 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
   //const isBan = useState();
 
   const userInfo: UserProfileBoxDataType = {
+    id: user.id,
     nickname: user.nickname,
     image: user.image,
   };

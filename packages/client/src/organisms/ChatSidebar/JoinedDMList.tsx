@@ -79,6 +79,7 @@ function JoinedDMListOrganisms() {
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
+      id: room.id,
       nickname: room.name,
       image: room.image,
     };

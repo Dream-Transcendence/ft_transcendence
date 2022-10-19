@@ -11,6 +11,8 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
+import { useRecoilValue } from 'recoil';
+import { logStateListAtom } from '../../recoil/log.recoil';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,8 +70,9 @@ function FreindListOrganisms() {
     }
     getFriendList();
   }, [userId]);
-
+ 
   const listElement: JSX.Element[] = friendList.map((friendData) => {
+    //friend데이터중 profileBox를 구현하기에 필요한 정보를 넣어줌
     const userData = {
       id: friendData.user.id,
       nickname: friendData.user.nickname,

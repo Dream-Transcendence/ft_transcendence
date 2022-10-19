@@ -4,6 +4,9 @@ import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
 import { FriendType, UserProfileBoxDataType } from '../../types/Profile.type';
+import { useRecoilValue } from 'recoil';
+import { logStateListAtom } from '../../recoil/log.recoil';
+import { LogStateType } from '../../types/LogOn.type';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -35,13 +38,40 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
+function findState(stateObject: LogStateType | undefined) {
+  if (stateObject === undefined) {
+    return 'logOff';
+  } else if (stateObject.onGame === true) {
+    return 'onGame';
+  } else if (stateObject.logOn === true) {
+    return 'logOn';
+  }
+  return 'logOff';
+}
+
+function findUser(id: number) {
+  return (logState: LogStateType) => {
+    return logState.id === id;
+  }
+}
+
+function getUserState(logStateList: LogStateType[], id: number):string | undefined {
+  let state = undefined;
+  if (logStateList.length > 0) {
+    const stateObject = logStateList.find(findUser(id));
+    state = findState(stateObject);
+  }
+  return state;
+}
+
 function ProfileAvatar(props: {
   avatarType: String | undefined;
   avartarProps: UserProfileBoxDataType;
 }) {
   const { avatarType, avartarProps } = props;
-  const { nickname, image } = avartarProps;
-
+  const { id, nickname, image } = avartarProps;
+  const logStateList = useRecoilValue<LogStateType[]>(logStateListAtom);
+  const userState = getUserState(logStateList, id)
   if (avatarType === 'circle') {
     return (
       <ProfileAvatarLayout>
@@ -49,8 +79,10 @@ function ProfileAvatar(props: {
           overlap="circular"
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
+          color={userState === 'onGame' ? 'primary' : userState === 'logOn' ? 'secondary' : 'default'}
         >
-          <Avatar alt={nickname} src={image} />
+          {/** color 및 backgroundcolor 수정 필요 */}
+          <Avatar alt={nickname} src={image} sx={{backgroundColor: 'black'}} /> 
         </StyledBadge>
       </ProfileAvatarLayout>
     );
