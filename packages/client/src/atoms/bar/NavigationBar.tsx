@@ -39,7 +39,7 @@ const NavLayout = styled('section')(({ theme }) => ({
 
 const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
-  width: '20%',
+  width: '30%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'right',
