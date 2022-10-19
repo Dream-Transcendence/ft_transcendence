@@ -70,7 +70,7 @@ function SearchBox() {
   useEffect(() => {
     if (target > 0)
       navigate(`${PROFILEURL}/${target}`);
-  }, [target, navigate])
+  }, [target]) //update를 deps에 넣으니 navibar의 채널로 이동하려해도 여기 훅이 발생했었음
 
   return (
     <Search>
