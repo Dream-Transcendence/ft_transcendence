@@ -7,6 +7,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
+import { BLOCK } from '../../configs/Block.case';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
@@ -27,6 +28,37 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
   width: '90%',
   borderRadius: '13px',
   backgroundColor: '#001D7D',
+}));
+
+const UserStateLayout = styled('section')(({ theme }) => ({
+  height: '100%',
+  width: '40%',
+  display: 'flex',
+  paddingRight: '10%',
+}));
+
+const BlockBadge = styled('span')(({ theme }) => ({
+  marginLeft: '1%',
+  marginTop: '-7%',
+  height: '40px',
+  width: '40px',
+  border: 'solid red',
+  borderRadius: '100%',
+  position: 'absolute',
+  backgroundColor: '#f3333355',
+  zIndex: '1',
+}));
+
+const BlockCloss = styled('span')(({ theme }) => ({
+  marginTop: '48%',
+  marginLeft: '0%',
+  height: '3px',
+  width: '40px',
+  position: 'absolute',
+
+  transform: 'rotate(-40deg)',
+  backgroundColor: '#f33333',
+  zIndex: '1',
 }));
 
 // const [isUser, setIsUser] = useRecoilState(IsUser);
@@ -74,7 +106,14 @@ function JoinedDMListOrganisms() {
     };
     return (
       <ListLayout key={room.id}>
-        <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+        <UserStateLayout>
+          {room.blocked === BLOCK && (
+            <BlockBadge>
+              <BlockCloss />
+            </BlockBadge>
+          )}
+          <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+        </UserStateLayout>
       </ListLayout>
     );
   });

@@ -24,6 +24,7 @@ export interface RoomList {
   id: number;
   name: string;
   image: string;
+  blocked?: boolean;
   recvMessageCount: number;
 }
 
