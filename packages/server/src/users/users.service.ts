@@ -1,4 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
@@ -6,7 +7,15 @@ import { AuthUserDto } from './dto/auth-user.dto';
 import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { FriendDto, UserDto } from './dto/user.dto';
+import {
+  FriendDto,
+  ClientInviteGameDto,
+  UserDto,
+  ServerInviteGameDto,
+  ClientAcceptGameDto,
+  ServerAcceptGameDto,
+} from './dto/user.dto';
+import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 
 @Injectable()
@@ -456,5 +465,40 @@ export class UserService {
     console.log(`onlineFriendList: ${onlineFriendList}`);
 
     return { connections: onlineFriendList };
+  }
+
+  async handleInviteGame(
+    client: Socket,
+    inviteGameDto: ClientInviteGameDto,
+    opponentClientId: string,
+  ): Promise<void> {
+    const { hostId, mode } = inviteGameDto;
+    const host = await this.usersRepository.findOne({
+      where: [{ id: hostId }],
+    });
+
+    const serverInviteGameDto: ServerInviteGameDto = {
+      host: {
+        id: host.id,
+        nickname: host.nickname,
+        image: host.image,
+      },
+      mode: mode,
+    };
+
+    client.to(opponentClientId).emit('inviteGame', serverInviteGameDto);
+  }
+
+  async handleAcceptGame(
+    client: Socket,
+    acceptGameDto: ClientAcceptGameDto,
+  ): Promise<ServerAcceptGameDto> {
+    const { mode } = acceptGameDto;
+    const serverAcceptGameDto: ServerAcceptGameDto = {
+      title: uuidv4(),
+      mode: mode,
+    };
+
+    return serverAcceptGameDto;
   }
 }
