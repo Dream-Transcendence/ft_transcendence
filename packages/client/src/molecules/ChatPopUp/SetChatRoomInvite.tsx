@@ -4,6 +4,31 @@ import SearchBox from '../../atoms/input/SearchBox';
 import ListGenerate from '../../atoms/list/ListGenerate';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import UserInviteProfileBox from '../ProfileSection/UserInviteBox';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { SearchPropsType } from '../../types/search.type';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import useSearch from '../../hooks/useSearch';
+import { PUBLIC } from '../../configs/RoomType';
+import { newParticipant } from '../../recoil/chat.recoil';
+import CancelIcon from '@mui/icons-material/Cancel';
+import {
+  ListGenerateLayout,
+  ListLayout,
+  ListUlLayout,
+} from '../../atoms/list/styles/ListStylesCSS';
+import axios from 'axios';
+import { HandleInviteList, RoomList } from '../../types/Room.type';
+import UserChatParticipantsBox from '../ProfileSection/UserChatParticipants';
+import {
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
+import CustomBoxButton from '../../atoms/button/icon/CustomBoxButton';
+import { CustomIconProps } from '../../types/Link.type';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -20,8 +45,10 @@ const SetInviteLayout = styled('div')(({ theme }) => ({
 
 const SearchBoxLayout = styled('div')(({ theme }) => ({
   width: '80%',
-  height: '12%',
+  height: '19%',
+  maxHeight: '56px',
   marginLeft: '9.5%',
+  display: 'flex',
 }));
 
 const InvitedListLayout = styled('section')(({ theme }) => ({
@@ -31,10 +58,98 @@ const InvitedListLayout = styled('section')(({ theme }) => ({
   overflow: 'auto',
 }));
 
-function SetChatRoomInviteModule(handler: {
-  handler: (value: number[]) => void;
+const CustomIconButtonLayout = styled('div')(({ theme }) => ({
+  marginTop: '-10%',
+  marginLeft: '70%',
+  width: '20px',
+  position: 'absolute',
+  zIndex: '2',
+}));
+
+function SetChatRoomInviteModule(props: {
+  handleInviteList: HandleInviteList;
 }) {
-  const handleParticipant = handler.handler;
+  const {
+    addedParticipantList,
+    setAddedParticipantList,
+    newParticipantList,
+    setNewParticipantList,
+    handleParticipant: handler,
+  } = props.handleInviteList;
+  const handleParticipant = handler;
+  const user = useRecoilValue(userDataAtom);
+  const searchProps = useSearch(
+    `${SERVERURL}/users/${user.id}/friends/search`,
+    CHATROOMURL,
+    PUBLIC,
+  );
+
+  async function getAddedParticpant(id: number) {
+    await axios.get(`${SERVERURL}/users/${id}/profile`).then((res) => {
+      const participantList: RoomList = {
+        id: res.data.id,
+        image: res.data.image,
+        name: res.data.nickname,
+        recvMessageCount: 0,
+      };
+      setAddedParticipantList([...addedParticipantList, participantList]);
+    });
+  }
+
+  function checkInArray(id: number) {
+    return function (addedParticipant: RoomList) {
+      return addedParticipant.id !== id;
+    };
+  }
+
+  useEffect(() => {
+    newParticipantList.map((id) => {
+      if (addedParticipantList.every(checkInArray(id))) {
+        getAddedParticpant(id);
+        handleParticipant([...newParticipantList]);
+      }
+      return;
+    });
+  }, [newParticipantList, addedParticipantList, getAddedParticpant]);
+
+  const listElement: React.ReactElement[] = addedParticipantList.map(
+    (addedParticipant: RoomList) => {
+      const profileInfo: UserProfileBoxDataType = {
+        nickname: addedParticipant.name,
+        image: addedParticipant.image,
+      };
+      const userProfileBoxProps: UserProfileBoxType = {
+        isButton: false,
+        avatarType: 'none',
+        userData: profileInfo,
+      };
+      const cancelInvite = () => {
+        const popParticipantList = newParticipantList.filter(
+          (popParticipant) => {
+            return popParticipant !== addedParticipant.id;
+          },
+        );
+        setNewParticipantList([...popParticipantList]);
+        handleParticipant([...popParticipantList]);
+        const popDisplayParticipantList = addedParticipantList.filter(
+          (Participant) => Participant.id !== addedParticipant.id,
+        );
+        setAddedParticipantList([...popDisplayParticipantList]);
+      };
+      const cancleProps: CustomIconProps = {
+        icon: <CancelIcon />,
+        action: cancelInvite,
+      };
+      return (
+        <ListLayout key={addedParticipant.id}>
+          <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+          <CustomIconButtonLayout>
+            <CustomIconButton customProps={cancleProps} />
+          </CustomIconButtonLayout>
+        </ListLayout>
+      );
+    },
+  );
   //[수정사항] 검색 컴포넌트 완성 후, 작업할 예정
   return (
     <SetInviteLayout>
@@ -42,10 +157,12 @@ function SetChatRoomInviteModule(handler: {
         채팅방 초대
       </Typography>
       <SearchBoxLayout>
-        <SearchBox />
+        <SearchBox searchProps={searchProps} />
       </SearchBoxLayout>
       <InvitedListLayout>
-        <ListGenerate element={<UserInviteProfileBox />} />
+        <ListGenerateLayout>
+          <ListUlLayout>{listElement}</ListUlLayout>
+        </ListGenerateLayout>
       </InvitedListLayout>
     </SetInviteLayout>
   );

@@ -48,7 +48,6 @@ const OwnTextInput = styled('section')(({ theme }) => ({
 function MessageBox(prop: { message: ReceivedMessage }) {
   const msg = prop.message;
   const userData = useRecoilValue(userDataAtom);
-  console.log('hi', msg, userData.id);
   return (
     <TextBoxLayout>
       {msg.user.id === userData.id ? (

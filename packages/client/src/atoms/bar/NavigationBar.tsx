@@ -14,7 +14,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import LogoutIconButton from '../button/icon/LogoutIconButton';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
@@ -24,11 +24,11 @@ import {
   GAMECREATEURL,
   GAMELOADINGURL,
   PROFILEURL,
+  SERVERURL,
 } from '../../configs/Link.url';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import useSocket from '../../socket/useSocket';
-import { gameLadderMatch, gameNameSpace } from '../../socket/event';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { useSetRecoilState } from 'recoil';
+import { SearchPropsType } from '../../types/search.type';
+import useSearch from '../../hooks/useSearch';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -39,15 +39,14 @@ const NavLayout = styled('section')(({ theme }) => ({
 
 const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
-  width: '30%',
-  height: '10%',
+  width: '20%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'right',
 }));
 
 export default function NavigationBar() {
-
+  const searchProps: SearchPropsType = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`);
 
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
@@ -88,7 +87,7 @@ export default function NavigationBar() {
             <LinkPageIconButton linkIconProps={ladderAction} />
             <LinkPageIconButton linkIconProps={chatAction} />
             <RightLayout>
-              <SearchBox />
+              <SearchBox searchProps={searchProps} />
               <LogoutIconButton />
             </RightLayout>
           </Toolbar>

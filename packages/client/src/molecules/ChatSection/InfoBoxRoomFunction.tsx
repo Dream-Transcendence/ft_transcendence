@@ -61,7 +61,6 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
         console.log('deleteChannel!! ', response); // "got it"
         //[수정사항] optimistic UI를 위한 작업
         const RemoveFromJoinedRoom = filterPopJoinedRoom();
-        console.log(RemoveFromJoinedRoom);
         setJoinedList([...RemoveFromJoinedRoom]);
         const addToUnJoinedRoom: UnJoinedRoomList = {
           ...roomInfo,
