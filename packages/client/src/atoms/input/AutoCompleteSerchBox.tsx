@@ -58,7 +58,7 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
 
       if (target) {
         setValue(target.nickname);
-        setParentTarget(target.id);
+        setParentTarget(target);
         // navigate(`${PROFILEURL}/${target?.id}`);
       }
     }

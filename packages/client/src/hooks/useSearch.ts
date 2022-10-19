@@ -6,14 +6,21 @@ import { CHATROOMURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { DM, PUBLIC } from '../configs/RoomType';
 import { userDataAtom } from '../pages/PingpongRoutePage';
 import { DMList, newParticipant } from '../recoil/chat.recoil';
+import { BaseUserProfileData } from '../types/Profile.type';
 import { SearchPropsType } from '../types/search.type';
+
+const initUser = {
+  id: 0,
+  nickname: 'noname',
+  image: 'noimage',
+}
 
 function useSearch(
   axiosUrl: string,
   naviUrl: string,
   type?: number,
 ): SearchPropsType {
-  const [target, setTarget] = useState<number>(0);
+  const [target, setTarget] = useState<BaseUserProfileData>(initUser);
   const navigate = useNavigate();
   const user = useRecoilValue(userDataAtom);
   const [dmList, setDmList] = useRecoilState(DMList);
@@ -45,17 +52,17 @@ function useSearch(
 
   //참가자 리스트 생성
   useEffect(() => {
-    if (target > 0 && type === undefined) navigate(`${naviUrl}${target}`);
-    else if (target > 0 && type === DM) {
-      createDM(target);
+    if (target.id > 0 && type === undefined) navigate(`${naviUrl}${target.id}`);
+    else if (target.id > 0 && type === DM) {
+      createDM(target.id);
       //[수정사항]여러개 생성되는문제 백에서 막아줄것!
-    } else if (target > 0 && type === PUBLIC) {
-      if (newParticipants.every((Participant) => Participant !== target)) {
-        const partiArray = [...newParticipants, target];
+    } else if (target.id > 0 && type === PUBLIC) {
+      if (newParticipants.every((Participant) => Participant !== target.id)) {
+        const partiArray = [...newParticipants, target.id];
         setNewParticipant(partiArray);
       }
     }
-    return setTarget(0);
+    return setTarget(initUser);
   }, [target, naviUrl, type, user.id, newParticipants]);
   return searchProps;
 }
