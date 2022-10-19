@@ -3,6 +3,13 @@ import TextBox from '../texts/TextBox';
 import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
+import useSocket from '../socket/useSocket';
+import { gameLadderMatch, gameNameSpace } from '../socket/event';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from './PingpongRoutePage';
+import { GAMEPLAYURL } from '../configs/Link.url';
+import { GameRoomDto } from '../types/Game.type';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -34,13 +41,61 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#0E359B',
 }));
 
-const Goback = () => {
-  const navigate = useNavigate();
-  navigate(-1);
-  return <div></div>;
-};
+// const goback = () => {
+//   const navigate = useNavigate();
+//   navigate(-1);
+//   return <div></div>;
+// };
 
-function GameLodingPage() {
+// 사용자가 어느쪽 플레이어인지 확인
+function findPlayerSpot(args: GameRoomDto, userId: number) {
+  if (args.leftPlayer.id === userId) {
+    return 'left';
+  } else {
+    return 'right';
+  }
+}
+
+//위치 확인후 게임 입장
+const moveToGame = (args: GameRoomDto, userId: number) => {
+  findPlayerSpot(args, userId);
+ }
+
+
+function GameLoadingPage() {
+  const navigate = useNavigate();
+  const { id: userId } = useRecoilValue(userDataAtom);
+  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  useEffect(() => {
+    connect();
+    socket.emit(
+      `${gameLadderMatch}`,
+      {
+        userId: userId
+      },
+      (response: any) => {
+        console.log('emit 성공 : ', response);
+      }
+    );
+    //match 성공시 값 받아서 동작시켜야함
+    socket.on(
+      `${gameLadderMatch}`,
+      (args) => {
+        moveToGame(args, userId);
+        navigate(`${GAMEPLAYURL}/${userId}`)
+      }
+    )
+    //GameRoomDto로 수정 예정
+    socket.on('exception', (response: any) => {
+      alert(response.message);
+      console.log(response);
+      
+    });
+    return () => { //unmount  
+      socket.removeAllListeners(); //모든 리스너 제거
+      disconnect();
+    }
+  })
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}
@@ -64,4 +119,4 @@ function GameLodingPage() {
   );
 }
 
-export default GameLodingPage;
+export default GameLoadingPage;

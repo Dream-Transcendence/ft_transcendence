@@ -126,7 +126,7 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   const handleParticipant = (value: number[]) => {
     //배열은 깊은 복사해야함
     const deepCopyRoom = { ...newRoom };
-    deepCopyRoom.participantIds = value;
+    deepCopyRoom.participantIds = [...value];
     setNewRoom({ ...deepCopyRoom });
   };
 

@@ -7,20 +7,25 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormHelperText from '@mui/material/FormHelperText';
 import Checkbox from '@mui/material/Checkbox';
 
-export default function GameOption() {
+function GameOption() {
   const [state, setState] = React.useState({
-    powerUp: true,
+    sizeDown: true,
     speedUp: false,
   });
+  const { sizeDown, speedUp } = state;
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event.target.name, '1' ,event.target.checked);
+    console.log('2', state);
     setState({
       ...state,
-      [event.target.name]: event.target.checked,
+      [event.target.name]: !(event.target.checked),
     });
   };
 
-  const { powerUp, speedUp } = state;
+  React.useEffect(() => {
+
+  }, [state])
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -30,19 +35,19 @@ export default function GameOption() {
           <FormControlLabel
             control={
               <Checkbox
-                checked={powerUp}
-                onChange={handleChange}
-                name="powerup"
+                // checked={sizeDown}
+                // onChange={handleChange}
+                name="sizeDown"
               />
             }
-            label="Power Up"
+            label="Size Down"
           />
           <FormControlLabel
             control={
               <Checkbox
-                checked={speedUp}
-                onChange={handleChange}
-                name="speedup"
+                // checked={speedUp}
+                // onChange={handleChange}
+                name="speedUp"
               />
             }
             label="Speed Up"
@@ -53,3 +58,5 @@ export default function GameOption() {
     </Box>
   );
 }
+
+export default GameOption;

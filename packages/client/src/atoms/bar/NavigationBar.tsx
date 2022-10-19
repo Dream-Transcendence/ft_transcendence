@@ -22,6 +22,7 @@ import {
   CHANNELURL,
   CHATROOMURL,
   GAMECREATEURL,
+  GAMELOADINGURL,
   PROFILEURL,
   SERVERURL,
 } from '../../configs/Link.url';
@@ -38,21 +39,22 @@ const NavLayout = styled('section')(({ theme }) => ({
 
 const RightLayout = styled('section')(({ theme }) => ({
   marginLeft: 'auto',
-  width: '20%',
+  width: '30%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'right',
 }));
 
 export default function NavigationBar() {
-  const searchProps = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`);
+  const searchProps: SearchPropsType = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`);
 
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: GAMECREATEURL,
+    url: GAMELOADINGURL,
+    // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const Channels: LinkIconResource = {
@@ -70,6 +72,7 @@ export default function NavigationBar() {
 
   const ladderAction: LinkIconProps = {
     iconResource: Ladder,
+    // action: 
   };
 
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패

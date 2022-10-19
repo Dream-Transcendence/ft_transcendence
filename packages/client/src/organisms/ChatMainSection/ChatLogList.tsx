@@ -9,7 +9,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import useSocket from '../../socket/useSocket';
 import {
   chatNameSpace,
@@ -27,6 +27,13 @@ const ChatLogLayout = styled('div')(({ theme }) => ({
 function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const { messages, setMessages } = props.messageSetter;
   const [socket] = useSocket(chatNameSpace);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    //^  ? 조건은  `if (messagesEndRef.current)` 와 같습니다.
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
   //[수정사항] 로그인 붙이면 작업할 것 상태변경메시지 브로드캐스트
   useEffect(() => {
     socket.on(`${patchMessage}`, (res) => {
@@ -46,6 +53,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       return (
         <ListChatLayout key={index}>
           <MessageBox message={msg} />
+          <div ref={messagesEndRef} />
         </ListChatLayout>
       );
     },

@@ -48,7 +48,6 @@ export const getJoinedChatList = selectorFamily<any, number>({
     async ({ get }) => {
       try {
         const response = await getRoomList(userId);
-        console.log('33223424@!!!!', response.data);
         return response.data;
       } catch (error) {
         console.dir(error);

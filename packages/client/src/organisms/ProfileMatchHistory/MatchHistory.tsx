@@ -40,13 +40,14 @@ function MatchHistory() {
     UserMatchHistoryType[]
   >([
     {
-      id: 0,
+      id: Number(userId),
       opponent: 'UnKnown',
       isWin: false,
       isLadder: false,
     },
   ]);
 
+  //userId로 받아온 리스트
   const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
     return (
       <ListLayout key={matchHistory.id}>
