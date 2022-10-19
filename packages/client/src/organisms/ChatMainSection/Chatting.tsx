@@ -22,6 +22,7 @@ function ChattingOrganisms(prop: any) {
   const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
   const userState = useRecoilValue(userStatus);
 
+  //최초 한번 마운트될 때 불러줌.
   useEffect(() => {
     async function getMessageHistory() {
       const response = await axios.get(`${SERVERURL}/rooms/messages/${roomId}`);
@@ -34,6 +35,7 @@ function ChattingOrganisms(prop: any) {
     messages: MessageHistory,
     setMessages: setMessageHistory,
   };
+  // console.log('데이터 받아오기 전', messageSetter.messages);
 
   return (
     <ChattingLayout>
