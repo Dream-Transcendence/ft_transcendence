@@ -75,11 +75,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
   //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
   function enterRoom() {
-    console.log('sonking ! enter!!!', {
-      userId: userData.id,
-      roomId: roomId,
-      salt: password,
-    });
     //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
     socket.emit(
       `${enterChannel}`,

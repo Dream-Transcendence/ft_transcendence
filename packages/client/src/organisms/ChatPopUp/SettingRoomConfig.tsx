@@ -4,13 +4,19 @@ import SetChatRoomNameModule from '../../molecules/ChatPopUp/SetChatRoomName';
 import SetChatRoomTypeModule from '../../molecules/ChatPopUp/SetChatRoomType';
 import SetChatRoomPasswordModule from '../../molecules/ChatPopUp/SetChatRoomPassword';
 import SetChatRoomInviteModule from '../../molecules/ChatPopUp/SetChatRoomInvite';
-import { CreateRoomSet } from '../../types/Room.type';
-import { useState } from 'react';
-import { SERVERURL } from '../../configs/Link.url';
+import {
+  CreateRoomSet,
+  HandleInviteList,
+  RoomList,
+} from '../../types/Room.type';
+import { useState, useEffect } from 'react';
+import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PROTECTED } from '../../configs/RoomType';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
+import { useNavigate } from 'react-router-dom';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -39,18 +45,11 @@ const SetButtonLayout = styled('div')(({ theme }) => ({
   justifyItems: 'center',
 }));
 
-async function createRoom(newRoom: CreateRoomSet) {
-  try {
-    const response = await axios.post(`${SERVERURL}/rooms/channels`, newRoom);
-  } catch (error) {
-    console.dir(error);
-  }
-}
-
 //일단 임시로 prop을 내려서 상태관리함 향후 교체할 예정
 function SettingRoomConfigOranisms(closeModal: () => void) {
   //[수정사항] userId => 1
   const userData = useRecoilValue(userDataAtom);
+  const [joinedChatRoom, setJoinedChatRoom] = useRecoilState(chatRoomList);
   //[수정사항] 나중에 방의 초기값을 만든사람 이름을 하면 좋을듯
   const [newRoom, setNewRoom] = useState<CreateRoomSet>({
     userId: userData.id,
@@ -59,21 +58,56 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
     salt: '',
     participantIds: [],
   });
+  const [addedParticipantList, setAddedParticipantList] = useState<RoomList[]>(
+    [],
+  );
+  const [newParticipantList, setNewParticipantList] =
+    useRecoilState(newParticipant);
+  const navigate = useNavigate();
+
+  async function createRoom(newRoom: CreateRoomSet) {
+    try {
+      await axios.post(`${SERVERURL}/rooms/channels`, newRoom).then((res) => {
+        setNewRoom({
+          userId: userData.id,
+          name: '',
+          type: 1,
+          salt: '',
+          participantIds: [],
+        });
+        const joinedRoom: RoomList = {
+          id: res.data.id,
+          name: newRoom.name,
+          image: '',
+          recvMessageCount: 0,
+        };
+        setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
+        resetAddedParticipantList();
+        navigate(`${CHATROOMURL}${res.data.id}`);
+      });
+    } catch (error) {
+      console.dir(error);
+    }
+  }
 
   const savehandler = () => {
-    console.log('!!', newRoom.type, newRoom.salt);
     if (newRoom.type === 2 && newRoom.salt === '')
       alert('비밀번호를 입력하세요');
     else if (newRoom.participantIds.length === 0)
       alert('인원을 1명 이상 초대하세요');
     else {
-      closeModal();
       createRoom(newRoom);
-      console.log('send', newRoom);
+      closeModal();
     }
   };
 
+  const resetAddedParticipantList = () => {
+    setAddedParticipantList([]);
+    setNewParticipantList([]);
+  };
+
   const closehandler = () => {
+    resetAddedParticipantList();
     closeModal();
   };
 
@@ -90,7 +124,18 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   };
 
   const handleParticipant = (value: number[]) => {
-    setNewRoom({ ...newRoom, participantIds: value });
+    //배열은 깊은 복사해야함
+    const deepCopyRoom = { ...newRoom };
+    deepCopyRoom.participantIds = value;
+    setNewRoom({ ...deepCopyRoom });
+  };
+
+  const handleInviteList: HandleInviteList = {
+    addedParticipantList: addedParticipantList,
+    setAddedParticipantList: setAddedParticipantList,
+    handleParticipant: handleParticipant,
+    newParticipantList: newParticipantList,
+    setNewParticipantList: setNewParticipantList,
   };
   return (
     <SettingRoomConfigLayout>
@@ -103,7 +148,7 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
         {newRoom.type === PROTECTED && (
           <SetChatRoomPasswordModule handler={handlePassword} />
         )}
-        <SetChatRoomInviteModule handler={handleParticipant} />
+        <SetChatRoomInviteModule handleInviteList={handleInviteList} />
         {/* [axios POST 요청] 위 정보를 포함한 채팅방 개설 */}
         <SetButtonLayout>
           <Button onClick={savehandler} variant="contained">

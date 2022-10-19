@@ -29,6 +29,11 @@ export const userStatus = atom<number | null>({
   default: null,
 });
 
+export const newParticipant = atom<number[]>({
+  key: 'newParticipant',
+  default: [],
+});
+
 //[수정사항] 전역으로 사용하는 데이터의 파일구조를 바꿀 것
 //현재 유저가 가입된 채팅방의 리스트를 받아옵니다.
 const getRoomList = async (userId: number) => {
@@ -43,6 +48,7 @@ export const getJoinedChatList = selectorFamily<any, number>({
     async ({ get }) => {
       try {
         const response = await getRoomList(userId);
+        console.log('33223424@!!!!', response.data);
         return response.data;
       } catch (error) {
         console.dir(error);

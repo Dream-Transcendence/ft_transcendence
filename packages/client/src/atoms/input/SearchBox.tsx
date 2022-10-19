@@ -33,6 +33,7 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
 
 const AutoWrapper = styled('div')(({ theme }) => ({
   height: '100%',
+  width: '100%',
   position: 'relative',
   alignItems: 'center',
   justifyContent: 'center',
@@ -56,26 +57,13 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function SearchBox() {
-  const [target, setTarget] = useState<number>(0);
-  const navigate = useNavigate();
-  const searchProps: SearchPropsType = {
-    url: `${SERVERURL}/users/search`,
-    listParams: {
-      value: target,
-      setValue: setTarget,
-    },
-  }
-
-  useEffect(() => {
-    if (target > 0)
-      navigate(`${PROFILEURL}/${target}`);
-  }, [target])
+function SearchBox(prop: { searchProps: SearchPropsType }) {
+  const searchProps = prop.searchProps;
 
   return (
     <Search>
       <AutoWrapper>
-        <AutoComplateSerchBox searchProps={searchProps}/>
+        <AutoComplateSerchBox searchProps={searchProps} />
       </AutoWrapper>
       {/* [axios GET 요청] Input value에 따른 인원목록 */}
       {/* 리스트 추가 후, 해당 유저 페이지로 연결하는 로직 구현해야함 */}

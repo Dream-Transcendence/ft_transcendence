@@ -2,10 +2,9 @@ import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
-import CircularProgress from '@mui/material/CircularProgress';
 import SettingRoomConfigOranisms from '../../organisms/ChatPopUp/SettingRoomConfig';
-import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../pages/PingpongRoutePage';
 
 const CreateChatRoomLayout = styled('div')(({ theme }) => ({
   height: '5.89%',
@@ -23,12 +22,14 @@ const AsideButtonBox = styled('div')(({ theme }) => ({
 
 function CreateChatRoomModule() {
   const [open, setOpen] = React.useState(false);
+  const user = useRecoilValue(userDataAtom);
   const handleClose = () => {
     setOpen(false);
   };
   const handleToggle = () => {
     setOpen(!open);
   };
+  //각자 user마다 다른 참가인원리스트를 가지게하기위해 구분하는 작업
 
   return (
     <CreateChatRoomLayout>
