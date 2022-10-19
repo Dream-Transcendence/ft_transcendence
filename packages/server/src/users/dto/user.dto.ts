@@ -79,3 +79,24 @@ export class DmUserDto {
   @IsBoolean()
   blocked: boolean;
 }
+
+export class ClientInviteGameDto {
+  hostId: number;
+  opponentId: number;
+  mode: number;
+}
+
+export class ServerInviteGameDto {
+  host: UserDto;
+  mode: number;
+}
+
+export class ClientAcceptGameDto {
+  hostId: number;
+  mode: number;
+}
+
+export class ServerAcceptGameDto {
+  title: string;
+  mode: number;
+}

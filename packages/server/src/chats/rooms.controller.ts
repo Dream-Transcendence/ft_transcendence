@@ -57,11 +57,14 @@ export class RoomsController {
     return this.roomService.getChannels(userId);
   }
 
-  @Get('/messages/:roomId')
+  @Get('/messages/:roomId/:messageId')
   @ApiOperation({ summary: '채팅방 메시지 목록' })
-  getMessages(@Param('roomId') roomId: number) {
+  getMessages(
+    @Param('roomId') roomId: number,
+    @Param('messageId') messageId: number,
+  ) {
     this.logger.log(`getMessages`);
-    return this.roomService.getMessages(roomId);
+    return this.roomService.getMessages(roomId, messageId);
   }
 
   @Get('/:roomId/:userId')
