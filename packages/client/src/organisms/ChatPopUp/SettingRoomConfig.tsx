@@ -131,8 +131,6 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   };
 
   const handleInviteList: HandleInviteList = {
-    addedParticipantList: addedParticipantList,
-    setAddedParticipantList: setAddedParticipantList,
     handleParticipant: handleParticipant,
     newParticipantList: newParticipantList,
     setNewParticipantList: setNewParticipantList,

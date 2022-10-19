@@ -13,7 +13,7 @@ const initUser = {
   id: 0,
   nickname: 'noname',
   image: 'noimage',
-}
+};
 
 function useSearch(
   axiosUrl: string,
@@ -57,8 +57,15 @@ function useSearch(
       createDM(target.id);
       //[수정사항]여러개 생성되는문제 백에서 막아줄것!
     } else if (target.id > 0 && type === PUBLIC) {
-      if (newParticipants.every((Participant) => Participant !== target.id)) {
-        const partiArray = [...newParticipants, target.id];
+      if (
+        newParticipants.every((Participant) => Participant.id !== target.id)
+      ) {
+        const newParti: BaseUserProfileData = {
+          id: target.id,
+          nickname: target.nickname,
+          image: target.image,
+        };
+        const partiArray = [...newParticipants, newParti];
         setNewParticipant(partiArray);
       }
     }
