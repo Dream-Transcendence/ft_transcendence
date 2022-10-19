@@ -9,6 +9,14 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
+import { useEffect } from 'react';
+import useSocket from '../../socket/useSocket';
+import {
+  chatNameSpace,
+  patchMessage,
+  patchUserInfo,
+  USERMESSAGE,
+} from '../../socket/event';
 const ChatLogLayout = styled('div')(({ theme }) => ({
   width: '90%',
   height: '92%',
@@ -18,13 +26,30 @@ const ChatLogLayout = styled('div')(({ theme }) => ({
 
 function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const { messages, setMessages } = props.messageSetter;
-  const listElement: React.ReactElement[] = messages.map((msg: any) => {
-    return (
-      <ListChatLayout key={msg.user.id}>
-        <MessageBox message={msg} />
-      </ListChatLayout>
-    );
-  });
+  const [socket] = useSocket(chatNameSpace);
+  //[수정사항] 로그인 붙이면 작업할 것 상태변경메시지 브로드캐스트
+  useEffect(() => {
+    socket.on(`${patchMessage}`, (res) => {
+      console.log(res);
+      // setMessages([...messages, res]);
+    });
+  }, [messages]);
+
+  useEffect(() => {
+    socket.on(`${USERMESSAGE}`, (res) => {
+      console.log(res);
+      // setMessages([...messages, res]);
+    });
+  }, [messages]);
+  const listElement: React.ReactElement[] = messages.map(
+    (msg: any, index: number) => {
+      return (
+        <ListChatLayout key={index}>
+          <MessageBox message={msg} />
+        </ListChatLayout>
+      );
+    },
+  );
 
   return (
     <ChatLogLayout>

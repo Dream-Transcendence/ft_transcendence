@@ -49,6 +49,9 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const handleEvent = (e: any) => {
     if (e.key === 'Enter') {
       const target = userList.find((user) => {
+        if (e.target.value === '') {
+          return e.target.valu;
+        }
         if (e.target.value) return user.nickname.includes(e.target.value);
         return atomNickname; //값이 이상하면 기본 값으로 초기화
       });

@@ -11,3 +11,9 @@ export interface ReceivedMessage {
     nickname: string;
   };
 }
+
+export interface SendMessage {
+  userId: number;
+  roomId: number;
+  body: string;
+}

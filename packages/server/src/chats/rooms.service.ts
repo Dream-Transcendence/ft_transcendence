@@ -444,6 +444,7 @@ export class RoomService {
       body: msg.body,
     };
     client.to(msg.room.title).emit('userMessage', userMessageDto);
+    return { isSent: true };
   }
 
   async patchUserInfo(client: Socket, patchUserInfoDto: PatchUserInfoDto) {

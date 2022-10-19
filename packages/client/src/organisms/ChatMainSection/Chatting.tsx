@@ -38,7 +38,7 @@ function ChattingOrganisms(prop: any) {
   return (
     <ChattingLayout>
       <ChatLogListOrganisms messageSetter={messageSetter} />
-      {userState !== MUTE && <ChatInputModule />}
+      {userState !== MUTE && <ChatInputModule messageSetter={messageSetter} />}
     </ChattingLayout>
   );
 }
