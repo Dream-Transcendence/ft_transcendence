@@ -13,12 +13,14 @@ import { Repository } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
 import { v4 as uuidv4 } from 'uuid';
 import { UserGateway } from 'src/users/user.gateway';
+import { UserService } from 'src/users/users.service';
 
 @Injectable()
 export class GameService {
   constructor(
     @Inject('USERS_REPOSITORY') private userRepository: Repository<User>,
     private schedulerRegistry: SchedulerRegistry,
+    private userService: UserService,
     private userGateway: UserGateway,
   ) {}
   private matchingQueue: MatchInfo[] = [];

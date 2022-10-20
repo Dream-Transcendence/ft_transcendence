@@ -1,5 +1,5 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
-import { Socket } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
@@ -13,13 +13,22 @@ import {
   ServerInviteGameDto,
   ClientAcceptGameDto,
   ServerAcceptGameDto,
+  Connection,
+  UserIdDto,
+  ServerRequestDto,
+  RequestIdDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
+import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class UserService {
   private logger = new Logger('UsersService');
+
+  private connectionList = new Map<string, Connection>();
+
   constructor(
     @Inject('USERS_REPOSITORY')
     private usersRepository: Repository<User>,
@@ -440,47 +449,87 @@ export class UserService {
   }
 
   // ANCHOR: Socket
-  // async handleLogOn(
-  //   userId: number,
-  //   onlineUserList: number[],
-  // ): Promise<ConnectionsDto> {
-  //   const friendRows = await this.friendsRepository.find({
-  //     relations: { user: true, friend: true },
-  //     where: { user: { id: userId } },
-  //   });
-  //   const onlineFriendList: number[] = [];
 
-  //   friendRows.forEach((friendRow) => {
-  //     console.log(friendRow.friend);
-  //   });
+  setConnection(userId: number, server: Server | Socket, onGame: boolean) {
+    let clientId: string;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === userId) {
+        clientId = key;
+      }
+    }
+    this.connectionList.get(clientId).onGame = onGame;
+    const connection = this.connectionList.get(clientId);
+    const connectionDto = new ConnectionDto(
+      connection.userId,
+      connection.onGame,
+    );
 
-  //   console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
+    if (server instanceof Server) {
+      server.emit('changeUserStatus', {
+        connection: connectionDto,
+      });
+    } else {
+      server.broadcast.emit('changeUserStatus', {
+        connection: connectionDto,
+      });
+    }
+  }
 
-  //   friendRows.forEach((friendRow) => {
-  //     if (onlineUserList.includes(friendRow.friend.id)) {
-  //       onlineFriendList.push(friendRow.friend.id);
-  //     }
-  //   });
-  //   console.log(`onlineFriendList: ${onlineFriendList}`);
+  getConnectionList() {
+    return this.connectionList;
+  }
 
-  //   return { connections: onlineFriendList };
-  // }
+  handleDisconnect(client: Socket) {
+    console.log('User Client disconnected', client.id);
+    const userId = this.connectionList.get(client.id).userId;
 
-  async handleInviteGame(
-    client: Socket,
-    inviteGameDto: ClientInviteGameDto,
-    opponentClientId: string,
-  ): Promise<void> {
-    const { hostId, mode } = inviteGameDto;
+    client.broadcast.emit('userLogOff', { userId: userId });
+
+    this.connectionList.delete(client.id);
+  }
+
+  async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
+    const onlineUserList = Array.from(this.connectionList.values());
+
+    this.connectionList.set(client.id, {
+      userId: connectionDto.userId,
+      onGame: false,
+    });
+
+    client.broadcast.emit('changeUserStatus', {
+      connection: { userId: connectionDto.userId, onGame: false },
+    });
+
+    const connectionsDto = new ConnectionsDto();
+    connectionsDto.connections = onlineUserList.map((value) => {
+      return new ConnectionDto(value.userId, value.onGame);
+    });
+
+    return connectionsDto;
+  }
+
+  async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
+    const { hostId, opponentId, mode } = inviteGameDto;
+
+    this.setConnection(inviteGameDto.hostId, client, true);
+
+    let opponentClientId = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === opponentId) opponentClientId = key;
+    }
+    if (opponentClientId === null)
+      throw new WsException('상대를 찾을 수 없습니다.');
+
     const host = await this.usersRepository.findOne({
       where: [{ id: hostId }],
     });
+    const { id, nickname, image } = host;
 
     const serverInviteGameDto: ServerInviteGameDto = {
       host: {
-        id: host.id,
-        nickname: host.nickname,
-        image: host.image,
+        id,
+        nickname,
+        image,
       },
       mode: mode,
     };
@@ -490,14 +539,105 @@ export class UserService {
 
   async handleAcceptGame(
     client: Socket,
+    server: Server,
     acceptGameDto: ClientAcceptGameDto,
-  ): Promise<ServerAcceptGameDto> {
-    const { mode } = acceptGameDto;
+  ) {
+    let hostClientId: string = null;
+
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === acceptGameDto.hostId) hostClientId = key;
+    }
+    if (hostClientId === null)
+      throw new WsException('호스트를 찾을 수 없습니다.');
+
+    this.setConnection(this.connectionList.get(client.id).userId, client, true);
     const serverAcceptGameDto: ServerAcceptGameDto = {
       title: uuidv4(),
-      mode: mode,
+      mode: acceptGameDto.mode,
     };
 
-    return serverAcceptGameDto;
+    // TODO: 이건 테스트 해봐야 함
+    server.to(client.id).emit('acceptGame', serverAcceptGameDto);
+    server.to(hostClientId).emit('acceptGame', serverAcceptGameDto);
+  }
+
+  handleRejectGame(client: Socket, server: Server, userIdDto: UserIdDto) {
+    let hostClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === userIdDto.id) hostClientId = key;
+    }
+    if (hostClientId === null)
+      throw new WsException('호스트를 찾을 수 없습니다.');
+
+    server.to(hostClientId).emit('rejectGame');
+  }
+
+  async handleFriendRequest(client: Socket, ClientRequestDto) {
+    const { requestorId, responserId } = ClientRequestDto;
+
+    const requestor = await this.usersRepository.findOneBy({ id: requestorId });
+    const responser = await this.usersRepository.findOneBy({ id: responserId });
+
+    let id = 1;
+    const maxId = await this.requestsRepository
+      .createQueryBuilder('request')
+      .select('MAX(request.id)', 'maxId')
+      .getRawOne();
+    if (maxId.id !== null) id = maxId.id + 1;
+    const request = this.requestsRepository.create({
+      id,
+      requestor: requestor,
+      responser: responser,
+    });
+    await this.requestsRepository.save(request);
+
+    let responserClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === responserId) responserClientId = key;
+    }
+    if (responserClientId === null)
+      throw new WsException('상대를 찾을 수 없습니다.');
+
+    const requestDto = new ServerRequestDto(
+      request.id,
+      request.requestor,
+      request.responser,
+    );
+
+    client.to(responserClientId).emit('friendRequest', requestDto);
+  }
+
+  async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    const request = await this.requestsRepository.findOneBy({
+      id: requestIdDto.id,
+    });
+    const friendDto = this.addFriend(
+      request.requestor.id,
+      request.responser.id,
+    );
+
+    let requestorClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === request.requestor.id) requestorClientId = key;
+    }
+
+    await this.requestsRepository.delete(request.id);
+
+    client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
+  }
+
+  async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    const request = await this.requestsRepository.findOneBy({
+      id: requestIdDto.id,
+    });
+
+    let requestorClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === request.requestor.id) requestorClientId = key;
+    }
+
+    await this.requestsRepository.delete(request.id);
+
+    client.to(requestorClientId).emit('friendRequestRejected');
   }
 }

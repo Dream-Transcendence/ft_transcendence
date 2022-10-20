@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsObject, IsString, IsUrl } from 'class-validator';
+import { User } from '../users.entity';
 
 export class UserDto {
   constructor(id: number, nickname: string, image: string) {
@@ -104,4 +105,29 @@ export class ServerAcceptGameDto {
 export class Connection {
   userId: number;
   onGame: boolean;
+}
+
+export class ClientRequestDto {
+  requesterId: number;
+  responserId: number;
+}
+
+export class ServerRequestDto {
+  constructor(id: number, requestor: User, responser: User) {
+    this.id = id;
+    this.requestor.id = requestor.id;
+    this.requestor.nickname = requestor.nickname;
+    this.requestor.image = requestor.image;
+    this.responser.id = responser.id;
+    this.responser.nickname = responser.nickname;
+    this.responser.image = responser.image;
+  }
+
+  id: number;
+  requestor: UserDto;
+  responser: UserDto;
+}
+
+export class RequestIdDto {
+  id: number;
 }
