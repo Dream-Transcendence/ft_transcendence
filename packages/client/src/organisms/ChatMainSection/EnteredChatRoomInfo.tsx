@@ -14,6 +14,7 @@ import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFuncti
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '11%',
+  minHeight: '100px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',

@@ -36,15 +36,20 @@ function useSearch(
 
   const createDM = async (participantId: number) => {
     try {
-      await axios
-        .post(`${SERVERURL}/rooms/dm`, {
-          userId: user.id,
-          participantId: participantId,
-        })
-        .then((res) => {
-          setDmList([...dmList, res.data]);
-          navigate(`${naviUrl}${res.data.id}`);
-        });
+      const existDM = dmList.every((dm) => {
+        return dm.id !== participantId;
+      });
+      if (existDM) {
+        await axios
+          .post(`${SERVERURL}/rooms/dm`, {
+            userId: user.id,
+            participantId: participantId,
+          })
+          .then((res) => {
+            setDmList([...dmList, res.data]);
+            navigate(`${naviUrl}${res.data.id}`);
+          });
+      }
     } catch (error) {
       console.log(error);
     }

@@ -32,7 +32,6 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const sendMessage = () => {
     socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
-      console.log('adsfasd', values);
       const sendMessage: ReceivedMessage = {
         body: values.body,
         id: 0,

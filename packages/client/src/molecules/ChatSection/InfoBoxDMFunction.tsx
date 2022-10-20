@@ -4,7 +4,6 @@ import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
-import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
@@ -14,9 +13,9 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { userAuth } from '../../recoil/chat.recoil';
+import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 
@@ -68,21 +67,40 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const userData = useRecoilValue(userDataAtom);
   const { roomInfo, handler } = roomInfoSet;
+  const [roomlist, setRoomList] = useRecoilState(DMList);
+  const findRoom = roomlist.find((room) => {
+    return room.name === roomInfo.name;
+  });
+  const popUserList = roomlist.filter((room) => {
+    return room.name !== roomInfo.name;
+  });
+  //cons
   //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
 
   const setBlock = () => {
     const block = { ...roomInfo, blocked: true };
+    if (findRoom !== undefined) {
+      const blockedUser = { ...findRoom, blocked: true };
+      setRoomList([...popUserList, blockedUser]);
+    }
     if (handler !== undefined) handler(block);
   };
   const setUnBlock = () => {
     const unBlock = { ...roomInfo, blocked: false };
+    if (findRoom !== undefined) {
+      const blockedUser = { ...findRoom, blocked: false };
+      setRoomList([...popUserList, blockedUser]);
+    }
     if (handler !== undefined) handler(unBlock);
   };
   function handlerBlock() {
-    if (roomInfo.blocked === UNBLOCK)
-      blockUser(roomInfo.id, userData.id, setBlock);
-    else if (roomInfo.blocked === BLOCK)
-      unBlockUser(roomInfo.id, userData.id, setUnBlock);
+    //[수정요망] 나 block id roominfo에서 userid를 받아와야함
+    // roomInfo.id => roomInfo.userId
+    alert('roomInfo.id => roomInfo.userId');
+    // if (roomInfo.blocked === UNBLOCK)
+    //   blockUser(roomInfo.id, userData.id, setBlock);
+    // else if (roomInfo.blocked === BLOCK)
+    //   unBlockUser(roomInfo.id, userData.id, setUnBlock);
   }
 
   const personal: LinkIconResource = {

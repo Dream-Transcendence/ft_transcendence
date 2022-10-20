@@ -104,8 +104,6 @@ function EnteredChatRoomTemplate() {
   }, [roomId, userData.id, roomInfo.type]);
 
   //참여자데이터를 토대로 본인의 타입이 어떤 타입인지 찾는 함수
-  // [수정사항] 임시로 participantInfo가 데이터가 null을 가지고 있는지 체크하는데, backapi에서 user타입을 가져와야 구분가능
-  //수정해야하는 사항 participant의 타입으로
   const useFindUserAuth = () => {
     let type;
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
@@ -163,7 +161,7 @@ function EnteredChatRoomTemplate() {
         <ChattingBanLayout>
           <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
           <ChatRoomFeaterLayout>
-            <ChattingOrganisms />
+            <ChattingOrganisms roomInfo={roomInfo} />
             {roomInfo.type !== DM && roomInfo.type !== 5 && (
               <ChatParticipantsOrganisms
                 participantInfoSet={participantInfoSet}
