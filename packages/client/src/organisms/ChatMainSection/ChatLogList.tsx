@@ -37,8 +37,9 @@ const CallAPI = styled('div')(({ theme }) => ({
 }));
 
 const AnchorLayout = styled('div')(({ theme }) => ({
-  backgroundColor: 'red',
-  marginTop: '100%',
+  marginTop: '70%',
+  height: '20px',
+  width: '20px',
   position: 'absolute',
   zIndex: 1000,
 }));
