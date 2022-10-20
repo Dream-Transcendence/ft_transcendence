@@ -129,12 +129,16 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       if (startChatRender && messages.length !== 0) {
         // 로딩 중이면 로더 컴포넌트 띄워줄것
         setIsLoaded(false);
-        await axios
-          .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`)
-          .then((res) => {
-            setMessages([...res.data, ...messages]);
-            setIsLoaded(true);
-          });
+        try {
+          await axios
+            .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`)
+            .then((res) => {
+              setMessages([...res.data, ...messages]);
+              setIsLoaded(true);
+            });
+        } catch (error) {
+          console.log(error);
+        }
       }
       // 종종 시작하자마자 스크롤이 바로 안 내려가서 한번 더 불러오는 경우가 있다..
       // 임시로 처음들어온 걸 체크한다음 스크롤을 내려줌
