@@ -17,10 +17,10 @@ import { logStateListAtom } from '../../recoil/log.recoil';
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignSelf: 'start',
-  justifySelf: 'end',
+  alignSelf: 'end',
+  justifySelf: 'start',
   alignItems: 'center',
-  height: '75%',
+  height: '42%',
   width: '50%',
   gridArea: 'FreindList',
   backgroundColor: '#1976D2',
@@ -43,7 +43,7 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
   borderColor: 'black',
 }));
 
-function FreindListOrganisms() {
+function FreindList() {
   const { userId } = useParams();
   const [friendList, setFriendList] = useState<FriendType[]>([
     {
@@ -70,7 +70,7 @@ function FreindListOrganisms() {
     }
     getFriendList();
   }, [userId]);
- 
+
   const listElement: JSX.Element[] = friendList.map((friendData) => {
     //friend데이터중 profileBox를 구현하기에 필요한 정보를 넣어줌
     const userData = {
@@ -115,4 +115,4 @@ function FreindListOrganisms() {
   );
 }
 
-export default FreindListOrganisms;
+export default FreindList;

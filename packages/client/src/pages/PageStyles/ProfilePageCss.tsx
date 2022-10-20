@@ -10,12 +10,12 @@ export const ProfileLayout = styled('div')(({ theme }) => ({
   gridTemplateColumns: '4fr 5fr',
   gridAutoRows: '14%', //gap의 값(5 * 3%)을 생각하여 계산해야됨
   gap: '3%',
-  gridTemplateAreas: `'Profile UserStat' 
-                          'Profile UserStat' 
-                          'Profile MatchHistory' 
-                          'FreindList MatchHistory' 
-                          'FreindList MatchHistory' 
-                          'FreindList Footer'`,
+  gridTemplateAreas: `'ProfilePersonal UserStat' 
+                      'ProfilePersonal UserStat' 
+                      'ProfilePersonal MatchHistory' 
+                      'ProfilePersonal MatchHistory' 
+                      'ProfilePersonal MatchHistory' 
+                      'ProfilePersonal Footer'`,
 }));
 
 export const Footer = styled('div')(({ theme }) => ({

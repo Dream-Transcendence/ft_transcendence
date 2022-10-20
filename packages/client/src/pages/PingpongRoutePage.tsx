@@ -2,7 +2,12 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import {
+  atom,
+  useRecoilState,
+  useRecoilValue,
+  useResetRecoilState,
+} from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
 import { logStateListAtom } from '../recoil/log.recoil';
@@ -33,34 +38,39 @@ export const userDataAtom = atom<BaseUserProfileData>({
   },
 });
 
-const logOnListMock = [{
-  id: 1,
-  logOn: true,
-  onGame: true,
-},{
-  id: 2,
-  logOn: true,
-  onGame: true,
-},{
-  id: 3,
-  logOn: true,
-  onGame: true,
-},{
-  id: 4,
-  logOn: true,
-  onGame: true,
-},{
-  id: 5,
-  logOn: true,
-  onGame: true,
-}]
+const logOnListMock = [
+  {
+    id: 1,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 2,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 3,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 4,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 5,
+    logOn: true,
+    onGame: true,
+  },
+];
 
 function PingpongRoutePage() {
-  console.log('11');
-
   const [socket, connect, disconnect] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
-  const [logStateList, setLogStateList] = useRecoilState<LogStateType[]>(logStateListAtom);
+  const [logStateList, setLogStateList] =
+    useRecoilState<LogStateType[]>(logStateListAtom);
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
@@ -88,7 +98,8 @@ function PingpongRoutePage() {
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
     //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
-  }, [userData.id, logStateList, setLogStateList]); //connect, disconnect를 빼니 emit요청을 1번만 함. 이유는 모르겠음..
+  }, [userData.id]);
+  //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함, id 또한 재 로그인 하지 않는이상 다시 바뀔 일은 없겠지만 일단 남겨 둠
 
   return (
     <PageSection>
