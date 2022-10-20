@@ -5,7 +5,6 @@ import { RoomService } from './rooms.service';
 import { roomsProviders } from './rooms.providers';
 import { usersProviders } from '../users/users.providers';
 import { RoomsGateway } from './rooms.gateway';
-
 @Module({
   imports: [DatabaseModule],
   controllers: [RoomsController],
