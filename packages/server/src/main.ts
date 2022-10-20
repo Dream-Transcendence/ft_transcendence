@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
+import * as cookieParser from 'cookie-parser';
 
 export class SocketIoAdapter extends IoAdapter {
   createIOServer(port: number, options?: any): any {
@@ -28,6 +29,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.use(cookieParser());
   const config = new DocumentBuilder()
     .setTitle('API design example')
     .setDescription('Example')

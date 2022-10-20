@@ -6,6 +6,7 @@ import {
   Logger,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
@@ -23,9 +24,11 @@ import {
   GetRoomInfoDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('room')
 @Controller('rooms')
+@UseGuards(AuthGuard('jwt'))
 export class RoomsController {
   private logger = new Logger('RoomsController');
   constructor(private roomService: RoomService) {}
