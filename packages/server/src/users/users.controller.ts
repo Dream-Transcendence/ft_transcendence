@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -26,8 +27,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { FriendDto, UserDto, UserIdDto } from './dto/user.dto';
 import { UserService } from './users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}

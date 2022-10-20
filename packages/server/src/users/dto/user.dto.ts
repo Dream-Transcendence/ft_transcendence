@@ -100,3 +100,8 @@ export class ServerAcceptGameDto {
   title: string;
   mode: number;
 }
+
+export class Connection {
+  userId: number;
+  onGame: boolean;
+}
