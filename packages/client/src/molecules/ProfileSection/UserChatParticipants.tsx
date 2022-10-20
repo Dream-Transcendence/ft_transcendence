@@ -12,11 +12,11 @@ import {
 } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 import { ADMIN, OWNER } from '../../configs/userType';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { userAuth } from '../../recoil/chat.recoil';
+import { DMList, userAuth } from '../../recoil/chat.recoil';
 import {
   ParticipantInfo,
   ParticipantInfoNState,
@@ -113,7 +113,13 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
   const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
     (participant) => participant.user.id !== participantInfo.user.id,
   );
-
+  const [roomlist, setRoomList] = useRecoilState(DMList);
+  const findRoom = roomlist.find((room) => {
+    return room.name === participantInfo.user.nickname;
+  });
+  const popUserList = roomlist.filter((room) => {
+    return room.name !== participantInfo.user.nickname;
+  });
   //const isBan = useState();
 
   const userInfo: UserProfileBoxDataType = {
@@ -138,10 +144,18 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
 
   const setBlock = () => {
     const block = { ...participantInfo, blocked: true };
+    if (findRoom !== undefined) {
+      const blockedUser = { ...findRoom, blocked: true };
+      setRoomList([...popUserList, blockedUser]);
+    }
     if (handler !== undefined) handler([...filteredParticipants, block]);
   };
   const setUnBlock = () => {
     const unBlock = { ...participantInfo, blocked: false };
+    if (findRoom !== undefined) {
+      const blockedUser = { ...findRoom, blocked: false };
+      setRoomList([...popUserList, blockedUser]);
+    }
     if (handler !== undefined) handler([...filteredParticipants, unBlock]);
   };
   function handlerBlock() {

@@ -10,7 +10,7 @@ export const ListLayout = styled('li')(() => ({
 
 export const ListChatLayout = styled('li')(() => ({
   width: '100%',
-  height: '80%',
+  height: '100%',
   flex: 'auto',
   paddingTop: '1%',
   paddingBottom: '2%',
@@ -31,6 +31,14 @@ export const ListChatUlLayout = styled('ul')(({ theme }) => ({
   listStyle: 'none',
   display: 'flex',
   flexDirection: 'column',
+}));
+
+export const ListChatGenerateLayout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  width: '100%',
+  backgroundColor: '#00FF0000',
 }));
 
 export const ListGenerateLayout = styled('div')(({ theme }) => ({

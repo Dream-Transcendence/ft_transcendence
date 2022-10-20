@@ -86,7 +86,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       (response: any) => {
         console.log('enter new room success ', response); // "got it"
         //임시 데이터 생성
-        //[수정사항] optimistic UI를 위한 작업
         const newRoom: RoomList = { ...roomInfo, recvMessageCount: 0 };
         setJoinedRoomList([...joinedRoomList, newRoom]);
         setUnJoinedList([...filterPopRoom()]); //버튼클릭고장
@@ -112,14 +111,12 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
       <RoomElementImageModule image={image} />
       <RoomInfoLayout>
         <RoomTitleModule title={name} type={type}></RoomTitleModule>
-        {/*[수정사항] id대신 인원수가 들어갈 예정 */}
         <RoomNumberOfPeopleModule num={personnel}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
         {type === PROTECTED && <PasswordInput handler={handlePassword} />}
       </PasswordInputLayout>
-      {/* [axios POST 요청] 타입에 따라 입장 여부확인(어떤 성격의 채팅방인지 전달) 후, 입장 요청 */}
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />
       </EnterButtonLayout>

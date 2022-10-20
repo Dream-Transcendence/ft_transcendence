@@ -6,3 +6,6 @@ export const userNameSpace = 'user';
 export const gameNameSpace = 'game';
 export const gameLadderMatch = 'match';
 export const patchUserInfo = 'patchUserInfo';
+export const patchMessage = 'patchMessage';
+export const SENDMESSAGE = 'sendMessage';
+export const USERMESSAGE = 'userMessage';

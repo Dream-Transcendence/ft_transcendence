@@ -13,11 +13,12 @@ import { Route } from 'react-router-dom';
 import { PROFILEURL } from './configs/Link.url';
 import { BaseUserProfileData } from './types/Profile.type';
 import React from 'react';
+import Loader from './atoms/Loading/Loader';
 
 function App() {
   return (
     <RecoilRoot>
-      <React.Suspense fallback={<div>Loading...</div>}>
+      <React.Suspense fallback={<Loader />}>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/nickname" element={<NicknamePage />} />

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { atom, selectorFamily } from 'recoil';
 import { SERVERURL } from '../configs/Link.url';
+import { BaseUserProfileData } from '../types/Profile.type';
 import { RoomList, UnJoinedRoomList } from '../types/Room.type';
 
 export const DMList = atom<RoomList[]>({
@@ -13,7 +14,6 @@ export const chatRoomList = atom<RoomList[]>({
   default: [],
 });
 
-//[수정사항] any=> 비동기로 받는 unJoinedRoomList 타입
 export const unJoinedRoomList = atom<UnJoinedRoomList[]>({
   key: 'unJoinedRoomList',
   default: [],
@@ -29,7 +29,7 @@ export const userStatus = atom<number | null>({
   default: null,
 });
 
-export const newParticipant = atom<number[]>({
+export const newParticipant = atom<BaseUserProfileData[]>({
   key: 'newParticipant',
   default: [],
 });
@@ -48,7 +48,6 @@ export const getJoinedChatList = selectorFamily<any, number>({
     async ({ get }) => {
       try {
         const response = await getRoomList(userId);
-        console.log('33223424@!!!!', response.data);
         return response.data;
       } catch (error) {
         console.dir(error);
