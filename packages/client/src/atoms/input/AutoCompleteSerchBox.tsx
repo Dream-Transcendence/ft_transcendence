@@ -53,9 +53,8 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
           return true;
         return false; //값이 이상하면 기본 값으로 초기화
       });
-
       if (target) {
-        setValue(target.nickname);
+        setValue('');
         setParentTarget(target);
         // navigate(`${PROFILEURL}/${target?.id}`);
       }

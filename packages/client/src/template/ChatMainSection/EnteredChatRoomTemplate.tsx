@@ -17,6 +17,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
+import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',

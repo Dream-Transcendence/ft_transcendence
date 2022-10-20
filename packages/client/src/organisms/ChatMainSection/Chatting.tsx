@@ -17,24 +17,19 @@ const ChattingLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column',
 }));
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
-function ChattingOrganisms(prop: any) {
+function ChattingOrganisms() {
   const { roomId } = useParams();
-  const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
   const userState = useRecoilValue(userStatus);
-
-  //최초 한번 마운트될 때 불러줌.
-  useEffect(() => {
-    async function getMessageHistory() {
-      const response = await axios.get(`${SERVERURL}/rooms/messages/${roomId}`);
-      setMessageHistory(response.data);
-    }
-    getMessageHistory();
-  }, [roomId]);
-
+  const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
   const messageSetter: ControlMessage = {
     messages: MessageHistory,
     setMessages: setMessageHistory,
   };
+
+  useEffect(() => {
+    setMessageHistory([]);
+    return setMessageHistory([]);
+  }, [roomId, setMessageHistory]);
   // console.log('데이터 받아오기 전', messageSetter.messages);
 
   return (

@@ -37,9 +37,9 @@ const OtherTextInput = styled('section')(({ theme }) => ({
 }));
 
 const OwnTextInput = styled('section')(({ theme }) => ({
-  overflow: 'auto',
   width: '60%',
   backgroundColor: '#5154ff',
+  marginRight: '-20%',
   borderRadius: '10px 0px 10px 10px',
   justifyContent: 'center',
   float: 'right',
@@ -52,7 +52,13 @@ function MessageBox(prop: { message: ReceivedMessage }) {
     <TextBoxLayout>
       {msg.user.id === userData.id ? (
         <OwnTextInput>
-          <Typography padding={'8%'} color={'white'} fontSize={12}>
+          <Typography
+            whiteSpace={'normal'}
+            padding={'8%'}
+            color={'white'}
+            fontSize={12}
+            style={{ wordWrap: 'break-word' }}
+          >
             {msg.body}
           </Typography>
         </OwnTextInput>

@@ -5,6 +5,7 @@ export interface ControlMessage {
 
 export interface ReceivedMessage {
   body: string;
+  id: number;
   user: {
     id: number;
     image: string;

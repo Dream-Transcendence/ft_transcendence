@@ -15,10 +15,17 @@ import { userAuth } from '../../recoil/chat.recoil';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignContent: 'center',
+  alignItems: 'center',
 }));
 
-const InfoBoxPasswordInnerLayout = styled('div')(({ theme }) => ({
+const InfoBoxPasswordInnerLayout = styled('section')(({ theme }) => ({
   display: 'flex',
+  height: '50%',
+  paddingBottom: '30%',
 }));
 
 const PasswordIconLayout = styled('div')(({ theme }) => ({

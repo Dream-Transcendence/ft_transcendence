@@ -24,8 +24,10 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const sendMessage = () => {
     socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
+      console.log('adsfasd', values);
       const sendMessage: ReceivedMessage = {
         body: values.body,
+        id: 0,
         user: {
           id: values.userId,
           image: '',
@@ -33,6 +35,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
         },
       };
       setMessages([...messages, sendMessage]);
+      setValues({ ...values, body: '' });
     });
   };
 
@@ -47,7 +50,6 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
       event.preventDefault();
       if (values.body !== '') {
         sendMessage();
-        setValues({ ...values, body: '' });
       }
     }
   };

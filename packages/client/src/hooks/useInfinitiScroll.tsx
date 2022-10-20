@@ -1,6 +1,9 @@
 import { useCallback, useRef } from 'react';
 
-function useInfiniteScroll(fetchMore: () => any, fetchMore2?: () => any) {
+//node를 check하기 위해 콜백으로 선언
+//observerRef를 node로 설정한 뒤, 관측시도
+//observerRef로 설정한  node가 뷰포인트에 option만큼 나타나면 콜백함수 호출
+function useInfiniteScroll(dataFetch: () => any) {
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const firstItemRef = useCallback(
@@ -12,9 +15,7 @@ function useInfiniteScroll(fetchMore: () => any, fetchMore2?: () => any) {
       observerRef.current = new IntersectionObserver(
         ([entries]) => {
           if (entries.isIntersecting) {
-            // fetch를 하기위한 callback
-            fetchMore();
-            // fetchMore2();
+            dataFetch();
           }
         },
         { threshold: 1 },
@@ -24,7 +25,7 @@ function useInfiniteScroll(fetchMore: () => any, fetchMore2?: () => any) {
         observerRef.current.observe(node);
       }
     },
-    [fetchMore],
+    [dataFetch],
   );
 
   return {
