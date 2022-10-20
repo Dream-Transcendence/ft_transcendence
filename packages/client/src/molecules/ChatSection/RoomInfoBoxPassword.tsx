@@ -36,7 +36,6 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const userType = useRecoilValue(userAuth);
   roomInfoSet['roomId'] = roomId;
-  //[수정사항]
 
   useEffect(() => {
     if (changePassword) {

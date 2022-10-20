@@ -1,9 +1,6 @@
 import { BaseUserProfileData } from './Profile.type';
 
 export interface RoomInfoSet {
-  //[수정사항] any => ChannelDto
-  //[수정사항] any => DmUserDto
-  //[수정사항] any => participantDto
   roomInfo: GetRoomInfoDto;
   roomId?: string;
   handler?: (roomInfo: GetRoomInfoDto) => void;

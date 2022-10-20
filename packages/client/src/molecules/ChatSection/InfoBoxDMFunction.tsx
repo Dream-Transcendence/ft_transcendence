@@ -33,7 +33,6 @@ export async function blockUser(
   setBlock: () => void,
 ) {
   try {
-    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
     await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
       id: blockId,
     });
@@ -51,7 +50,6 @@ export async function unBlockUser(
   setUnBlock: () => void,
 ) {
   try {
-    //[수정사항] 임시로 userid를 1로 지정. doyun님과 소통 후, 변경 예정
     await axios.delete(`${SERVERURL}/users/${userId}/blocks/${blockId}`);
     console.log('unblock!!');
     setUnBlock();
@@ -61,8 +59,6 @@ export async function unBlockUser(
   }
 }
 
-//향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
-//[수정사항] any => ChannelDto
 function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const userData = useRecoilValue(userDataAtom);
@@ -74,8 +70,6 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const popUserList = roomlist.filter((room) => {
     return room.name !== roomInfo.name;
   });
-  //cons
-  //[수정사항] 동환님이 유저 작업끝내면 바꿀 것
 
   const setBlock = () => {
     const block = { ...roomInfo, blocked: true };

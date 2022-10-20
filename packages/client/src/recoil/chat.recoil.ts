@@ -14,7 +14,6 @@ export const chatRoomList = atom<RoomList[]>({
   default: [],
 });
 
-//[수정사항] any=> 비동기로 받는 unJoinedRoomList 타입
 export const unJoinedRoomList = atom<UnJoinedRoomList[]>({
   key: 'unJoinedRoomList',
   default: [],

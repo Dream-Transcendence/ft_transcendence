@@ -61,7 +61,6 @@ function EnteredChatRoomTemplate() {
     status: null,
   });
   const [personnel, setPersonnel] = useState<number>(0);
-  //[수정사항] any => ChannelParticipantDto
   const [participantInfo, setParticipantInfo] = useState<ParticipantInfo[]>([]);
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
@@ -71,7 +70,6 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     async function getRoomInfo() {
       try {
-        // [수정사항] 도메인이 아직 확실하지 않아서 보류
         const response = await axios.get(
           `${SERVERURL}/rooms/${roomId}/${userData.id}`,
         );

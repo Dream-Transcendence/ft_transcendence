@@ -32,9 +32,7 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
 /*
  * 채팅정보를 수정하기 위한 공통 커스텀 훅
  */
-//[수정사항] 비밀번호 변경 성공, 향후 손캉님이 공백 보낼 때, type변경해주는 로직 고쳐주면 아이콘 자동변환되게 바꿀 것
 export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
-  //[수정사항] userId임시 1
   try {
     const { roomInfo, roomId, handler } = roomInfoSet;
     const response = await axios.patch(
