@@ -83,17 +83,18 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   }, [scrollHeight, setIsOverflow, roomId]);
 
-  // debounce로 0.3초간 입력 측정
+  // debounce로 0.5초간 입력 측정
   const scrollEvent = _.debounce(() => {
-    // console.log('scroll');
-    const scrollTop = ulRef.current.scrollTop; // 스크롤 위치
-    const clientHeight = ulRef.current.clientHeight; // 요소의 높이
-    const scrollHeight = ulRef.current.scrollHeight; // 스크롤의 높이
+    if (ulRef.current) {
+      const scrollTop = ulRef.current.scrollTop; // 스크롤 위치
+      const clientHeight = ulRef.current.clientHeight; // 요소의 높이
+      const scrollHeight = ulRef.current.scrollHeight; // 스크롤의 높이
 
-    // 스크롤이 맨 아래에서 0.1 이상 떨어져 있는 경우는 밑으로 이동하지 않도록 설정
-    setScrollState(
-      scrollTop + clientHeight >= scrollHeight * 0.9 ? true : false,
-    );
+      // 스크롤이 맨 아래에서 0.1 이상 떨어져 있는 경우는 밑으로 이동하지 않도록 설정
+      setScrollState(
+        scrollTop + clientHeight >= scrollHeight * 0.9 ? true : false,
+      );
+    }
   }, 500);
 
   //메시지가 업데이트 될 경우, 스크롤을 맨 밑으로 내려주기

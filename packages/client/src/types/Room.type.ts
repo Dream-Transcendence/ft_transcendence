@@ -47,6 +47,7 @@ export interface UnJoinedRoomList {
 
 export interface GetRoomInfoDto {
   id: number;
+  userId?: number;
   name: string;
   type: number;
   image: string;

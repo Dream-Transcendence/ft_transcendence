@@ -51,6 +51,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
     id: 0,
+    userId: 0,
     name: '',
     type: 5,
     image: '',

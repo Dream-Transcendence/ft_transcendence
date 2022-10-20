@@ -96,11 +96,10 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   function handlerBlock() {
     //[수정요망] 나 block id roominfo에서 userid를 받아와야함
     // roomInfo.id => roomInfo.userId
-    alert('roomInfo.id => roomInfo.userId');
-    // if (roomInfo.blocked === UNBLOCK)
-    //   blockUser(roomInfo.id, userData.id, setBlock);
-    // else if (roomInfo.blocked === BLOCK)
-    //   unBlockUser(roomInfo.id, userData.id, setUnBlock);
+    if (roomInfo.userId !== undefined && roomInfo.blocked === UNBLOCK)
+      blockUser(roomInfo.userId, userData.id, setBlock);
+    else if (roomInfo.userId !== undefined && roomInfo.blocked === BLOCK)
+      unBlockUser(roomInfo.userId, userData.id, setUnBlock);
   }
 
   const personal: LinkIconResource = {
