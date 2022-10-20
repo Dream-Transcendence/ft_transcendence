@@ -12,12 +12,14 @@ import { User } from '../users/users.entity';
 import { Repository } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
 import { v4 as uuidv4 } from 'uuid';
+import { UserGateway } from 'src/users/user.gateway';
 
 @Injectable()
 export class GameService {
   constructor(
     @Inject('USERS_REPOSITORY') private userRepository: Repository<User>,
     private schedulerRegistry: SchedulerRegistry,
+    private userGateway: UserGateway,
   ) {}
   private matchingQueue: MatchInfo[] = [];
   private gameInfoMap: Map<string, GameInfo> = new Map();
@@ -57,6 +59,9 @@ export class GameService {
 
   // 매칭에는 게임설정이 없다
   async handleMatch(client: Socket, matchDto: MatchDto) {
+    if (matchDto.mode === 0)
+      this.userGateway.setConnection(matchDto.userId, true);
+
     const { title, userId, mode } = matchDto;
     console.log('Game Client match', matchDto);
     // NOTE: 유저가 매칭을 요청하면, 매칭 대기열에 추가
@@ -152,6 +157,10 @@ export class GameService {
             this.gameInfoMap.get(title).score.right === 3 ||
             this.gameInfoMap.get(title).score.left === 3
           ) {
+            const players = this.gameInfoMap.get(title).player;
+            // NOTE: 게임 중 상태를 온라인으로 바꿈
+            this.userGateway.setConnection(players.left.id, false);
+            this.userGateway.setConnection(players.right.id, false);
             message = '#############게임 끝################';
           }
           this.emitToEveryone(

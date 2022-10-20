@@ -6,10 +6,11 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { ConnectionDto } from './dto/connect-user.dto';
+import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import {
   ClientAcceptGameDto,
   ClientInviteGameDto,
+  Connection,
   UserIdDto,
 } from './dto/user.dto';
 import { UserService } from './users.service';
@@ -24,7 +25,28 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private connectionList = new Map<string, number>();
+  private connectionList = new Map<string, Connection>();
+
+  setConnection(userId: number, onGame: boolean) {
+    let clientId: string;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === userId) {
+        clientId = key;
+      }
+    }
+    this.connectionList.get(clientId).onGame = onGame;
+    const connection = this.connectionList.get(clientId);
+    const connectionDto = new ConnectionDto(
+      connection.userId,
+      connection.onGame,
+    );
+
+    this.server.emit('changeUserStatus', { connection: connectionDto });
+  }
+
+  getConnectionList() {
+    return this.connectionList;
+  }
 
   async handleConnection(client: Socket) {
     console.log('User Client connected', client.id);
@@ -32,26 +54,9 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleDisconnect(client: Socket) {
     console.log('User Client disconnected', client.id);
+    const userId = this.connectionList.get(client.id).userId;
 
-    const userId = this.connectionList.get(client.id);
-    const onlineUserList = Array.from(this.connectionList.values());
-
-    const onlineFriendList = await this.userService.handleLogOn(
-      userId,
-      onlineUserList,
-    );
-
-    let count = 0;
-    for (const value of onlineUserList) if (value === userId) count++;
-
-    // NOTE: 2개 이상일 땐, 다른 클라이언트에서 로그인 되어있는 상태
-    if (count === 1) {
-      for (const [key, value] of this.connectionList) {
-        if (onlineFriendList.connections.includes(value)) {
-          this.server.to(key).emit('detectLogOff', { userId: userId });
-        }
-      }
-    }
+    client.broadcast.emit('UserLogOff', { userId: userId });
 
     this.connectionList.delete(client.id);
   }
@@ -60,27 +65,31 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
     const onlineUserList = Array.from(this.connectionList.values());
 
-    this.connectionList.set(client.id, connectionDto.userId);
+    this.connectionList.set(client.id, {
+      userId: connectionDto.userId,
+      onGame: false,
+    });
 
-    const onlineFriendList = await this.userService.handleLogOn(
-      connectionDto.userId,
-      onlineUserList,
-    );
+    client.broadcast.emit('changeUserStatus', {
+      connection: { userId: connectionDto.userId, onGame: false },
+    });
 
-    for (const [key, value] of this.connectionList) {
-      if (onlineFriendList.connections.includes(value)) {
-        this.server.to(key).emit('detectLogOn', connectionDto);
-      }
-    }
+    const connectionsDto = new ConnectionsDto();
+    connectionsDto.connections = onlineUserList.map((value) => {
+      return new ConnectionDto(value.userId, value.onGame);
+    });
 
-    return onlineFriendList;
+    return connectionsDto;
   }
 
   @SubscribeMessage('inviteGame')
   async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
     let opponentClientId: string;
+
+    this.setConnection(inviteGameDto.hostId, true);
+
     for (const [key, value] of this.connectionList) {
-      if (value === inviteGameDto.opponentId) {
+      if (value.userId === inviteGameDto.opponentId) {
         opponentClientId = key;
       }
     }
@@ -90,11 +99,14 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('acceptGame')
   async handleAcceptGame(client: Socket, acceptGameDto: ClientAcceptGameDto) {
     let hostClientId: string;
+
     for (const [key, value] of this.connectionList) {
-      if (value === acceptGameDto.hostId) {
+      if (value.userId === acceptGameDto.hostId) {
         hostClientId = key;
       }
     }
+    this.setConnection(this.connectionList.get(client.id).userId, true);
+
     const serverAcceptGameDto = await this.userService.handleAcceptGame(
       client,
       acceptGameDto,
@@ -108,7 +120,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async handleRejectGame(client: Socket, userIdDto: UserIdDto) {
     let hostClientId: string;
     for (const [key, value] of this.connectionList) {
-      if (value === userIdDto.id) {
+      if (value.userId === userIdDto.id) {
         hostClientId = key;
       }
     }

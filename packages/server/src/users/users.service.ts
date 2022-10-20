@@ -4,7 +4,6 @@ import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
-import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import {
@@ -441,31 +440,31 @@ export class UserService {
   }
 
   // ANCHOR: Socket
-  async handleLogOn(
-    userId: number,
-    onlineUserList: number[],
-  ): Promise<ConnectionsDto> {
-    const friendRows = await this.friendsRepository.find({
-      relations: { user: true, friend: true },
-      where: { user: { id: userId } },
-    });
-    const onlineFriendList: number[] = [];
+  // async handleLogOn(
+  //   userId: number,
+  //   onlineUserList: number[],
+  // ): Promise<ConnectionsDto> {
+  //   const friendRows = await this.friendsRepository.find({
+  //     relations: { user: true, friend: true },
+  //     where: { user: { id: userId } },
+  //   });
+  //   const onlineFriendList: number[] = [];
 
-    friendRows.forEach((friendRow) => {
-      console.log(friendRow.friend);
-    });
+  //   friendRows.forEach((friendRow) => {
+  //     console.log(friendRow.friend);
+  //   });
 
-    console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
+  //   console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
 
-    friendRows.forEach((friendRow) => {
-      if (onlineUserList.includes(friendRow.friend.id)) {
-        onlineFriendList.push(friendRow.friend.id);
-      }
-    });
-    console.log(`onlineFriendList: ${onlineFriendList}`);
+  //   friendRows.forEach((friendRow) => {
+  //     if (onlineUserList.includes(friendRow.friend.id)) {
+  //       onlineFriendList.push(friendRow.friend.id);
+  //     }
+  //   });
+  //   console.log(`onlineFriendList: ${onlineFriendList}`);
 
-    return { connections: onlineFriendList };
-  }
+  //   return { connections: onlineFriendList };
+  // }
 
   async handleInviteGame(
     client: Socket,
