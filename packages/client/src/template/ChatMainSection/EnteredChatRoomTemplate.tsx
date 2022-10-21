@@ -153,6 +153,7 @@ function EnteredChatRoomTemplate() {
 
   const [socket] = useSocket(chatNameSpace);
 
+  //[수정사항][소켓] socket.on이 호출이 안됨.
   useEffect(() => {
     function changedParticipantStatus() {
       socket.on(`${patchUserInfo}`, (res) => {
@@ -174,9 +175,6 @@ function EnteredChatRoomTemplate() {
       });
     }
     changedParticipantStatus();
-    return () => {
-      socket.off(`${patchUserInfo}`);
-    };
   }, [participantInfo]);
 
   const roomInfoSet: RoomInfoSet = {

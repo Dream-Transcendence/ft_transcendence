@@ -1,6 +1,10 @@
 import { styled } from '@mui/material/styles';
 import ListGenerate from '../../atoms/list/ListGenerate';
-import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import {
+  ControlMessage,
+  SocketMessage,
+  SendMessage,
+} from '../../types/Message.type';
 import MessageBox from '../../atoms/textPrompt/MessageBox';
 import {
   ListChatGenerateLayout,
@@ -122,6 +126,18 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       getMessageHistory();
     }
   }, [roomId, isOverflow, startChatRender, setMessages]);
+
+  // useEffect( () => {
+  //   const sendMessage :SendMessage = {
+  //     userId: ,
+  //     roomId: ,
+  //     body: string;
+  //   }
+  //   socket.emit()
+  // });
+  // const sendMessageWithSocket = () => {
+
+  // };
 
   const callApi = async () => {
     // 로딩이 완료 되어 있는 경우에만 호출가능

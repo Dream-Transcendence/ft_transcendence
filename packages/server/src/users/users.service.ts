@@ -694,9 +694,4 @@ export class UserService {
     const userInfo = await this.getUser(userId);
     return userInfo;
   }
-  async whoAmI(user: any) {
-    const { userId } = user;
-    const userInfo = await this.getUser(userId);
-    return userInfo;
-  }
 }

@@ -53,8 +53,6 @@ function ProfileNickname() {
     const value = event.target.value;
 
     setNickname(value);
-    console.log('change', value);
-    console.log('user', user);
   };
 
   const handleClick = () => {
