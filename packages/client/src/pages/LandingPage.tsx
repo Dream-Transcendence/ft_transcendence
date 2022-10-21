@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import axios from 'axios';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
@@ -33,7 +34,7 @@ const EnterButton = styled.button`
     background: #2d6;
   }
 `;
-
+axios.defaults.withCredentials = true;
 function LandingPage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
 

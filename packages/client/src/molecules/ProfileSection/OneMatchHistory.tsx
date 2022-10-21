@@ -14,7 +14,7 @@ const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   border: 'solid 1px',
   width: '97%',
-  height: '100%',
+  height: '90%',
   borderRadius: '10%',
   overflow: 'hidden',
   margin: 0,

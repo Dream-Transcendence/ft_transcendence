@@ -8,14 +8,13 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('login')
-  login(@Request() req) {
+  login(@Request() req, @Res({ passthrough: true }) res) {
     return req.user;
   }
 
   @Get('bakingkim-redirect')
   async bakingKimAuthRedirect(@Request() req, @Res({ passthrough: true }) res) {
     // passthrough : 응답을 보내기 위한 옵션
-    this.authService.createJwtToken(req.user, res);
-    return { isMember: req.user.isMember };
+    await this.authService.createJwtToken(req.user, res);
   }
 }
