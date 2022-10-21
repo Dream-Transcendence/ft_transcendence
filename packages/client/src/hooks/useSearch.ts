@@ -36,15 +36,20 @@ function useSearch(
 
   const createDM = async (participantId: number) => {
     try {
-      await axios
-        .post(`${SERVERURL}/rooms/dm`, {
-          userId: user.id,
-          participantId: participantId,
-        })
-        .then((res) => {
-          setDmList([...dmList, res.data]);
-          navigate(`${naviUrl}${res.data.id}`);
-        });
+      const existDM = dmList.every((dm) => {
+        return dm.id !== participantId;
+      });
+      if (existDM) {
+        await axios
+          .post(`${SERVERURL}/rooms/dm`, {
+            userId: user.id,
+            participantId: participantId,
+          })
+          .then((res) => {
+            setDmList([...dmList, res.data]);
+            navigate(`${naviUrl}${res.data.id}`);
+          });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +60,6 @@ function useSearch(
     if (target.id > 0 && type === undefined) navigate(`${naviUrl}${target.id}`);
     else if (target.id > 0 && type === DM) {
       createDM(target.id);
-      //[수정사항]여러개 생성되는문제 백에서 막아줄것!
     } else if (target.id > 0 && type === PUBLIC) {
       if (
         newParticipants.every((Participant) => Participant.id !== target.id)

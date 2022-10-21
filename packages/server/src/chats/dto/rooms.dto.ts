@@ -106,6 +106,10 @@ export class GetRoomInfoDto {
   id: number;
 
   @ApiProperty()
+  @IsInt()
+  userId?: number;
+
+  @ApiProperty()
   @IsString()
   name: string;
 

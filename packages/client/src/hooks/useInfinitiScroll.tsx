@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react';
 
-//node를 check하기 위해 콜백으로 선언
+//<CallAPI ref={firstItemRef} >는 <CallAPI ref={(ref) => firstItemRef(ref)}>와 동일
 //observerRef를 node로 설정한 뒤, 관측시도
 //observerRef로 설정한  node가 뷰포인트에 option만큼 나타나면 콜백함수 호출
 function useInfiniteScroll(dataFetch: () => any) {

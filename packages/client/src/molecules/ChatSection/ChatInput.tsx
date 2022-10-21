@@ -7,7 +7,7 @@ import useSocket from '../../socket/useSocket';
 import { chatNameSpace, SENDMESSAGE } from '../../socket/event';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
 
@@ -22,9 +22,16 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
     body: '',
   });
 
+  useEffect(() => {
+    setValues({
+      userId: user.id,
+      roomId: roomId,
+      body: '',
+    });
+  }, [roomId]);
+
   const sendMessage = () => {
     socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
-      console.log('adsfasd', values);
       const sendMessage: ReceivedMessage = {
         body: values.body,
         id: 0,
@@ -73,6 +80,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
         sx={{
           ml: 1,
           flex: 1,
+          color: 'white',
           backgroundColor: '#003566',
           borderRadius: '10px',
         }}

@@ -8,13 +8,13 @@ const sockets: { [key: string]: Socket<DefaultEventsMap, DefaultEventsMap> } =
 const useSocket = (
   nameSpace: string,
 ): [Socket<DefaultEventsMap, DefaultEventsMap>, () => void, () => void] => {
+  //transport로 폴링을 막아주면 초기 emit이 두번씩
   if (!sockets[nameSpace]) {
-    console.log('namespace!: ', nameSpace);
     sockets[nameSpace] = io(`${SOCKETURL}/${nameSpace}`, {
       autoConnect: false,
-      transports: ['websocket'],
+      // transports: ['websocket'],
     });
-    console.log('socket object!: ',  sockets[nameSpace]);
+    console.log('socket object!: ', sockets[nameSpace]);
   }
 
   // if (sockets[nameSpace].connected) {
@@ -38,7 +38,6 @@ const useSocket = (
         sockets[nameSpace].connected,
       );
       sockets[nameSpace].connect();
-      
     }
   };
 

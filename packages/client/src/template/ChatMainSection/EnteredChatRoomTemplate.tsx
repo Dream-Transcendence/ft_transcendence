@@ -51,6 +51,7 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
     id: 0,
+    userId: 0,
     name: '',
     type: 5,
     image: '',
@@ -60,7 +61,6 @@ function EnteredChatRoomTemplate() {
     status: null,
   });
   const [personnel, setPersonnel] = useState<number>(0);
-  //[수정사항] any => ChannelParticipantDto
   const [participantInfo, setParticipantInfo] = useState<ParticipantInfo[]>([]);
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
@@ -70,7 +70,6 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     async function getRoomInfo() {
       try {
-        // [수정사항] 도메인이 아직 확실하지 않아서 보류
         const response = await axios.get(
           `${SERVERURL}/rooms/${roomId}/${userData.id}`,
         );
@@ -104,8 +103,6 @@ function EnteredChatRoomTemplate() {
   }, [roomId, userData.id, roomInfo.type]);
 
   //참여자데이터를 토대로 본인의 타입이 어떤 타입인지 찾는 함수
-  // [수정사항] 임시로 participantInfo가 데이터가 null을 가지고 있는지 체크하는데, backapi에서 user타입을 가져와야 구분가능
-  //수정해야하는 사항 participant의 타입으로
   const useFindUserAuth = () => {
     let type;
     if (roomInfo.type !== DM && roomInfo.type !== 5) {
@@ -163,7 +160,7 @@ function EnteredChatRoomTemplate() {
         <ChattingBanLayout>
           <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
           <ChatRoomFeaterLayout>
-            <ChattingOrganisms />
+            <ChattingOrganisms roomInfo={roomInfo} />
             {roomInfo.type !== DM && roomInfo.type !== 5 && (
               <ChatParticipantsOrganisms
                 participantInfoSet={participantInfoSet}

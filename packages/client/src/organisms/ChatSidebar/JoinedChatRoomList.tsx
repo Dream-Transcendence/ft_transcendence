@@ -35,15 +35,11 @@ const BoxLayout = styled('div')(({ theme }) => ({
   marginLeft: '3%',
 }));
 
-//[수정사항] any=>chatRoomList 타입
-
 function JoinedChatRoomModule() {
   const userData = useRecoilValue(userDataAtom);
   const [roomlist, setRoomList] = useRecoilState(chatRoomList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const [socket] = useSocket(chatNameSpace);
-  // const [error, setError] = useState(false);
-  // let res = false;
   const navigate = useNavigate();
   useEffect(() => {
     setRoomList(joinedChatList.channelList);

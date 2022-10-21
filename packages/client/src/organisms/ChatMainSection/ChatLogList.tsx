@@ -37,8 +37,9 @@ const CallAPI = styled('div')(({ theme }) => ({
 }));
 
 const AnchorLayout = styled('div')(({ theme }) => ({
-  backgroundColor: 'red',
-  marginTop: '100%',
+  marginTop: '70%',
+  height: '20px',
+  width: '20px',
   position: 'absolute',
   zIndex: 1000,
 }));
@@ -82,17 +83,18 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   }, [scrollHeight, setIsOverflow, roomId]);
 
-  // debounce로 0.3초간 입력 측정
+  // debounce로 0.5초간 입력 측정
   const scrollEvent = _.debounce(() => {
-    // console.log('scroll');
-    const scrollTop = ulRef.current.scrollTop; // 스크롤 위치
-    const clientHeight = ulRef.current.clientHeight; // 요소의 높이
-    const scrollHeight = ulRef.current.scrollHeight; // 스크롤의 높이
+    if (ulRef.current) {
+      const scrollTop = ulRef.current.scrollTop; // 스크롤 위치
+      const clientHeight = ulRef.current.clientHeight; // 요소의 높이
+      const scrollHeight = ulRef.current.scrollHeight; // 스크롤의 높이
 
-    // 스크롤이 맨 아래에서 0.1 이상 떨어져 있는 경우는 밑으로 이동하지 않도록 설정
-    setScrollState(
-      scrollTop + clientHeight >= scrollHeight * 0.9 ? true : false,
-    );
+      // 스크롤이 맨 아래에서 0.1 이상 떨어져 있는 경우는 밑으로 이동하지 않도록 설정
+      setScrollState(
+        scrollTop + clientHeight >= scrollHeight * 0.9 ? true : false,
+      );
+    }
   }, 500);
 
   //메시지가 업데이트 될 경우, 스크롤을 맨 밑으로 내려주기
@@ -127,12 +129,16 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       if (startChatRender && messages.length !== 0) {
         // 로딩 중이면 로더 컴포넌트 띄워줄것
         setIsLoaded(false);
-        await axios
-          .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`)
-          .then((res) => {
-            setMessages([...res.data, ...messages]);
-            setIsLoaded(true);
-          });
+        try {
+          await axios
+            .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`)
+            .then((res) => {
+              setMessages([...res.data, ...messages]);
+              setIsLoaded(true);
+            });
+        } catch (error) {
+          console.log(error);
+        }
       }
       // 종종 시작하자마자 스크롤이 바로 안 내려가서 한번 더 불러오는 경우가 있다..
       // 임시로 처음들어온 걸 체크한다음 스크롤을 내려줌

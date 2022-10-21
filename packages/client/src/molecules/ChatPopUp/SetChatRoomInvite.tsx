@@ -120,7 +120,6 @@ function SetChatRoomInviteModule(props: {
       );
     },
   );
-  //[수정사항] 검색 컴포넌트 완성 후, 작업할 예정
   return (
     <SetInviteLayout>
       <Typography margin="3%" variant="h5">

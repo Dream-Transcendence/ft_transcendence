@@ -156,6 +156,7 @@ export class RoomService {
       });
       const roomInfo = {
         id: room.id,
+        userId: participant.user.id,
         name: participant.user.nickname,
         type: room.type,
         image: participant.user.image,
