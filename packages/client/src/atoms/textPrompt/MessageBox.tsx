@@ -1,4 +1,4 @@
-import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
+import { ControlMessage, SocketMessage } from '../../types/Message.type';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import List from '@mui/material/List';
@@ -45,7 +45,7 @@ const OwnTextInput = styled('section')(({ theme }) => ({
   float: 'right',
 }));
 
-function MessageBox(prop: { message: ReceivedMessage }) {
+function MessageBox(prop: { message: SocketMessage }) {
   const msg = prop.message;
   const userData = useRecoilValue(userDataAtom);
   return (

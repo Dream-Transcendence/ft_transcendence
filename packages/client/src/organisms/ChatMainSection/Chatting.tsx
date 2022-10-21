@@ -8,7 +8,7 @@ import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
 import { userStatus } from '../../recoil/chat.recoil';
 import { MUTE } from '../../configs/Status.case';
-import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
+import { ControlMessage, SocketMessage } from '../../types/Message.type';
 import { GetRoomInfoDto } from '../../types/Room.type';
 import { DM } from '../../configs/RoomType';
 
@@ -35,7 +35,7 @@ function ChattingOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   const { type } = props.roomInfo;
   const { roomId } = useParams();
   const userState = useRecoilValue(userStatus);
-  const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
+  const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
   const messageSetter: ControlMessage = {
     messages: MessageHistory,
     setMessages: setMessageHistory,

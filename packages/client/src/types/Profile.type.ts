@@ -50,3 +50,8 @@ export interface OtherUserData {
 export interface UserSecondAuth {
   authenticated: boolean;
 }
+
+export interface ControlNickname {
+  nickname: string;
+  setNickname: (nickname: string) => void;
+}
