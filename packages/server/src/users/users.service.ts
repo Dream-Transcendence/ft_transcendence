@@ -17,11 +17,13 @@ import {
   UserIdDto,
   ServerRequestDto,
   RequestIdDto,
+  ClientRequestDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
+import { ClientRequest } from 'http';
 
 @Injectable()
 export class UserService {
@@ -572,8 +574,40 @@ export class UserService {
     server.to(hostClientId).emit('rejectGame');
   }
 
-  async handleFriendRequest(client: Socket, ClientRequestDto) {
-    const { requestorId, responserId } = ClientRequestDto;
+  async duplicateRequestCheck(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    const { requestorId, responserId } = clientRequestDto;
+
+    const duplicateFriendCheck = await this.friendsRepository.findOne({
+      where: { user: { id: requestorId }, friend: { id: responserId } },
+    });
+    if (duplicateFriendCheck !== null)
+      throw new WsException('이미 친구입니다.');
+
+    let duplicateRequestCheck = await this.requestsRepository.findOne({
+      where: { requestor: { id: requestorId }, responser: { id: responserId } },
+    });
+    if (duplicateRequestCheck === null) {
+      duplicateRequestCheck = await this.requestsRepository.findOne({
+        where: {
+          requestor: { id: responserId },
+          responser: { id: requestorId },
+        },
+      });
+    }
+    if (duplicateRequestCheck !== null)
+      throw new WsException('이미 친구 요청을 보냈거나 받았습니다.');
+  }
+
+  async handleFriendRequest(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    const { requestorId, responserId } = clientRequestDto;
+
+    await this.duplicateRequestCheck(client, clientRequestDto);
 
     const requestor = await this.usersRepository.findOneBy({ id: requestorId });
     const responser = await this.usersRepository.findOneBy({ id: responserId });
@@ -581,11 +615,11 @@ export class UserService {
     let id = 1;
     const maxId = await this.requestsRepository
       .createQueryBuilder('request')
-      .select('MAX(request.id)', 'maxId')
+      .select('MAX(request.id)', 'id')
       .getRawOne();
     if (maxId.id !== null) id = maxId.id + 1;
     const request = this.requestsRepository.create({
-      id,
+      id: id,
       requestor: requestor,
       responser: responser,
     });
@@ -595,16 +629,10 @@ export class UserService {
     for (const [key, value] of this.connectionList) {
       if (value.userId === responserId) responserClientId = key;
     }
-    if (responserClientId === null)
-      throw new WsException('상대를 찾을 수 없습니다.');
-
-    const requestDto = new ServerRequestDto(
-      request.id,
-      request.requestor,
-      request.responser,
-    );
-
-    client.to(responserClientId).emit('friendRequest', requestDto);
+    if (responserClientId !== null) {
+      const requestDto = new ServerRequestDto(request.id, requestor, responser);
+      client.to(responserClientId).emit('friendRequest', requestDto);
+    }
   }
 
   async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
@@ -616,14 +644,15 @@ export class UserService {
       request.responser.id,
     );
 
+    await this.requestsRepository.delete(request.id);
+
     let requestorClientId: string = null;
     for (const [key, value] of this.connectionList) {
       if (value.userId === request.requestor.id) requestorClientId = key;
     }
 
-    await this.requestsRepository.delete(request.id);
-
-    client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
+    if (requestorClientId !== null)
+      client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
   }
 
   async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
@@ -631,13 +660,13 @@ export class UserService {
       id: requestIdDto.id,
     });
 
-    let requestorClientId: string = null;
-    for (const [key, value] of this.connectionList) {
-      if (value.userId === request.requestor.id) requestorClientId = key;
-    }
-
     await this.requestsRepository.delete(request.id);
 
-    client.to(requestorClientId).emit('friendRequestRejected');
+    let requestorClientId: string = null;
+    for (const [key, value] of this.connectionList)
+      if (value.userId === request.requestor.id) requestorClientId = key;
+
+    if (requestorClientId !== null)
+      client.to(requestorClientId).emit('friendRequestRejected');
   }
 }

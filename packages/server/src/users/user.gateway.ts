@@ -4,12 +4,15 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ConnectionDto } from './dto/connect-user.dto';
 import {
   ClientAcceptGameDto,
   ClientInviteGameDto,
+  ClientRequestDto,
+  RequestIdDto,
   UserIdDto,
 } from './dto/user.dto';
 import { UserService } from './users.service';
@@ -43,12 +46,12 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('inviteGame')
   async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
-    this.userService.handleInviteGame(client, inviteGameDto);
+    await this.userService.handleInviteGame(client, inviteGameDto);
   }
 
   @SubscribeMessage('acceptGame')
   async handleAcceptGame(client: Socket, acceptGameDto: ClientAcceptGameDto) {
-    this.userService.handleAcceptGame(client, this.server, acceptGameDto);
+    await this.userService.handleAcceptGame(client, this.server, acceptGameDto);
   }
 
   @SubscribeMessage('rejectGame')
@@ -57,13 +60,20 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('friendRequest')
-  async handleFriendRequest(client: Socket, userIdDto: UserIdDto) {
-    // this.userService.handleFriendRequest(client, userIdDto);
+  async handleFriendRequest(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    await this.userService.handleFriendRequest(client, clientRequestDto);
   }
 
   @SubscribeMessage('acceptFriendRequest')
-  async handleAcceptFriendRequest(client: Socket, userIdDto: UserIdDto) {}
+  async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    await this.userService.handleAcceptFriendRequest(client, requestIdDto);
+  }
 
   @SubscribeMessage('rejectFriendRequest')
-  async handleRejectFriendRequest(client: Socket, userIdDto: UserIdDto) {}
+  async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    await this.userService.handleRejectFriendRequest(client, requestIdDto);
+  }
 }

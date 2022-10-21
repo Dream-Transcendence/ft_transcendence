@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsInt, IsObject, IsString, IsUrl } from 'class-validator';
+import { request } from 'http';
 import { User } from '../users.entity';
 
 export class UserDto {
@@ -108,19 +109,24 @@ export class Connection {
 }
 
 export class ClientRequestDto {
-  requesterId: number;
+  requestorId: number;
   responserId: number;
 }
 
 export class ServerRequestDto {
   constructor(id: number, requestor: User, responser: User) {
+    console.log(requestor, responser);
     this.id = id;
-    this.requestor.id = requestor.id;
-    this.requestor.nickname = requestor.nickname;
-    this.requestor.image = requestor.image;
-    this.responser.id = responser.id;
-    this.responser.nickname = responser.nickname;
-    this.responser.image = responser.image;
+    this.requestor = new UserDto(
+      requestor.id,
+      requestor.nickname,
+      requestor.image,
+    );
+    this.responser = new UserDto(
+      responser.id,
+      responser.nickname,
+      responser.image,
+    );
   }
 
   id: number;
