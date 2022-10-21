@@ -129,8 +129,23 @@ export class ServerRequestDto {
     );
   }
 
+  @ApiProperty({ example: 1 })
   id: number;
+  @ApiProperty({
+    example: {
+      id: 1,
+      nickname: 'dha',
+      image: 'https://cdn.42.fr/users/dha.jpg',
+    },
+  })
   requestor: UserDto;
+  @ApiProperty({
+    example: {
+      id: 2,
+      nickname: 'junghan',
+      image: 'https://cdn.42.fr/users/junghan.jpg',
+    },
+  })
   responser: UserDto;
 }
 

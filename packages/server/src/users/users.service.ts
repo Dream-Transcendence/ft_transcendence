@@ -23,7 +23,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
-import { ClientRequest } from 'http';
 
 @Injectable()
 export class UserService {
@@ -396,7 +395,7 @@ export class UserService {
     return responserDto;
   }
 
-  async getRequests(id: number): Promise<UserDto[]> {
+  async getRequests(id: number): Promise<ServerRequestDto[]> {
     // SELECT * FROM public."request"
     // LEFT JOIN "user" ON "user"."id" = id
     // WHERE "request"."responserId" = "user"."id";
@@ -405,17 +404,14 @@ export class UserService {
       where: { responser: { id: id } },
     });
 
-    const requestors: UserDto[] = [];
+    const requestDtoList: ServerRequestDto[] = [];
     requests.forEach((request) => {
-      const userDto = new UserDto(
-        request.requestor.id,
-        request.requestor.nickname,
-        request.requestor.image,
-      );
-      requestors.push(userDto);
+      const { id, requestor, responser } = request;
+      const requestDto = new ServerRequestDto(id, requestor, responser);
+      requestDtoList.push(requestDto);
     });
 
-    return requestors;
+    return requestDtoList;
   }
 
   //ANCHOR: user search
@@ -529,14 +525,14 @@ export class UserService {
   async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
     const { hostId, opponentId, mode } = inviteGameDto;
 
-    this.setConnection(inviteGameDto.hostId, client, true);
-
     let opponentClientId = null;
     for (const [key, value] of this.connectionList) {
       if (value.userId === opponentId) opponentClientId = key;
     }
     if (opponentClientId === null)
       throw new WsException('상대를 찾을 수 없습니다.');
+
+    this.setConnection(inviteGameDto.hostId, client, true);
 
     const host = await this.usersRepository.findOne({
       where: [{ id: hostId }],
@@ -586,6 +582,8 @@ export class UserService {
     }
     if (hostClientId === null)
       throw new WsException('호스트를 찾을 수 없습니다.');
+
+    this.connectionList.get(hostClientId).onGame = false;
 
     server.to(hostClientId).emit('rejectGame');
   }
@@ -655,7 +653,7 @@ export class UserService {
     const request = await this.requestsRepository.findOneBy({
       id: requestIdDto.id,
     });
-    const friendDto = this.addFriend(
+    const friendDto = await this.addFriend(
       request.requestor.id,
       request.responser.id,
     );
