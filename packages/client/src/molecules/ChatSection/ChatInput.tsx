@@ -9,7 +9,7 @@ import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
+import { ControlMessage, SocketMessage } from '../../types/Message.type';
 
 function ChatInputModule(props: { messageSetter: ControlMessage }) {
   const { messages, setMessages } = props.messageSetter;
@@ -32,7 +32,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const sendMessage = () => {
     socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
-      const sendMessage: ReceivedMessage = {
+      const sendMessage: SocketMessage = {
         body: values.body,
         id: 0,
         user: {

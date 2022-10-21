@@ -1,9 +1,9 @@
 export interface ControlMessage {
-  messages: ReceivedMessage[];
-  setMessages: (Messages: ReceivedMessage[]) => void;
+  messages: SocketMessage[];
+  setMessages: (Messages: SocketMessage[]) => void;
 }
 
-export interface ReceivedMessage {
+export interface SocketMessage {
   body: string;
   id: number;
   user: {

@@ -1,6 +1,6 @@
 import { styled } from '@mui/material/styles';
 import ListGenerate from '../../atoms/list/ListGenerate';
-import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
+import { ControlMessage, SocketMessage } from '../../types/Message.type';
 import MessageBox from '../../atoms/textPrompt/MessageBox';
 import {
   ListChatGenerateLayout,
