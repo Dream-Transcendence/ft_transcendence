@@ -9,7 +9,6 @@ import { SearchPropsType } from '../../types/search.type';
 import { useNavigate } from 'react-router-dom';
 import { PROFILEURL } from '../../configs/Link.url';
 
-
 function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const { url, listParams, action } = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.
   const { value: parentTarget, setValue: setParentTarget } = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
@@ -50,14 +49,12 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const handleEvent = (e: any) => {
     if (e.key === 'Enter') {
       const target = userList.find((user) => {
-        console.log(1);
         if (e.target.value && user.nickname.includes(e.target.value))
           return true;
-        return false //값이 이상하면 기본 값으로 초기화
+        return false; //값이 이상하면 기본 값으로 초기화
       });
-
       if (target) {
-        setValue(target.nickname);
+        setValue('');
         setParentTarget(target);
         // navigate(`${PROFILEURL}/${target?.id}`);
       }

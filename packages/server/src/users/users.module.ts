@@ -9,6 +9,8 @@ import { UserService } from './users.service';
 @Module({
   imports: [DatabaseModule],
   controllers: [UsersController],
+  // NOTE: UserGateway 프로바이더를 넣어두면, 게임에도 있기 때문에 소켓이 두번씩 불러진다.
   providers: [UserService, UserGateway, ...usersProviders, ...roomsProviders],
+  exports: [UserService, UserGateway, ...usersProviders, ...roomsProviders],
 })
 export class UsersModule {}

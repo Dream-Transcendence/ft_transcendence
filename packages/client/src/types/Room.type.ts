@@ -1,7 +1,6 @@
+import { BaseUserProfileData } from './Profile.type';
+
 export interface RoomInfoSet {
-  //[수정사항] any => ChannelDto
-  //[수정사항] any => DmUserDto
-  //[수정사항] any => participantDto
   roomInfo: GetRoomInfoDto;
   roomId?: string;
   handler?: (roomInfo: GetRoomInfoDto) => void;
@@ -29,11 +28,9 @@ export interface RoomList {
 }
 
 export interface HandleInviteList {
-  addedParticipantList: RoomList[];
-  setAddedParticipantList: (roomList: RoomList[]) => void;
   handleParticipant: (numList: number[]) => void;
-  newParticipantList: number[];
-  setNewParticipantList: (numList: number[]) => void;
+  newParticipantList: BaseUserProfileData[];
+  setNewParticipantList: (numList: BaseUserProfileData[]) => void;
 }
 
 export interface UnJoinedRoomList {
@@ -47,6 +44,7 @@ export interface UnJoinedRoomList {
 
 export interface GetRoomInfoDto {
   id: number;
+  userId?: number;
   name: string;
   type: number;
   image: string;

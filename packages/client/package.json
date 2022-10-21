@@ -21,6 +21,7 @@
     "framer-motion": "^7.3.2",
     "mui-image": "^1.0.7",
     "react": "^18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "^18.2.0",
     "react-responsive": "^9.0.0-beta.10",
     "react-router-dom": "^6.3.0",

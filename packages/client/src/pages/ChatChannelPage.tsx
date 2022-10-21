@@ -4,7 +4,7 @@ import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefault
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { constSelector, useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL, SERVERURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';

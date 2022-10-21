@@ -1,6 +1,4 @@
 import {
-  ConnectedSocket,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
@@ -24,6 +22,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.log('Game Client connected');
   }
 
+  // TODO: 상대 유저가 disconnect 되었을 때 패배 처리
   handleDisconnect() {
     console.log('Game Client disconnected');
   }
@@ -33,9 +32,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     return await this.gameService.handleMatch(client, matchDto);
   }
 
-  @SubscribeMessage('cancel')
+  @SubscribeMessage('cancelMatch')
   async handleCancel(client: Socket, matchDto: MatchDto) {
-    await this.gameService.handleCancel(client, matchDto);
+    await this.gameService.handleCancelMatch(client, matchDto);
   }
 
   @SubscribeMessage('start')

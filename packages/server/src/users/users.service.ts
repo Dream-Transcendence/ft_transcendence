@@ -1,17 +1,35 @@
 import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
-import { ConnectionsDto } from './dto/connect-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { FriendDto, UserDto } from './dto/user.dto';
+import {
+  FriendDto,
+  ClientInviteGameDto,
+  UserDto,
+  ServerInviteGameDto,
+  ClientAcceptGameDto,
+  ServerAcceptGameDto,
+  Connection,
+  UserIdDto,
+  ServerRequestDto,
+  RequestIdDto,
+  ClientRequestDto,
+} from './dto/user.dto';
+import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
+import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class UserService {
   private logger = new Logger('UsersService');
+
+  private connectionList = new Map<string, Connection>();
+
   constructor(
     @Inject('USERS_REPOSITORY')
     private usersRepository: Repository<User>,
@@ -31,17 +49,17 @@ export class UserService {
 
   //ANCHOR: user management
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const { nickname, image, email } = createUserDto;
+    const { id, nickname, image, email } = createUserDto;
 
     // FIXME: 테스트용
-    let id = 1;
-    const maxUserId = await this.usersRepository
-      .createQueryBuilder('user')
-      .select('MAX(user.id)', 'id')
-      .getRawOne();
-    if (maxUserId.id !== null) id = maxUserId.id + 1;
+    // let id = 1;
+    // const maxUserId = await this.usersRepository
+    //   .createQueryBuilder('user')
+    //   .select('MAX(user.id)', 'id')
+    //   .getRawOne();
+    // if (maxUserId.id !== null) id = maxUserId.id + 1;
 
-    console.log(maxUserId.id);
+    // console.log(maxUserId.id);
     let user = this.usersRepository.create({
       id,
       nickname,
@@ -73,6 +91,7 @@ export class UserService {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
     // if (user === null) throw new EntityNotFoundError(User, id);
 
+    if (!user) return null;
     const userDto = new UserDto(user.id, user.nickname, user.image);
     return userDto;
   }
@@ -283,6 +302,21 @@ export class UserService {
     return friendDto;
   }
 
+  async getFriend(id: number, friendId: number): Promise<UserDto> {
+    const friend = await this.friendsRepository.findOne({
+      relations: ['user', 'friend'],
+      where: { user: { id: id }, friend: { id: friendId } },
+    });
+    if (friend === null) throw new EntityNotFoundError(User, friendId);
+
+    const friendDto = new UserDto(
+      friend.friend.id,
+      friend.friend.nickname,
+      friend.friend.image,
+    );
+    return friendDto;
+  }
+
   async getFriends(id: number): Promise<FriendDto[]> {
     // SELECT * FROM public."friend"
     // LEFT JOIN "user" ON "user"."id" = friendId
@@ -361,7 +395,7 @@ export class UserService {
     return responserDto;
   }
 
-  async getRequests(id: number): Promise<UserDto[]> {
+  async getRequests(id: number): Promise<ServerRequestDto[]> {
     // SELECT * FROM public."request"
     // LEFT JOIN "user" ON "user"."id" = id
     // WHERE "request"."responserId" = "user"."id";
@@ -370,17 +404,14 @@ export class UserService {
       where: { responser: { id: id } },
     });
 
-    const requestors: UserDto[] = [];
+    const requestDtoList: ServerRequestDto[] = [];
     requests.forEach((request) => {
-      const userDto = new UserDto(
-        request.requestor.id,
-        request.requestor.nickname,
-        request.requestor.image,
-      );
-      requestors.push(userDto);
+      const { id, requestor, responser } = request;
+      const requestDto = new ServerRequestDto(id, requestor, responser);
+      requestDtoList.push(requestDto);
     });
 
-    return requestors;
+    return requestDtoList;
   }
 
   //ANCHOR: user search
@@ -432,29 +463,224 @@ export class UserService {
   }
 
   // ANCHOR: Socket
-  async handleLogOn(
-    userId: number,
-    onlineUserList: number[],
-  ): Promise<ConnectionsDto> {
-    const friendRows = await this.friendsRepository.find({
-      relations: { user: true, friend: true },
-      where: { user: { id: userId } },
-    });
-    const onlineFriendList: number[] = [];
 
-    friendRows.forEach((friendRow) => {
-      console.log(friendRow.friend);
-    });
-
-    console.log(`onlineUserList: ${onlineUserList}, userId: ${userId}`);
-
-    friendRows.forEach((friendRow) => {
-      if (onlineUserList.includes(friendRow.friend.id)) {
-        onlineFriendList.push(friendRow.friend.id);
+  setConnection(userId: number, server: Server | Socket, onGame: boolean) {
+    let clientId: string;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === userId) {
+        clientId = key;
       }
-    });
-    console.log(`onlineFriendList: ${onlineFriendList}`);
+    }
+    this.connectionList.get(clientId).onGame = onGame;
+    const connection = this.connectionList.get(clientId);
+    const connectionDto = new ConnectionDto(
+      connection.userId,
+      connection.onGame,
+    );
 
-    return { connections: onlineFriendList };
+    if (server instanceof Server) {
+      server.emit('changeUserStatus', {
+        connection: connectionDto,
+      });
+    } else {
+      server.broadcast.emit('changeUserStatus', {
+        connection: connectionDto,
+      });
+    }
+  }
+
+  getConnectionList() {
+    return this.connectionList;
+  }
+
+  handleDisconnect(client: Socket) {
+    console.log('User Client disconnected', client.id);
+    const userId = this.connectionList.get(client.id).userId;
+
+    client.broadcast.emit('userLogOff', { userId: userId });
+
+    this.connectionList.delete(client.id);
+  }
+
+  async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
+    const onlineUserList = Array.from(this.connectionList.values());
+
+    this.connectionList.set(client.id, {
+      userId: connectionDto.userId,
+      onGame: false,
+    });
+
+    client.broadcast.emit('changeUserStatus', {
+      connection: { userId: connectionDto.userId, onGame: false },
+    });
+
+    const connectionsDto = new ConnectionsDto();
+    connectionsDto.connections = onlineUserList.map((value) => {
+      return new ConnectionDto(value.userId, value.onGame);
+    });
+
+    return connectionsDto;
+  }
+
+  async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
+    const { hostId, opponentId, mode } = inviteGameDto;
+
+    let opponentClientId = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === opponentId) opponentClientId = key;
+    }
+    if (opponentClientId === null)
+      throw new WsException('상대를 찾을 수 없습니다.');
+
+    this.setConnection(inviteGameDto.hostId, client, true);
+
+    const host = await this.usersRepository.findOne({
+      where: [{ id: hostId }],
+    });
+    const { id, nickname, image } = host;
+
+    const serverInviteGameDto: ServerInviteGameDto = {
+      host: {
+        id,
+        nickname,
+        image,
+      },
+      mode: mode,
+    };
+
+    client.to(opponentClientId).emit('inviteGame', serverInviteGameDto);
+  }
+
+  async handleAcceptGame(
+    client: Socket,
+    server: Server,
+    acceptGameDto: ClientAcceptGameDto,
+  ) {
+    let hostClientId: string = null;
+
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === acceptGameDto.hostId) hostClientId = key;
+    }
+    if (hostClientId === null)
+      throw new WsException('호스트를 찾을 수 없습니다.');
+
+    this.setConnection(this.connectionList.get(client.id).userId, client, true);
+    const serverAcceptGameDto: ServerAcceptGameDto = {
+      title: uuidv4(),
+      mode: acceptGameDto.mode,
+    };
+
+    // TODO: 이건 테스트 해봐야 함
+    server.to(client.id).emit('acceptGame', serverAcceptGameDto);
+    server.to(hostClientId).emit('acceptGame', serverAcceptGameDto);
+  }
+
+  handleRejectGame(client: Socket, server: Server, userIdDto: UserIdDto) {
+    let hostClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === userIdDto.id) hostClientId = key;
+    }
+    if (hostClientId === null)
+      throw new WsException('호스트를 찾을 수 없습니다.');
+
+    this.connectionList.get(hostClientId).onGame = false;
+
+    server.to(hostClientId).emit('rejectGame');
+  }
+
+  async duplicateRequestCheck(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    const { requestorId, responserId } = clientRequestDto;
+
+    const duplicateFriendCheck = await this.friendsRepository.findOne({
+      where: { user: { id: requestorId }, friend: { id: responserId } },
+    });
+    if (duplicateFriendCheck !== null)
+      throw new WsException('이미 친구입니다.');
+
+    let duplicateRequestCheck = await this.requestsRepository.findOne({
+      where: { requestor: { id: requestorId }, responser: { id: responserId } },
+    });
+    if (duplicateRequestCheck === null) {
+      duplicateRequestCheck = await this.requestsRepository.findOne({
+        where: {
+          requestor: { id: responserId },
+          responser: { id: requestorId },
+        },
+      });
+    }
+    if (duplicateRequestCheck !== null)
+      throw new WsException('이미 친구 요청을 보냈거나 받았습니다.');
+  }
+
+  async handleFriendRequest(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    const { requestorId, responserId } = clientRequestDto;
+
+    await this.duplicateRequestCheck(client, clientRequestDto);
+
+    const requestor = await this.usersRepository.findOneBy({ id: requestorId });
+    const responser = await this.usersRepository.findOneBy({ id: responserId });
+
+    let id = 1;
+    const maxId = await this.requestsRepository
+      .createQueryBuilder('request')
+      .select('MAX(request.id)', 'id')
+      .getRawOne();
+    if (maxId.id !== null) id = maxId.id + 1;
+    const request = this.requestsRepository.create({
+      id: id,
+      requestor: requestor,
+      responser: responser,
+    });
+    await this.requestsRepository.save(request);
+
+    let responserClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === responserId) responserClientId = key;
+    }
+    if (responserClientId !== null) {
+      const requestDto = new ServerRequestDto(request.id, requestor, responser);
+      client.to(responserClientId).emit('friendRequest', requestDto);
+    }
+  }
+
+  async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    const request = await this.requestsRepository.findOneBy({
+      id: requestIdDto.id,
+    });
+    const friendDto = await this.addFriend(
+      request.requestor.id,
+      request.responser.id,
+    );
+
+    await this.requestsRepository.delete(request.id);
+
+    let requestorClientId: string = null;
+    for (const [key, value] of this.connectionList) {
+      if (value.userId === request.requestor.id) requestorClientId = key;
+    }
+
+    if (requestorClientId !== null)
+      client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
+  }
+
+  async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    const request = await this.requestsRepository.findOneBy({
+      id: requestIdDto.id,
+    });
+
+    await this.requestsRepository.delete(request.id);
+
+    let requestorClientId: string = null;
+    for (const [key, value] of this.connectionList)
+      if (value.userId === request.requestor.id) requestorClientId = key;
+
+    if (requestorClientId !== null)
+      client.to(requestorClientId).emit('friendRequestRejected');
   }
 }

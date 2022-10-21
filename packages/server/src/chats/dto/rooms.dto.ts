@@ -106,6 +106,10 @@ export class GetRoomInfoDto {
   id: number;
 
   @ApiProperty()
+  @IsInt()
+  userId?: number;
+
+  @ApiProperty()
   @IsString()
   name: string;
 
@@ -368,6 +372,20 @@ export class MessageDto {
   @IsObject()
   @IsNotEmpty()
   user: UserDto;
+
+  @IsString()
+  @IsNotEmpty()
+  body: string;
+}
+
+export class GetMessageDto {
+  @IsObject()
+  @IsNotEmpty()
+  user: UserDto;
+
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
 
   @IsString()
   @IsNotEmpty()

@@ -20,6 +20,7 @@ import {
   MessageDto,
   GetRoomInfoDto,
   DmDto,
+  GetMessageDto,
 } from './dto/rooms.dto';
 import { Block, User } from '../users/users.entity';
 import { DmParticipant } from './rooms.entity';
@@ -155,6 +156,7 @@ export class RoomService {
       });
       const roomInfo = {
         id: room.id,
+        userId: participant.user.id,
         name: participant.user.nickname,
         type: room.type,
         image: participant.user.image,
@@ -307,20 +309,37 @@ export class RoomService {
   }
 
   // Message service
-  async getMessages(roomId: number): Promise<MessageDto[]> {
+  async getMessages(
+    roomId: number,
+    messageId: number,
+  ): Promise<GetMessageDto[]> {
     const msgs = await this.messagesRepository.find({
       relations: { user: true },
       where: { room: { id: roomId } },
-      order: { id: 'ASC' },
+      order: { id: 'DESC' },
     });
-    const result: MessageDto[] = [];
-    msgs.map((msg) => {
+    const result: GetMessageDto[] = [];
+    let idx = 0;
+    const msgResult = msgs.filter((msg) => {
+      if (
+        (!messageId && idx < 15) ||
+        (messageId && messageId > msg.id && idx < 15)
+      ) {
+        idx++;
+        return true;
+      } else return false;
+    });
+    msgResult.sort(function (a, b) {
+      return a.id - b.id;
+    });
+    msgResult.map((msg) => {
       const message = {
         user: {
           id: msg.user.id,
           nickname: msg.user.nickname,
           image: msg.user.image,
         },
+        id: msg.id,
         body: msg.body,
       };
       result.push(message);
@@ -444,6 +463,7 @@ export class RoomService {
       body: msg.body,
     };
     client.to(msg.room.title).emit('userMessage', userMessageDto);
+    return { isSent: true };
   }
 
   async patchUserInfo(client: Socket, patchUserInfoDto: PatchUserInfoDto) {

@@ -4,9 +4,17 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
+  WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { ConnectionDto } from './dto/connect-user.dto';
+import {
+  ClientAcceptGameDto,
+  ClientInviteGameDto,
+  ClientRequestDto,
+  RequestIdDto,
+  UserIdDto,
+} from './dto/user.dto';
 import { UserService } from './users.service';
 
 @WebSocketGateway(4242, {
@@ -19,55 +27,53 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  private connectionList = new Map<string, number>();
+  setConnection(userId: number, onGame: boolean) {
+    this.userService.setConnection(userId, this.server, onGame);
+  }
 
   async handleConnection(client: Socket) {
     console.log('User Client connected', client.id);
   }
 
   async handleDisconnect(client: Socket) {
-    console.log('User Client disconnected', client.id);
-
-    const userId = this.connectionList.get(client.id);
-    const onlineUserList = Array.from(this.connectionList.values());
-
-    const onlineFriendList = await this.userService.handleLogOn(
-      userId,
-      onlineUserList,
-    );
-
-    let count = 0;
-    for (const value of onlineUserList) if (value === userId) count++;
-
-    // NOTE: 2개 이상일 땐, 다른 클라이언트에서 로그인 되어있는 상태
-    if (count === 1) {
-      for (const [key, value] of this.connectionList) {
-        if (onlineFriendList.connections.includes(value)) {
-          this.server.to(key).emit('detectLogOff', { userId: userId });
-        }
-      }
-    }
-
-    this.connectionList.delete(client.id);
+    this.userService.handleDisconnect(client);
   }
 
   @SubscribeMessage('logOn')
   async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
-    const onlineUserList = Array.from(this.connectionList.values());
+    return await this.userService.handleLogOn(client, connectionDto);
+  }
 
-    this.connectionList.set(client.id, connectionDto.userId);
+  @SubscribeMessage('inviteGame')
+  async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
+    await this.userService.handleInviteGame(client, inviteGameDto);
+  }
 
-    const onlineFriendList = await this.userService.handleLogOn(
-      connectionDto.userId,
-      onlineUserList,
-    );
+  @SubscribeMessage('acceptGame')
+  async handleAcceptGame(client: Socket, acceptGameDto: ClientAcceptGameDto) {
+    await this.userService.handleAcceptGame(client, this.server, acceptGameDto);
+  }
 
-    for (const [key, value] of this.connectionList) {
-      if (onlineFriendList.connections.includes(value)) {
-        this.server.to(key).emit('detectLogOn', connectionDto);
-      }
-    }
+  @SubscribeMessage('rejectGame')
+  async handleRejectGame(client: Socket, userIdDto: UserIdDto) {
+    this.userService.handleRejectGame(client, this.server, userIdDto);
+  }
 
-    return onlineFriendList;
+  @SubscribeMessage('friendRequest')
+  async handleFriendRequest(
+    client: Socket,
+    clientRequestDto: ClientRequestDto,
+  ) {
+    await this.userService.handleFriendRequest(client, clientRequestDto);
+  }
+
+  @SubscribeMessage('acceptFriendRequest')
+  async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    await this.userService.handleAcceptFriendRequest(client, requestIdDto);
+  }
+
+  @SubscribeMessage('rejectFriendRequest')
+  async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
+    await this.userService.handleRejectFriendRequest(client, requestIdDto);
   }
 }

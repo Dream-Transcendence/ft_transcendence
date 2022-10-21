@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
 import { createTheme } from '@mui/material';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
-import { FriendType, UserProfileBoxDataType } from '../../types/Profile.type';
+import { BaseUserProfileData, FriendType, UserProfileBoxDataType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { logStateListAtom } from '../../recoil/log.recoil';
 import { LogStateType } from '../../types/LogOn.type';
@@ -49,13 +49,13 @@ function findState(stateObject: LogStateType | undefined) {
   return 'logOff';
 }
 
-function findUser(id: number) {
+function findUser(id: number | undefined) {
   return (logState: LogStateType) => {
     return logState.id === id;
   }
 }
 
-function getUserState(logStateList: LogStateType[], id: number):string | undefined {
+function getUserState(logStateList: LogStateType[], id: number| undefined):string | undefined {
   let state = undefined;
   if (logStateList.length > 0) {
     const stateObject = logStateList.find(findUser(id));
