@@ -35,23 +35,7 @@ const ParticipantsBoxTitle = styled('div')(({ theme }) => ({
 function ChatParticipantsOrganisms(prop: {
   participantInfoSet: ParticipantInfoSet;
 }) {
-  const [socket] = useSocket(chatNameSpace);
   const participantInfoSet = prop.participantInfoSet;
-  const { participantInfo } = participantInfoSet;
-
-  // useEffect(() => {
-  //   function changedParticipantStatus() {
-  //     socket.on(`${patchUserInfo}`, (res) => {
-  //       const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
-  //         (participant) => participant.user.id !== res.user,
-  //       );
-  //     });
-  //   }
-  //   changedParticipantStatus();
-  //   return () => {
-  //     socket.off(`${patchUserInfo}`);
-  //   };
-  // }, []);
 
   return (
     <ChatParticipantsLayout>

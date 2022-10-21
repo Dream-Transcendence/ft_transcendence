@@ -16,7 +16,11 @@ import {
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
-import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import {
+  ControlMessage,
+  ControlRoomInfo,
+  SocketMessage,
+} from '../../types/Message.type';
 import { userDataAtom } from '../../recoil/user.recoil';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
@@ -66,6 +70,7 @@ function EnteredChatRoomTemplate() {
   const userData = useRecoilValue(userDataAtom);
   const [userType, setUserType] = useRecoilState(userAuth);
   const [userState, setUserState] = useRecoilState(userStatus);
+  const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
 
   useEffect(() => {
     async function getRoomInfo() {
@@ -154,13 +159,23 @@ function EnteredChatRoomTemplate() {
     handler: setParticipantInfo,
   };
 
+  const messageSetter: ControlMessage = {
+    messages: MessageHistory,
+    setMessages: setMessageHistory,
+  };
+
+  const controlRoomInfo: ControlRoomInfo = {
+    roomInfo: roomInfo,
+    controlMessage: messageSetter,
+  };
+
   return (
     <ChattingRoomLayout>
       {userState !== BAN ? (
         <ChattingBanLayout>
           <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
           <ChatRoomFeaterLayout>
-            <ChattingOrganisms roomInfo={roomInfo} />
+            <ChattingOrganisms controlRoomInfo={controlRoomInfo} />
             {roomInfo.type !== DM && roomInfo.type !== 5 && (
               <ChatParticipantsOrganisms
                 participantInfoSet={participantInfoSet}
