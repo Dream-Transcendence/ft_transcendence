@@ -22,6 +22,8 @@ import {
   SocketMessage,
 } from '../../types/Message.type';
 import { userDataAtom } from '../../recoil/user.recoil';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, patchUserInfo } from '../../socket/event';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -148,6 +150,34 @@ function EnteredChatRoomTemplate() {
       }
     }
   }, [participantInfo.length, setUserType]);
+
+  const [socket] = useSocket(chatNameSpace);
+
+  useEffect(() => {
+    function changedParticipantStatus() {
+      socket.on(`${patchUserInfo}`, (res) => {
+        const editParticipant: ParticipantInfo | undefined =
+          participantInfo.find(
+            (participant) => participant.user.id !== res.user,
+          );
+        const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
+          (participant) => participant.user.id !== res.userId,
+        );
+        if (editParticipant !== undefined) {
+          const modifiedParticipant: ParticipantInfo = {
+            ...editParticipant,
+            auth: res.auth,
+            status: res.status,
+          };
+          setParticipantInfo([...filteredParticipants, modifiedParticipant]);
+        }
+      });
+    }
+    changedParticipantStatus();
+    return () => {
+      socket.off(`${patchUserInfo}`);
+    };
+  }, [participantInfo]);
 
   const roomInfoSet: RoomInfoSet = {
     roomInfo: { ...roomInfo, personnel: personnel },

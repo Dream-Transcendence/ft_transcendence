@@ -57,7 +57,6 @@ function ChatroomPage() {
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
   const [socket, connect, disconnect] = useSocket(chatNameSpace);
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  console.log('페이지마다 user정보확인', user);
 
   useEffect(() => {
     setRoomList(unJoinedChatList);

@@ -17,7 +17,6 @@ import { userDataAtom } from '../../recoil/user.recoil';
 
 function ProfileTemplate() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  console.log('페이지마다 user정보확인', user);
   const { userId } = useParams();
   return (
     <ProfileLayout>
