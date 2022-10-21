@@ -15,15 +15,17 @@ const NicknameInitLayout = styled('section')(({ theme }) => ({
 }));
 
 function NicknameInit() {
-  const [nickname, setNickname] = useState<string | null>(null);
+  const [nickname, setNickname] = useState<string>('');
 
-  const confirmNicknameHandler = (nickname: string): void => {
-    setNickname(nickname);
+  const controlNickname = {
+    nickname: nickname,
+    setNickname: setNickname,
   };
+
   return (
     <NicknameInitLayout>
-      <NickNameTextField />
-      <NicknameConfirmButton />
+      <NickNameTextField controlNickname={controlNickname} />
+      <NicknameConfirmButton controlNickname={controlNickname} />
     </NicknameInitLayout>
   );
 }

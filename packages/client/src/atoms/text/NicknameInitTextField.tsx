@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
 import { TextField } from '@mui/material';
+import { useState } from 'react';
+import { ControlNickname } from '../../types/Profile.type';
 
 const NickNameTextFieldLayout = styled('span')(({ theme }) => ({
   alignSelf: 'center',
@@ -8,7 +10,14 @@ const NickNameTextFieldLayout = styled('span')(({ theme }) => ({
   height: '60%',
 }));
 
-function NickNameTextField() {
+function NickNameTextField(props: { controlNickname: ControlNickname }) {
+  const { setNickname } = props.controlNickname;
+
+  const HandleNickName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const values = event.target.value;
+    setNickname(values);
+  };
+
   return (
     <NickNameTextFieldLayout>
       <TextField
@@ -16,6 +25,7 @@ function NickNameTextField() {
         label="닉네임을 입력하세요."
         variant="filled"
         fullWidth
+        onChange={HandleNickName}
       />
     </NickNameTextFieldLayout>
   );

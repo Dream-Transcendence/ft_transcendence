@@ -1,12 +1,14 @@
 import styled from '@emotion/styled';
-import { useState } from 'react';
+import axios from 'axios';
 import { useRecoilState } from 'recoil';
-import NavigationBar from '../atoms/bar/NavigationBar';
 import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
-import { PROFILEURL } from '../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { LinkComponentResource } from '../types/Link.type';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { userDataAtom } from './PingpongRoutePage';
+import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 const MainSection = styled.section`
   background: #6bade2;
@@ -34,17 +36,21 @@ const EnterButton = styled.button`
   }
 `;
 
+axios.defaults.withCredentials = true;
+
 function LandingPage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
+  const [click, setClick] = useState(false);
 
-  const Enter: LinkComponentResource = {
-    url: PROFILEURL,
-    // [axios GET 요청] 서버 측으로 로그인시도 전달
-    component: <EnterButton>들어가기</EnterButton>,
+  const loginOauth = () => {
+    //[수정사항] 이미 로그인 중인지도 파악하는 로직 추가예정
+    window.location.href = `${SERVERURL}/auth/login`;
   };
+
   return (
     <MainSection>
-      <LinkPageComponentButton LinkComponentprops={Enter} />
+      <EnterButton onClick={loginOauth}>들어가기</EnterButton>
+      {/* <LinkPageComponentButton LinkComponentprops={Enter} /> */}
     </MainSection>
   );
 }
