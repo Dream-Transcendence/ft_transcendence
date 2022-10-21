@@ -12,13 +12,6 @@ import { GameService } from './game.service';
 @Module({
   imports: [DatabaseModule, UsersModule],
   controllers: [GameController],
-  providers: [
-    GameService,
-    GameGateway,
-    ...usersProviders,
-    ...roomsProviders,
-    UserGateway,
-    UserService,
-  ],
+  providers: [GameService, GameGateway],
 })
 export class GameModule {}

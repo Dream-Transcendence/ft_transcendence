@@ -25,7 +25,12 @@ import { GameLadderDto, GameRecordDto } from 'src/game/game.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
-import { FriendDto, UserDto, UserIdDto } from './dto/user.dto';
+import {
+  FriendDto,
+  ServerRequestDto,
+  UserDto,
+  UserIdDto,
+} from './dto/user.dto';
 import { UserService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -165,6 +170,16 @@ export class UsersController {
     return this.userService.addFriend(id, friendIdDto.id);
   }
 
+  @Get(':id/friends/:friendId')
+  @ApiTags('유저/친구')
+  @ApiOperation({ summary: '친구 정보 확인' })
+  @ApiOkResponse({ description: '친구 정보 확인 성공', type: UserDto })
+  @ApiNotFoundResponse({ description: 'Friend Not Found' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  getFriend(@Param('id') id: number, @Param('friendId') friendId: number) {
+    return this.userService.getFriend(id, friendId);
+  }
+
   @Get('/:id/friends')
   @ApiTags('유저/친구')
   @ApiOperation({ summary: '유저 친구 목록 가져오기' })
@@ -233,10 +248,10 @@ export class UsersController {
   @ApiOperation({ summary: '친구 요청 목록 가져오기' })
   @ApiOkResponse({
     description: '친구 요청 목록 가져오기 성공',
-    type: [UserDto],
+    type: [ServerRequestDto],
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getRequests(@Param('id') id: number): Promise<UserDto[]> {
+  getRequests(@Param('id') id: number): Promise<ServerRequestDto[]> {
     return this.userService.getRequests(id);
   }
 
