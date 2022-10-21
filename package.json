@@ -41,7 +41,9 @@
     "@nestjs/schedule": "^2.1.0",
     "axios": "^0.27.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "lodash": "^4.17.21",
     "react-hooks": "^1.0.1",
+    "react-loading": "^2.0.3",
     "recoil": "^0.7.5"
   }
 }

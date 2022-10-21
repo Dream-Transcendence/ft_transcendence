@@ -50,17 +50,17 @@ export class UserService {
 
   //ANCHOR: user management
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
-    const { nickname, image, email } = createUserDto;
+    const { id, nickname, image, email } = createUserDto;
 
     // FIXME: 테스트용
-    let id = 1;
-    const maxUserId = await this.usersRepository
-      .createQueryBuilder('user')
-      .select('MAX(user.id)', 'id')
-      .getRawOne();
-    if (maxUserId.id !== null) id = maxUserId.id + 1;
+    // let id = 1;
+    // const maxUserId = await this.usersRepository
+    //   .createQueryBuilder('user')
+    //   .select('MAX(user.id)', 'id')
+    //   .getRawOne();
+    // if (maxUserId.id !== null) id = maxUserId.id + 1;
 
-    console.log(maxUserId.id);
+    // console.log(maxUserId.id);
     let user = this.usersRepository.create({
       id,
       nickname,
@@ -92,6 +92,7 @@ export class UserService {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
     // if (user === null) throw new EntityNotFoundError(User, id);
 
+    if (!user) return null;
     const userDto = new UserDto(user.id, user.nickname, user.image);
     return userDto;
   }
@@ -299,6 +300,21 @@ export class UserService {
     this.friendsRepository.save(row2);
 
     const friendDto = new UserDto(friend.id, friend.nickname, friend.image);
+    return friendDto;
+  }
+
+  async getFriend(id: number, friendId: number): Promise<UserDto> {
+    const friend = await this.friendsRepository.findOne({
+      relations: ['user', 'friend'],
+      where: { user: { id: id }, friend: { id: friendId } },
+    });
+    if (friend === null) throw new EntityNotFoundError(User, friendId);
+
+    const friendDto = new UserDto(
+      friend.friend.id,
+      friend.friend.nickname,
+      friend.friend.image,
+    );
     return friendDto;
   }
 

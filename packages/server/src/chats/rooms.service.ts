@@ -156,6 +156,7 @@ export class RoomService {
       });
       const roomInfo = {
         id: room.id,
+        userId: participant.user.id,
         name: participant.user.nickname,
         type: room.type,
         image: participant.user.image,
@@ -462,6 +463,7 @@ export class RoomService {
       body: msg.body,
     };
     client.to(msg.room.title).emit('userMessage', userMessageDto);
+    return { isSent: true };
   }
 
   async patchUserInfo(client: Socket, patchUserInfoDto: PatchUserInfoDto) {

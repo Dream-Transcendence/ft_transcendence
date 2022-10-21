@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiConflictResponse,
@@ -26,8 +27,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import { FriendDto, UserDto, UserIdDto } from './dto/user.dto';
 import { UserService } from './users.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
@@ -160,6 +163,16 @@ export class UsersController {
     @Body() friendIdDto: UserIdDto,
   ): Promise<UserDto> {
     return this.userService.addFriend(id, friendIdDto.id);
+  }
+
+  @Get(':id/friends/:friendId')
+  @ApiTags('유저/친구')
+  @ApiOperation({ summary: '친구 정보 확인' })
+  @ApiOkResponse({ description: '친구 정보 확인 성공', type: UserDto })
+  @ApiNotFoundResponse({ description: 'Friend Not Found' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  getFriend(@Param('id') id: number, @Param('friendId') friendId: number) {
+    return this.userService.getFriend(id, friendId);
   }
 
   @Get('/:id/friends')

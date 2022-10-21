@@ -9,36 +9,61 @@ import { useRecoilValue } from 'recoil';
 import { userStatus } from '../../recoil/chat.recoil';
 import { MUTE } from '../../configs/Status.case';
 import { ControlMessage, ReceivedMessage } from '../../types/Message.type';
+import { GetRoomInfoDto } from '../../types/Room.type';
+import { DM } from '../../configs/RoomType';
 
-const ChattingLayout = styled('div')(({ theme }) => ({
-  width: '75%',
+const DMChattingLayout = styled('div')(({ theme }) => ({
+  width: '100%',
   height: '99%',
   display: 'flex',
   flexDirection: 'column',
 }));
+
+const RoomChattingLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '99%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const ChattingLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '99%',
+}));
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
-function ChattingOrganisms(prop: any) {
+function ChattingOrganisms(props: { roomInfo: GetRoomInfoDto }) {
+  const { type } = props.roomInfo;
   const { roomId } = useParams();
-  const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
   const userState = useRecoilValue(userStatus);
-
-  useEffect(() => {
-    async function getMessageHistory() {
-      const response = await axios.get(`${SERVERURL}/rooms/messages/${roomId}`);
-      setMessageHistory(response.data);
-    }
-    getMessageHistory();
-  }, [roomId]);
-
+  const [MessageHistory, setMessageHistory] = useState<ReceivedMessage[]>([]);
   const messageSetter: ControlMessage = {
     messages: MessageHistory,
     setMessages: setMessageHistory,
   };
 
+  useEffect(() => {
+    setMessageHistory([]);
+    return setMessageHistory([]);
+  }, [roomId, setMessageHistory]);
+  // console.log('데이터 받아오기 전', messageSetter.messages);
+
   return (
     <ChattingLayout>
-      <ChatLogListOrganisms messageSetter={messageSetter} />
-      {userState !== MUTE && <ChatInputModule />}
+      {type === DM ? (
+        <DMChattingLayout>
+          <ChatLogListOrganisms messageSetter={messageSetter} />
+          {userState !== MUTE && (
+            <ChatInputModule messageSetter={messageSetter} />
+          )}
+        </DMChattingLayout>
+      ) : (
+        <RoomChattingLayout>
+          <ChatLogListOrganisms messageSetter={messageSetter} />
+          {userState !== MUTE && (
+            <ChatInputModule messageSetter={messageSetter} />
+          )}
+        </RoomChattingLayout>
+      )}
     </ChattingLayout>
   );
 }

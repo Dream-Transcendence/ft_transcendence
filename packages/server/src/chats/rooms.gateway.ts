@@ -52,7 +52,7 @@ export class RoomsGateway {
     @ConnectedSocket() client: Socket,
     @MessageBody() sendMessageDto: SendMessageDto,
   ) {
-    await this.roomService.sendMessage(client, sendMessageDto);
+    return await this.roomService.sendMessage(client, sendMessageDto);
   }
 
   @SubscribeMessage('patchUserInfo')

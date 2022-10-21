@@ -15,10 +15,12 @@ import { userAuth } from '../../recoil/chat.recoil';
 
 const InfoBoxPasswordLayout = styled('div')(({ theme }) => ({
   width: '30%',
+  display: 'flex',
 }));
 
-const InfoBoxPasswordInnerLayout = styled('div')(({ theme }) => ({
+const InfoBoxPasswordInnerLayout = styled('section')(({ theme }) => ({
   display: 'flex',
+  minHeight: '100px',
 }));
 
 const PasswordIconLayout = styled('div')(({ theme }) => ({
@@ -34,7 +36,6 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
   const [changePassword, setChangePassword] = useState<boolean>(false);
   const userType = useRecoilValue(userAuth);
   roomInfoSet['roomId'] = roomId;
-  //[수정사항]
 
   useEffect(() => {
     if (changePassword) {
@@ -42,8 +43,9 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
         if (handler !== undefined) {
           const room = { ...roomInfo, salt: password };
           handler(room);
+          console.log('', room);
+          ChangeRoomInfo({ ...roomInfoSet, roomInfo: room });
         }
-        ChangeRoomInfo({ ...roomInfoSet, roomInfo: roomInfo });
       } catch (error) {
         alert(error);
         console.dir(error);
