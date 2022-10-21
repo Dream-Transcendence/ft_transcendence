@@ -7,9 +7,10 @@ const GamePlayerLayout = styled('div')(({ theme }) => ({
   alignContent: 'center',
   alignItems: 'center',
   alignSelf: 'center',
-  flexWrap: 'wrap',
+  flexWrap: 'nowrap',
   height: '100%',
   padding: '3px',
+  overflow: 'hidden',
 }));
 
 function GamePlayer(player: String) {

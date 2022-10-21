@@ -46,7 +46,7 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 export default function NavigationBar() {
-  const searchProps: SearchPropsType = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`);
+  const searchProps: SearchPropsType = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`, 5);
 
   const Avartar: LinkIconResource = {
     url: PROFILEURL,

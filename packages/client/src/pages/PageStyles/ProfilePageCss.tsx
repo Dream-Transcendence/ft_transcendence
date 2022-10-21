@@ -15,7 +15,7 @@ export const ProfileLayout = styled('div')(({ theme }) => ({
                       'ProfilePersonal MatchHistory' 
                       'ProfilePersonal MatchHistory' 
                       'ProfilePersonal MatchHistory' 
-                      'ProfilePersonal Footer'`,
+                      'ProfilePersonal MatchHistory'`,
 }));
 
 export const Footer = styled('div')(({ theme }) => ({

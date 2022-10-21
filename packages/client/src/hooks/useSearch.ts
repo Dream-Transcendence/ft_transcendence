@@ -52,7 +52,7 @@ function useSearch(
 
   //참가자 리스트 생성
   useEffect(() => {
-    if (target.id > 0 && type === undefined) navigate(`${naviUrl}${target.id}`);
+    if (target.id > 0 && type === 5) navigate(`${naviUrl}${target.id}`); //profile 이동
     else if (target.id > 0 && type === DM) {
       createDM(target.id);
       //[수정사항]여러개 생성되는문제 백에서 막아줄것!

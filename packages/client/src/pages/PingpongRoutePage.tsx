@@ -51,8 +51,8 @@ const logOnListMock = [
   },
   {
     id: 3,
-    logOn: true,
-    onGame: true,
+    logOn: false,
+    onGame: false,
   },
   {
     id: 4,
@@ -83,7 +83,7 @@ function PingpongRoutePage() {
         },
         (response: LogStateType[]) => {
           console.log('logOn users:', response);
-          setLogStateList(logOnListMock);
+          setLogStateList(logOnListMock); //로그인 중인 유저들 정보  받기
         },
       );
       socket.on('exception', (response: any) => {
@@ -120,6 +120,9 @@ function PingpongRoutePage() {
         <Route path="gameplay/:userId" element={<GamePlayPage />} />
         <Route path="gameloading/*" element={<GameLoadingPage />} />
       </Routes>
+      {/* <footer>
+       <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
+      </footer> */}
     </PageSection>
   );
 }

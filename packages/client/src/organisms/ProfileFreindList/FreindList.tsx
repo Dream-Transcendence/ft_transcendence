@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { Typography } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
-import { SERVERURL } from '../../configs/Link.url';
-import { useEffect, useState } from 'react';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   ListGenerateLayout,
@@ -13,6 +13,7 @@ import {
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useRecoilValue } from 'recoil';
 import { logStateListAtom } from '../../recoil/log.recoil';
+import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -43,55 +44,52 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
   borderColor: 'black',
 }));
 
-function FreindList() {
-  const { userId } = useParams();
-  const [friendList, setFriendList] = useState<FriendType[]>([
-    {
-      id: 1,
-      user: {
-        id: 1,
-        nickname: 'noname',
-        image: 'noimage',
-      },
-      isBlocked: false,
-    },
-  ]);
-  useEffect(() => {
-    async function getFriendList() {
-      try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/friends`,
-        );
-        setFriendList(response.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
-    getFriendList();
-  }, [userId]);
+function FreindList(props : {friendProps: FriendPropsType}) {
+  const navigate = useNavigate();
+  const { value: friendList } = props.friendProps;
+  const [listElement, setListElement] = useState<JSX.Element[]>();
+  // const { userId } = useParams();
 
-  const listElement: JSX.Element[] = friendList.map((friendData) => {
-    //friend데이터중 profileBox를 구현하기에 필요한 정보를 넣어줌
-    const userData = {
-      id: friendData.user.id,
-      nickname: friendData.user.nickname,
-      image: friendData.user.image,
-    };
-    const otherProfileBoxProp: UserProfileBoxType = {
-      isButton: true,
-      avatarType: 'circle',
-      userData: userData,
-      action: () => {
-        window.location.href = `http://localhost:3005/pingpong/profile/${friendData.user.id}`;
-      },
-    };
-    return (
-      <ListLayout key={friendData.user.id}>
-        <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
-      </ListLayout>
-    );
-  });
+  // useEffect(() => {
+  //   async function getFriendList() {
+  //     try {
+  //       const response = await axios.get(
+  //         `${SERVERURL}/users/${userId}/friends`,
+  //       );
+  //       setFriendList(response.data);
+  //     } catch (error) {
+  //       alert(error);
+  //       console.log(error);
+  //     }
+  //   }
+  //   getFriendList();
+  // }, [userId]);
+
+  useEffect(() => {
+    const element = friendList.map((friendData) => {
+      //friend데이터중 profileBox를 구현하기에 필요한 정보를 넣어줌
+      const userData = {
+        id: friendData.user.id,
+        nickname: friendData.user.nickname,
+        image: friendData.user.image,
+      };
+      const otherProfileBoxProp: UserProfileBoxType = {
+        isButton: true,
+        avatarType: 'circle',
+        userData: userData,
+        action: () => {
+          navigate(`${PROFILEURL}/${friendData.user.id}`)
+        },
+      };
+      
+      return (
+        <ListLayout key={friendData.user.id}>
+          <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
+        </ListLayout>
+      );
+   })
+   setListElement(element);
+  }, [friendList, navigate]);
 
   return (
     <FreindListLayout>

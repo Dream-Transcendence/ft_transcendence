@@ -19,7 +19,6 @@ function ProfileTemplate() {
       <ProfilePersonal />
       <UserStat />
       <MatchHistory />
-      <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
     </ProfileLayout>
   );
 }

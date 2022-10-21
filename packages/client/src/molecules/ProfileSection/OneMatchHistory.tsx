@@ -10,13 +10,23 @@ import { BaseUserProfileData, UserMatchHistoryType } from '../../types/Profile.t
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
-  flexWrap: 'wrap',
-  alignSelf: 'center',
-  alignContent: 'center',
+  flexWrap: 'nowrap',
   alignItems: 'center',
   border: 'solid 1px',
-  width: '100%',
+  width: '97%',
   height: '100%',
+  borderRadius: '10%',
+  overflow: 'hidden',
+  margin: 0,
+}));
+
+const PlayerInfoLayout = styled('div')(({theme}) => ({
+  display: 'flex',
+  flexWrap: 'nowrap',
+  alignItems: 'center',
+  height: '100%',
+  width: '100%',
+  justifyContent: 'space-around',
 }));
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
@@ -26,10 +36,12 @@ function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
     <OneMatchHistoryLayout
       style={{ backgroundColor: isWin ? 'yellow' : 'green' }}
     >
-      {MatchType(isLadder)}
-      {GamePlayer(userData.nickname)}
-      <Typography>VS</Typography>
-      {GamePlayer(opponent)}
+      <PlayerInfoLayout>
+        {MatchType(isLadder)}
+        {GamePlayer(userData.nickname)}
+        <Typography>VS</Typography>
+        {GamePlayer(opponent)}
+      </PlayerInfoLayout>
     </OneMatchHistoryLayout>
   );
 }

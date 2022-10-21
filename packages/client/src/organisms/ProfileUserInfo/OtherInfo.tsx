@@ -20,10 +20,13 @@ import { AlternateEmailTwoTone } from '@mui/icons-material';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../pages/PingpongRoutePage';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
+import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 
-function OtherInfo() {
+function OtherInfo(props : {friendProps: FriendPropsType}) {
   const { id } = useRecoilValue(userDataAtom);
   const { userId: otherId } = useParams();
+  const {value: friendList, setter: setFriendList } = props.friendProps;
+
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
     nickname: 'noname',
@@ -41,30 +44,25 @@ function OtherInfo() {
     }
   }
 
+  useEffect(() => {
+    getUserData();
+  }, [otherId]);
+
   //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
   async function checkIsFriend() {
     try {
       //친구 찾는 로직 수정되면 테스트 해보기
-      const friendList = await axios.get(
-        `${SERVERURL}/users/${id}/friends`);
-      const friend = friendList.data.find((friend: FriendType) => {
-        return friend.user.id === Number(otherId);
-      })
-      console.log(friend);
-      if (friend !== undefined) {
+      const response = await axios.get(`${SERVERURL}/users/${id}/friends/${otherId}`);
+      if (await response.status === 201) {
         setIsFriend(true);
       } else {
-      setIsFriend(false);
+        setIsFriend(false);
       }
     } catch (error) {
       alert(error);
       console.log(error);
     }
   }
-
-  useEffect(() => {
-    getUserData();
-  }, [otherId]);
 
   useEffect(() => {
     checkIsFriend();
@@ -87,12 +85,14 @@ function OtherInfo() {
       console.log(error);
     }
   }
+  
   async function addRequestFriend() {
     try {
       const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
         id: Number(otherId),
       });
       if (responseAdd.status === 201) {
+        setFriendList(friendList.concat(responseAdd.data));
         return true;
       } else {
         return false;
