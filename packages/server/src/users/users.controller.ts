@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  Request,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -276,5 +277,10 @@ export class UsersController {
     @Query('nickname') nickname: string,
   ): Promise<UserDto[]> {
     return this.userService.searchFriend(id, nickname);
+  }
+
+  @Get('userinfo')
+  async userInfo(@Request() req) {
+    return await this.userService.userInfo(req.user);
   }
 }

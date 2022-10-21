@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { bakingKimStrategy } from './bakingKim.strategy';
+import { bakingKimStrategy } from './bakingkim.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { UsersModule } from '../users/users.module';
 import { UserService } from '../users/users.service';
