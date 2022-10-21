@@ -54,5 +54,6 @@ export class AuthService {
       httpOnly: true, // XSS와 같은 공격이 차단
     });
     console.log('🥎🥎🥎🥎🥎🥎🥎🥎 우리가 만든 jwt token ', access_token);
+    res.redirect(`http://localhost:3005/nickname`);
   }
 }

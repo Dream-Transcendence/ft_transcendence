@@ -683,4 +683,10 @@ export class UserService {
     if (requestorClientId !== null)
       client.to(requestorClientId).emit('friendRequestRejected');
   }
+
+  async userInfo(user: any) {
+    const { userId } = user;
+    const userInfo = await this.getUser(userId);
+    return userInfo;
+  }
 }
