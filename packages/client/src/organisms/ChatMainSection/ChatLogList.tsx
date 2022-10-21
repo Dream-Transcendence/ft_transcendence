@@ -127,17 +127,22 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   }, [roomId, isOverflow, startChatRender, setMessages]);
 
-  // useEffect( () => {
-  //   const sendMessage :SendMessage = {
-  //     userId: ,
-  //     roomId: ,
-  //     body: string;
-  //   }
-  //   socket.emit()
-  // });
-  // const sendMessageWithSocket = () => {
-
-  // };
+  useEffect(() => {
+    const receiveMessage = () => {
+      socket.on(`${USERMESSAGE}`, (res: any) => {
+        const message: SocketMessage = {
+          body: res.body,
+          id: res.id,
+          user: {
+            id: res.user.id,
+            image: res.user.image,
+            nickname: res.user.nickname,
+          },
+        };
+        setMessages([...messages, message]);
+      });
+    };
+  }, [messages]);
 
   const callApi = async () => {
     // 로딩이 완료 되어 있는 경우에만 호출가능
