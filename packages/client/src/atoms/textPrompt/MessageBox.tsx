@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { ThemeProvider, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const TextBoxLayout = styled('section')(() => ({
   height: '100%',

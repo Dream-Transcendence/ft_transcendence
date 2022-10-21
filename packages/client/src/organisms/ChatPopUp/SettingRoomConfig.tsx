@@ -14,9 +14,9 @@ import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PROTECTED } from '../../configs/RoomType';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
 import { useNavigate } from 'react-router-dom';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',

@@ -14,10 +14,10 @@ import {
   ParticipantInfoSet,
 } from '../../types/Participant.type';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
 import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',

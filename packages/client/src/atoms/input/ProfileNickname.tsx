@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { Edit, WidthFull } from '@mui/icons-material';
 import { IconButton, Input, InputAdornment, TextField } from '@mui/material';
 import { useRecoilState, useResetRecoilState } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
@@ -14,6 +13,7 @@ import CustomIconButton from '../button/icon/CustomIconButtion';
 import EditIcon from '@mui/icons-material/Edit';
 import { CustomIconProps } from '../../types/Link.type';
 import { useParams } from 'react-router-dom';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   display: 'flex',

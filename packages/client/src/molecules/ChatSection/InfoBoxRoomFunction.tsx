@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { CHANNELURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
@@ -10,6 +9,7 @@ import useSocket from '../../socket/useSocket';
 import { chatNameSpace, deleteChannelParticipant } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { RoomInfoSet, RoomList, UnJoinedRoomList } from '../../types/Room.type';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',

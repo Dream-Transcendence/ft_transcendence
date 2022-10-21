@@ -18,8 +18,8 @@ import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 function OtherInfo() {
   const { id } = useRecoilValue(userDataAtom);
@@ -45,16 +45,15 @@ function OtherInfo() {
   async function checkIsFriend() {
     try {
       //친구 찾는 로직 수정되면 테스트 해보기
-      const friendList = await axios.get(
-        `${SERVERURL}/users/${id}/friends`);
+      const friendList = await axios.get(`${SERVERURL}/users/${id}/friends`);
       const friend = friendList.data.find((friend: FriendType) => {
         return friend.user.id === Number(otherId);
-      })
+      });
       console.log(friend);
       if (friend !== undefined) {
         setIsFriend(true);
       } else {
-      setIsFriend(false);
+        setIsFriend(false);
       }
     } catch (error) {
       alert(error);
@@ -97,10 +96,10 @@ function OtherInfo() {
       } else {
         return false;
       }
-    } catch(error: any) {
+    } catch (error: any) {
       alert(error);
       console.log(error);
-    } 
+    }
   }
   async function addFriend() {
     try {
@@ -112,7 +111,8 @@ function OtherInfo() {
       //친구 요청
       const sendReq = await sendRequestFriend();
       console.log('11', sendReq);
-      if (!sendReq) { //비동기 처리에 의해서 값 변경이 바로 안되어 반대로 처리해둠 추후 요청 확인을 받는 것으로 처리할 예정
+      if (!sendReq) {
+        //비동기 처리에 의해서 값 변경이 바로 안되어 반대로 처리해둠 추후 요청 확인을 받는 것으로 처리할 예정
         //요청을 보낸 쪽이 확인 응답을 받고 다시 추가 요청을 보내는데 수신 쪽에서 확인을 받고 친구 추가를 바로 하면 될 것 같음
         //
         const addReq = await addRequestFriend();
@@ -151,9 +151,11 @@ function OtherInfo() {
       </UserNicknameLayout>
       <ProfileActionLayout>
         {/* [Socket IO 요청] 상대방에게 친구수락 팝업 뜨게할 것 */}
-        {isFriend ? 
-          <CustomIconButton customProps={alreadFriendProps} />:
-          <CustomIconButton customProps={addFriendProps} /> }
+        {isFriend ? (
+          <CustomIconButton customProps={alreadFriendProps} />
+        ) : (
+          <CustomIconButton customProps={addFriendProps} />
+        )}
       </ProfileActionLayout>
     </UserInfoLayout>
   );

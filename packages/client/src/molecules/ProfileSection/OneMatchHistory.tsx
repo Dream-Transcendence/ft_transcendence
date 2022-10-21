@@ -5,8 +5,11 @@ import { createTheme, Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
-import { BaseUserProfileData, UserMatchHistoryType } from '../../types/Profile.type';
+import { userDataAtom } from '../../recoil/user.recoil';
+import {
+  BaseUserProfileData,
+  UserMatchHistoryType,
+} from '../../types/Profile.type';
 
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { PROFILEURL, SERVERURL } from '../../../configs/Link.url';
-import { userDataAtom } from '../../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../../recoil/user.recoil';
 import {
   BaseUserProfileData,
   ControlNickname,
@@ -37,17 +37,19 @@ function NicknameConfirmButton(props: { controlNickname: ControlNickname }) {
   };
 
   const editNickname = async () => {
-    await axios
-      .patch(`${SERVERURL}/users/${userData.id}/profile`, {
-        nickname: nickname,
-        image: userData.image,
-      })
-      .then((res) => {
-        if (res.status === 409)
-          alert('중복된 닉네임입니다! 다른 닉네임으로 변경해주세요!');
-        setUser({ ...user, nickname: nickname });
-        navigate(`${PROFILEURL}/${userData.id}`);
-      });
+    try {
+      await axios
+        .patch(`${SERVERURL}/users/${userData.id}/profile`, {
+          nickname: nickname,
+          image: userData.image,
+        })
+        .then((res) => {
+          setUser({ ...user, nickname: nickname });
+          navigate(`${PROFILEURL}/${userData.id}`);
+        });
+    } catch (error: any) {
+      if (error) alert('중복된 닉네임입니다! 다른 닉네임으로 변경해주세요!');
+    }
   };
 
   const handler = () => {

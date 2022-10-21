@@ -9,8 +9,8 @@ import {
 } from '../../atoms/list/styles/ListStylesCSS';
 import { BLOCK } from '../../configs/Block.case';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
+import { userDataAtom } from '../../recoil/user.recoil';
 import { chatNameSpace, enterChannel } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { UserProfileBoxDataType } from '../../types/Profile.type';

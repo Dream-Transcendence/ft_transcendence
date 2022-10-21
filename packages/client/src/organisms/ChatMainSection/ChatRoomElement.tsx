@@ -10,7 +10,6 @@ import { PROTECTED } from '../../configs/RoomType';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import {
   GetRoomInfoDto,
   RoomList,
@@ -19,6 +18,7 @@ import {
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, enterChannel } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',

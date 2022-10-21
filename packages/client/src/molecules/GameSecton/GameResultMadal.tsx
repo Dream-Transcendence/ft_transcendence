@@ -8,7 +8,7 @@ import { color } from '@mui/system';
 import GameScore from './GameScore';
 import { UserProfileBoxType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const style = {
   position: 'absolute' as 'absolute',

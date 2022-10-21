@@ -4,10 +4,10 @@ import axios from 'axios';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { SearchPropsType } from '../../types/search.type';
 import { useNavigate } from 'react-router-dom';
 import { PROFILEURL } from '../../configs/Link.url';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const { url, listParams, action } = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.

@@ -4,11 +4,11 @@ import { TextField } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { userDataAtom } from './PingpongRoutePage';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { userDataAtom } from '../recoil/user.recoil';
 
 const NicknamePageLayout = styled('div')(({ theme }) => ({
   display: 'grid',
