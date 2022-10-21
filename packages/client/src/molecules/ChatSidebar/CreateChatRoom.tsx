@@ -4,7 +4,7 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import SettingRoomConfigOranisms from '../../organisms/ChatPopUp/SettingRoomConfig';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const CreateChatRoomLayout = styled('div')(({ theme }) => ({
   height: '5.89%',

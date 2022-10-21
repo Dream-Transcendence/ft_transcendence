@@ -14,10 +14,16 @@ import {
   ParticipantInfoSet,
 } from '../../types/Participant.type';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
-import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import {
+  ControlMessage,
+  ControlRoomInfo,
+  SocketMessage,
+} from '../../types/Message.type';
+import { userDataAtom } from '../../recoil/user.recoil';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, patchUserInfo } from '../../socket/event';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -66,6 +72,7 @@ function EnteredChatRoomTemplate() {
   const userData = useRecoilValue(userDataAtom);
   const [userType, setUserType] = useRecoilState(userAuth);
   const [userState, setUserState] = useRecoilState(userStatus);
+  const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
 
   useEffect(() => {
     async function getRoomInfo() {
@@ -144,6 +151,32 @@ function EnteredChatRoomTemplate() {
     }
   }, [participantInfo.length, setUserType]);
 
+  const [socket] = useSocket(chatNameSpace);
+
+  //[수정사항][소켓] socket.on이 호출이 안됨.
+  useEffect(() => {
+    function changedParticipantStatus() {
+      socket.on(`${patchUserInfo}`, (res) => {
+        const editParticipant: ParticipantInfo | undefined =
+          participantInfo.find(
+            (participant) => participant.user.id !== res.user,
+          );
+        const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
+          (participant) => participant.user.id !== res.userId,
+        );
+        if (editParticipant !== undefined) {
+          const modifiedParticipant: ParticipantInfo = {
+            ...editParticipant,
+            auth: res.auth,
+            status: res.status,
+          };
+          setParticipantInfo([...filteredParticipants, modifiedParticipant]);
+        }
+      });
+    }
+    changedParticipantStatus();
+  }, [participantInfo]);
+
   const roomInfoSet: RoomInfoSet = {
     roomInfo: { ...roomInfo, personnel: personnel },
     handler: handleRoomInfo,
@@ -154,13 +187,23 @@ function EnteredChatRoomTemplate() {
     handler: setParticipantInfo,
   };
 
+  const messageSetter: ControlMessage = {
+    messages: MessageHistory,
+    setMessages: setMessageHistory,
+  };
+
+  const controlRoomInfo: ControlRoomInfo = {
+    roomInfo: roomInfo,
+    controlMessage: messageSetter,
+  };
+
   return (
     <ChattingRoomLayout>
       {userState !== BAN ? (
         <ChattingBanLayout>
           <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
           <ChatRoomFeaterLayout>
-            <ChattingOrganisms roomInfo={roomInfo} />
+            <ChattingOrganisms controlRoomInfo={controlRoomInfo} />
             {roomInfo.type !== DM && roomInfo.type !== 5 && (
               <ChatParticipantsOrganisms
                 participantInfoSet={participantInfoSet}

@@ -7,9 +7,9 @@ import useSocket from '../socket/useSocket';
 import { gameLadderMatch, gameNameSpace } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from './PingpongRoutePage';
 import { GAMEPLAYURL } from '../configs/Link.url';
 import { GameRoomDto } from '../types/Game.type';
+import { userDataAtom } from '../recoil/user.recoil';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -59,8 +59,7 @@ function findPlayerSpot(args: GameRoomDto, userId: number) {
 //위치 확인후 게임 입장
 const moveToGame = (args: GameRoomDto, userId: number) => {
   findPlayerSpot(args, userId);
- }
-
+};
 
 function GameLoadingPage() {
   const navigate = useNavigate();
@@ -71,31 +70,28 @@ function GameLoadingPage() {
     socket.emit(
       `${gameLadderMatch}`,
       {
-        userId: userId
+        userId: userId,
       },
       (response: any) => {
         console.log('emit 성공 : ', response);
-      }
+      },
     );
     //match 성공시 값 받아서 동작시켜야함
-    socket.on(
-      `${gameLadderMatch}`,
-      (args) => {
-        moveToGame(args, userId);
-        navigate(`${GAMEPLAYURL}/${userId}`)
-      }
-    )
+    socket.on(`${gameLadderMatch}`, (args) => {
+      moveToGame(args, userId);
+      navigate(`${GAMEPLAYURL}/${userId}`);
+    });
     //GameRoomDto로 수정 예정
     socket.on('exception', (response: any) => {
       alert(response.message);
       console.log(response);
-      
     });
-    return () => { //unmount  
+    return () => {
+      //unmount
       socket.removeAllListeners(); //모든 리스너 제거
       disconnect();
-    }
-  })
+    };
+  });
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}

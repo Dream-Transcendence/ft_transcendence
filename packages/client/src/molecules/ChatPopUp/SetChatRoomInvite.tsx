@@ -3,7 +3,6 @@ import { styled } from '@mui/material/styles';
 import SearchBox from '../../atoms/input/SearchBox';
 import { useEffect } from 'react';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { useRecoilValue } from 'recoil';
 import useSearch from '../../hooks/useSearch';
 import { PUBLIC } from '../../configs/RoomType';
@@ -23,6 +22,7 @@ import {
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 /*
  * AsideSearchBox로 감싼 이유는

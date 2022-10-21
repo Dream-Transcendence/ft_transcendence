@@ -25,7 +25,6 @@ async function bootstrap() {
     origin: 'http://localhost:3005',
     credentials: true,
   });
-
   app.useGlobalPipes(
     new ValidationPipe({
       // whitelist: true,

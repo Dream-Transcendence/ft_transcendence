@@ -8,7 +8,11 @@ import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
 import { userStatus } from '../../recoil/chat.recoil';
 import { MUTE } from '../../configs/Status.case';
-import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import {
+  ControlMessage,
+  ControlRoomInfo,
+  SocketMessage,
+} from '../../types/Message.type';
 import { GetRoomInfoDto } from '../../types/Room.type';
 import { DM } from '../../configs/RoomType';
 
@@ -31,15 +35,12 @@ const ChattingLayout = styled('div')(({ theme }) => ({
   height: '99%',
 }));
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
-function ChattingOrganisms(props: { roomInfo: GetRoomInfoDto }) {
-  const { type } = props.roomInfo;
+function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
+  const { roomInfo, controlMessage } = props.controlRoomInfo;
+  const { setMessages: setMessageHistory } = controlMessage;
+  const { type } = roomInfo;
   const { roomId } = useParams();
   const userState = useRecoilValue(userStatus);
-  const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
-  const messageSetter: ControlMessage = {
-    messages: MessageHistory,
-    setMessages: setMessageHistory,
-  };
 
   useEffect(() => {
     setMessageHistory([]);
@@ -51,16 +52,16 @@ function ChattingOrganisms(props: { roomInfo: GetRoomInfoDto }) {
     <ChattingLayout>
       {type === DM ? (
         <DMChattingLayout>
-          <ChatLogListOrganisms messageSetter={messageSetter} />
+          <ChatLogListOrganisms messageSetter={controlMessage} />
           {userState !== MUTE && (
-            <ChatInputModule messageSetter={messageSetter} />
+            <ChatInputModule messageSetter={controlMessage} />
           )}
         </DMChattingLayout>
       ) : (
         <RoomChattingLayout>
-          <ChatLogListOrganisms messageSetter={messageSetter} />
+          <ChatLogListOrganisms messageSetter={controlMessage} />
           {userState !== MUTE && (
-            <ChatInputModule messageSetter={messageSetter} />
+            <ChatInputModule messageSetter={controlMessage} />
           )}
         </RoomChattingLayout>
       )}

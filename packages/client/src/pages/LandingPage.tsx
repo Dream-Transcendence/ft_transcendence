@@ -5,10 +5,10 @@ import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentB
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { LinkComponentResource } from '../types/Link.type';
 import { BaseUserProfileData } from '../types/Profile.type';
-import { userDataAtom } from './PingpongRoutePage';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { userDataAtom } from '../recoil/user.recoil';
 
 const MainSection = styled.section`
   background: #6bade2;

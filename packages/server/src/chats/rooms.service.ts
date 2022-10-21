@@ -506,11 +506,11 @@ export class RoomService {
       }
     }
     await this.channelParticipantsRepository.save(user);
-    client
-      .to(user.room.title)
-      .emit(
-        'patchMessage',
-        `참여자 ${user.user.nickname}의 ${patchedColumn}이(가) ${patchedValue}(으)로 변경되었습니다.`,
-      );
+    client.to(user.room.title).emit('patchMessage', {
+      userId,
+      auth,
+      status,
+      message: `참여자 ${user.user.nickname}의 ${patchedColumn}이(가) ${patchedValue}(으)로 변경되었습니다.`,
+    });
   }
 }

@@ -6,9 +6,9 @@ import AutoComplateSerchBox from '../../atoms/input/AutoCompleteSerchBox';
 import SearchBox from '../../atoms/input/SearchBox';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import { SearchPropsType } from '../../types/search.type';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import useSearch from '../../hooks/useSearch';
 import { DM } from '../../configs/RoomType';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 /*
  * AsideSearchBox로 감싼 이유는

@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
+import { userDataAtom } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { BaseUserProfileData } from '../types/Profile.type';
@@ -35,14 +36,6 @@ const PageSection = styled('section')(({ theme }) => ({
 //   }
 // }, [userData]);
 //닉네임 2차인증 끝나고 받은 접속 유저 정보 목업데이터
-export const userDataAtom = atom<BaseUserProfileData>({
-  key: 'userData',
-  default: {
-    id: 0,
-    nickname: 'default',
-    image: '',
-  },
-});
 
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);

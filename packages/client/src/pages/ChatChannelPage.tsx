@@ -8,10 +8,11 @@ import { constSelector, useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL, SERVERURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
-import { userDataAtom } from './PingpongRoutePage';
 import useSocket from '../socket/useSocket';
 import { chatNameSpace } from '../socket/event';
 import { getUnJoinedChatList, unJoinedRoomList } from '../recoil/chat.recoil';
+import { BaseUserProfileData } from '../types/Profile.type';
+import { userDataAtom } from '../recoil/user.recoil';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -55,6 +56,7 @@ function ChatroomPage() {
   const [roomList, setRoomList] = useRecoilState(unJoinedRoomList);
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
   const [socket, connect, disconnect] = useSocket(chatNameSpace);
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
 
   useEffect(() => {
     setRoomList(unJoinedChatList);

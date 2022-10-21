@@ -6,10 +6,10 @@ import { CustomIconProps } from '../../types/Link.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, SENDMESSAGE } from '../../socket/event';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 function ChatInputModule(props: { messageSetter: ControlMessage }) {
   const { messages, setMessages } = props.messageSetter;

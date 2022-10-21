@@ -15,7 +15,6 @@ import { UserProfileBoxDataType } from '../../types/Profile.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 import { ADMIN, OWNER } from '../../configs/userType';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { DMList, userAuth } from '../../recoil/chat.recoil';
 import {
   ParticipantInfo,
@@ -26,6 +25,7 @@ import { MUTE } from '../../configs/Status.case';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { Rotate90DegreesCcw } from '@mui/icons-material';
 import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',

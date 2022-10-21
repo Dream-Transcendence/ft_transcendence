@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { CHATROOMURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { DM, PUBLIC } from '../configs/RoomType';
-import { userDataAtom } from '../pages/PingpongRoutePage';
 import { DMList, newParticipant } from '../recoil/chat.recoil';
+import { userDataAtom } from '../recoil/user.recoil';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { SearchPropsType } from '../types/search.type';
 

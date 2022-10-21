@@ -8,7 +8,6 @@ import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFu
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace } from '../../socket/event';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({

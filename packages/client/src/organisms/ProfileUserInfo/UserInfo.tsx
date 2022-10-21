@@ -19,9 +19,9 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { ReadMoreRounded } from '@mui/icons-material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { userDataAtom } from '../../recoil/user.recoil';
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',

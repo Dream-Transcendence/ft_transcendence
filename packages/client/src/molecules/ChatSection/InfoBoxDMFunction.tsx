@@ -14,10 +14,10 @@ import {
 } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',

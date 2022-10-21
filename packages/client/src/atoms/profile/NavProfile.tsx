@@ -1,6 +1,6 @@
 import { Avatar } from '@mui/material';
 import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
 import ProfileAvatar from './ProfileAvatar';

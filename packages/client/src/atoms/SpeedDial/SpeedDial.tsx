@@ -7,7 +7,6 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { useRecoilValue } from 'recoil';
 import { OWNER, ADMIN, COMMON } from '../../configs/userType';
 import { userAuth } from '../../recoil/chat.recoil';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
 import { chatNameSpace, patchUserInfo } from '../../socket/event';
 import { useParams } from 'react-router-dom';
 import {
@@ -18,6 +17,7 @@ import {
 import useSocket from '../../socket/useSocket';
 import { useState } from 'react';
 import { BAN, MUTE, NONE } from '../../configs/Status.case';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 //와.. 뭐지 react-dom.development.js:16317 Uncaught Error: Too many re-renders. React limits the number of renders to prevent an infinite loop 에러 발생
 //아래의 코드가 문제인듯하다.

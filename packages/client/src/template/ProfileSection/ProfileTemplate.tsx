@@ -13,7 +13,7 @@ import OtherInfo from '../../organisms/ProfileUserInfo/OtherInfo';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { useParams } from 'react-router-dom';
-import { userDataAtom } from '../../pages/PingpongRoutePage';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 function ProfileTemplate() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
