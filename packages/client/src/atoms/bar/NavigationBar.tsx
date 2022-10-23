@@ -26,9 +26,10 @@ import {
   PROFILEURL,
   SERVERURL,
 } from '../../configs/Link.url';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
+import { userGameTypeAtom } from '../../recoil/uesr.recoil';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -45,8 +46,18 @@ const RightLayout = styled('section')(({ theme }) => ({
   justifyContent: 'right',
 }));
 
-export default function NavigationBar() {
-  const searchProps: SearchPropsType = useSearch(`${SERVERURL}/users/search`, `${PROFILEURL}/`);
+function NavigationBar() {
+  const [userGameType, setUserGameType] = useRecoilState(userGameTypeAtom);
+
+  const searchProps: SearchPropsType = useSearch(
+    `${SERVERURL}/users/search`,
+    `${PROFILEURL}/`,
+    5, //profile type
+  );
+
+  const setLadder = () => {
+    setUserGameType('Ladder');
+  };
 
   const Avartar: LinkIconResource = {
     url: PROFILEURL,
@@ -72,7 +83,7 @@ export default function NavigationBar() {
 
   const ladderAction: LinkIconProps = {
     iconResource: Ladder,
-    // action: 
+    action: setLadder,
   };
 
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
@@ -96,3 +107,5 @@ export default function NavigationBar() {
     </NavLayout>
   );
 }
+
+export default NavigationBar;

@@ -9,6 +9,7 @@ import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GAMEPLAYURL } from '../configs/Link.url';
 import { GameRoomDto } from '../types/Game.type';
+import { userGameTypeAtom } from '../recoil/uesr.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
@@ -65,8 +66,10 @@ function GameLoadingPage() {
   const navigate = useNavigate();
   const { id: userId } = useRecoilValue(userDataAtom);
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const userState = useRecoilValue(userGameTypeAtom);
   useEffect(() => {
-    connect();
+    connect(); //game namespace socket 연결
+    //ladder 일때
     socket.emit(
       `${gameLadderMatch}`,
       {
@@ -76,6 +79,9 @@ function GameLoadingPage() {
         console.log('emit 성공 : ', response);
       },
     );
+    //1:1일때
+    //socket.emit~~~
+
     //match 성공시 값 받아서 동작시켜야함
     socket.on(`${gameLadderMatch}`, (args) => {
       moveToGame(args, userId);

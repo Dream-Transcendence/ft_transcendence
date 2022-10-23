@@ -2,12 +2,14 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { atom, useRecoilValue } from 'recoil';
+import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
 import { userDataAtom } from '../recoil/user.recoil';
+import { userStateListAtom } from '../recoil/uesr.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
+import { UserStateType } from '../types/LogOn.type';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
@@ -37,10 +39,40 @@ const PageSection = styled('section')(({ theme }) => ({
 // }, [userData]);
 //닉네임 2차인증 끝나고 받은 접속 유저 정보 목업데이터
 
+//로그인 한 사람들 목록
+const logOnListMock = [
+  {
+    id: 1,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 2,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 3,
+    logOn: false,
+    onGame: false,
+  },
+  {
+    id: 4,
+    logOn: true,
+    onGame: true,
+  },
+  {
+    id: 5,
+    logOn: true,
+    onGame: true,
+  },
+];
+
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
-
+  const [logStateList, setLogStateList] =
+    useRecoilState<UserStateType[]>(userStateListAtom);
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
@@ -51,8 +83,9 @@ function PingpongRoutePage() {
         {
           userId: userData.id,
         },
-        (response: any) => {
-          console.log('logOn user:', response);
+        (response: UserStateType[]) => {
+          console.log('logOn users:', response);
+          setLogStateList(logOnListMock); //로그인 중인 유저들 정보  받기
         },
       );
       socket.on('exception', (response: any) => {

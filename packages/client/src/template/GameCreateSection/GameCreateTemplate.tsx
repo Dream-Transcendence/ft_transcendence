@@ -3,7 +3,10 @@ import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GameCreateMainOrganism from '../../organisms/GameCreateSection/GameCreateMainSection';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { LinkTextResource } from '../../types/Link.type';
+import { LinkComponentResource, LinkTextResource } from '../../types/Link.type';
+import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
+import { Typography } from '@mui/material';
+import { GAMECREATEURL, GAMELOADINGURL } from '../../configs/Link.url';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -37,16 +40,15 @@ const GameFooterLayout = styled('div')(({ theme }) => ({
   height: '20%',
 }));
 
-const ButtonComponentLayout = styled(LinkPageTextButton)(({ theme }) => ({
+const ButtonComponentLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#312ECE',
 }));
 
-function GameCreateTemplate(props: { buttonType: string | undefined }) {
-  const { buttonType } = props;
-
+function GameCreateTemplate() {
   //[수정사항] gameloading으로 넘어가야함
-  const EnterRoom: LinkTextResource = {
-    content: 'INVITE',
+  const EnterRoom: LinkComponentResource = {
+    url: GAMELOADINGURL,
+    component: <Typography>Invite</Typography>,
   };
 
   return (
@@ -64,7 +66,10 @@ function GameCreateTemplate(props: { buttonType: string | undefined }) {
         {/* [SocketIO 요청] 상대방 초대 
         소켓 연결해아함?? 좀 더 공부해야함 */}
         {/* 상대방 화면에 수락 컴포넌트 요청할 것임. */}
-        <ButtonComponentLayout LinkTextResource={EnterRoom} />
+        <ButtonComponentLayout>
+          <LinkPageComponentButton linkComponentprops={EnterRoom} />
+        </ButtonComponentLayout>
+        {/* <ButtonComponentLayout LinkTextResource={EnterRoom} /> */}
       </GameFooterLayout>
     </GameTemplateLayout>
   );
