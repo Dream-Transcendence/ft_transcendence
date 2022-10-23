@@ -31,19 +31,21 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
   }, [roomId]);
 
   const sendMessage = () => {
-    socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
-      const sendMessage: SocketMessage = {
-        body: values.body,
-        id: 0,
-        user: {
-          id: values.userId,
-          image: '',
-          nickname: '',
-        },
-      };
-      setMessages([...messages, sendMessage]);
-      setValues({ ...values, body: '' });
-    });
+    if (values.body !== '') {
+      socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
+        const sendMessage: SocketMessage = {
+          body: values.body,
+          id: 0,
+          user: {
+            id: values.userId,
+            image: '',
+            nickname: '',
+          },
+        };
+        setMessages([...messages, sendMessage]);
+        setValues({ ...values, body: '' });
+      });
+    }
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +57,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
     if (event.key === 'Enter') {
       //자꾸 enter를 누르면 refresh되길래 기본기능막아줌
       event.preventDefault();
-      if (values.body !== '') {
-        sendMessage();
-      }
+      sendMessage();
     }
   };
 

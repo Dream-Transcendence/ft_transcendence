@@ -1,27 +1,14 @@
 import { styled } from '@mui/material/styles';
-import ListGenerate from '../../atoms/list/ListGenerate';
-import {
-  ControlMessage,
-  SocketMessage,
-  SendMessage,
-} from '../../types/Message.type';
+import { ControlMessage, SocketMessage } from '../../types/Message.type';
 import MessageBox from '../../atoms/textPrompt/MessageBox';
 import {
   ListChatGenerateLayout,
   ListChatLayout,
   ListChatUlLayout,
-  ListGenerateLayout,
-  ListLayout,
-  ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useEffect, useRef, useState } from 'react';
 import useSocket from '../../socket/useSocket';
-import {
-  chatNameSpace,
-  patchMessage,
-  patchUserInfo,
-  USERMESSAGE,
-} from '../../socket/event';
+import { chatNameSpace, patchMessage, USERMESSAGE } from '../../socket/event';
 import Loader from '../../atoms/Loading/Loader';
 import useInfiniteScroll from '../../hooks/useInfinitiScroll';
 import _ from 'lodash';
@@ -79,13 +66,23 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
 
   // ul에 리스트가 일정량이상있는지 체크 overflow감지
   useEffect(() => {
+    console.log(
+      'over effecrt',
+      ulRef.current.scrollTop,
+      ulRef.current.scrollHeight,
+      ulRef.current.clientHeight,
+    );
     if (ulRef.current) {
       //향후 수정예정 특정 위치에서만 불러지도록 수정할 것
-      const isOverflow =
-        ulRef.current.scrollHeight > ulRef.current.clientHeight + 50;
-      setIsOverflow(isOverflow);
+      if (ulRef.current.scrollHeight <= 385) {
+        setIsOverflow(false);
+      } else {
+        const isOverflow =
+          ulRef.current.scrollHeight > ulRef.current.clientHeight + 50;
+        setIsOverflow(isOverflow);
+      }
     }
-  }, [scrollHeight, setIsOverflow, roomId]);
+  }, [scrollHeight, setIsOverflow, roomId, messages]);
 
   // debounce로 0.5초간 입력 측정
   const scrollEvent = _.debounce(() => {
@@ -104,7 +101,8 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   //메시지가 업데이트 될 경우, 스크롤을 맨 밑으로 내려주기
   useEffect(() => {
     if (scrollState) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      if (isOverflow)
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
 
@@ -118,10 +116,12 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     async function getMessageHistory() {
       await axios.get(`${SERVERURL}/rooms/messages/${roomId}/0`).then((res) => {
         setMessages(res.data);
-        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+        if (isOverflow)
+          messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
       });
     }
     // 데이터 양이 많아져 스크롤이 생길 경우, db에서 추가로직 불러오는 요청으로 데이터 받아올 것
+    console.log('isOverflow', isOverflow);
     if (!isOverflow) {
       getMessageHistory();
     }
@@ -142,6 +142,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         setMessages([...messages, message]);
       });
     };
+    receiveMessage();
   }, [messages]);
 
   const callApi = async () => {
@@ -178,7 +179,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   // intersection observer로 특정 컴포넌트가 뷰포인트에 드러나는지 감지
   const { firstItemRef } = useInfiniteScroll(callApi);
 
-  // console.log('how many%%%%%%%%%%%%%', messages);
+  console.log('how many%%%%%%%%%%%%%', messages);
   const listElement: React.ReactElement[] = messages.map(
     (msg: any, index: number) => {
       return (
