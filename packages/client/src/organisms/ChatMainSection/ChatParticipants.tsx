@@ -8,7 +8,7 @@ import {
 } from '../../types/Participant.type';
 import { useEffect } from 'react';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, patchUserInfo } from '../../socket/event';
+import { chatNameSpace } from '../../socket/event';
 
 const ChatParticipantsLayout = styled('div')(({ theme }) => ({
   width: '30%',

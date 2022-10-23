@@ -8,7 +8,7 @@ import {
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useEffect, useRef, useState } from 'react';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, patchMessage, USERMESSAGE } from '../../socket/event';
+import { chatNameSpace, USERMESSAGE } from '../../socket/event';
 import Loader from '../../atoms/Loading/Loader';
 import useInfiniteScroll from '../../hooks/useInfinitiScroll';
 import _ from 'lodash';
@@ -36,7 +36,7 @@ const AnchorLayout = styled('div')(({ theme }) => ({
 }));
 
 function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
-  const { messages, setMessages } = props.messageSetter;
+  const { messages, setMessages, blockedUser } = props.messageSetter;
   const [socket] = useSocket(chatNameSpace);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesMiddleRef = useRef<HTMLDivElement | null>(null);
@@ -49,29 +49,23 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const scrollHeight = ulRef.current?.scrollHeight;
 
   //[수정사항][소켓] 로그인 붙이면 작업할 것 상태변경메시지 브로드캐스트
-  useEffect(() => {
-    socket.on(`${patchMessage}`, (res) => {
-      console.log(res);
-      // setMessages([...messages, res]);
-    });
-  }, [messages]);
+  // useEffect(() => {
+  //   socket.on(`${patchMessage}`, (res) => {
+  //     console.log(res);
+  //     // setMessages([...messages, res]);
+  //   });
+  // }, [messages]);
 
   // [수정사항][소켓] 어떤 유저가 메시지 보내면 실시간으로 받아 띄워주기
-  useEffect(() => {
-    socket.on(`${USERMESSAGE}`, (res) => {
-      console.log(res);
-      // setMessages([...messages, res]);
-    });
-  }, [messages]);
+  // useEffect(() => {
+  //   socket.on(`${USERMESSAGE}`, (res) => {
+  //     console.log(res);
+  //     // setMessages([...messages, res]);
+  //   });
+  // }, [messages]);
 
   // ul에 리스트가 일정량이상있는지 체크 overflow감지
   useEffect(() => {
-    console.log(
-      'over effecrt',
-      ulRef.current.scrollTop,
-      ulRef.current.scrollHeight,
-      ulRef.current.clientHeight,
-    );
     if (ulRef.current) {
       //향후 수정예정 특정 위치에서만 불러지도록 수정할 것
       if (ulRef.current.scrollHeight <= 385) {
@@ -121,7 +115,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       });
     }
     // 데이터 양이 많아져 스크롤이 생길 경우, db에서 추가로직 불러오는 요청으로 데이터 받아올 것
-    console.log('isOverflow', isOverflow);
     if (!isOverflow) {
       getMessageHistory();
     }
@@ -143,7 +136,10 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       });
     };
     receiveMessage();
-  }, [messages]);
+    // return () => {
+    //   socket.off(`${USERMESSAGE}`);
+    // };
+  }, [messages, setMessages, socket]);
 
   const callApi = async () => {
     // 로딩이 완료 되어 있는 경우에만 호출가능
@@ -176,20 +172,29 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   };
 
+  const checkBlock = (msg: SocketMessage) => {
+    if (
+      blockedUser.every((blockUser) => {
+        return blockUser !== msg.user.id;
+      })
+    )
+      return false;
+    else return true;
+  };
+
   // intersection observer로 특정 컴포넌트가 뷰포인트에 드러나는지 감지
   const { firstItemRef } = useInfiniteScroll(callApi);
 
-  console.log('how many%%%%%%%%%%%%%', messages);
   const listElement: React.ReactElement[] = messages.map(
-    (msg: any, index: number) => {
+    (msg: SocketMessage, index: number) => {
       return (
         <ListChatLayout key={index}>
           {index === 0 && isOverflow ? (
             <CallAPI ref={firstItemRef}>
-              <MessageBox message={msg} />
+              {!checkBlock(msg) && <MessageBox message={msg} />}
             </CallAPI>
           ) : (
-            <MessageBox message={msg} />
+            !checkBlock(msg) && <MessageBox message={msg} />
           )}
         </ListChatLayout>
       );

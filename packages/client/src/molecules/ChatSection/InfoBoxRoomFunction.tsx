@@ -72,9 +72,9 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     socket.on('exception', (response: any) => {
       alert(response.message);
     });
-    socket.on('roomMessage', (response: any) => {
-      console.log(response);
-    });
+    // socket.on('roomMessage', (response: any) => {
+    //   console.log(response);
+    // });
   }
 
   const outRoomProps: CustomIconProps = {
