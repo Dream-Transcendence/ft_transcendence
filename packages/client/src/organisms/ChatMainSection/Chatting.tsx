@@ -46,8 +46,6 @@ function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
     setMessageHistory([]);
     return setMessageHistory([]);
   }, [roomId, setMessageHistory]);
-  console.log('데이터 받아오기 전', roomInfo);
-
   return (
     <ChattingLayout>
       {type === DM ? (

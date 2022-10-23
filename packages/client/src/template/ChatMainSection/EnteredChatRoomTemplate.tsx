@@ -89,7 +89,14 @@ function EnteredChatRoomTemplate() {
       }
     }
     getRoomInfo();
-  }, [roomId, userData.id]);
+  }, [
+    roomId,
+    userData.id,
+    navigate,
+    setRoomInfo,
+    roomInfo.status,
+    setUserState,
+  ]);
 
   useEffect(() => {
     async function getParticipantInfo() {
