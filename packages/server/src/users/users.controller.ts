@@ -12,6 +12,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -28,6 +29,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PatchUserDto } from './dto/patch-user.dto';
 import {
   FriendDto,
+  PatchAuthDto,
   ServerRequestDto,
   UserDto,
   UserIdDto,
@@ -36,13 +38,13 @@ import { UserService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('users')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
 
   @Post()
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '유저 등록 / BodyType: CreateUserDto',
     description: '로그인 로직에 유저 추가가 들어갈 경우, 삭제될 수 있음',
@@ -56,7 +58,7 @@ export class UsersController {
   }
 
   @Get('/:id/profile')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '유저 정보 가져오기',
     description:
@@ -69,7 +71,7 @@ export class UsersController {
   }
 
   @Patch('/:id/profile')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '유저 정보 수정  / BodyType: PatchUserDto',
     description: '닉네임 또는 이미지 업데이트(수정할 객체만 담아서 요청)',
@@ -85,7 +87,7 @@ export class UsersController {
   }
 
   @Get('/:id/2nd-auth')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '2차 인증 여부 가져오기',
     description: '유저의 2차 인증 여부를 Boolean(true, false)으로 확인',
@@ -97,16 +99,20 @@ export class UsersController {
   }
 
   @Patch('/:id/2nd-auth')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '2차 인증 업데이트 / BodyType: AuthUserDto',
     description:
-      '유저의 2차 인증 여부 반전(true -> false, false -> true) / 현재 인증 기능 미구현',
+      '유저의 2차 인증 여부 반전(true -> false, false -> true)\
+      인증을 할 때는 이메일로 받은 code를 body에 포함하고, 해제 할 때는 바디에 아무것도 포함하지 않음',
   })
   @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
+  @ApiBadRequestResponse({
+    description: '인증코드가 일치하지 않거나 만료되었습니다.',
+  })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchAuth(@Param('id') id: number) {
-    return this.userService.patchAuth(id);
+  patchAuth(@Param('id') id: number, @Body() patchAuthDto: PatchAuthDto) {
+    return this.userService.patchAuth(id, patchAuthDto);
   }
 
   @Post('/:id/blocks')
@@ -279,6 +285,16 @@ export class UsersController {
     return this.userService.searchFriend(id, nickname);
   }
 
+  @Post('/:id/2nd-auth')
+  @ApiTags('유저/관리')
+  @ApiOperation({ summary: '유저 2차 인증 요청' })
+  @ApiCreatedResponse({ description: '유저 2차 인증 요청 성공' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  requestAuth(@Param('id') id: number) {
+    return this.userService.requestAuth(id);
+  }
+
+  @ApiTags('유저/인증')
   @Get('userinfo')
   async userInfo(@Request() req) {
     return await this.userService.userInfo(req.user);
