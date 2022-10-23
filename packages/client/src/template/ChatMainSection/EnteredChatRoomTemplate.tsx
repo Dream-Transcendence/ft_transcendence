@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { SERVERURL } from '../../configs/Link.url';
+import { useParams, useNavigate } from 'react-router-dom';
+import { SERVERURL, CHANNELURL } from '../../configs/Link.url';
 import { DM } from '../../configs/RoomType';
 import { BAN } from '../../configs/Status.case';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
@@ -71,6 +71,7 @@ function EnteredChatRoomTemplate() {
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
   const [userType, setUserType] = useRecoilState(userAuth);
+  const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStatus);
   const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
 
@@ -83,7 +84,7 @@ function EnteredChatRoomTemplate() {
         setRoomInfo(response.data);
         setUserState(roomInfo.status);
       } catch (error) {
-        alert(error);
+        navigate(`${CHANNELURL}`);
         throw console.dir(error);
       }
     }
@@ -199,21 +200,22 @@ function EnteredChatRoomTemplate() {
 
   return (
     <ChattingRoomLayout>
-      {userState !== BAN ? (
-        <ChattingBanLayout>
-          <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
-          <ChatRoomFeaterLayout>
-            <ChattingOrganisms controlRoomInfo={controlRoomInfo} />
-            {roomInfo.type !== DM && roomInfo.type !== 5 && (
-              <ChatParticipantsOrganisms
-                participantInfoSet={participantInfoSet}
-              />
-            )}
-          </ChatRoomFeaterLayout>
-        </ChattingBanLayout>
-      ) : (
-        <BannedLayout>😛</BannedLayout>
-      )}
+      {roomInfo.id !== 0 &&
+        (userState !== BAN ? (
+          <ChattingBanLayout>
+            <EnteredChatRoomInfoOrganisms roomInfoSet={roomInfoSet} />
+            <ChatRoomFeaterLayout>
+              <ChattingOrganisms controlRoomInfo={controlRoomInfo} />
+              {roomInfo.type !== DM && roomInfo.type !== 5 && (
+                <ChatParticipantsOrganisms
+                  participantInfoSet={participantInfoSet}
+                />
+              )}
+            </ChatRoomFeaterLayout>
+          </ChattingBanLayout>
+        ) : (
+          <BannedLayout>😛</BannedLayout>
+        ))}
     </ChattingRoomLayout>
   );
 }

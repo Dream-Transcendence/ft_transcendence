@@ -29,7 +29,7 @@ import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 const ChatLogLayout = styled('div')(({ theme }) => ({
-  width: '90%',
+  width: '100%',
   height: '92%',
   display: 'flex',
   flexDirection: 'column',

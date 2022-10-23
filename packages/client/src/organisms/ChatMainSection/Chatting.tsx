@@ -31,7 +31,7 @@ const RoomChattingLayout = styled('div')(({ theme }) => ({
 }));
 
 const ChattingLayout = styled('div')(({ theme }) => ({
-  width: '100%',
+  width: '70%',
   height: '99%',
 }));
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
@@ -46,7 +46,7 @@ function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
     setMessageHistory([]);
     return setMessageHistory([]);
   }, [roomId, setMessageHistory]);
-  // console.log('데이터 받아오기 전', messageSetter.messages);
+  console.log('데이터 받아오기 전', roomInfo);
 
   return (
     <ChattingLayout>
