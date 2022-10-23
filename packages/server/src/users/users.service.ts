@@ -191,6 +191,7 @@ export class UserService {
         throw new BadRequestException(
           '인증코드가 일치하지 않거나 만료되었습니다.',
         );
+      this.authCodeList.delete(id);
     }
 
     auth.authenticated = !auth.authenticated;
