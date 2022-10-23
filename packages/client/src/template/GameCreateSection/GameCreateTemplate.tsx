@@ -7,6 +7,9 @@ import { LinkComponentResource, LinkTextResource } from '../../types/Link.type';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
 import { Typography } from '@mui/material';
 import { GAMECREATEURL, GAMELOADINGURL } from '../../configs/Link.url';
+import { NOMAL } from '../../configs/Game.type';
+import { useRecoilState } from 'recoil';
+import { gameTypeAtom } from '../../recoil/user.recoil';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -45,10 +48,16 @@ const ButtonComponentLayout = styled('div')(({ theme }) => ({
 }));
 
 function GameCreateTemplate() {
+  const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+
+  const setNomal = () => {
+    setUserGameType(NOMAL);
+  };
+
   //[수정사항] gameloading으로 넘어가야함
-  const EnterRoom: LinkComponentResource = {
+  const EnterGame: LinkComponentResource = {
     url: GAMELOADINGURL,
-    component: <Typography>Invite</Typography>,
+    component: <Button onClick={setNomal}>Invite</Button>,
   };
 
   return (
@@ -67,7 +76,7 @@ function GameCreateTemplate() {
         소켓 연결해아함?? 좀 더 공부해야함 */}
         {/* 상대방 화면에 수락 컴포넌트 요청할 것임. */}
         <ButtonComponentLayout>
-          <LinkPageComponentButton linkComponentprops={EnterRoom} />
+          <LinkPageComponentButton linkComponentprops={EnterGame} />
         </ButtonComponentLayout>
         {/* <ButtonComponentLayout LinkTextResource={EnterRoom} /> */}
       </GameFooterLayout>

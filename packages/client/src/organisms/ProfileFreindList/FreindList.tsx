@@ -4,7 +4,7 @@ import { Typography } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import {
   ListGenerateLayout,
@@ -12,16 +12,16 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useRecoilValue } from 'recoil';
-import { userStateListAtom } from '../../recoil/uesr.recoil';
+import { userStateListAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  alignSelf: 'start',
-  justifySelf: 'end',
+  alignSelf: 'end',
+  justifySelf: 'start',
   alignItems: 'center',
-  height: '75%',
+  height: '42%',
   width: '50%',
   gridArea: 'FreindList',
   backgroundColor: '#1976D2',

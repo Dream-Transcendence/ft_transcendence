@@ -9,8 +9,9 @@ import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GAMEPLAYURL } from '../configs/Link.url';
 import { GameRoomDto } from '../types/Game.type';
-import { userGameTypeAtom } from '../recoil/uesr.recoil';
+import { gameTypeAtom } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
+import { LADDER, NOMAL } from '../configs/Game.type';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -66,22 +67,32 @@ function GameLoadingPage() {
   const navigate = useNavigate();
   const { id: userId } = useRecoilValue(userDataAtom);
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
-  const userState = useRecoilValue(userGameTypeAtom);
+  const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
     connect(); //game namespace socket 연결
     //ladder 일때
-    socket.emit(
-      `${gameLadderMatch}`,
-      {
-        userId: userId,
-      },
-      (response: any) => {
-        console.log('emit 성공 : ', response);
-      },
-    );
-    //1:1일때
-    //socket.emit~~~
-
+    if (gameType === LADDER) {
+      socket.emit(
+        `${gameLadderMatch}`,
+        {
+          userId: userId,
+        },
+        (response: any) => {
+          console.log('emit 성공 : ', response);
+        },
+      );
+    } else if (gameType === NOMAL) {
+      //1:1일때
+      socket.emit(
+        `${gameLadderMatch}`,
+        {
+          userId: userId,
+        },
+        (response: any) => {
+          console.log('emit 성공 : ', response);
+        },
+      );
+    }
     //match 성공시 값 받아서 동작시켜야함
     socket.on(`${gameLadderMatch}`, (args) => {
       moveToGame(args, userId);

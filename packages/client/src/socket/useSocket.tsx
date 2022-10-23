@@ -1,5 +1,5 @@
 import io, { Socket } from 'socket.io-client';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { SOCKETURL } from '../configs/Link.url';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 const sockets: { [key: string]: Socket<DefaultEventsMap, DefaultEventsMap> } =
@@ -26,28 +26,30 @@ const useSocket = (
   // const auth = () => {
   //   sockets[nameSpace].connect();
   // };
-
+  // console.log( sockets[nameSpace]);
   const connect = () => {
     //undefined를 체크한 이유는 가끔가다가 socket생성이 느려서 터짐!
-    if (
-      sockets[nameSpace] !== undefined &&
+    if (sockets[nameSpace] !== undefined &&
       sockets[nameSpace].connected === false
     ) {
+      sockets[nameSpace].connect();
       console.log(
         `sockets[${nameSpace}].connected`,
         sockets[nameSpace].connected,
       );
-      sockets[nameSpace].connect();
     }
   };
 
   const disconnect = () => {
-    if (sockets[nameSpace].connected) {
+    if (sockets[nameSpace] !== undefined &&
+      sockets[nameSpace].connected === true
+      ) {
+
+      sockets[nameSpace].disconnect();
       console.log(
         `sockets[${nameSpace}].disconnected`,
         sockets[nameSpace].connected,
       );
-      sockets[nameSpace].disconnect();
       delete sockets[nameSpace];
     }
   };

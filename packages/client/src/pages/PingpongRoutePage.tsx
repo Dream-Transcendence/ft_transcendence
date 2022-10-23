@@ -5,8 +5,8 @@ import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
-import { userDataAtom } from '../recoil/user.recoil';
-import { userStateListAtom } from '../recoil/uesr.recoil';
+import { userDataAtom, gameTypeAtom } from '../recoil/user.recoil';
+import { userStateListAtom } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { UserStateType } from '../types/LogOn.type';
@@ -24,19 +24,6 @@ const PageSection = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-//기본 유저 데이터 초초기기화
-// useEffect(() => {
-//   async function getUserData() {
-//     const response = await axios.get(`${SERVERURL}users/${id}/profile`);
-//     console.log(response.data);
-//     setUser(response.data);
-//   }
-//   try {
-//     getUserData();
-//   } catch {
-//     console.log('error: PingpongRoutePage()');
-//   }
-// }, [userData]);
 //닉네임 2차인증 끝나고 받은 접속 유저 정보 목업데이터
 
 //로그인 한 사람들 목록
@@ -76,7 +63,7 @@ function PingpongRoutePage() {
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
-    function setChatSocketConnect() {
+    function setUserSocketConnect() {
       connect();
       socket.emit(
         `${logOn}`,
@@ -92,13 +79,16 @@ function PingpongRoutePage() {
         alert(response.message);
       });
     }
-    setChatSocketConnect();
+    setUserSocketConnect();
+    console.log('logs', logStateList);
     return () => {
       socket.off('exception');
       disconnect();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
-  }, [userData.id, socket, connect, disconnect]);
+    //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
+  }, [userData.id]);
+  //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함, id 또한 재 로그인 하지 않는이상 다시 바뀔 일은 없겠지만 일단 남겨 둠
 
   return (
     <PageSection>
@@ -119,6 +109,9 @@ function PingpongRoutePage() {
         <Route path="gameplay/:userId" element={<GamePlayPage />} />
         <Route path="gameloading/*" element={<GameLoadingPage />} />
       </Routes>
+      {/* <footer>
+       <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
+      </footer> */}
     </PageSection>
   );
 }

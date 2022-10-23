@@ -1,6 +1,10 @@
 import { styled } from '@mui/material/styles';
+import { height } from '@mui/system';
 
 export const ListLayout = styled('li')(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
   width: '100%',
   height: '20%',
   paddingTop: '2px',
@@ -18,9 +22,13 @@ export const ListChatLayout = styled('li')(() => ({
 }));
 
 export const ListUlLayout = styled('ul')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
   height: '100%',
+  width: '100%',
   position: 'relative',
-  padding: 3,
+  margin: 0,
+  padding: '0',
   overflow: 'auto',
 }));
 

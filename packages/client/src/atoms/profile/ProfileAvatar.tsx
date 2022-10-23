@@ -1,7 +1,7 @@
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
-import { createTheme } from '@mui/material';
+import { createTheme, makeStyles } from '@mui/material';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
 import {
   BaseUserProfileData,
@@ -9,18 +9,18 @@ import {
   UserProfileBoxDataType,
 } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
-import { userStateListAtom } from '../../recoil/uesr.recoil';
+import { userLogStateListAtom } from '../../recoil/log.recoil';
 import { UserStateType } from '../../types/LogOn.type';
+import { userStateListAtom } from '../../recoil/user.recoil';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px`, //${theme.palette.background.paper}
+    // color: '#44b700',
+    boxShadow: `0 0 0 1px`, //${theme.palette.background.paper}
     '&::after': {
       position: 'absolute',
-      top: 0,
-      left: 0,
+      top: -1,
+      left: -1,
       width: '100%',
       height: '100%',
       borderRadius: '50%',
@@ -36,7 +36,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
       opacity: 1,
     },
     '100%': {
-      transform: 'scale(2.6)',
+      transform: 'scale(2.0)',
       opacity: 0,
     },
   },

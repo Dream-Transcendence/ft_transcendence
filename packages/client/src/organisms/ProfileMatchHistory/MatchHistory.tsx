@@ -21,7 +21,7 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   alignSelf: 'start',
   justifySelf: 'start',
   alignItems: 'center',
-  height: '100%',
+  height: '90%',
   width: '60%',
   gridArea: 'MatchHistory',
   backgroundColor: '#1976D2',
@@ -63,9 +63,11 @@ function MatchHistory() {
           MatchHistory
         </Typography>
       </TextLayout>
+      <div style={{backgroundColor: 'white', width: '90%', height: '90%', borderRadius: '3%'}}>
       <ListGenerateLayout>
         <ListUlLayout>{listElement}</ListUlLayout>
       </ListGenerateLayout>
+      </div>
     </MatchHistoryLayout>
   );
 }

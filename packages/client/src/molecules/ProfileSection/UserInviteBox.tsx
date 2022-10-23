@@ -24,6 +24,7 @@ function UserInviteProfileBox() {
   //props: { userData: BaseUserProfileData }) {
   //const { userData } = props;
   const userData: UserProfileBoxDataType = {
+    id: 0,
     nickname: 'noname',
     image: 'noimage',
   };

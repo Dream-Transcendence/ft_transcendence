@@ -3,14 +3,15 @@ import { Typography } from '@mui/material';
 
 const MatchTypeLayout = styled('div')(({ theme }) => ({
   display: 'flex',
+  flexWrap: 'nowrap',
   alignContent: 'center',
   alignItems: 'center',
   alignSelf: 'center',
   backgroundColor: '#00000000',
   flexBasis: '20%', //matchtype width %
   height: '100%',
-  margin: '0.5rem',
   borderRight: 'solid 1px',
+  marginLeft: '0.3rem',
 }));
 
 function MatchType(matchType: boolean) {

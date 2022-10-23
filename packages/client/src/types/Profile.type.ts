@@ -5,7 +5,7 @@ export interface UserLadderType {
 }
 
 export interface UserProfileBoxDataType {
-  id: number;
+  id?: number;
   nickname: string;
   image: string;
 }

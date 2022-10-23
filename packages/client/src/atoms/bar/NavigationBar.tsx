@@ -29,7 +29,8 @@ import {
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
-import { userGameTypeAtom } from '../../recoil/uesr.recoil';
+import { gameTypeAtom } from '../../recoil/user.recoil';
+import { LADDER } from '../../configs/Game.type';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -47,7 +48,7 @@ const RightLayout = styled('section')(({ theme }) => ({
 }));
 
 function NavigationBar() {
-  const [userGameType, setUserGameType] = useRecoilState(userGameTypeAtom);
+  const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
 
   const searchProps: SearchPropsType = useSearch(
     `${SERVERURL}/users/search`,
@@ -56,7 +57,7 @@ function NavigationBar() {
   );
 
   const setLadder = () => {
-    setUserGameType('Ladder');
+    setUserGameType(LADDER);
   };
 
   const Avartar: LinkIconResource = {
