@@ -33,6 +33,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PatchImageDto, PatchNicknameDto } from './dto/patch-user.dto';
 import {
   FriendDto,
+  IsBlockedDto,
   PatchAuthDto,
   ServerRequestDto,
   UserDto,
@@ -75,7 +76,7 @@ export class UsersController {
     return this.userService.getUser(id);
   }
 
-  @Patch('/:id/image')
+  @Post('/:id/image')
   @ApiTags('유저 관리')
   @ApiOperation({
     summary: '유저 이미지 수정 / BodyType: File',
@@ -157,6 +158,24 @@ export class UsersController {
     return this.userService.blockUser(id, userIdDto.id);
   }
 
+  @Get('/:id/blocks/:blockedUserId')
+  @ApiTags('유저/차단')
+  @ApiOperation({
+    summary: '유저 차단 여부 확인',
+    description: '유저의 차단 여부를 Boolean(true, false)으로 확인',
+  })
+  @ApiOkResponse({
+    description: '유저 차단 여부 가져오기 성공',
+    type: IsBlockedDto,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  getIsBlocked(
+    @Param('id') id: number,
+    @Param('blockedUserId') blockedUserId: number,
+  ): Promise<IsBlockedDto> {
+    return this.userService.getIsBlocked(id, blockedUserId);
+  }
+
   @Delete('/:id/blocks/:blockedUserId')
   @ApiTags('유저/차단')
   @ApiOperation({
@@ -185,6 +204,29 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getRooms(@Param('id') id: number): Promise<GetUserRoomsDto> {
     return this.userService.getRooms(id);
+  }
+
+  @Get('/search')
+  @ApiQuery({ name: 'nickname', required: true })
+  @ApiTags('유저/검색')
+  @ApiOperation({ summary: '유저 검색' })
+  @ApiOkResponse({ description: '유저 검색 성공', type: [UserDto] })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  searchUser(@Query('nickname') nickname: string): Promise<UserDto[]> {
+    return this.userService.searchUser(nickname);
+  }
+
+  @Get('/:id/friends/search')
+  @ApiTags('유저/검색')
+  @ApiQuery({ name: 'nickname', required: true })
+  @ApiOperation({ summary: '친구 검색' })
+  @ApiOkResponse({ description: '친구 검색 성공', type: [UserDto] })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  searchFriend(
+    @Param('id') id: number,
+    @Query('nickname') nickname: string,
+  ): Promise<UserDto[]> {
+    return this.userService.searchFriend(id, nickname);
   }
 
   @Post('/:id/friends')
@@ -287,29 +329,6 @@ export class UsersController {
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getRequests(@Param('id') id: number): Promise<ServerRequestDto[]> {
     return this.userService.getRequests(id);
-  }
-
-  @Get('/search')
-  @ApiQuery({ name: 'nickname', required: true })
-  @ApiTags('유저/검색')
-  @ApiOperation({ summary: '유저 검색' })
-  @ApiOkResponse({ description: '유저 검색 성공', type: [UserDto] })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  searchUser(@Query('nickname') nickname: string): Promise<UserDto[]> {
-    return this.userService.searchUser(nickname);
-  }
-
-  @Get('/:id/friends/search')
-  @ApiTags('유저/검색')
-  @ApiQuery({ name: 'nickname', required: true })
-  @ApiOperation({ summary: '친구 검색' })
-  @ApiOkResponse({ description: '친구 검색 성공', type: [UserDto] })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  searchFriend(
-    @Param('id') id: number,
-    @Query('nickname') nickname: string,
-  ): Promise<UserDto[]> {
-    return this.userService.searchFriend(id, nickname);
   }
 
   @Post('/:id/2nd-auth')

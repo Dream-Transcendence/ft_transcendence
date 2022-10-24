@@ -164,3 +164,9 @@ export class PatchAuthDto {
   @IsOptional()
   code: number;
 }
+
+export class IsBlockedDto {
+  @ApiProperty({ example: false })
+  @IsBoolean()
+  isBlocked: boolean;
+}

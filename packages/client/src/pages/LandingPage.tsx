@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
+import { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
@@ -7,7 +8,7 @@ import { LinkComponentResource } from '../types/Link.type';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { userDataAtom } from '../recoil/user.recoil';
 
 const MainSection = styled.section`
@@ -35,12 +36,9 @@ const EnterButton = styled.button`
     background: #2d6;
   }
 `;
-
 axios.defaults.withCredentials = true;
-
 function LandingPage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [click, setClick] = useState(false);
 
   const loginOauth = () => {
     //[수정사항] 이미 로그인 중인지도 파악하는 로직 추가예정
