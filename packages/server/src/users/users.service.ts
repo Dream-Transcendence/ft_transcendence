@@ -205,8 +205,10 @@ export class UserService {
     });
     const { code } = patchAuthDto;
 
+    console.log(this.authCodeList, code);
+
     if (code !== undefined || auth.authenticated === false) {
-      if (this.authCodeList.get(id) !== code)
+      if (this.authCodeList.get(id) !== code || code === undefined)
         throw new BadRequestException(
           '인증코드가 일치하지 않거나 만료되었습니다.',
         );
