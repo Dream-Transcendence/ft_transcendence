@@ -9,11 +9,15 @@ import {
   Post,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBody,
   ApiConflictResponse,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -26,7 +30,7 @@ import { GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { GameLadderDto, GameRecordDto } from 'src/game/game.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PatchUserDto } from './dto/patch-user.dto';
+import { PatchImageDto, PatchNicknameDto } from './dto/patch-user.dto';
 import {
   FriendDto,
   PatchAuthDto,
@@ -36,6 +40,7 @@ import {
 } from './dto/user.dto';
 import { UserService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 // @UseGuards(AuthGuard('jwt'))
@@ -70,20 +75,42 @@ export class UsersController {
     return this.userService.getUser(id);
   }
 
-  @Patch('/:id/profile')
-  @ApiTags('유저/관리')
+  @Patch('/:id/image')
+  @ApiTags('유저 관리')
   @ApiOperation({
-    summary: '유저 정보 수정  / BodyType: PatchUserDto',
-    description: '닉네임 또는 이미지 업데이트(수정할 객체만 담아서 요청)',
+    summary: '유저 이미지 수정 / BodyType: File',
+    description: '유저 이미지 업데이트',
   })
-  @ApiOkResponse({ description: '유저 정보 수정 성공', type: UserDto })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    description: 'User profile image',
+    type: PatchImageDto,
+  })
+  @ApiOkResponse({ description: '유저 이미지 수정 성공', type: UserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  patchImage(
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.patchImage(id, file);
+  }
+
+  @Patch('/:id/nickname')
+  @ApiTags('유저 관리')
+  @ApiOperation({
+    summary: '유저 닉네임 수정  / BodyType: PatchNicknameDto',
+    description: '닉네임 업데이트',
+  })
+  @ApiOkResponse({ description: '유저 닉네임 수정 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiConflictResponse({ description: '이미 있는 닉네임으로 변경 시도' })
-  patchUser(
+  patchNickname(
     @Param('id') id: number,
-    @Body() patchUserDto: PatchUserDto,
+    @Body()
+    patchNicknameDto: PatchNicknameDto,
   ): Promise<UserDto> {
-    return this.userService.patchUser(id, patchUserDto);
+    return this.userService.patchNickname(id, patchNicknameDto);
   }
 
   @Get('/:id/2nd-auth')
