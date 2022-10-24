@@ -12,12 +12,14 @@ import { DatabaseModule } from '../database/database.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
+import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     UsersModule,
     PassportModule,
     HttpModule,
     DatabaseModule,
+    ConfigModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60m' },
