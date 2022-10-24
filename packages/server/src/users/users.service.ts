@@ -25,11 +25,13 @@ import {
   ServerRequestDto,
   RequestIdDto,
   ClientRequestDto,
+  PatchAuthDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
+import { MailerService } from '@nestjs-modules/mailer';
 import * as AWS from 'aws-sdk';
 
 @Injectable()
@@ -53,6 +55,7 @@ export class UserService {
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
     private dmParticipantsRepository: Repository<DmParticipant>,
+    private readonly mailerService: MailerService,
   ) {}
 
   //ANCHOR: user management
@@ -141,6 +144,38 @@ export class UserService {
     return newUserDto;
   }
 
+  private authCodeList: Map<number, number> = new Map();
+
+  async requestAuth(id: number) {
+    const userAuth = await this.authRepository.findOne({
+      relations: ['user'],
+      where: { user: { id: id } },
+    });
+
+    const authCode = Math.floor(Math.random() * (1000000 - 100000)) + 100000;
+    this.authCodeList.set(id, authCode);
+    // NOTE: after 5 minutes, delete authCode
+    setTimeout(() => {
+      this.authCodeList.delete(id);
+    }, 5 * 60 * 1000);
+
+    await this.mailerService
+      .sendMail({
+        to: userAuth.email,
+        from: 'no-reply <no-reply@transcendence.com>',
+        subject: '[ft-transcendence] 2차 인증 코드',
+        text: `인증 코드: ${authCode}`,
+        html: `<b>인증 코드: ${authCode}</b>`,
+      })
+      .then((success) => {
+        console.log('Mail sent: ' + success);
+      })
+      .catch((err) => {
+        console.log('Error occured: ' + err);
+        throw new BadRequestException();
+      });
+  }
+
   async getAuth(id: number): Promise<AuthUserDto> {
     // SELECT * FROM public."auth"
     // LEFT JOIN "user" ON "user"."id" = id
@@ -157,13 +192,23 @@ export class UserService {
     return authUserDto;
   }
 
-  // TODO: 인증하는 로직 추가
-  async patchAuth(id: number): Promise<AuthUserDto> {
+  async patchAuth(
+    id: number,
+    patchAuthDto: PatchAuthDto,
+  ): Promise<AuthUserDto> {
     const auth = await this.authRepository.findOne({
       relations: { user: true },
       where: { user: { id: id } },
     });
-    // if (auth === null) throw new EntityNotFoundError(Auth, id);
+
+    if (auth.authenticated === false) {
+      const { code } = patchAuthDto;
+      if (this.authCodeList.get(id) !== code)
+        throw new BadRequestException(
+          '인증코드가 일치하지 않거나 만료되었습니다.',
+        );
+      this.authCodeList.delete(id);
+    }
 
     auth.authenticated = !auth.authenticated;
     await this.authRepository.save(auth);

@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsInt, IsObject, IsString, IsUrl } from 'class-validator';
-import { request } from 'http';
+import {
+  IsBoolean,
+  IsInt,
+  IsObject,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { User } from '../users.entity';
 
 export class UserDto {
@@ -151,4 +156,11 @@ export class ServerRequestDto {
 
 export class RequestIdDto {
   id: number;
+}
+
+export class PatchAuthDto {
+  @ApiProperty({ example: 391082 })
+  @IsInt()
+  @IsOptional()
+  code: number;
 }
