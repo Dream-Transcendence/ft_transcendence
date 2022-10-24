@@ -50,20 +50,18 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
 
   //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
   async function checkIsFriend() {
-    try {
-      //친구 찾는 로직 수정되면 테스트 해보기
-      const response = await axios.get(
-        `${SERVERURL}/users/${id}/friends/${otherId}`,
-      );
-      if ((await response.status) === 201) {
+    await axios.get(
+      `${SERVERURL}/users/${id}/friends/${otherId}`,
+    ).then((response: any) => {
+      if (response.status === 201) {
         setIsFriend(true);
-      } else {
+      }
+    }).catch((error: any) => {
+      console.log('error status : ', error.response.data.statusCode);
+      if (error.response.data.statusCode === 404) {
         setIsFriend(false);
       }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
+    })
   }
 
   useEffect(() => {

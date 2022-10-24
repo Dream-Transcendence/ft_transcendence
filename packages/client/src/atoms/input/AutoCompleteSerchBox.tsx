@@ -15,7 +15,7 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const { nickname: atomNickname } = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
   const [value, setValue] = useState<string | null>(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     async function getSearchUser() {
@@ -33,9 +33,9 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
           );
           setUserList(list);
         }
-      } catch (error) {
+      } catch (error:any) {
         alert(error);
-        console.log(error);
+        console.log('123', error.response.data.status);
       }
     } //[수정사항][doyun] 에러 발생 focus도 안됐는데 제멋대로 호출함
     if (value) getSearchUser();

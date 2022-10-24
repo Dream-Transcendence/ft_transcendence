@@ -1,5 +1,8 @@
-export interface UserStateType {
-  id: number;
-  logOn: boolean;
+export interface ConnectionDto {
+  userId: number;
   onGame: boolean;
+}
+
+export interface ConnectionsDto {
+  connections: ConnectionDto[];
 }
