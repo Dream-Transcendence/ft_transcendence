@@ -11,7 +11,6 @@ import {
   checkIsSecondOauth,
   userLogStateListAtom,
 } from '../recoil/user.recoil';
-import { userStateListAtom } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
@@ -60,7 +59,7 @@ function PingpongRoutePage() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const [logStateList, setLogStateList] =
-    useRecoilState<UserStateType[]>(userStateListAtom);
+    useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [passSecondOauth, setPassSecondOauth] =
     useRecoilState<boolean>(checkIsSecondOauth);
   //로그온 정보 날리기 친구정보 가져다줄것
@@ -94,10 +93,10 @@ function PingpongRoutePage() {
           setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
         },
       );
-      socket.on('exception', (response: any) => {
-        alert('이미 로그인 한 상태입니다.');
-        navigate('/');
-      });
+      // socket.on('exception', (response: any) => {
+      //   alert('이미 로그인 한 상태입니다.');
+      //   navigate('/');
+      // });
     }
     setUserSocketConnect();
     console.log('logs', userLogStateList);

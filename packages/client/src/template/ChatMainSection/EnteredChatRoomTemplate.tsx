@@ -29,6 +29,7 @@ import {
   ENTERMESSAGE,
   PATCHMESSAGE,
 } from '../../socket/event';
+import { SocketAddress } from 'net';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -222,40 +223,62 @@ function EnteredChatRoomTemplate() {
       });
     }
     changedParticipantStatus();
+    // return () => {
+    //   socket.off(`${PATCHMESSAGE}`);
+    // };
   }, [participantInfo, socket]);
 
   const getBlocked = async (blockedUserId: number) => {
     let response;
-    try {
-      response = await axios.get(`/users/${userData}/blocks/${blockedUserId}`);
-    } catch (error) {
-      console.dir(error);
-    }
-    return response?.data.blocked;
   };
 
   //[수정사항][소켓] 참가인원의 block유무를 알기 위해
   useEffect(() => {
-    if (roomInfo.type !== DM) {
-      socket.on(`${ENTERMESSAGE}`, (res) => {
-        console.log('endter!! ', res);
-        const participant = { ...res, blocked: getBlocked(res.user.id) };
-        setParticipantInfo([...participantInfo, participant]);
+    if (
+      roomInfo.type !== DM &&
+      roomInfo.type !== 5 &&
+      participantInfo.length > 1
+    ) {
+      socket.on(`${ENTERMESSAGE}`, async (res) => {
+        try {
+          await axios
+            .get(`${SERVERURL}/users/${userData.id}/blocks/${res.user.id}`)
+            .then((response) => {
+              const participant = { ...res, blocked: response.data };
+              console.log('endter!! ', participant);
+              setParticipantInfo([...participantInfo, participant]);
+            });
+        } catch (error) {
+          console.dir(error);
+        }
       });
     }
-  }, [participantInfo]);
+    return () => {
+      socket.off(`${ENTERMESSAGE}`);
+    };
+  }, [participantInfo, socket]);
 
   useEffect(() => {
-    if (roomInfo.type !== DM) {
+    if (
+      roomInfo.type !== DM &&
+      roomInfo.type !== 5 &&
+      participantInfo.length > 1
+    ) {
       socket.on(`${DELETEMESSAGE}`, (res) => {
         console.log('out!! ', res);
         const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
-          (participant) => participant.user.id !== res.userId,
+          (participant) => {
+            return participant.user.id !== +res;
+          },
         );
+        console.log(res, filteredParticipants);
         setParticipantInfo([...filteredParticipants]);
       });
     }
-  }, [participantInfo]);
+    return () => {
+      socket.off(`${DELETEMESSAGE}`);
+    };
+  }, [participantInfo, socket]);
 
   const roomInfoSet: RoomInfoSet = {
     roomInfo: { ...roomInfo, personnel: personnel },

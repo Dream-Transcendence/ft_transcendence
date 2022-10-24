@@ -4,7 +4,7 @@ import { recoilPersist } from 'recoil-persist';
 import { ConnectionDto } from '../types/LogOn.type';
 
 export const userLogStateListAtom = atom<ConnectionDto[]>({
-  key: 'userStateListAtom',
+  key: 'userLogStateListAtom',
   default: [],
 });
 
