@@ -50,7 +50,7 @@ function MatchHistory() {
   //userId로 받아온 리스트
   const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
     return (
-      <ListLayout key={matchHistory.id}>
+      <ListLayout key={matchHistory.id} sx={{justifyContent:'center'}}>
         <OneMatchHistory matchHistory={matchHistory} />
       </ListLayout>
     );

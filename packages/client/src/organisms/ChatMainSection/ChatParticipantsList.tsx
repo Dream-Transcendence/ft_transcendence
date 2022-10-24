@@ -11,6 +11,12 @@ import {
 import { ParticipantInfoSet } from '../../types/Participant.type';
 
 const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
+  // alignItems: 'center',
+  // alignContent: 'center',
+  // justifyContent: 'center',
+  // justifyItems: 'center',
+  // display: 'flex',
+  // flexDirection: 'column',
   width: '98%',
   height: '90%',
 }));

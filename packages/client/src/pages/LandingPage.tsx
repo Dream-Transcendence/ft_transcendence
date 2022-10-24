@@ -36,7 +36,9 @@ const EnterButton = styled.button`
     background: #2d6;
   }
 `;
+
 axios.defaults.withCredentials = true;
+
 function LandingPage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
 
