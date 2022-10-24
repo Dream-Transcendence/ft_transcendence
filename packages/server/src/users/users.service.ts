@@ -5,6 +5,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
@@ -436,7 +437,7 @@ export class UserService {
       relations: ['user', 'friend'],
       where: { user: { id: id }, friend: { id: friendId } },
     });
-    if (friend === null) throw new EntityNotFoundError(User, friendId);
+    if (friend === null) throw new NotFoundException('친구가 아닙니다.');
 
     const friendDto = new UserDto(
       friend.friend.id,
