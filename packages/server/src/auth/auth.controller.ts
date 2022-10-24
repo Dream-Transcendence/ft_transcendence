@@ -8,7 +8,7 @@ export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('login')
-  login(@Request() req, @Res({ passthrough: true }) res) {
+  login(@Request() req) {
     return req.user;
   }
 

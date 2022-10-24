@@ -31,7 +31,7 @@ export class AuthService {
       console.log(response.data.id);
       let user = await this.userService.getUser(response.data.id);
       if (user) {
-        return { ...user, isMember: true };
+        return user;
       } else {
         user = await this.userService.addUser({
           id: response.data.id,
@@ -39,7 +39,7 @@ export class AuthService {
           image: response.data.image.link,
           email: response.data.email,
         });
-        return { ...user, isMember: false };
+        return user;
       }
     }
     return null;
