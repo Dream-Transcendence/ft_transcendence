@@ -31,9 +31,25 @@ const RoomChattingLayout = styled('div')(({ theme }) => ({
 }));
 
 const ChattingLayout = styled('div')(({ theme }) => ({
-  width: '100%',
+  width: '70%',
   height: '99%',
 }));
+
+const BlockLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'right',
+  alignItems: 'center',
+}));
+
+const BlockSpan = styled('span')(({ theme }) => ({
+  fontSize: '6.2em',
+  color: '#432455',
+  marginBottom: '10%',
+  textShadow: '#FC0 1px 0 10px',
+}));
+
 // prop 변수를 안넣어주니  has no properties in common with type 'IntrinsicAttributes'. 라는 에러발생
 function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
   const { roomInfo, controlMessage } = props.controlRoomInfo;
@@ -46,17 +62,21 @@ function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
     setMessageHistory([]);
     return setMessageHistory([]);
   }, [roomId, setMessageHistory]);
-  // console.log('데이터 받아오기 전', messageSetter.messages);
 
   return (
+    //type에 따라 방 사이즈변경하려고 레이아웃을 나눔 하지만 지금은 적용안됨.
     <ChattingLayout>
       {type === DM ? (
-        <DMChattingLayout>
-          <ChatLogListOrganisms messageSetter={controlMessage} />
-          {userState !== MUTE && (
+        roomInfo.blocked === false ? (
+          <DMChattingLayout>
+            <ChatLogListOrganisms messageSetter={controlMessage} />
             <ChatInputModule messageSetter={controlMessage} />
-          )}
-        </DMChattingLayout>
+          </DMChattingLayout>
+        ) : (
+          <BlockLayout>
+            <BlockSpan>BLOCK</BlockSpan>
+          </BlockLayout>
+        )
       ) : (
         <RoomChattingLayout>
           <ChatLogListOrganisms messageSetter={controlMessage} />

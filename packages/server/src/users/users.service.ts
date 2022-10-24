@@ -1,11 +1,18 @@
-import { ConflictException, Inject, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+} from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
 import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PatchUserDto } from './dto/patch-user.dto';
+import { PatchNicknameDto } from './dto/patch-user.dto';
 import {
   FriendDto,
   ClientInviteGameDto,
@@ -18,16 +25,19 @@ import {
   ServerRequestDto,
   RequestIdDto,
   ClientRequestDto,
+  PatchAuthDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
+import { MailerService } from '@nestjs-modules/mailer';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class UserService {
   private logger = new Logger('UsersService');
-
+  s3 = new AWS.S3();
   private connectionList = new Map<string, Connection>();
 
   constructor(
@@ -45,21 +55,13 @@ export class UserService {
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
     private dmParticipantsRepository: Repository<DmParticipant>,
+    private readonly mailerService: MailerService,
   ) {}
 
   //ANCHOR: user management
   async addUser(createUserDto: CreateUserDto): Promise<UserDto> {
     const { id, nickname, image, email } = createUserDto;
 
-    // FIXME: 테스트용
-    // let id = 1;
-    // const maxUserId = await this.usersRepository
-    //   .createQueryBuilder('user')
-    //   .select('MAX(user.id)', 'id')
-    //   .getRawOne();
-    // if (maxUserId.id !== null) id = maxUserId.id + 1;
-
-    // console.log(maxUserId.id);
     let user = this.usersRepository.create({
       id,
       nickname,
@@ -96,27 +98,82 @@ export class UserService {
     return userDto;
   }
 
-  async patchUser(id: number, userDto: PatchUserDto): Promise<UserDto> {
-    const { nickname, image } = userDto;
+  async patchImage(id: number, file: Express.Multer.File) {
+    const user = await this.usersRepository.findOne({ where: [{ id: id }] });
+
+    // NOTE: 파일을 S3에 저장하고, 그 주소를 DB에 저장한다.
+    console.log(file);
+    console.log(process.env);
+    console.log(process.env.AWS_S3_BUCKET_NAME);
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: file.originalname,
+      Body: file.buffer,
+    };
+
+    try {
+      const data = await this.s3.upload(params).promise();
+      console.log(data);
+      user.image = data.Location;
+      await this.usersRepository.save(user);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+
+    const userDto = new UserDto(user.id, user.nickname, user.image);
+    return userDto;
+  }
+
+  async patchNickname(id: number, userDto: PatchNicknameDto): Promise<UserDto> {
+    const { nickname } = userDto;
 
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
 
-    if (nickname) {
-      // SELECT COUNT(*) FROM public."user" WHERE "nickname" = $1;
-      // COUNT를 통해서 중복된 닉네임의 수를 확인할 수도 있다.
-      const duplicateCheck = await this.usersRepository.findOne({
-        where: { nickname: nickname },
-      });
-      if (duplicateCheck !== null) throw new ConflictException();
-
-      user.nickname = nickname;
-    }
-    if (image) user.image = image;
+    // SELECT COUNT(*) FROM public."user" WHERE "nickname" = $1;
+    // COUNT를 통해서 중복된 닉네임의 수를 확인할 수도 있다.
+    const duplicateCheck = await this.usersRepository.findOne({
+      where: { nickname: nickname },
+    });
+    if (duplicateCheck !== null) throw new ConflictException();
+    user.nickname = nickname;
 
     await this.usersRepository.save(user);
 
     const newUserDto = new UserDto(user.id, user.nickname, user.image);
     return newUserDto;
+  }
+
+  private authCodeList: Map<number, number> = new Map();
+
+  async requestAuth(id: number) {
+    const userAuth = await this.authRepository.findOne({
+      relations: ['user'],
+      where: { user: { id: id } },
+    });
+
+    const authCode = Math.floor(Math.random() * (1000000 - 100000)) + 100000;
+    this.authCodeList.set(id, authCode);
+    // NOTE: after 5 minutes, delete authCode
+    setTimeout(() => {
+      this.authCodeList.delete(id);
+    }, 5 * 60 * 1000);
+
+    await this.mailerService
+      .sendMail({
+        to: userAuth.email,
+        from: 'no-reply <no-reply@transcendence.com>',
+        subject: '[ft-transcendence] 2차 인증 코드',
+        text: `인증 코드: ${authCode}`,
+        html: `<b>인증 코드: ${authCode}</b>`,
+      })
+      .then((success) => {
+        console.log('Mail sent: ' + success);
+      })
+      .catch((err) => {
+        console.log('Error occured: ' + err);
+        throw new BadRequestException();
+      });
   }
 
   async getAuth(id: number): Promise<AuthUserDto> {
@@ -135,13 +192,23 @@ export class UserService {
     return authUserDto;
   }
 
-  // TODO: 인증하는 로직 추가
-  async patchAuth(id: number): Promise<AuthUserDto> {
+  async patchAuth(
+    id: number,
+    patchAuthDto: PatchAuthDto,
+  ): Promise<AuthUserDto> {
     const auth = await this.authRepository.findOne({
       relations: { user: true },
       where: { user: { id: id } },
     });
-    // if (auth === null) throw new EntityNotFoundError(Auth, id);
+
+    if (auth.authenticated === false) {
+      const { code } = patchAuthDto;
+      if (this.authCodeList.get(id) !== code)
+        throw new BadRequestException(
+          '인증코드가 일치하지 않거나 만료되었습니다.',
+        );
+      this.authCodeList.delete(id);
+    }
 
     auth.authenticated = !auth.authenticated;
     await this.authRepository.save(auth);

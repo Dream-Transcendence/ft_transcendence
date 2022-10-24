@@ -1,6 +1,8 @@
 import { GetRoomInfoDto } from './Room.type';
+import { ParticipantInfo } from './Participant.type';
 
 export interface ControlMessage {
+  blockedUser: number[];
   messages: SocketMessage[];
   setMessages: (Messages: SocketMessage[]) => void;
 }

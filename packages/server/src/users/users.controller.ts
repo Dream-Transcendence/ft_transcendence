@@ -9,10 +9,15 @@ import {
   Post,
   Query,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
+  ApiBody,
   ApiConflictResponse,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -25,24 +30,26 @@ import { GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { GameLadderDto, GameRecordDto } from 'src/game/game.dto';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
-import { PatchUserDto } from './dto/patch-user.dto';
+import { PatchImageDto, PatchNicknameDto } from './dto/patch-user.dto';
 import {
   FriendDto,
+  PatchAuthDto,
   ServerRequestDto,
   UserDto,
   UserIdDto,
 } from './dto/user.dto';
 import { UserService } from './users.service';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}
 
   @Post()
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '유저 등록 / BodyType: CreateUserDto',
     description: '로그인 로직에 유저 추가가 들어갈 경우, 삭제될 수 있음',
@@ -56,7 +63,7 @@ export class UsersController {
   }
 
   @Get('/:id/profile')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '유저 정보 가져오기',
     description:
@@ -68,24 +75,46 @@ export class UsersController {
     return this.userService.getUser(id);
   }
 
-  @Patch('/:id/profile')
+  @Patch('/:id/image')
   @ApiTags('유저 관리')
   @ApiOperation({
-    summary: '유저 정보 수정  / BodyType: PatchUserDto',
-    description: '닉네임 또는 이미지 업데이트(수정할 객체만 담아서 요청)',
+    summary: '유저 이미지 수정 / BodyType: File',
+    description: '유저 이미지 업데이트',
   })
-  @ApiOkResponse({ description: '유저 정보 수정 성공', type: UserDto })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    description: 'User profile image',
+    type: PatchImageDto,
+  })
+  @ApiOkResponse({ description: '유저 이미지 수정 성공', type: UserDto })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  patchImage(
+    @Param('id') id: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.userService.patchImage(id, file);
+  }
+
+  @Patch('/:id/nickname')
+  @ApiTags('유저 관리')
+  @ApiOperation({
+    summary: '유저 닉네임 수정  / BodyType: PatchNicknameDto',
+    description: '닉네임 업데이트',
+  })
+  @ApiOkResponse({ description: '유저 닉네임 수정 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiConflictResponse({ description: '이미 있는 닉네임으로 변경 시도' })
-  patchUser(
+  patchNickname(
     @Param('id') id: number,
-    @Body() patchUserDto: PatchUserDto,
+    @Body()
+    patchNicknameDto: PatchNicknameDto,
   ): Promise<UserDto> {
-    return this.userService.patchUser(id, patchUserDto);
+    return this.userService.patchNickname(id, patchNicknameDto);
   }
 
   @Get('/:id/2nd-auth')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '2차 인증 여부 가져오기',
     description: '유저의 2차 인증 여부를 Boolean(true, false)으로 확인',
@@ -97,16 +126,20 @@ export class UsersController {
   }
 
   @Patch('/:id/2nd-auth')
-  @ApiTags('유저 관리')
+  @ApiTags('유저/관리')
   @ApiOperation({
     summary: '2차 인증 업데이트 / BodyType: AuthUserDto',
     description:
-      '유저의 2차 인증 여부 반전(true -> false, false -> true) / 현재 인증 기능 미구현',
+      '유저의 2차 인증 여부 반전(true -> false, false -> true)\
+      인증을 할 때는 이메일로 받은 code를 body에 포함하고, 해제 할 때는 바디에 아무것도 포함하지 않음',
   })
   @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
+  @ApiBadRequestResponse({
+    description: '인증코드가 일치하지 않거나 만료되었습니다.',
+  })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  patchAuth(@Param('id') id: number) {
-    return this.userService.patchAuth(id);
+  patchAuth(@Param('id') id: number, @Body() patchAuthDto: PatchAuthDto) {
+    return this.userService.patchAuth(id, patchAuthDto);
   }
 
   @Post('/:id/blocks')
@@ -279,6 +312,16 @@ export class UsersController {
     return this.userService.searchFriend(id, nickname);
   }
 
+  @Post('/:id/2nd-auth')
+  @ApiTags('유저/관리')
+  @ApiOperation({ summary: '유저 2차 인증 요청' })
+  @ApiCreatedResponse({ description: '유저 2차 인증 요청 성공' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  requestAuth(@Param('id') id: number) {
+    return this.userService.requestAuth(id);
+  }
+
+  @ApiTags('유저/인증')
   @Get('userinfo')
   async userInfo(@Request() req) {
     return await this.userService.userInfo(req.user);

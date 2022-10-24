@@ -147,11 +147,8 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
           <Input
             disableUnderline
             style={divStyle}
-            value={roomName}
+            value={name}
             placeholder={name}
-            //계속 onchange가 안되고, value가 고정값이라 뭐가 문제인가 했더니
-            //handleChange를 함수형태 던지니 제대로 작동이 안됐음.
-            //()를 붙혀 실행시켜야함
             onChange={handleRoomName()}
             onKeyPress={(event) => {
               if (event.key === 'Enter') {

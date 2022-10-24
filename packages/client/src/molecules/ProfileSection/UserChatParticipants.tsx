@@ -21,7 +21,7 @@ import {
   ParticipantInfoNState,
 } from '../../types/Participant.type';
 import { useState } from 'react';
-import { MUTE } from '../../configs/Status.case';
+import { BAN, MUTE } from '../../configs/Status.case';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { Rotate90DegreesCcw } from '@mui/icons-material';
 import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
@@ -70,6 +70,15 @@ const MuteBadge = styled('span')(({ theme }) => ({
   width: '20px',
   position: 'absolute',
   zIndex: '2',
+}));
+
+const BanBadge = styled('span')(({ theme }) => ({
+  marginTop: '11%',
+  marginLeft: '72%',
+  fontSize: '5px',
+  color: 'yellowgreen',
+  position: 'absolute',
+  zIndex: '1',
 }));
 
 const BlockBadge = styled('span')(({ theme }) => ({
@@ -176,6 +185,7 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
         {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
         {auth === OWNER && <AdminBadge>👑</AdminBadge>}
         {status === MUTE && <MuteBadge>🔇</MuteBadge>}
+        {status === BAN && <BanBadge>BAN</BanBadge>}
         {participantInfo.blocked === BLOCK && (
           <BlockBadge>
             <BlockCloss />

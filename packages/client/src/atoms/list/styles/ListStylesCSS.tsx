@@ -13,8 +13,7 @@ export const ListLayout = styled('li')(() => ({
 }));
 
 export const ListChatLayout = styled('li')(() => ({
-  width: '100%',
-  height: '100%',
+  width: '70%',
   flex: 'auto',
   paddingTop: '1%',
   paddingBottom: '2%',
@@ -38,6 +37,7 @@ export const ListChatUlLayout = styled('ul')(({ theme }) => ({
   overflow: 'auto',
   listStyle: 'none',
   display: 'flex',
+  width: '100%',
   flexDirection: 'column',
 }));
 
