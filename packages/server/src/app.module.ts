@@ -4,6 +4,7 @@ import { RoomModule } from './chats/rooms.module';
 import { GameModule } from './game/game.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
     GameModule,
     ScheduleModule.forRoot(),
     AuthModule,
+    ConfigModule.forRoot(),
   ],
   controllers: [],
 })
