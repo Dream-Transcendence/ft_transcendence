@@ -5,6 +5,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
@@ -26,6 +27,7 @@ import {
   RequestIdDto,
   ClientRequestDto,
   PatchAuthDto,
+  IsBlockedDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
@@ -282,6 +284,17 @@ export class UserService {
     return blockedUsers;
   }
 
+  async getIsBlocked(id: number, userId: number): Promise<IsBlockedDto> {
+    const isBlocked = await this.blocksRepository.findOne({
+      relations: ['user', 'blockedUser'],
+      where: [{ user: { id: id }, blockedUser: { id: userId } }],
+    });
+    if (isBlocked === null) {
+      return { isBlocked: false };
+    }
+    return { isBlocked: true };
+  }
+
   // ANCHOR: user chat
   async getRooms(id: number): Promise<GetUserRoomsDto> {
     const channels = await this.channelParticipantsRepository.find({
@@ -331,6 +344,56 @@ export class UserService {
     return { channelList, dmList };
   }
 
+  //ANCHOR: user search
+  async searchUser(nickname: string): Promise<UserDto[]> {
+    // SELECT * FROM public."user"
+    // WHERE "user"."nickname" LIKE '%nickname%';
+    const users = await this.usersRepository.find({
+      where: { nickname: Like(`%${nickname}%`) },
+    });
+
+    const foundUsers: UserDto[] = [];
+    users.forEach((user) => {
+      const userDto = new UserDto(user.id, user.nickname, user.image);
+      foundUsers.push(userDto);
+    });
+
+    return foundUsers;
+  }
+
+  async searchFriend(id: number, nickname: string): Promise<UserDto[]> {
+    // SELECT * FROM public."friend"
+    // LEFT JOIN "user" ON "user"."id" = id
+    // WHERE "friend"."userId" = "user"."id";
+    console.log(id, nickname);
+
+    const friendRows = await this.friendsRepository.find({
+      relations: { user: true, friend: true },
+      where: { user: { id: id }, friend: { nickname: Like(`%${nickname}%`) } },
+    });
+
+    // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
+    const blockRows = await this.blocksRepository.find({
+      relations: { user: true, blockedUser: true },
+      where: { user: { id: id } },
+    });
+    const blockedIds = blockRows.map((blockRow) => blockRow.blockedUser.id);
+
+    const foundUsers: UserDto[] = [];
+    friendRows.forEach((row) => {
+      if (blockedIds.includes(row.friend.id) === false) {
+        const userDto = new UserDto(
+          row.friend.id,
+          row.friend.nickname,
+          row.friend.image,
+        );
+        foundUsers.push(userDto);
+      }
+    });
+
+    return foundUsers;
+  }
+
   //ANCHOR: user friend
   async addFriend(id: number, friendId: number): Promise<UserDto> {
     // SELECT * FROM public."user"
@@ -374,7 +437,7 @@ export class UserService {
       relations: ['user', 'friend'],
       where: { user: { id: id }, friend: { id: friendId } },
     });
-    if (friend === null) throw new EntityNotFoundError(User, friendId);
+    if (friend === null) throw new NotFoundException('친구가 아닙니다.');
 
     const friendDto = new UserDto(
       friend.friend.id,
@@ -479,54 +542,6 @@ export class UserService {
     });
 
     return requestDtoList;
-  }
-
-  //ANCHOR: user search
-  async searchUser(nickname: string): Promise<UserDto[]> {
-    // SELECT * FROM public."user"
-    // WHERE "user"."nickname" LIKE '%nickname%';
-    const users = await this.usersRepository.find({
-      where: { nickname: Like(`%${nickname}%`) },
-    });
-
-    const foundUsers: UserDto[] = [];
-    users.forEach((user) => {
-      const userDto = new UserDto(user.id, user.nickname, user.image);
-      foundUsers.push(userDto);
-    });
-
-    return foundUsers;
-  }
-
-  async searchFriend(id: number, nickname: string): Promise<UserDto[]> {
-    // SELECT * FROM public."friend"
-    // LEFT JOIN "user" ON "user"."id" = id
-    // WHERE "friend"."userId" = "user"."id";
-    const friendRows = await this.friendsRepository.find({
-      relations: { user: true, friend: true },
-      where: { user: { id: id }, friend: { nickname: Like(`%${nickname}%`) } },
-    });
-
-    // NOTE: 차단 여부를 같이 보내주지 않고 차단한 유저는 검색 결과에서 제외하는 방식으로 구현
-    const blockRows = await this.blocksRepository.find({
-      relations: { user: true, blockedUser: true },
-      where: { user: { id: id } },
-    });
-    const blockedIds = blockRows.map((blockRow) => blockRow.blockedUser.id);
-
-    const foundUsers: UserDto[] = [];
-    friendRows.forEach((row) => {
-      if (blockedIds.includes(row.friend.id) === false) {
-        const userDto = new UserDto(
-          row.friend.id,
-          row.friend.nickname,
-          row.friend.image,
-        );
-        foundUsers.push(userDto);
-      }
-    });
-
-    return foundUsers;
   }
 
   // ANCHOR: Socket
@@ -754,11 +769,6 @@ export class UserService {
   }
 
   async userInfo(user: any) {
-    const { userId } = user;
-    const userInfo = await this.getUser(userId);
-    return userInfo;
-  }
-  async whoAmI(user: any) {
     const { userId } = user;
     const userInfo = await this.getUser(userId);
     return userInfo;
