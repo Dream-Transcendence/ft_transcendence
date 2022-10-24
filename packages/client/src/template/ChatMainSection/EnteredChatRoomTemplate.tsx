@@ -238,6 +238,7 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     if (roomInfo.type !== DM) {
       socket.on(`${ENTERMESSAGE}`, (res) => {
+        console.log('endter!! ', res);
         const participant = { ...res, blocked: getBlocked(res.user.id) };
         setParticipantInfo([...participantInfo, participant]);
       });
@@ -247,6 +248,7 @@ function EnteredChatRoomTemplate() {
   useEffect(() => {
     if (roomInfo.type !== DM) {
       socket.on(`${DELETEMESSAGE}`, (res) => {
+        console.log('out!! ', res);
         const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
           (participant) => participant.user.id !== res.userId,
         );

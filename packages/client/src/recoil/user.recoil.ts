@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { recoilPersist } from 'recoil-persist';
-import { UserStateType } from '../types/LogOn.type';
+import { ConnectionDto } from '../types/LogOn.type';
 
-export const userStateListAtom = atom<UserStateType[]>({
+export const userLogStateListAtom = atom<ConnectionDto[]>({
   key: 'userStateListAtom',
   default: [],
 });

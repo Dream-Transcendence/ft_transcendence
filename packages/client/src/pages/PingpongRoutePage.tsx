@@ -9,11 +9,12 @@ import {
   userDataAtom,
   gameTypeAtom,
   checkIsSecondOauth,
+  userLogStateListAtom,
 } from '../recoil/user.recoil';
 import { userStateListAtom } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
-import { UserStateType } from '../types/LogOn.type';
+import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
 import { BaseUserProfileData } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
@@ -33,28 +34,23 @@ const PageSection = styled('section')(({ theme }) => ({
 //로그인 한 사람들 목록
 const logOnListMock = [
   {
-    id: 1,
-    logOn: true,
-    onGame: true,
-  },
-  {
-    id: 2,
-    logOn: true,
-    onGame: true,
-  },
-  {
-    id: 3,
-    logOn: false,
+    logOn: 1,
     onGame: false,
   },
   {
-    id: 4,
-    logOn: true,
+    logOn: 2,
+    onGame: false,
+  },
+  {
+    logOn: 3,
     onGame: true,
   },
   {
-    id: 5,
-    logOn: true,
+    logOn: 4,
+    onGame: false,
+  },
+  {
+    logOn: 5,
     onGame: true,
   },
 ];
@@ -76,6 +72,15 @@ function PingpongRoutePage() {
     if (userData.id === 0) navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
 
+  const [userLogStateList, setUserLogStateList] =
+    useRecoilState<ConnectionDto[]>(userLogStateListAtom);
+  //로그온 정보 날리기 친구정보 가져다줄것
+  //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
+
+  const setListDirect = (response: any) => {
+    setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
+  };
+
   useEffect(() => {
     function setUserSocketConnect() {
       connect();
@@ -84,17 +89,18 @@ function PingpongRoutePage() {
         {
           userId: userData.id,
         },
-        (response: UserStateType[]) => {
-          console.log('logOn users:', response);
-          setLogStateList(logOnListMock); //로그인 중인 유저들 정보  받기
+        (response: ConnectionsDto) => {
+          // setListDirect(response);
+          setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
         },
       );
       socket.on('exception', (response: any) => {
-        alert(response.message);
+        alert('이미 로그인 한 상태입니다.');
+        navigate('/');
       });
     }
     setUserSocketConnect();
-    console.log('logs', logStateList);
+    console.log('logs', userLogStateList);
     return () => {
       socket.off('exception');
       disconnect();

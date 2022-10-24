@@ -349,17 +349,17 @@ export class RoomService {
 
   // ANCHOR Socket.io
   async enterChannel(client: Socket, enterChannelDto: EnterChannelDto) {
-    let user: User = null;
     const { userId, roomId, salt } = enterChannelDto;
     let participant: ChannelParticipant;
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (!room) throw new WsException(`Cant't find room ${roomId}`);
 
     if (room.type != 0) {
-      const row = await this.channelParticipantsRepository.findOne({
+      participant = await this.channelParticipantsRepository.findOne({
+        relations: { user: true },
         where: { user: { id: userId }, room: { id: roomId } },
       });
-      if (!row) {
+      if (!participant) {
         if (room.type == 2 && salt !== room.salt)
           throw new WsException('Password is not correct');
 
@@ -375,18 +375,22 @@ export class RoomService {
           user: await this.usersRepository.findOneBy({ id: userId }),
           room,
         });
-        user = participant.user;
         await this.channelParticipantsRepository.insert(participant);
+        client.to(room.title).emit(
+          'enterMessage',
+          `{
+              "user": {
+                "id": ${userId},
+                "nickname": "${participant.user.nickname}",
+                "image": "${participant.user.image}",
+              },
+            }`,
+        );
       }
     }
     // 유저 룸 초기화 후, roomId 룸에 추가
     client.rooms.clear();
     client.join(room.title);
-    // 새 참여자라면, 입장 메세지 쏴주기
-    if (user)
-      client
-        .to(room.title)
-        .emit('roomMessage', `${user.nickname}이(가) 입장했습니다.`);
 
     // 참여 성공
     // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
@@ -426,12 +430,7 @@ export class RoomService {
         return { isDeleted: true };
       }
     }
-    client
-      .to(title)
-      .emit(
-        'roomMessage',
-        `${deleteParticipant.user.nickname}이(가) 방을 나갔습니다.`,
-      );
+    client.to(title).emit('deleteMessage', `${deleteParticipant.user.id}`);
     return { isDeleted: true };
   }
 

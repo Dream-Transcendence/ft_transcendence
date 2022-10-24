@@ -5,6 +5,7 @@ import {
   Injectable,
   InternalServerErrorException,
   Logger,
+  NotFoundException,
 } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
@@ -31,7 +32,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
-import { WsException } from '@nestjs/websockets';
+import { WebSocketGateway, WsException } from '@nestjs/websockets';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as AWS from 'aws-sdk';
 
@@ -436,7 +437,7 @@ export class UserService {
       relations: ['user', 'friend'],
       where: { user: { id: id }, friend: { id: friendId } },
     });
-    if (friend === null) throw new EntityNotFoundError(User, friendId);
+    if (friend === null) throw new NotFoundException('친구가 아닙니다.');
 
     const friendDto = new UserDto(
       friend.friend.id,
@@ -587,6 +588,11 @@ export class UserService {
 
   async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
     const onlineUserList = Array.from(this.connectionList.values());
+    onlineUserList.map((connection) => {
+      if (connection.userId === connectionDto.userId) {
+        throw new WsException('이미 로그인 되어있습니다.');
+      }
+    });
 
     this.connectionList.set(client.id, {
       userId: connectionDto.userId,

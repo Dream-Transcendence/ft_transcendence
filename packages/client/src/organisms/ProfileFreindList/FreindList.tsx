@@ -12,7 +12,7 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useRecoilValue } from 'recoil';
-import { userStateListAtom } from '../../recoil/user.recoil';
+import { userLogStateListAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
