@@ -1,11 +1,12 @@
 import styled from '@emotion/styled';
 
+//User와 Other의 공통 degine
 export const UserInfoLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'end',
   justifySelf: 'end',
-  height: '80%',
+  height: '47%',
   width: '55%',
   gridArea: 'Profile',
   backgroundColor: '#1976D2',

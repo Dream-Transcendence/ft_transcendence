@@ -12,7 +12,7 @@ function FileUploadButton(props: { uploadProps: CustomUploadProps }) {
       component="label"
       // onClick={() => action}
     >
-      <input hidden accept="image/*" type="file" onChange={action} />
+      <input hidden accept="image/*" type="file" onChange={action}/>
       {icon}
     </IconButton>
   );

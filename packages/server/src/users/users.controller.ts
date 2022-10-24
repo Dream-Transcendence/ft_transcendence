@@ -76,7 +76,7 @@ export class UsersController {
     return this.userService.getUser(id);
   }
 
-  @Patch('/:id/image')
+  @Post('/:id/image')
   @ApiTags('유저 관리')
   @ApiOperation({
     summary: '유저 이미지 수정 / BodyType: File',

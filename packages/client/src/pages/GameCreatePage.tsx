@@ -27,7 +27,7 @@ function GameCreatePage() {
   return (
     <GameCreateLayout>
       <GameCreateTemplateLayout>
-        <GameCreateTemplate buttonType={'invite'} />
+        <GameCreateTemplate />
       </GameCreateTemplateLayout>
     </GameCreateLayout>
   );

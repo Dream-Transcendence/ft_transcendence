@@ -6,9 +6,9 @@ import {
 import CustomIconButton from '../icon/CustomIconButtion';
 
 function LinkPageComponentButton(props: {
-  LinkComponentprops: LinkComponentResource;
+  linkComponentprops: LinkComponentResource;
 }) {
-  const { url, component } = props.LinkComponentprops;
+  const { url, component } = props.linkComponentprops;
 
   return (
     <Link style={{ textDecoration: 'none' }} to={url}>
