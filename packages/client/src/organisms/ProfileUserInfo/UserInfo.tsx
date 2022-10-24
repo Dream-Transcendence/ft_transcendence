@@ -34,32 +34,29 @@ function UserInfo() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
   const [userImage, setUserImage] = useState<FormData | undefined>();
 
-  async function changeUserImage() {
-    if (userImage) {
-      for (var entries of userImage.values()) {
-        console.log('value2 :\n', entries);
-      }      
+  useEffect(() => {
+      if (userImage) {
+      axios.post(
+        `${SERVERURL}/users/${userId}/image`,
+        userImage,
+      ).then((response) => {
+        setUser({ ...user, image: response.data.image });
+        console.log('이미지 변경 성공');
+      }).catch ((error) => {
+        alert(error);
+        console.log('error : ', error);
+      })
     }
-    await axios.post(
-      `${SERVERURL}/users/${userId}/image`,
-      { image: userImage },
-    ).then((response) => {
-      setUser({ ...user, image: response.data });
-      console.log('이미지 변경 성공');
-    }).catch ((error) => {
-    alert(error);
-    console.log('error : ', error);
-    })
-  }
+  }, [userImage, userId])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
       if (file) {
         // 낙관적 ui
-        // console.log(event.target.files[0]);
-        // let url = URL.createObjectURL(event.target.files[0]);
-        // setUser({ ...user, image: url });
+        console.log(event.target.files[0]);
+        let url = URL.createObjectURL(event.target.files[0]);
+        setUser({ ...user, image: url });
 
         //서버 이미지 저장을 위한 form data
         const formData = new FormData();
@@ -81,10 +78,10 @@ function UserInfo() {
     }
   }
 
-  const fileUploadProps: CustomIconProps = {
-    icon: <FileUploadIcon color="disabled" />,
-    action: changeUserImage,
-  };
+  // const fileUploadProps: CustomIconProps = {
+  //   icon: <FileUploadIcon color="disabled" />,
+  //   action: changeUserImage,
+  // };
 
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
@@ -96,9 +93,9 @@ function UserInfo() {
       <UserPictureLayout>
         <ProfileImage userData={user} />
         <UserPictureButtonLayout>
-          <form enctype="multipart/form-data">
+          <form>
           <FileUploadButton uploadProps={fileChangeProps} />
-          <CustomIconButton customProps={fileUploadProps} />
+          {/* <CustomIconButton customProps={fileUploadProps} /> */}
           </form>
         </UserPictureButtonLayout>
       </UserPictureLayout>
