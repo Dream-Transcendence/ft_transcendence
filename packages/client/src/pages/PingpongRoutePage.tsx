@@ -5,7 +5,11 @@ import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL } from '../configs/Link.url';
-import { userDataAtom, gameTypeAtom } from '../recoil/user.recoil';
+import {
+  userDataAtom,
+  gameTypeAtom,
+  checkIsSecondOauth,
+} from '../recoil/user.recoil';
 import { userStateListAtom } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
@@ -58,10 +62,20 @@ const logOnListMock = [
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
   const [logStateList, setLogStateList] =
     useRecoilState<UserStateType[]>(userStateListAtom);
+  const [passSecondOauth, setPassSecondOauth] =
+    useRecoilState<boolean>(checkIsSecondOauth);
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
+
+  useEffect(() => {
+    //[수정사항][2nd] api완성기다리는중
+    // if (userData.id === 0 || passSecondOauth === false) navigate('/');
+    if (userData.id === 0) navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
+
   useEffect(() => {
     function setUserSocketConnect() {
       connect();
