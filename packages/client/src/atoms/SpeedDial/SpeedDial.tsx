@@ -7,7 +7,7 @@ import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import { useRecoilValue } from 'recoil';
 import { OWNER, ADMIN, COMMON } from '../../configs/userType';
 import { userAuth } from '../../recoil/chat.recoil';
-import { chatNameSpace, patchUserInfo } from '../../socket/event';
+import { chatNameSpace, PATCHUSERINFO } from '../../socket/event';
 import { useParams } from 'react-router-dom';
 import {
   ChangeParticipantInfo,
@@ -97,21 +97,23 @@ function BasicSpeedDial(props: {
   const OnMute = () => {
     // if (!isMute) setIsMute(true);
     // else alert('이미 음소거 처리되었습니다.');
-    setParticipantInfos([
-      ...filteredParticipants,
-      changeParticipant(participantInfo, 'status', MUTE),
-    ]);
-    console.log('mute!!!!!!!!!!!');
+    if (status !== BAN && status !== MUTE) {
+      setParticipantInfos([
+        ...filteredParticipants,
+        changeParticipant(participantInfo, 'status', MUTE),
+      ]);
+      console.log('mute!!!!!!!!!!!');
+    }
   };
 
-  const OnUnMute = () => {
+  const beNone = () => {
     // if (!isMute) setIsMute(true);
     // else alert('이미 음소거 처리되었습니다.');
     setParticipantInfos([
       ...filteredParticipants,
-      changeParticipant(participantInfo, 'status', 8),
+      changeParticipant(participantInfo, 'status', null),
     ]);
-    console.log('unmute!!!!!!!!!!!');
+    console.log('NONE!!!!!!!!!!!');
   };
 
   const handleAdmin = () => {
@@ -125,12 +127,12 @@ function BasicSpeedDial(props: {
   };
 
   const handleBan = () => {
-    if (status !== BAN) {
+    if (status !== BAN && status !== MUTE) {
       const info = setInfo(auth, BAN);
       setUserState(info, KickOff);
       setTimeout(async () => {
         const info = await setInfo(auth, NONE);
-        setUserState(info, OnUnMute);
+        setUserState(info, beNone);
       }, 5000);
     }
   };
@@ -145,7 +147,7 @@ function BasicSpeedDial(props: {
       setUserState(info, OnMute);
       setTimeout(async () => {
         const info = await setInfo(auth, NONE);
-        setUserState(info, OnUnMute);
+        setUserState(info, beNone);
       }, 5000);
     }
     // set비동기처리 30초
@@ -153,7 +155,7 @@ function BasicSpeedDial(props: {
   };
 
   const setUserState = (info: ChangeParticipantInfo, action: () => void) => {
-    socket.emit(`${patchUserInfo}`, info, (response: any) => {
+    socket.emit(`${PATCHUSERINFO}`, info, (response: any) => {
       // action();
     });
     socket.on('exception', (response: any) => {

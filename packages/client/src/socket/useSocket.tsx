@@ -14,7 +14,6 @@ const useSocket = (
       autoConnect: false,
       // transports: ['websocket'],
     });
-    console.log('socket object!: ', sockets[nameSpace]);
   }
 
   // if (sockets[nameSpace].connected) {

@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { atom, selectorFamily } from 'recoil';
-import { SERVERURL } from '../configs/Link.url';
+import { SERVERURL, CHANNELURL } from '../configs/Link.url';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { RoomList, UnJoinedRoomList } from '../types/Room.type';
+import { useNavigate } from 'react-router-dom';
 
 export const DMList = atom<RoomList[]>({
   key: 'DMList',

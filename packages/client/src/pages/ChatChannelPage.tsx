@@ -4,8 +4,8 @@ import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefault
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
-import { constSelector, useRecoilState, useRecoilValue } from 'recoil';
-import { CHANNELURL, SERVERURL } from '../configs/Link.url';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { CHANNELURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import useSocket from '../socket/useSocket';
@@ -91,7 +91,6 @@ function ChatroomPage() {
             />
             {/* <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} /> */}
             <Route path="room/:roomId" element={<EnteredChatRoomTemplate />} />
-            {/* <Route path="dm/:dmId" element={<EnteredDMTemplate />} /> */}
             {roomList.length ? (
               <Route
                 path="/"
@@ -100,6 +99,7 @@ function ChatroomPage() {
             ) : (
               <Route path="/" element={<ChatRoomDefaultTemplate />} />
             )}
+            {/* <Route path="*" element={<Navigate replace to={CHANNELURL} />} /> */}
           </Routes>
         </Section>
       </MainSection>

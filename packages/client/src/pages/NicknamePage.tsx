@@ -27,10 +27,16 @@ function NicknamePage() {
   //[수정사항] 이미 로그인한적있는 유저는 nickname변경창조차 뜨지않아야함
   useEffect(() => {
     async function getUserData() {
-      await axios.get(`${SERVERURL}/users/user`).then((res) => {
-        console.log('!!!!', res.data);
-        setUser(res.data);
-      });
+      await axios
+        .get(`${SERVERURL}/users/userinfo`)
+        .then((res) => {
+          console.log('!!!!', res.data);
+          setUser(res.data);
+        })
+        .catch(() => {
+          navigate('/');
+          console.log('no auth');
+        });
     }
     try {
       //이미 로그인 된 유저면 바로 프로필로보내기

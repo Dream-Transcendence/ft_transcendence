@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
@@ -40,6 +40,11 @@ const PageSection = styled('section')(({ theme }) => ({
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userData.id === 0) navigate('/');
+  }, [userData, navigate]);
 
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
