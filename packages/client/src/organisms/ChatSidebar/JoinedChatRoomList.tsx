@@ -10,7 +10,7 @@ import {
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { chatRoomList, getJoinedChatList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { chatNameSpace, enterChannel } from '../../socket/event';
+import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
 
@@ -54,7 +54,7 @@ function JoinedChatRoomModule() {
     //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
     const enterRoom = () => {
       socket.emit(
-        `${enterChannel}`,
+        `${ENTERCHANNEL}`,
         {
           userId: userData.id,
           roomId: room.id,

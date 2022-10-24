@@ -23,7 +23,12 @@ import {
 } from '../../types/Message.type';
 import { userDataAtom } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, PATCHMESSAGE } from '../../socket/event';
+import {
+  chatNameSpace,
+  DELETEMESSAGE,
+  ENTERMESSAGE,
+  PATCHMESSAGE,
+} from '../../socket/event';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -39,7 +44,7 @@ const BannedLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
-  justifyContent: 'right',
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 
@@ -56,13 +61,6 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   marginTop: '0%',
 }));
-
-// export const fetchParticipantData = async (roomId: string, userId: number) => {
-//   const response = await axios.get(
-//     `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
-//   );
-//   setParticipantInfo(response.data);
-// };
 
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
@@ -198,7 +196,7 @@ function EnteredChatRoomTemplate() {
       socket.on(`${PATCHMESSAGE}`, (res) => {
         const editParticipant: ParticipantInfo | undefined =
           participantInfo.find(
-            (participant) => participant.user.id !== res.user,
+            (participant) => participant.user.id === res.userId,
           );
         const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
           (participant) => participant.user.id !== res.userId,
@@ -209,6 +207,12 @@ function EnteredChatRoomTemplate() {
             auth: res.auth,
             status: res.status,
           };
+          console.log(
+            'modify: ',
+            modifiedParticipant,
+            'filter:',
+            filteredParticipants,
+          );
           setParticipantInfo([...filteredParticipants, modifiedParticipant]);
           // if (res.userId === userData.id) {
           //   setUserType(res.auth);
@@ -219,6 +223,33 @@ function EnteredChatRoomTemplate() {
     }
     changedParticipantStatus();
   }, [participantInfo, socket]);
+
+  const getBlocked = async (blockedUserId: number) => {
+    let response;
+    try {
+      response = await axios.get(`/users/${userData}/blocks/${blockedUserId}`);
+    } catch (error) {
+      console.dir(error);
+    }
+    return response?.data.blocked;
+  };
+
+  //[수정사항][소켓] 참가인원의 block유무를 알기 위해
+  useEffect(() => {
+    socket.on(`${ENTERMESSAGE}`, (res) => {
+      const participant = { ...res, blocked: getBlocked(res.user.id) };
+      setParticipantInfo([...participantInfo, participant]);
+    });
+  }, [participantInfo]);
+
+  useEffect(() => {
+    socket.on(`${DELETEMESSAGE}`, (res) => {
+      const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
+        (participant) => participant.user.id !== res.userId,
+      );
+      setParticipantInfo([...filteredParticipants]);
+    });
+  }, [participantInfo]);
 
   const roomInfoSet: RoomInfoSet = {
     roomInfo: { ...roomInfo, personnel: personnel },

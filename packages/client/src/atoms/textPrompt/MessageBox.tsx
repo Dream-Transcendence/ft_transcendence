@@ -28,7 +28,7 @@ const ListTextLayout = styled('div')(({ theme }) => ({
 }));
 
 const OtherTextInput = styled('section')(({ theme }) => ({
-  width: '30%',
+  width: '40%',
   backgroundColor: '#003566',
   borderRadius: '0px 10px 10px 10px',
   justifyContent: 'center',

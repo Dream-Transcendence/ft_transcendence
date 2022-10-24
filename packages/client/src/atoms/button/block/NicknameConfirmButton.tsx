@@ -39,9 +39,8 @@ function NicknameConfirmButton(props: { controlNickname: ControlNickname }) {
   const editNickname = async () => {
     try {
       await axios
-        .patch(`${SERVERURL}/users/${userData.id}/profile`, {
+        .patch(`${SERVERURL}/users/${userData.id}/nickname`, {
           nickname: nickname,
-          image: userData.image,
         })
         .then((res) => {
           setUser({ ...user, nickname: nickname });

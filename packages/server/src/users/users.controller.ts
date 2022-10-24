@@ -43,7 +43,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
-// @UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class UsersController {
   private logger = new Logger('UsersController');
   constructor(private userService: UserService) {}

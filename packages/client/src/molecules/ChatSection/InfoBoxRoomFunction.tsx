@@ -6,7 +6,7 @@ import { CHANNELURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, deleteChannelParticipant } from '../../socket/event';
+import { chatNameSpace, DELETECHANNELPARTICIPANT } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { RoomInfoSet, RoomList, UnJoinedRoomList } from '../../types/Room.type';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -51,8 +51,9 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       roomId: Number(roomId),
     });
     console.log('in out !', socket);
+    //[수정사항][소켓] 채팅방의 메시지뿐만아니라 데데이이터터도  받받을  것것
     socket.emit(
-      `${deleteChannelParticipant}`,
+      `${DELETECHANNELPARTICIPANT}`,
       {
         userId: userData.id,
         roomId: Number(roomId),
