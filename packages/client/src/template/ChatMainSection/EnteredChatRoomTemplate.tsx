@@ -236,19 +236,23 @@ function EnteredChatRoomTemplate() {
 
   //[수정사항][소켓] 참가인원의 block유무를 알기 위해
   useEffect(() => {
-    socket.on(`${ENTERMESSAGE}`, (res) => {
-      const participant = { ...res, blocked: getBlocked(res.user.id) };
-      setParticipantInfo([...participantInfo, participant]);
-    });
+    if (roomInfo.type !== DM) {
+      socket.on(`${ENTERMESSAGE}`, (res) => {
+        const participant = { ...res, blocked: getBlocked(res.user.id) };
+        setParticipantInfo([...participantInfo, participant]);
+      });
+    }
   }, [participantInfo]);
 
   useEffect(() => {
-    socket.on(`${DELETEMESSAGE}`, (res) => {
-      const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
-        (participant) => participant.user.id !== res.userId,
-      );
-      setParticipantInfo([...filteredParticipants]);
-    });
+    if (roomInfo.type !== DM) {
+      socket.on(`${DELETEMESSAGE}`, (res) => {
+        const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
+          (participant) => participant.user.id !== res.userId,
+        );
+        setParticipantInfo([...filteredParticipants]);
+      });
+    }
   }, [participantInfo]);
 
   const roomInfoSet: RoomInfoSet = {

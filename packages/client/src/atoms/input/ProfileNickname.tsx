@@ -14,6 +14,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { CustomIconProps } from '../../types/Link.type';
 import { useParams } from 'react-router-dom';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { checkValidNickname } from '../button/block/NicknameConfirmButton';
 
 const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   display: 'flex',
@@ -56,8 +57,9 @@ function ProfileNickname() {
   };
 
   const handleClick = () => {
-    console.log('click ', nickname);
-    changeName(nickname);
+    console.log('click ', nickname); //예외처리 추가
+    if (checkValidNickname(nickname)) changeName(nickname);
+    else alert('닉네임이 공백을 포함하거나 유효하지 않습니다!');
   };
 
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
