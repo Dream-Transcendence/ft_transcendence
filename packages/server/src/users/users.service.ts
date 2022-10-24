@@ -562,11 +562,13 @@ export class UserService {
 
   handleDisconnect(client: Socket) {
     console.log('User Client disconnected', client.id);
-    const userId = this.connectionList.get(client.id).userId;
+    if (this.connectionList.get(client.id)) {
+      const userId = this.connectionList.get(client.id).userId;
 
-    client.broadcast.emit('userLogOff', { userId: userId });
+      client.broadcast.emit('userLogOff', { userId: userId });
 
-    this.connectionList.delete(client.id);
+      this.connectionList.delete(client.id);
+    }
   }
 
   async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
