@@ -40,6 +40,8 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const [socket] = useSocket(chatNameSpace);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesMiddleRef = useRef<HTMLDivElement | null>(null);
+  const messagesFirstRef = useRef<HTMLDivElement | null>(null);
+  const scrollLayout = useRef<HTMLDivElement>(null);
   const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
   const [startChatRender, setStartChatRender] = useState(false); // 최초 스크롤이 받아졌는지 여부
   const [isLoaded, setIsLoaded] = useState(true);
@@ -48,32 +50,20 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const { roomId } = useParams();
   const scrollHeight = ulRef.current?.scrollHeight;
 
-  //[수정사항][소켓] 로그인 붙이면 작업할 것 상태변경메시지 브로드캐스트
-  // useEffect(() => {
-  //   socket.on(`${patchMessage}`, (res) => {
-  //     console.log(res);
-  //     // setMessages([...messages, res]);
-  //   });
-  // }, [messages]);
-
-  // [수정사항][소켓] 어떤 유저가 메시지 보내면 실시간으로 받아 띄워주기
-  // useEffect(() => {
-  //   socket.on(`${USERMESSAGE}`, (res) => {
-  //     console.log(res);
-  //     // setMessages([...messages, res]);
-  //   });
-  // }, [messages]);
-
   // ul에 리스트가 일정량이상있는지 체크 overflow감지
   useEffect(() => {
     if (ulRef.current) {
       //향후 수정예정 특정 위치에서만 불러지도록 수정할 것
-      if (ulRef.current.scrollHeight <= 385) {
-        setIsOverflow(false);
-      } else {
-        const isOverflow =
-          ulRef.current.scrollHeight > ulRef.current.clientHeight + 50;
-        setIsOverflow(isOverflow);
+
+      if (scrollLayout.current != null) {
+        if (ulRef.current.scrollHeight <= scrollLayout.current.clientHeight) {
+          setIsOverflow(false);
+          messagesFirstRef.current?.scrollIntoView({ behavior: 'auto' });
+        } else {
+          const isOverflow =
+            ulRef.current.scrollHeight > ulRef.current.clientHeight + 50;
+          setIsOverflow(isOverflow);
+        }
       }
     }
   }, [scrollHeight, setIsOverflow, roomId, messages]);
@@ -132,6 +122,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
             nickname: res.user.nickname,
           },
         };
+        // console.log('받는 데이터', message, messages);
         setMessages([...messages, message]);
       });
     };
@@ -204,10 +195,11 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   return (
     <ChatLogLayout>
       {/* [axios GET 요청]해당 채팅방의 모든 로그 요청 */}
-      <ListChatGenerateLayout>
+      <ListChatGenerateLayout ref={scrollLayout}>
         {!isLoaded && <Loader />}
         <ListChatUlLayout ref={ulRef}>
           <AnchorLayout ref={messagesMiddleRef} />
+          <div ref={messagesFirstRef} />
           {listElement} <div ref={messagesEndRef} />
         </ListChatUlLayout>
       </ListChatGenerateLayout>

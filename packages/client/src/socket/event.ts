@@ -1,5 +1,7 @@
-export const enterChannel = 'enterChannel';
-export const deleteChannelParticipant = 'deleteChannelParticipant';
+export const ENTERCHANNEL = 'enterChannel';
+export const ENTERMESSAGE = 'enterMessage';
+export const DELETECHANNELPARTICIPANT = 'deleteChannelParticipant';
+export const DELETEMESSAGE = 'deleteMessage';
 export const logOn = 'logOn';
 export const chatNameSpace = 'chat';
 export const userNameSpace = 'user';

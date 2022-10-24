@@ -6,7 +6,7 @@ import { CHANNELURL } from '../../configs/Link.url';
 import { CustomIconProps } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, deleteChannelParticipant } from '../../socket/event';
+import { chatNameSpace, DELETECHANNELPARTICIPANT } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { RoomInfoSet, RoomList, UnJoinedRoomList } from '../../types/Room.type';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -46,13 +46,8 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   //채팅방을 나가는 작업 네임스페이스(ws://localhost:4242/chat)
   function outRoom() {
-    console.log('out room!', {
-      userId: userData.id,
-      roomId: Number(roomId),
-    });
-    console.log('in out !', socket);
     socket.emit(
-      `${deleteChannelParticipant}`,
+      `${DELETECHANNELPARTICIPANT}`,
       {
         userId: userData.id,
         roomId: Number(roomId),

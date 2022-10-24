@@ -8,7 +8,7 @@ import { BaseUserProfileData } from '../types/Profile.type';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
-import { userDataAtom } from '../recoil/user.recoil';
+import { checkIsSecondOauth, userDataAtom } from '../recoil/user.recoil';
 
 const NicknamePageLayout = styled('div')(({ theme }) => ({
   display: 'grid',
@@ -21,7 +21,9 @@ const NicknamePageLayout = styled('div')(({ theme }) => ({
 
 function NicknamePage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [nickname, setNickname] = useState(false);
+  const [checkOauth, setCheckOauth] = useState(false);
+  const [passSecondOauth, setPassSecondOauth] =
+    useRecoilState<boolean>(checkIsSecondOauth);
   const navigate = useNavigate();
 
   //[수정사항] 이미 로그인한적있는 유저는 nickname변경창조차 뜨지않아야함
@@ -30,8 +32,12 @@ function NicknamePage() {
       await axios
         .get(`${SERVERURL}/users/userinfo`)
         .then((res) => {
-          console.log('!!!!', res.data);
           setUser(res.data);
+          //[수정사항][로그인]
+          if (res.data.nickname.length <= 10) {
+            //최초 가입 유저
+            setCheckOauth(true);
+          } //이미 가입된 유저면
         })
         .catch(() => {
           navigate('/');
@@ -50,10 +56,29 @@ function NicknamePage() {
     }
   }, []);
 
+  useEffect(() => {
+    if (checkOauth) {
+      const getSecondOauth = async () => {
+        await axios
+          .get(`${SERVERURL}/users/${user.id}/2nd-auth`)
+          .then((res) => {
+            console.log(res);
+            if (!res.data.authenticated) {
+              setPassSecondOauth(true); // 2nd 가 설정되지않은경우
+              navigate(`${PROFILEURL}/${user.id}`);
+            } else navigate('/secondOauth');
+          });
+      };
+      try {
+        getSecondOauth();
+      } catch (error) {
+        console.dir(error);
+      }
+    }
+  }, [checkOauth, user.id]);
+
   return (
-    <NicknamePageLayout>
-      <NicknameInit />
-    </NicknamePageLayout>
+    <NicknamePageLayout>{user.id !== 0 && <NicknameInit />}</NicknamePageLayout>
   );
 }
 
