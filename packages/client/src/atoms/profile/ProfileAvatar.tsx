@@ -9,9 +9,8 @@ import {
   UserProfileBoxDataType,
 } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
-import { userLogStateListAtom } from '../../recoil/log.recoil';
-import { UserStateType } from '../../types/LogOn.type';
-import { userStateListAtom } from '../../recoil/user.recoil';
+import { ConnectionDto } from '../../types/LogOn.type';
+import { userLogStateListAtom } from '../../recoil/user.recoil';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -42,30 +41,30 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
   },
 }));
 
-function findState(stateObject: UserStateType | undefined) {
+function findState(stateObject: ConnectionDto | undefined) {
   if (stateObject === undefined) {
     return 'logOff';
   } else if (stateObject.onGame === true) {
     return 'onGame';
-  } else if (stateObject.logOn === true) {
+  } else if (stateObject.userId > 0) {
     return 'logOn';
   }
   return 'logOff';
 }
 
 function findUser(id: number | undefined) {
-  return (logState: UserStateType) => {
-    return logState.id === id;
+  return (userLogState: ConnectionDto) => {
+    return userLogState.userId === id;
   };
 }
 
 function getUserState(
-  logStateList: UserStateType[],
+  userLogStateList: ConnectionDto[],
   id: number | undefined,
 ): string | undefined {
   let state = undefined;
-  if (logStateList.length > 0) {
-    const stateObject = logStateList.find(findUser(id));
+  if (userLogStateList.length > 0) {
+    const stateObject = userLogStateList.find(findUser(id));
     state = findState(stateObject);
   }
   return state;
@@ -78,8 +77,8 @@ function ProfileAvatar(props: {
   const { avatarType, avartarProps } = props;
   const { id, nickname, image } = avartarProps;
   //logStateList : 로그인중인 유저 list
-  const logStateList = useRecoilValue<UserStateType[]>(userStateListAtom);
-  const userState = getUserState(logStateList, id);
+  const userLogStateList = useRecoilValue<ConnectionDto[]>(userLogStateListAtom);
+  const userState = getUserState(userLogStateList, id);
 
   if (avatarType === 'circle') {
     return (
@@ -90,7 +89,7 @@ function ProfileAvatar(props: {
           variant="dot"
           color={
             userState === 'onGame'
-              ? 'warning'
+              ? 'secondary'
               : userState === 'logOn'
               ? 'success'
               : 'error'
