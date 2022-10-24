@@ -13,7 +13,7 @@ import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
 import { CustomIconProps, CustomUploadProps } from '../../types/Link.type';
 import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
@@ -31,54 +31,55 @@ export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
 
 function UserInfo() {
   const { userId } = useParams();
-
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-  const [userImage, setUserImage] = useState('');
-  async function changeUserImage() {
-    try {
-      const response = await axios.patch(
-        `${SERVERURL}/users/${userId}/profile`,
-        { image: userImage },
-      );
-      if (response.status === 200) {
-        setUser({ ...user, image: userImage });
-        console.log('이미지 변경 성공');
-        console.log(user.image);
-      }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
-  }
+  const [userImage, setUserImage] = useState<FormData | undefined>();
 
-  let reader = new FileReader();
+  async function changeUserImage() {
+    if (userImage) {
+      for (var entries of userImage.values()) {
+        console.log('value2 :\n', entries);
+      }      
+    }
+    await axios.post(
+      `${SERVERURL}/users/${userId}/image`,
+      { image: userImage },
+    ).then((response) => {
+      setUser({ ...user, image: response.data });
+      console.log('이미지 변경 성공');
+    }).catch ((error) => {
+    alert(error);
+    console.log('error : ', error);
+    })
+  }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      //blob으로 저장하여 이미지의 생명이 짧음, formData로 보내야 할 것 같은데 서버의 받는 구조가 바뀌어야 함
-      //기본 이미지의 타입은 string인데 formData는 객체임.
-      //-> reader로 구현하였음.
-      // console.log(event.target.files[0]);
-      // let url = URL.createObjectURL(event.target.files[0]);
-      // setUserImage(url);
       const file = event.target.files[0];
       if (file) {
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-          //비동기 로직임
-          if (reader.result) {
-            if (typeof reader.result === 'string') {
-              // setUser({ ...user, image: reader.result });
-              setUserImage(reader.result);
-            } else {
-              alert('처리할 수 없는 이미지입니다.');
-            }
-          }
-        };
-        // changeUserImage(); //비동기 로직 끝난 뒤 그 값을 받아야 함
-      }
+        // 낙관적 ui
+        // console.log(event.target.files[0]);
+        // let url = URL.createObjectURL(event.target.files[0]);
+        // setUser({ ...user, image: url });
+
+        //서버 이미지 저장을 위한 form data
+        const formData = new FormData();
+        formData.append('file', file);
+        // let variables = [{
+        //   title: "title",
+        //   content: "content"
+        // },{
+        //   title: "title2",
+        //   content: "content2"
+        // }]    
+        // formData.append("data", new Blob([JSON.stringify(variables)], {type: "application/json"}))
+        console.log('1 : \n', formData); //빈 객체로 보이는 이유 브라우저 정책이라고 함
+        for (var entries of formData.values()) {
+          console.log('value :\n', entries);
+        }
+        setUserImage(formData);
+      };
     }
-  };
+  }
 
   const fileUploadProps: CustomIconProps = {
     icon: <FileUploadIcon color="disabled" />,
@@ -95,12 +96,10 @@ function UserInfo() {
       <UserPictureLayout>
         <ProfileImage userData={user} />
         <UserPictureButtonLayout>
-          {/* [axios POST ? PUT ? 요청] 본인의 프로필 사진 변경을 위한 요청
-              - 변경할 프로필 사진 -> 전체 라우트 위치에서 유저 데이터 한번에 요청 */}
-          <span>
-            <FileUploadButton uploadProps={fileChangeProps} />
-            <CustomIconButton customProps={fileUploadProps} />
-          </span>
+          <form enctype="multipart/form-data">
+          <FileUploadButton uploadProps={fileChangeProps} />
+          <CustomIconButton customProps={fileUploadProps} />
+          </form>
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>

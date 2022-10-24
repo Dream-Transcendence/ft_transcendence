@@ -31,7 +31,7 @@ function ProfileNickname() {
   async function changeName(value: string) {
     try {
       const response = await axios.patch(
-        `${SERVERURL}/users/${user.id}/profile`,
+        `${SERVERURL}/users/${user.id}/nickname`,
         { nickname: value },
       );
       if (response.status === 200) {
