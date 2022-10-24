@@ -54,35 +54,16 @@ function UserInfo() {
       const file = event.target.files[0];
       if (file) {
         // 낙관적 ui
-        console.log(event.target.files[0]);
         let url = URL.createObjectURL(event.target.files[0]);
         setUser({ ...user, image: url });
 
         //서버 이미지 저장을 위한 form data
         const formData = new FormData();
         formData.append('file', file);
-        // let variables = [{
-        //   title: "title",
-        //   content: "content"
-        // },{
-        //   title: "title2",
-        //   content: "content2"
-        // }]    
-        // formData.append("data", new Blob([JSON.stringify(variables)], {type: "application/json"}))
-        console.log('1 : \n', formData); //빈 객체로 보이는 이유 브라우저 정책이라고 함
-        for (var entries of formData.values()) {
-          console.log('value :\n', entries);
-        }
         setUserImage(formData);
       };
     }
   }
-
-  // const fileUploadProps: CustomIconProps = {
-  //   icon: <FileUploadIcon color="disabled" />,
-  //   action: changeUserImage,
-  // };
-
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
     action: handleChange,
@@ -93,10 +74,7 @@ function UserInfo() {
       <UserPictureLayout>
         <ProfileImage userData={user} />
         <UserPictureButtonLayout>
-          <form>
           <FileUploadButton uploadProps={fileChangeProps} />
-          {/* <CustomIconButton customProps={fileUploadProps} /> */}
-          </form>
         </UserPictureButtonLayout>
       </UserPictureLayout>
       <UserNicknameLayout>
