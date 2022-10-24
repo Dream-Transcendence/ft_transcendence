@@ -245,7 +245,6 @@ function EnteredChatRoomTemplate() {
             .get(`${SERVERURL}/users/${userData.id}/blocks/${res.user.id}`)
             .then((response) => {
               const participant = { ...res, blocked: response.data };
-              console.log('endter!! ', participant);
               setParticipantInfo([...participantInfo, participant]);
             });
         } catch (error) {
@@ -265,7 +264,6 @@ function EnteredChatRoomTemplate() {
       participantInfo.length > 1
     ) {
       socket.on(`${DELETEMESSAGE}`, (res) => {
-        console.log('out!! ', res);
         const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
           (participant) => {
             return participant.user.id !== +res;

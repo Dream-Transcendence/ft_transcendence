@@ -31,6 +31,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
   }, [roomId]);
 
   const sendMessage = () => {
+    // console.log('is data???', values);
     if (values.body !== '') {
       socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
         const sendMessage: SocketMessage = {

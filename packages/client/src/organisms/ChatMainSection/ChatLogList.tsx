@@ -122,6 +122,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
             nickname: res.user.nickname,
           },
         };
+        // console.log('받는 데이터', message, messages);
         setMessages([...messages, message]);
       });
     };

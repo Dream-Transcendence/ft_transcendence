@@ -46,12 +46,6 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   //채팅방을 나가는 작업 네임스페이스(ws://localhost:4242/chat)
   function outRoom() {
-    console.log('out room!', {
-      userId: userData.id,
-      roomId: Number(roomId),
-    });
-    console.log('in out !', socket);
-    //[수정사항][소켓] 채팅방의 메시지뿐만아니라 데데이이터터도  받받을  것것
     socket.emit(
       `${DELETECHANNELPARTICIPANT}`,
       {
