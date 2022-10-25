@@ -155,7 +155,7 @@ export class UserService {
     });
 
     // NOTE: 인증코드를 생성한다.(000000 ~ 999999)
-    const authCode = Math.floor(Math.random() * 1000000 + 100000);
+    const authCode = Math.floor(Math.random() * 900000 + 100000);
     this.authCodeList.set(id, authCode);
     // NOTE: 생성한 코드는 5분 후에 만료된다.
     setTimeout(() => {
