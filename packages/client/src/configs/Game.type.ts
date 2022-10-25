@@ -1,2 +1,2 @@
 export const LADDER = 0;
-export const NOMAL = 1;
+export const CUSTOM = 1;
