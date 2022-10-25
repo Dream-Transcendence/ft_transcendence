@@ -15,3 +15,8 @@ export interface GameRoomDto {
   score: { left: number; right: number };
   mode: number;
 }
+
+export interface gameInfoPropsType {
+  value: GameRoomDto | undefined,
+  setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>,
+}

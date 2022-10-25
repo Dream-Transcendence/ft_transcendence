@@ -33,9 +33,9 @@ export class GameService {
   paddleWidth = 10;
   paddleHeight = 75;
 
-  emitToEveryone(client: Socket, title: string, data: any) {
-    client.to(title).emit('gameMessage', data);
-    client.emit('gameMessage', data);
+  emitToEveryone(client: Socket, title: string, event:string,data: any) {
+    client.to(title).emit(event, data);
+    client.emit(event, data);
   }
 
   async match(
@@ -56,7 +56,7 @@ export class GameService {
     opponent.socket.join(title);
 
     this.gameInfoMap.set(title, gameInfo);
-    this.emitToEveryone(client, title, gameInfo.getGameRoomDto(title));
+    this.emitToEveryone(client, title, 'alreadyForMatch', gameInfo.getGameRoomDto(title));
   }
 
   // 매칭에는 게임설정이 없다
@@ -143,6 +143,7 @@ export class GameService {
           this.emitToEveryone(
             client,
             title,
+            'gameMessage',
             '@@@@@@@@@@@@ 패들에 부딫힘 @@@@@@@@@@@@@@',
           );
         } else {
@@ -170,6 +171,7 @@ export class GameService {
           this.emitToEveryone(
             client,
             title,
+            'gameMessage',
             this.gameInfoMap.get(title).getGameScoreDto(),
           );
           this.schedulerRegistry.deleteInterval(title);
@@ -181,7 +183,7 @@ export class GameService {
         y + dy < this.ballRadius
       ) {
         this.gameInfoMap.get(title).ballSpeed.y *= -1;
-        this.emitToEveryone(client, title, '위, 아래에서 부딫힘');
+        this.emitToEveryone(client, title, 'gameMessage','위, 아래에서 부딫힘');
       }
       this.gameInfoMap.get(title).ballPos.x +=
         this.gameInfoMap.get(title).ballSpeed.x;
@@ -190,6 +192,7 @@ export class GameService {
       this.emitToEveryone(
         client,
         title,
+        'gameProcess',
         this.gameInfoMap.get(title).getGameInfoDto(),
       );
     };

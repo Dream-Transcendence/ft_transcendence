@@ -94,10 +94,9 @@ function PingpongRoutePage() {
       }
     });
     return () => {
-      socket.off(CHANGEUSERSTATUS);
+      socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     }
   }, [userLogStateList, setUserLogStateList, findChanged, socket])
-
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response)
