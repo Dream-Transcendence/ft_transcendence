@@ -8,13 +8,13 @@ import { PROFILEURL } from '../configs/Link.url';
 import {
   userDataAtom,
   gameTypeAtom,
-  checkIsSecondOauth,
   userLogStateListAtom,
+  userSecondAuth,
 } from '../recoil/user.recoil';
 import { logOn, userNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
-import { BaseUserProfileData } from '../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLodingPage';
@@ -61,14 +61,14 @@ function PingpongRoutePage() {
   const [logStateList, setLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<boolean>(checkIsSecondOauth);
+    useRecoilState<UserSecondAuth>(userSecondAuth);
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
 
   useEffect(() => {
-    //[수정사항][2nd] api완성기다리는중
-    // if (userData.id === 0 || passSecondOauth === false) navigate('/');
-    if (userData.id === 0) navigate('/');
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
 
   const [userLogStateList, setUserLogStateList] =

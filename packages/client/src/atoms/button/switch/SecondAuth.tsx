@@ -2,10 +2,14 @@ import styled from '@emotion/styled';
 import { FormControlLabel, Switch } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../../configs/Link.url';
-import { UserSecondAuth } from '../../../types/Profile.type';
+import { userDataAtom, userSecondAuth } from '../../../recoil/user.recoil';
+import {
+  UserSecondAuth,
+  UserSecondAuthBody,
+} from '../../../types/Profile.type';
 
 const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -14,44 +18,33 @@ const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
 }));
 
 function SecondAuthSwitch() {
-  const { userId } = useParams();
-  const [isAuth, setIsAuth] = useState<UserSecondAuth>({
-    authenticated: false,
-  });
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const [passSecondOauth, setPassSecondOauth] =
+    useRecoilState<UserSecondAuth>(userSecondAuth);
 
-  useEffect(() => {
-    async function getSecondAuth() {
-      try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/2nd-auth`,
-        );
-        setIsAuth(response.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
-    getSecondAuth();
-  }, [userId]);
-
-  async function changeAuth() {
-    try {
-      //[doyun]api구현되면 db 업데이트 해줄 예정
-      // const response = await axios.post(
-      //   `${SERVERURL}/users/${userId}/2nd-auth`,
-      // );
-      // if (response.status === 200) {
-      setIsAuth((preAuth) => {
-        let newAuth = { ...preAuth };
-        newAuth.authenticated = !preAuth.authenticated;
-        return newAuth;
+  const unSetSecondAuth = async () => {
+    await axios.patch(`${SERVERURL}/users/${userData.id}/2nd-auth`).then(() => {
+      setPassSecondOauth({
+        checkIsSecondOauth: false,
+        checkIsValid: true,
       });
-      // }
-    } catch (error) {
-      alert(error);
-      console.log(error);
+      alert('2차 인증이 해제되었습니다.');
+    });
+  };
+
+  const handleChangeAuth = () => {
+    console.log('IsSecondOauth:', passSecondOauth);
+    if (passSecondOauth.checkIsSecondOauth) {
+      try {
+        unSetSecondAuth(); // 클릭된 현재 Auth가 on일 때 // auth를 끄는 동작
+      } catch (error) {
+        console.dir(error);
+      }
+    } else if (!passSecondOauth.checkIsSecondOauth) {
+      navigate('/secondOauth'); // 클릭된 현재 Auth가 off일 때 // auth를 키는 동작
     }
-  }
+  };
 
   return (
     //[axios GET 요청] 2차 인증 여부
@@ -62,8 +55,8 @@ function SecondAuthSwitch() {
             //onChange={handleChange}
             inputProps={{ 'aria-label': 'controlled' }}
             color="default"
-            checked={isAuth.authenticated}
-            onClick={changeAuth}
+            checked={passSecondOauth.checkIsSecondOauth}
+            onClick={handleChangeAuth}
           />
         }
         label="2차 인증"

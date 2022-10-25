@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { BaseUserProfileData } from '../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import { recoilPersist } from 'recoil-persist';
 import { ConnectionDto } from '../types/LogOn.type';
 
@@ -29,8 +29,11 @@ export const userDataAtom = atom<BaseUserProfileData>({
   effects_UNSTABLE: [persistAtom],
 });
 
-export const checkIsSecondOauth = atom<boolean>({
-  key: 'checkIsSecondOauth',
-  default: false,
+export const userSecondAuth = atom<UserSecondAuth>({
+  key: 'userSecondAuth',
+  default: {
+    checkIsSecondOauth: false,
+    checkIsValid: true,
+  },
   effects_UNSTABLE: [persistAtom],
 });

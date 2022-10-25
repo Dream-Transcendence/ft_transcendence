@@ -5,8 +5,10 @@ import { useEffect, useState } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
-import { checkIsSecondOauth, userDataAtom } from '../recoil/user.recoil';
-import { BaseUserProfileData } from '../types/Profile.type';
+import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
+import { IsNumber } from 'class-validator';
+import { onlyNumbers } from '../utils/onlyNumber';
 
 const SecondOauthPageLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -53,13 +55,19 @@ const OutButtonLayout = styled('section')(({ theme }) => ({
   marginLeft: '85%',
 }));
 
-function SecondOauth() {
+function SecondOauthPage() {
   const [seconedOauth, setSecondOauth] = useState<string>('');
   const [isRequest, setIsRequest] = useState<boolean>(false);
   const navigate = useNavigate();
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
   const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<boolean>(checkIsSecondOauth);
+    useRecoilState<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //[수정사항][2nd] api완성기다리는중
+    if (user.id === 0) navigate('/');
+  }, [user.id, navigate]);
+
   const handleSecondOauth = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSecondOauth(value);
@@ -78,23 +86,20 @@ function SecondOauth() {
   };
 
   const registSecondOauth = async () => {
-    console.log('second:', seconedOauth);
-    if (seconedOauth === '') {
-      alert('인증코드를 입력해주세요.');
-      return;
-    }
     await axios
       .patch(`${SERVERURL}/users/${user.id}/2nd-auth`, {
-        code: seconedOauth,
+        code: +seconedOauth,
       })
       .then((res) => {
         console.log('res!', res);
-        setPassSecondOauth(true);
+        setPassSecondOauth({
+          checkIsSecondOauth: true,
+          checkIsValid: true,
+        });
         navigate(`${PROFILEURL}/${user.id}`);
       })
       .catch((error) => {
         console.dir(error);
-        setPassSecondOauth(false);
         alert('인증코드가 잘못되었습니다.');
       });
   };
@@ -104,6 +109,14 @@ function SecondOauth() {
   };
 
   const handleRegist = () => {
+    console.log('second:', seconedOauth);
+    if (seconedOauth === '') {
+      alert('인증코드를 입력해주세요.');
+      return;
+    } else if (!onlyNumbers(seconedOauth)) {
+      alert('숫자만 입력해주세요.');
+      return;
+    }
     registSecondOauth();
   };
 
@@ -143,4 +156,4 @@ function SecondOauth() {
   );
 }
 
-export default SecondOauth;
+export default SecondOauthPage;

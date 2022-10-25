@@ -4,11 +4,11 @@ import { TextField } from '@mui/material';
 import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { BaseUserProfileData } from '../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
-import { checkIsSecondOauth, userDataAtom } from '../recoil/user.recoil';
+import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 
 const NicknamePageLayout = styled('div')(({ theme }) => ({
   display: 'grid',
@@ -23,7 +23,7 @@ function NicknamePage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
   const [checkOauth, setCheckOauth] = useState(false);
   const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<boolean>(checkIsSecondOauth);
+    useRecoilState<UserSecondAuth>(userSecondAuth);
   const navigate = useNavigate();
 
   //[수정사항] 이미 로그인한적있는 유저는 nickname변경창조차 뜨지않아야함
@@ -64,9 +64,15 @@ function NicknamePage() {
           .then((res) => {
             console.log(res);
             if (!res.data.authenticated) {
-              setPassSecondOauth(true); // 2nd 가 설정되지않은경우
+              // 2nd 가 설정되지않은경우
               navigate(`${PROFILEURL}/${user.id}`);
-            } else navigate('/secondOauth');
+            } else {
+              setPassSecondOauth({
+                checkIsSecondOauth: true,
+                checkIsValid: false,
+              });
+              navigate('/secondOauth');
+            }
           });
       };
       try {

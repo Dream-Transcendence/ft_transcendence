@@ -14,7 +14,7 @@ import { PROFILEURL } from './configs/Link.url';
 import { BaseUserProfileData } from './types/Profile.type';
 import React from 'react';
 import Loader from './atoms/Loading/Loader';
-import SecondOauth from './pages/SecondOauth';
+import SecondOauthPage from './pages/SecondOauthPage';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route path="/nickname" element={<NicknamePage />} />
           {/* 구글 2차인증 페이지 추가될 예정 */}
           {/* [axios POST 요청] 서버 측으로 로그인시도 전달 */}
-          <Route path="/secondOauth" element={<SecondOauth />} />
+          <Route path="/secondOauth" element={<SecondOauthPage />} />
           <Route
             path="pingpong"
             element={<Navigate replace to={PROFILEURL} />}
