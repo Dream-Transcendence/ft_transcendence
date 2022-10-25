@@ -52,6 +52,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Message, (message) => message.user)
   messages: Message[];
+
+  @OneToMany(() => Game, (game) => game.user)
+  games: Game[];
 }
 
 @Entity()
@@ -113,4 +116,41 @@ export class Request extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.friends)
   responser: User;
+}
+
+@Entity()
+export class Game extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  win: boolean;
+
+  @Column()
+  ladder: boolean;
+
+  @ManyToOne(() => User, (user) => user.games)
+  user: User;
+
+  @ManyToOne(() => User, (user) => user.games)
+  opponent: User;
+}
+
+@Entity()
+export class Rank extends BaseEntity {
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column()
+  rank: number;
+
+  @Column()
+  win: number;
+
+  @Column()
+  lose: number;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
 }

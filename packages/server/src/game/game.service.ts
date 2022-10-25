@@ -7,8 +7,9 @@ import {
   RoomTitleDto,
   MovePaddleDto,
   MatchInfo,
+  AddGameResultDto,
 } from './game.dto';
-import { User } from '../users/users.entity';
+import { Game, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,6 +20,7 @@ import { UserService } from 'src/users/users.service';
 export class GameService {
   constructor(
     @Inject('USERS_REPOSITORY') private userRepository: Repository<User>,
+    @Inject('GAMES_REPOSITORY') private gamesRepository: Repository<Game>,
     private schedulerRegistry: SchedulerRegistry,
     private userService: UserService,
     private userGateway: UserGateway,
@@ -87,7 +89,6 @@ export class GameService {
       }
     } else {
       // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
-
       if (this.matchingQueue.length !== 0) {
         // NOTE: 매칭 대기열에 유저가 있으면, 매칭(로직이 문제 없는 지 고민해봐야 함)
         const opponent = this.matchingQueue.shift();
@@ -111,12 +112,31 @@ export class GameService {
     // NOTE disconnect를 할지 방에서만 빼낼지 고민
   }
 
-  async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
-    const { title } = roomTitleDto;
-    this.addInterval(title, 1000 / 6, client);
+  async addGameResult(addGameResultDto: AddGameResultDto) {
+    const { players, score, mode } = addGameResultDto;
+    const result1 = this.gamesRepository.create({
+      win: score.left > score.right ? true : false,
+      ladder: mode === 0 ? true : false,
+      user: players.left,
+      opponent: players.right,
+    });
+    console.log('result1: ', result1);
+    const result2 = await this.gamesRepository.create({
+      win: score.left < score.right ? true : false,
+      ladder: mode === 0 ? true : false,
+      user: players.right,
+      opponent: players.left,
+    });
+    console.log('result2 ', result2);
+    await this.gamesRepository.save([result1, result2]);
   }
 
-  addInterval(title: string, milliseconds: number, client: Socket) {
+  async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
+    const { title } = roomTitleDto;
+    await this.addInterval(title, 1000 / 6, client);
+  }
+
+  async addInterval(title: string, milliseconds: number, client: Socket) {
     const callback = () => {
       const x = this.gameInfoMap.get(title).ballPos.x;
       const y = this.gameInfoMap.get(title).ballPos.y;
@@ -150,7 +170,7 @@ export class GameService {
           this.gameInfoMap.get(title).ballSpeed.y = -3;
           this.gameInfoMap.get(title).ballSpeed.x = 3;
           this.gameInfoMap.get(title).paddlePos.left = (250 - 75) / 2;
-          this.gameInfoMap.get(title).paddlePos.right = (250 - 75) / 2;
+          this.gameInfoMap.get(title).paddlePos.right = 0;
 
           if (x + dx < this.ballRadius)
             this.gameInfoMap.get(title).score.right += 1;
@@ -163,6 +183,12 @@ export class GameService {
             // NOTE: 게임 중 상태를 온라인으로 바꿈
             this.userGateway.setConnection(players.left.id, false);
             this.userGateway.setConnection(players.right.id, false);
+            // 여기 추가
+            this.addGameResult({
+              players,
+              score: this.gameInfoMap.get(title).score,
+              mode: 0,
+            });
             message = '#############게임 끝################';
           }
           this.emitToEveryone(
