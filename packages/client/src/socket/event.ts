@@ -7,6 +7,7 @@ export const chatNameSpace = 'chat';
 export const userNameSpace = 'user';
 export const gameNameSpace = 'game';
 export const gameLadderMatch = 'match';
+export const GAMESTART = 'start';
 export const PATCHUSERINFO = 'patchUserInfo';
 export const PATCHMESSAGE = 'patchMessage';
 export const SENDMESSAGE = 'sendMessage';

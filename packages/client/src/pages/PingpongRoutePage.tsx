@@ -19,6 +19,7 @@ import ChatroomPage from './ChatChannelPage';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLodingPage';
 import GamePlayPage from './GamePlayPage';
+import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
 
 const PageSection = styled('section')(({ theme }) => ({
@@ -124,9 +125,7 @@ function PingpongRoutePage() {
         />
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
-        <Route path="gamecreate/*" element={<GameCreatePage />} />
-        <Route path="gameplay/:userId" element={<GamePlayPage />} />
-        <Route path="gameloading/*" element={<GameLoadingPage />} />
+        <Route path="game/*" element={<GameRoutePage />} />
       </Routes>
       {/* <footer>
        <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>

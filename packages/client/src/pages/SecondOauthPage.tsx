@@ -64,7 +64,6 @@ function SecondOauthPage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
 
   useEffect(() => {
-    //[수정사항][2nd] api완성기다리는중
     if (user.id === 0) navigate('/');
   }, [user.id, navigate]);
 

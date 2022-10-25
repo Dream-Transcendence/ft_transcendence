@@ -191,7 +191,6 @@ function EnteredChatRoomTemplate() {
 
   const [socket] = useSocket(chatNameSpace);
 
-  //[수정사항][소켓] socket.on이 호출이 안됨.
   useEffect(() => {
     function changedParticipantStatus() {
       socket.on(`${PATCHMESSAGE}`, (res) => {
@@ -232,7 +231,6 @@ function EnteredChatRoomTemplate() {
     let response;
   };
 
-  //[수정사항][소켓] 참가인원의 block유무를 알기 위해
   useEffect(() => {
     if (
       roomInfo.type !== DM &&

@@ -69,7 +69,7 @@ function GameLoadingPage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
-    connect(); //game namespace socket 연결
+    // connect(); //game namespace socket 연결
     //ladder 일때
     if (gameType === LADDER) {
       socket.emit(
@@ -105,8 +105,8 @@ function GameLoadingPage() {
     });
     return () => {
       //unmount
-      socket.removeAllListeners(); //모든 리스너 제거
-      disconnect();
+      // socket.removeAllListeners(); //모든 리스너 제거
+      // disconnect();
     };
   });
   return (
