@@ -4,7 +4,7 @@ import ProfilePage from './pages/ProfilePage';
 import ChatroomPage from './pages/ChatChannelPage';
 import NicknamePage from './pages/NicknamePage';
 import GameCreatePage from './pages/GameCreatePage';
-import GameLoadingPage from './pages/GameLodingPage';
+import GameLoadingPage from './pages/GameLoadingPage';
 import GamePlayPage from './pages/GamePlayPage';
 import { RecoilRoot, selector, useRecoilState, useRecoilValue } from 'recoil';
 import PingpongRoutePage from './pages/PingpongRoutePage';

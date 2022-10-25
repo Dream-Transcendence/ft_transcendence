@@ -1,6 +1,9 @@
 export const enterChannel = 'enterChannel';
 export const deleteChannelParticipant = 'deleteChannelParticipant';
 export const logOn = 'logOn';
+export const CHANGEUSERSTATUS = 'changeUserStatus';
+export const USERLOGOFF = 'userLogOff';
+// export const logOff = 'logOff'; -> auto emit when user disconnect 
 export const chatNameSpace = 'chat';
 export const userNameSpace = 'user';
 export const gameNameSpace = 'game';
