@@ -155,7 +155,7 @@ export class UserService {
     });
 
     // NOTE: 인증코드를 생성한다.(000000 ~ 999999)
-    const authCode = Math.floor(Math.random() * 1000000);
+    const authCode = Math.floor(Math.random() * 900000 + 100000);
     this.authCodeList.set(id, authCode);
     // NOTE: 생성한 코드는 5분 후에 만료된다.
     setTimeout(() => {
@@ -573,7 +573,7 @@ export class UserService {
     if (this.connectionList.get(client.id)) {
       const userId = this.connectionList.get(client.id).userId;
 
-      client.broadcast.emit('userLogOff', { userId: userId });
+      client.broadcast.emit('userLogOff', { userId: userId, onGame: false });
 
       this.connectionList.delete(client.id);
     }
@@ -673,6 +673,7 @@ export class UserService {
       throw new WsException('호스트를 찾을 수 없습니다.');
 
     this.connectionList.get(hostClientId).onGame = false;
+    server.emit('changeUserStatus', { userId: userIdDto.id, onGame: false });
 
     server.to(hostClientId).emit('rejectGame');
   }
