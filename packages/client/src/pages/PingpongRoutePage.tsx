@@ -93,7 +93,12 @@ function PingpongRoutePage() {
         setUserLogStateList(newList);
       }
     });
+    return () => {
+      socket.off(CHANGEUSERSTATUS);
+    }
+  }, [userLogStateList, setUserLogStateList, findChanged, socket])
 
+  useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response)
       if (userLogStateList.length > 0 && idx !== -1) {
@@ -107,7 +112,6 @@ function PingpongRoutePage() {
       socket.removeAllListeners(); //모든 리스너 제거
     }
   }, [userLogStateList, setUserLogStateList, findChanged, socket])
-
   return (
     <PageSection>
       <header>

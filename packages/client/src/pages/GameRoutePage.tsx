@@ -11,7 +11,7 @@ function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   useEffect(() => {
     connect();
-
+    
     return () => {
       disconnect();
     };

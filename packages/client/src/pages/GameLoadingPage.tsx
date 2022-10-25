@@ -65,7 +65,7 @@ const moveToGame = (args: GameRoomDto, userId: number) => {
 function GameLoadingPage() {
   const navigate = useNavigate();
   const { id: userId } = useRecoilValue(userDataAtom);
-  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const [socket] = useSocket(gameNameSpace);
   const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
     // connect(); //game namespace socket 연결
