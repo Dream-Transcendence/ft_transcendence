@@ -8,6 +8,8 @@ CREATE TABLE "room" ("id" SERIAL NOT NULL, "name" character varying, "type" inte
 CREATE TABLE "channel_participant" ("id" SERIAL NOT NULL, "auth" integer, "status" integer, "statusStartDate" TIMESTAMP, "userId" integer, "roomId" integer, CONSTRAINT "PK_ae5e5f3f9ce9a1968392ebb6b08" PRIMARY KEY ("id"));
 CREATE TABLE "dm_participant" ("id" SERIAL NOT NULL, "userId" integer, "roomId" integer, CONSTRAINT "PK_7400786b0fd136d7e1b7e5d6802" PRIMARY KEY ("id"));
 CREATE TABLE "message" ("id" integer NOT NULL, "date" TIMESTAMP NOT NULL, "body" character varying NOT NULL, "userId" integer, "roomId" integer, CONSTRAINT "PK_ba01f0a3e0123651915008bc578" PRIMARY KEY ("id"));
+CREATE TABLE "game" ("id" SERIAL NOT NULL, "win" boolean NOT NULL, "ladder" boolean NOT NULL, "userId" integer, "opponentId" integer, CONSTRAINT "PK_352a30652cd352f552fef73dec5" PRIMARY KEY ("id"));
+CREATE TABLE "rank" ("id" SERIAL NOT NULL, "rank" integer NOT NULL, "win" integer NOT NULL, "lose" integer NOT NULL, "userId" integer, CONSTRAINT "REL_0319fdc8ba0d4c2f456815dafe" UNIQUE ("userId"), CONSTRAINT "PK_a5dfd2e605e5e4fb8578caec083" PRIMARY KEY ("id"));
 ALTER TABLE "block" ADD CONSTRAINT "FK_b7c8985f27f5b0d1820832318da" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "block" ADD CONSTRAINT "FK_c9a8df2f7cbbae1cda940694409" FOREIGN KEY ("blockedUserId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "auth" ADD CONSTRAINT "FK_373ead146f110f04dad60848154" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
@@ -21,6 +23,9 @@ ALTER TABLE "dm_participant" ADD CONSTRAINT "FK_a05c42c34e7c204da3911b2a781" FOR
 ALTER TABLE "dm_participant" ADD CONSTRAINT "FK_0530689ed4b0bca1dd9fc3dc613" FOREIGN KEY ("roomId") REFERENCES "room"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "message" ADD CONSTRAINT "FK_446251f8ceb2132af01b68eb593" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "message" ADD CONSTRAINT "FK_fdfe54a21d1542c564384b74d5c" FOREIGN KEY ("roomId") REFERENCES "room"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "game" ADD CONSTRAINT "FK_a8106c0a84d70ecfc3358301c54" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "game" ADD CONSTRAINT "FK_3240e72a746928ea85f05b3b2f8" FOREIGN KEY ("opponentId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "rank" ADD CONSTRAINT "FK_0319fdc8ba0d4c2f456815dafea" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://cdn.intra.42.fr/users/dha.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (1, 'dha@student.42seoul.kr', true, 1);

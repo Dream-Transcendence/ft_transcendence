@@ -137,7 +137,7 @@ export class GameService {
   }
 
   async addInterval(title: string, milliseconds: number, client: Socket) {
-    const callback = () => {
+    const callback = async () => {
       const x = this.gameInfoMap.get(title).ballPos.x;
       const y = this.gameInfoMap.get(title).ballPos.y;
       const dx = this.gameInfoMap.get(title).ballSpeed.x;
