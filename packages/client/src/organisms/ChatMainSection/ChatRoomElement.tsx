@@ -16,7 +16,7 @@ import {
   UnJoinedRoomList,
 } from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, enterChannel } from '../../socket/event';
+import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 
@@ -77,7 +77,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
   function enterRoom() {
     //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
     socket.emit(
-      `${enterChannel}`,
+      `${ENTERCHANNEL}`,
       {
         userId: userData.id,
         roomId: roomId,

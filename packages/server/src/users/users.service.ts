@@ -154,9 +154,10 @@ export class UserService {
       where: { user: { id: id } },
     });
 
-    const authCode = Math.floor(Math.random() * (1000000 - 100000)) + 100000;
+    // NOTE: 인증코드를 생성한다.(000000 ~ 999999)
+    const authCode = Math.floor(Math.random() * 1000000);
     this.authCodeList.set(id, authCode);
-    // NOTE: after 5 minutes, delete authCode
+    // NOTE: 생성한 코드는 5분 후에 만료된다.
     setTimeout(() => {
       this.authCodeList.delete(id);
     }, 5 * 60 * 1000);
@@ -202,23 +203,23 @@ export class UserService {
       relations: { user: true },
       where: { user: { id: id } },
     });
+    const { code } = patchAuthDto;
 
-    if (auth.authenticated === false) {
-      const { code } = patchAuthDto;
-      if (this.authCodeList.get(id) !== code)
+    console.log(this.authCodeList, code);
+
+    if (code !== undefined || auth.authenticated === false) {
+      if (this.authCodeList.get(id) !== code || code === undefined)
         throw new BadRequestException(
           '인증코드가 일치하지 않거나 만료되었습니다.',
         );
       this.authCodeList.delete(id);
+      if (auth.authenticated === true) return { authenticated: true };
     }
 
     auth.authenticated = !auth.authenticated;
     await this.authRepository.save(auth);
 
-    const authUserDto = new AuthUserDto();
-    authUserDto.authenticated = auth.authenticated;
-
-    return authUserDto;
+    return { authenticated: auth.authenticated };
   }
 
   // ANCHOR: user block
@@ -546,7 +547,7 @@ export class UserService {
 
   // ANCHOR: Socket
 
-  setConnection(userId: number, server: Server | Socket, onGame: boolean) {
+  setConnection(userId: number, onGame: boolean) {
     let clientId: string;
     for (const [key, value] of this.connectionList) {
       if (value.userId === userId) {
@@ -560,15 +561,7 @@ export class UserService {
       connection.onGame,
     );
 
-    if (server instanceof Server) {
-      server.emit('changeUserStatus', {
-        connection: connectionDto,
-      });
-    } else {
-      server.broadcast.emit('changeUserStatus', {
-        connection: connectionDto,
-      });
-    }
+    return connectionDto;
   }
 
   getConnectionList() {
@@ -588,6 +581,11 @@ export class UserService {
 
   async handleLogOn(client: Socket, connectionDto: ConnectionDto) {
     const onlineUserList = Array.from(this.connectionList.values());
+    onlineUserList.map((connection) => {
+      if (connection.userId === connectionDto.userId) {
+        throw new WsException('이미 로그인 되어있습니다.');
+      }
+    });
 
     this.connectionList.set(client.id, {
       userId: connectionDto.userId,
@@ -616,7 +614,10 @@ export class UserService {
     if (opponentClientId === null)
       throw new WsException('상대를 찾을 수 없습니다.');
 
-    this.setConnection(inviteGameDto.hostId, client, true);
+    client.broadcast.emit(
+      'changeUserStatus',
+      this.setConnection(inviteGameDto.hostId, true),
+    );
 
     const host = await this.usersRepository.findOne({
       where: [{ id: hostId }],
@@ -648,7 +649,11 @@ export class UserService {
     if (hostClientId === null)
       throw new WsException('호스트를 찾을 수 없습니다.');
 
-    this.setConnection(this.connectionList.get(client.id).userId, client, true);
+    client.broadcast.emit(
+      'changeUserStatus',
+      this.setConnection(this.connectionList.get(client.id).userId, true),
+    );
+
     const serverAcceptGameDto: ServerAcceptGameDto = {
       title: uuidv4(),
       mode: acceptGameDto.mode,

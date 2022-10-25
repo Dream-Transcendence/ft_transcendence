@@ -131,8 +131,8 @@ export class UsersController {
   @ApiOperation({
     summary: '2차 인증 업데이트 / BodyType: AuthUserDto',
     description:
-      '유저의 2차 인증 여부 반전(true -> false, false -> true)\
-      인증을 할 때는 이메일로 받은 code를 body에 포함하고, 해제 할 때는 바디에 아무것도 포함하지 않음',
+      '3가지 분기로 나뉨 (활성화 상태 / 바디 여부), 1. 2차 인증 활성화(false / O), \
+      2. 2차 인증 비활성화(true / X), 3. 2차 인증 로그인(true / O)',
   })
   @ApiOkResponse({ description: '2차 인증 업데이트 성공', type: AuthUserDto })
   @ApiBadRequestResponse({

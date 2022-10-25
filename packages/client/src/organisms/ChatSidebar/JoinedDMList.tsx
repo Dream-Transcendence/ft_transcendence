@@ -11,7 +11,7 @@ import { BLOCK } from '../../configs/Block.case';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { chatNameSpace, enterChannel } from '../../socket/event';
+import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
 
@@ -86,7 +86,7 @@ function JoinedDMListOrganisms() {
 
     const enterRoom = () => {
       socket.emit(
-        `${enterChannel}`,
+        `${ENTERCHANNEL}`,
         {
           userId: userData.id,
           roomId: room.id,

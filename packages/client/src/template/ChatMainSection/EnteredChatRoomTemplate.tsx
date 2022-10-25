@@ -23,7 +23,13 @@ import {
 } from '../../types/Message.type';
 import { userDataAtom } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
-import { chatNameSpace, PATCHMESSAGE } from '../../socket/event';
+import {
+  chatNameSpace,
+  DELETEMESSAGE,
+  ENTERMESSAGE,
+  PATCHMESSAGE,
+} from '../../socket/event';
+import { SocketAddress } from 'net';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -39,7 +45,7 @@ const BannedLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
-  justifyContent: 'right',
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 
@@ -56,13 +62,6 @@ const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   marginTop: '0%',
 }));
-
-// export const fetchParticipantData = async (roomId: string, userId: number) => {
-//   const response = await axios.get(
-//     `${SERVERURL}/rooms/${roomId}/channel/${userId}/participants`,
-//   );
-//   setParticipantInfo(response.data);
-// };
 
 function EnteredChatRoomTemplate() {
   const [roomInfo, setRoomInfo] = useState<GetRoomInfoDto>({
@@ -192,13 +191,12 @@ function EnteredChatRoomTemplate() {
 
   const [socket] = useSocket(chatNameSpace);
 
-  //[수정사항][소켓] socket.on이 호출이 안됨.
   useEffect(() => {
     function changedParticipantStatus() {
       socket.on(`${PATCHMESSAGE}`, (res) => {
         const editParticipant: ParticipantInfo | undefined =
           participantInfo.find(
-            (participant) => participant.user.id !== res.user,
+            (participant) => participant.user.id === res.userId,
           );
         const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
           (participant) => participant.user.id !== res.userId,
@@ -209,6 +207,12 @@ function EnteredChatRoomTemplate() {
             auth: res.auth,
             status: res.status,
           };
+          console.log(
+            'modify: ',
+            modifiedParticipant,
+            'filter:',
+            filteredParticipants,
+          );
           setParticipantInfo([...filteredParticipants, modifiedParticipant]);
           // if (res.userId === userData.id) {
           //   setUserType(res.auth);
@@ -218,6 +222,58 @@ function EnteredChatRoomTemplate() {
       });
     }
     changedParticipantStatus();
+    // return () => {
+    //   socket.off(`${PATCHMESSAGE}`);
+    // };
+  }, [participantInfo, socket]);
+
+  const getBlocked = async (blockedUserId: number) => {
+    let response;
+  };
+
+  useEffect(() => {
+    if (
+      roomInfo.type !== DM &&
+      roomInfo.type !== 5 &&
+      participantInfo.length > 1
+    ) {
+      socket.on(`${ENTERMESSAGE}`, async (res) => {
+        try {
+          await axios
+            .get(`${SERVERURL}/users/${userData.id}/blocks/${res.user.id}`)
+            .then((response) => {
+              const participant = { ...res, blocked: response.data };
+              setParticipantInfo([...participantInfo, participant]);
+            });
+        } catch (error) {
+          console.dir(error);
+        }
+      });
+    }
+    return () => {
+      socket.off(`${ENTERMESSAGE}`);
+    };
+  }, [participantInfo, socket]);
+
+  useEffect(() => {
+    if (
+      roomInfo.type !== DM &&
+      roomInfo.type !== 5 &&
+      participantInfo.length > 1
+    ) {
+      socket.on(`${DELETEMESSAGE}`, (res) => {
+        const filteredParticipants: ParticipantInfo[] = participantInfo.filter(
+          (participant) => {
+            return participant.user.id !== +res;
+          },
+        );
+        console.log(res, filteredParticipants);
+        setParticipantInfo([...filteredParticipants]);
+      });
+    }
+    return () => {
+      socket.off(`${DELETEMESSAGE}`);
+    };
   }, [participantInfo, socket]);
 
   const roomInfoSet: RoomInfoSet = {

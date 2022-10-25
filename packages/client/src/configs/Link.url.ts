@@ -1,7 +1,7 @@
 export const PROFILEURL = '/pingpong/profile';
-export const GAMECREATEURL = '/pingpong/gamecreate';
-export const GAMELOADINGURL = '/pingpong/gameloading';
-export const GAMEPLAYURL = '/pingpong/gameplay';
+export const GAMECREATEURL = '/pingpong/game/create';
+export const GAMELOADINGURL = '/pingpong/game/loading';
+export const GAMEPLAYURL = '/pingpong/game/play/';
 export const CHATROOMURL = '/pingpong/channel/room/';
 export const CHATDMURL = '/pingpong/channel/DM';
 export const CHANNELURL = '/pingpong/channel/';

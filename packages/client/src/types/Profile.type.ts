@@ -48,8 +48,13 @@ export interface OtherUserData {
   isFriend: boolean;
 }
 
+export interface UserSecondAuthBody {
+  code: boolean;
+}
+
 export interface UserSecondAuth {
-  authenticated: boolean;
+  checkIsSecondOauth: boolean;
+  checkIsValid: boolean;
 }
 
 export interface ControlNickname {

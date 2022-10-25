@@ -156,7 +156,7 @@ function BasicSpeedDial(props: {
 
   const setUserState = (info: ChangeParticipantInfo, action: () => void) => {
     socket.emit(`${PATCHUSERINFO}`, info, (response: any) => {
-      // action();
+      console.log('status changed:', info);
     });
     socket.on('exception', (response: any) => {
       alert(`변경불가 \n 사유: ${response.message}`);

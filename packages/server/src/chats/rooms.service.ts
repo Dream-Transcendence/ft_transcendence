@@ -376,16 +376,13 @@ export class RoomService {
           room,
         });
         await this.channelParticipantsRepository.insert(participant);
-        client.to(room.title).emit(
-          'enterMessage',
-          `{
-              "user": {
-                "id": ${userId},
-                "nickname": "${participant.user.nickname}",
-                "image": "${participant.user.image}",
-              },
-            }`,
-        );
+        client.to(room.title).emit('enterMessage', {
+          user: {
+            id: userId,
+            nickname: participant.user.nickname,
+            image: participant.user.image,
+          },
+        });
       }
     }
     // 유저 룸 초기화 후, roomId 룸에 추가
