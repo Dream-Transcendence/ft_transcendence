@@ -17,7 +17,52 @@ export interface GameRoomDto {
 }
 
 export interface CanvasProps {
+  children?: JSX.Element[];
+  width: number;
+  height: number;
+}
+
+export interface CanvasImgProps {
   children?: JSX.Element;
   width: number;
   height: number;
+}
+
+export interface BallProps {
+  children?: JSX.Element;
+  diameter: number;
+  posX?: number;
+  posY?: number;
+}
+
+export interface PaddleProps {
+  children?: JSX.Element;
+  width: number;
+  height: number;
+  posX?: number;
+  posY?: number;
+}
+
+export interface ScoreProps {
+  left: number;
+  right: number;
+}
+
+export interface ResponsiveGameProps {
+  canvasImgProps: CanvasImgProps;
+  ballProps: BallProps;
+  paddleProps: PaddleProps;
+}
+
+export interface GameOffsetProps {
+  ballPosX: number;
+  ballPosY: number;
+  LeftPaddlePosY: number;
+  RightPaddlePosY: number;
+}
+
+export interface GameResultModalControl {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  score: ScoreProps;
 }
