@@ -26,14 +26,12 @@ function NicknamePage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
   const navigate = useNavigate();
 
-  //[수정사항] 이미 로그인한적있는 유저는 nickname변경창조차 뜨지않아야함
   useEffect(() => {
     async function getUserData() {
       await axios
         .get(`${SERVERURL}/users/userinfo`)
         .then((res) => {
           setUser(res.data);
-          //[수정사항][로그인]
           if (res.data.nickname.length <= 10) {
             //최초 가입 유저
             setCheckOauth(true);

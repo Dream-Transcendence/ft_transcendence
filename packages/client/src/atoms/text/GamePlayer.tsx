@@ -4,13 +4,15 @@ import { Typography } from '@mui/material';
 const GamePlayerLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   backgroundColor: '#00000000',
-  alignContent: 'center',
+  // alignContent: 'center',
   alignItems: 'center',
-  alignSelf: 'center',
+  // alignSelf: 'center',
   flexWrap: 'nowrap',
   height: '100%',
   padding: '3px',
   overflow: 'hidden',
+  minWidth: '5rem',
+  maxWidth: '35%'
 }));
 
 function GamePlayer(player: String) {

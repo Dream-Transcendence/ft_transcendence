@@ -4,14 +4,14 @@ import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
-import { gameLadderMatch, gameNameSpace } from '../socket/event';
+import { gameCancel, gameLadderMatch, gameNameSpace } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { GAMEPLAYURL } from '../configs/Link.url';
 import { GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
-import { LADDER, NOMAL } from '../configs/Game.type';
+import { LADDER, CUSTOM } from '../configs/Game.type';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -50,26 +50,25 @@ const ButtonLayout = styled('div')(({ theme }) => ({
 // };
 
 // 사용자가 어느쪽 플레이어인지 확인
-function findPlayerSpot(args: GameRoomDto, userId: number) {
-  if (args.leftPlayer.id === userId) {
-    return 'left';
-  } else {
-    return 'right';
-  }
-}
+// function findPlayerSpot(args: GameRoomDto, userId: number) {
+//   if (args.leftPlayer.id === userId) {
+//     return 'left';
+//   } else {
+//     return 'right';
+//   }
+// }
 
 //위치 확인후 게임 입장
 const moveToGame = (args: GameRoomDto, userId: number) => {
-  findPlayerSpot(args, userId);
 };
 
 function GameLoadingPage() {
   const navigate = useNavigate();
   const { id: userId } = useRecoilValue(userDataAtom);
-  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const [socket] = useSocket(gameNameSpace);
   const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
-    connect(); //game namespace socket 연결
+    // connect(); //game namespace socket 연결
     //ladder 일때
     if (gameType === LADDER) {
       socket.emit(
@@ -81,7 +80,7 @@ function GameLoadingPage() {
           console.log('emit 성공 : ', response);
         },
       );
-    } else if (gameType === NOMAL) {
+    } else if (gameType === CUSTOM) {
       //1:1일때
       socket.emit(
         `${gameLadderMatch}`,
@@ -98,6 +97,8 @@ function GameLoadingPage() {
       moveToGame(args, userId);
       navigate(`${GAMEPLAYURL}/${userId}`);
     });
+    //게임 취소 로직 이어 구현하기
+    // socket.on(`${gameCancel}`)
     //GameRoomDto로 수정 예정
     socket.on('exception', (response: any) => {
       alert(response.message);
@@ -105,10 +106,12 @@ function GameLoadingPage() {
     });
     return () => {
       //unmount
+      // socket.emit(`${gameCancel}`)
       socket.removeAllListeners(); //모든 리스너 제거
       disconnect();
     };
-  });
+  }, []);
+  
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}

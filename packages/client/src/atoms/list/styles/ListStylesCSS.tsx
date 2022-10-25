@@ -4,7 +4,6 @@ import { height } from '@mui/system';
 export const ListLayout = styled('li')(() => ({
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'center',
   width: '100%',
   height: '20%',
   paddingTop: '2px',
