@@ -98,17 +98,23 @@ export class MatchingInfo {
   constructor(public readonly userId: number, public readonly socket: Socket) {}
 }
 
+export class AddGameResultDto {
+  players: { left: User; right: User };
+  score: { left: number; right: number };
+  mode: GAME_MODE;
+}
+
 export class GameInfo {
   constructor(
     private player1: User,
     private player2: User,
-    private mode: GAME_MODE,
+    public mode: GAME_MODE,
   ) {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
     this.ballPos = { x: 240, y: 125 };
     this.ballSpeed = { x: 3, y: -3 };
-    this.paddlePos = { left: (250 - 75) / 2, right: (250 - 75) / 2 };
+    this.paddlePos = { left: (250 - 75) / 2, right: 0 };
     // this.mode = mode;
     // mode도 받기
   }
