@@ -183,8 +183,7 @@ export class GameService {
             // NOTE: 게임 중 상태를 온라인으로 바꿈
             this.userGateway.setConnection(players.left.id, false);
             this.userGateway.setConnection(players.right.id, false);
-            // 여기 추가
-            this.addGameResult({
+            await this.addGameResult({
               players,
               score: this.gameInfoMap.get(title).score,
               mode: 0,
