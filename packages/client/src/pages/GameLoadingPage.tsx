@@ -111,6 +111,7 @@ function GameLoadingPage() {
       disconnect();
     };
   }, []);
+  
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}
