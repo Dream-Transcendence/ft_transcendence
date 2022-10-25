@@ -12,6 +12,7 @@ function GameRoutePage() {
   useEffect(() => {
     function connectGameSocket() {
       connect();
+      console.log('sls');
     }
     connectGameSocket();
     return () => {

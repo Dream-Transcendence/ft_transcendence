@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
-import GameCreateMainOrganism from '../../organisms/GameCreateSection/GameCreateMainSection';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
@@ -8,8 +7,9 @@ const GameTemplateLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
   alignContent: 'center',
   backgroundColor: '#194DD2',
+  borderRadius: '10%',
   width: '80%',
-  height: '85%',
+  height: '60%',
 }));
 
 const GameHeaderLayout = styled('div')(({ theme }) => ({
@@ -21,8 +21,13 @@ const GameHeaderLayout = styled('div')(({ theme }) => ({
 }));
 
 const GameSectionLayout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  justifyItems: 'center',
+  backgroundColor: '#435ff3',
   width: '100%',
-  height: '90%',
+  height: '80%',
 }));
 
 function GamePlayTemplate() {

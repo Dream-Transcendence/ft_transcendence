@@ -15,3 +15,9 @@ export interface GameRoomDto {
   score: { left: number; right: number };
   mode: number;
 }
+
+export interface CanvasProps {
+  children?: JSX.Element;
+  width: number;
+  height: number;
+}
