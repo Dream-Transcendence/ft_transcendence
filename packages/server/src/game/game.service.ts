@@ -9,7 +9,7 @@ import {
   MatchInfo,
   AddGameResultDto,
 } from './game.dto';
-import { Game, User } from '../users/users.entity';
+import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
 import { WsException } from '@nestjs/websockets';
 import { v4 as uuidv4 } from 'uuid';
@@ -21,6 +21,7 @@ export class GameService {
   constructor(
     @Inject('USERS_REPOSITORY') private userRepository: Repository<User>,
     @Inject('GAMES_REPOSITORY') private gamesRepository: Repository<Game>,
+    @Inject('RANK_REPOSITORY') private rankRepository: Repository<Rank>,
     private schedulerRegistry: SchedulerRegistry,
     private userService: UserService,
     private userGateway: UserGateway,
@@ -123,7 +124,7 @@ export class GameService {
       opponent: players.right,
     });
     console.log('result1: ', result1);
-    const result2 = await this.gamesRepository.create({
+    const result2 = this.gamesRepository.create({
       win: score.left < score.right ? true : false,
       ladder: mode === 0 ? true : false,
       user: players.right,
@@ -131,6 +132,33 @@ export class GameService {
     });
     console.log('result2 ', result2);
     await this.gamesRepository.save([result1, result2]);
+  }
+
+  async updateRank(gameResult: AddGameResultDto) {
+    const { players, score } = gameResult;
+
+    const rank1 = await this.rankRepository.findOne({
+      relations: ['user'],
+      where: { user: { id: players.left.id } },
+    });
+    const rank2 = await this.rankRepository.findOne({
+      relations: ['user'],
+      where: { user: { id: players.right.id } },
+    });
+
+    if (score.left > score.right) {
+      rank1.win++;
+      rank2.lose++;
+    } else {
+      rank1.lose++;
+      rank2.win++;
+    }
+    let tmp = Math.floor(rank1.win / 5);
+    rank1.rank = tmp > 3 ? 3 : tmp;
+    tmp = Math.floor(rank2.win / 5);
+    rank2.rank = tmp > 3 ? 3 : tmp;
+
+    await this.rankRepository.save([rank1, rank2]);
   }
 
   async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
@@ -185,11 +213,13 @@ export class GameService {
             // NOTE: 게임 중 상태를 온라인으로 바꿈
             this.userGateway.setConnection(players.left.id, false);
             this.userGateway.setConnection(players.right.id, false);
-            await this.addGameResult({
+            const gameResult: AddGameResultDto = {
               players,
               score: this.gameInfoMap.get(title).score,
-              mode: 0,
-            });
+              mode: this.gameInfoMap.get(title).mode,
+            };
+            await this.addGameResult(gameResult);
+            if (gameResult.mode === 0) await this.updateRank(gameResult);
             message = '#############게임 끝################';
           }
           this.emitToEveryone(

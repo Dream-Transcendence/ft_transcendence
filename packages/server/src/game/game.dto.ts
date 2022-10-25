@@ -108,7 +108,7 @@ export class GameInfo {
   constructor(
     private player1: User,
     private player2: User,
-    private mode: GAME_MODE,
+    public mode: GAME_MODE,
   ) {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };

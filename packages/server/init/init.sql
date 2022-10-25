@@ -29,16 +29,22 @@ ALTER TABLE "rank" ADD CONSTRAINT "FK_0319fdc8ba0d4c2f456815dafea" FOREIGN KEY (
 
 INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://cdn.intra.42.fr/users/dha.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (1, 'dha@student.42seoul.kr', true, 1);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (1, 0, 0, 0, 1);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (2, 'junghan', 'https://cdn.intra.42.fr/users/junghan.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (2, 'junghan@student.42seoul.kr', false, 2);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (2, 0, 0, 0, 2);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (3, 'doyun', 'https://cdn.intra.42.fr/users/doyun.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (3, 'doyun@student.42seoul.kr', false, 3);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (3, 0, 0, 0, 3);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (4, 'sonkang', 'https://cdn.intra.42.fr/users/sonkang.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (4, 'sonkang@student.42seoul.kr', false, 4);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (4, 0, 0, 0, 4);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (5, 'hybae', 'https://cdn.intra.42.fr/users/hybae.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (5, 'hybae@student.42seoul.kr', false, 5);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (5, 0, 0, 0, 5);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (6, 'huchoi', 'https://cdn.intra.42.fr/users/huchoi.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (6, 'huchoi@student.42seoul.kr', false, 6);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (6, 0, 0, 0, 6);
 
 INSERT INTO "block" ("id", "blockedTime", "userId", "blockedUserId") VALUES (1, '2022-10-10 00:00:00', 1, 2);
 INSERT INTO "block" ("id", "blockedTime", "userId", "blockedUserId") VALUES (2, '2022-10-10 00:00:00', 3, 4);
