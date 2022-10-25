@@ -63,12 +63,8 @@ export class GameService {
 
   // 매칭에는 게임설정이 없다
   async handleMatch(client: Socket, matchDto: MatchDto) {
-    if (matchDto.mode === 0)
-      this.userGateway.setConnection(matchDto.userId, true);
-
     const { title, userId, mode } = matchDto;
     console.log('Game Client match', matchDto);
-    // NOTE: 유저가 매칭을 요청하면, 매칭 대기열에 추가
 
     for (const [key, value] of this.customMatchingMap) {
       if (value.userId === userId)
@@ -78,6 +74,10 @@ export class GameService {
       if (matchingInfo.userId === userId)
         throw new WsException('이미 매칭 대기열에 있습니다.');
     });
+
+    if (matchDto.mode === 0)
+      this.userGateway.setConnection(matchDto.userId, true);
+
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
       if (this.customMatchingMap.has(title)) {
@@ -101,6 +101,8 @@ export class GameService {
 
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
     console.log('Game Client cancel', matchDto);
+
+    this.userGateway.setConnection(matchDto.userId, false);
 
     const index = this.matchingQueue.findIndex(
       (matchingInfo) => matchingInfo.socket.id === client.id,
