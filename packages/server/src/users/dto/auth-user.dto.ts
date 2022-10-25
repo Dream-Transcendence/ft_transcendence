@@ -4,5 +4,5 @@ import { IsBoolean } from 'class-validator';
 export class AuthUserDto {
   @ApiProperty()
   @IsBoolean()
-  authenticated: boolean;
+  authenticated?: boolean;
 }
