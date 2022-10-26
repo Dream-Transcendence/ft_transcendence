@@ -4,14 +4,15 @@ import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
-import { gameCancel, gameLadderMatch, gameNameSpace } from '../socket/event';
+import { ALREADYFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { GAMEPLAYURL } from '../configs/Link.url';
-import { GameRoomDto } from '../types/Game.type';
+import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
+import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
+import { gameModeAtom } from '../recoil/game.recoil';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -43,40 +44,28 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#0E359B',
 }));
 
-// const goback = () => {
-//   const navigate = useNavigate();
-//   navigate(-1);
-//   return <div></div>;
-// };
-
-// 사용자가 어느쪽 플레이어인지 확인
-// function findPlayerSpot(args: GameRoomDto, userId: number) {
-//   if (args.leftPlayer.id === userId) {
-//     return 'left';
-//   } else {
-//     return 'right';
-//   }
-// }
-
-//위치 확인후 게임 입장
-const moveToGame = (args: GameRoomDto, userId: number) => {};
-
-function GameLoadingPage() {
-  const navigate = useNavigate();
-  const { id: userId } = useRecoilValue(userDataAtom);
+function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
+  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
+  const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
+  const navigate = useNavigate();
+  const gameMode = useRecoilValue(gameModeAtom);
+
   useEffect(() => {
     // connect(); //game namespace socket 연결
     //ladder 일때
+    console.log('gametype: ', gameType);
     if (gameType === LADDER) {
+      console.log('before emit');
       socket.emit(
         `${gameLadderMatch}`,
         {
           userId: userId,
+          mode: gameMode,
         },
         (response: any) => {
-          console.log('emit 성공 : ', response);
+          console.log('match emit 성공 : ', response);
         },
       );
     } else if (gameType === CUSTOM) {
@@ -85,31 +74,48 @@ function GameLoadingPage() {
         `${gameLadderMatch}`,
         {
           userId: userId,
+          mode: gameMode,
         },
         (response: any) => {
-          console.log('emit 성공 : ', response);
+          console.log('match emit 성공 : ', response);
         },
       );
     }
+    return () => {
+      socket.emit(GAMECANCLE,
+      {
+        useId: userId,
+        onGame: false,
+      })
+      console.log('match cancel!');
+      socket.off(GAMECANCLE); //모든 리스너 제거
+    }
+  }, []);
+
     //match 성공시 값 받아서 동작시켜야함
-    socket.on(`${gameLadderMatch}`, (args) => {
-      moveToGame(args, userId);
-      navigate(`${GAMEPLAYURL}/${userId}`);
-    });
+    useEffect(() => {
+      socket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
+        setGameInfo(response);
+        navigate(`${GAMEPLAYURL}/${response.title}`);
+      });
+      return () => {
+        socket.off(ALREADYFORMATCH);
+      }
+    }, [])
+
     //게임 취소 로직 이어 구현하기
     // socket.on(`${gameCancel}`)
     //GameRoomDto로 수정 예정
-    socket.on('exception', (response: any) => {
-      alert(response.message);
-      console.log(response);
-    });
-    return () => {
-      //unmount
-      // socket.emit(`${gameCancel}`)
-      // socket.removeAllListeners(); //모든 리스너 제거
-      // disconnect();
-    };
-  }, []);
+    useEffect(() => {
+      socket.on('exception', (response: any) => {
+        alert(response.message);
+        console.log('게임 에러', response);
+      });
+      return () => {
+        socket.off('exception')
+      }
+    }, [])
+
 
   return (
     <GameLodingLayout>

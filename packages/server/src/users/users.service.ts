@@ -566,11 +566,15 @@ export class UserService {
 
   setConnection(userId: number, onGame: boolean) {
     let clientId: string;
+    console.log("connection list############# ",this.connectionList);
     for (const [key, value] of this.connectionList) {
+      console.log("key^^6^^^ ", key);
+      console.log("id 비교 ",value.userId, " ",userId);
       if (value.userId === userId) {
         clientId = key;
       }
     }
+    console.log("setConnection:",clientId);
     this.connectionList.get(clientId).onGame = onGame;
     const connection = this.connectionList.get(clientId);
     const connectionDto = new ConnectionDto(
@@ -589,13 +593,13 @@ export class UserService {
     console.log('User Client disconnected', client.id);
     if (this.connectionList.get(client.id)) {
       const userId = this.connectionList.get(client.id).userId;
+      this.connectionList.delete(client.id);
       const connectionDto: ConnectionDto = {
         userId: userId,
         onGame: false,
       };
       client.broadcast.emit('userLogOff', connectionDto);
 
-      this.connectionList.delete(client.id);
     }
   }
 

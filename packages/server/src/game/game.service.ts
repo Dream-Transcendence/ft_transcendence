@@ -86,6 +86,7 @@ export class GameService {
 
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
+      console.log("matchDto.mode !== 0@@@@@@@@@@@");
       if (this.customMatchingMap.has(title)) {
         const opponent = this.customMatchingMap.get(title);
         this.customMatchingMap.delete(title);
@@ -94,15 +95,19 @@ export class GameService {
         this.customMatchingMap.set(title, new MatchInfo(client, userId, mode));
       }
     } else {
+      console.log("matchDto.mode === 0@@@@@@@@@@@");
       // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
       if (this.matchingQueue.length !== 0) {
         // NOTE: 매칭 대기열에 유저가 있으면, 매칭(로직이 문제 없는 지 고민해봐야 함)
         const opponent = this.matchingQueue.shift();
+        console.log("듀명@@@@@@@@@@@@@@@@@@@@@@@");
         this.match(client, uuidv4(), userId, opponent);
       } else {
         this.matchingQueue.push(new MatchInfo(client, matchDto.userId, 0));
+        console.log("한명@@@@@@@@@@@@@@@@@@@@@@@");
       }
     }
+    return {isMatched: true};
   }
 
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {

@@ -1,3 +1,6 @@
+import { Socket } from "socket.io-client";
+import { DefaultEventsMap } from '@socket.io/component-emitter';
+
 export interface GameRoomDto {
   title: string;
   leftPlayer: {
@@ -16,6 +19,10 @@ export interface GameRoomDto {
   mode: number;
 }
 
+export interface gameInfoPropsType {
+  value: GameRoomDto | undefined,
+  setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>,
+}
 export interface CanvasProps {
   children?: JSX.Element[];
   width: number;
