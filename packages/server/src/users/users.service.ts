@@ -562,10 +562,7 @@ export class UserService {
 
   setConnection(userId: number, onGame: boolean) {
     let clientId: string;
-    console.log('connection list############# ', this.connectionList);
     for (const [key, value] of this.connectionList) {
-      console.log('key^^6^^^ ', key);
-      console.log('id 비교 ', value.userId, ' ', userId);
       if (value.userId === userId) {
         clientId = key;
       }
