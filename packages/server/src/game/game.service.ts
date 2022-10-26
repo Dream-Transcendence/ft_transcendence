@@ -4,11 +4,11 @@ import { Socket } from 'socket.io';
 import {
   GameInfo,
   MatchDto,
-  RoomTitleDto,
   MovePaddleDto,
   MatchInfo,
   AddGameResultDto,
   SizeDto,
+  HandleStartDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -26,6 +26,7 @@ export class GameService {
     private userGateway: UserGateway,
   ) {}
   private matchingQueue: MatchInfo[] = [];
+  private readyMap: Map<string, number> = new Map();
   private gameInfoMap: Map<string, GameInfo> = new Map();
   private customMatchingMap: Map<string, MatchInfo> = new Map();
 
@@ -61,7 +62,7 @@ export class GameService {
     this.emitToEveryone(
       client,
       title,
-      'gameMessage',
+      'alreadyForMatch',
       gameInfo.getGameRoomDto(title),
     );
   }
@@ -85,6 +86,7 @@ export class GameService {
 
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
+      console.log("matchDto.mode !== 0@@@@@@@@@@@");
       if (this.customMatchingMap.has(title)) {
         const opponent = this.customMatchingMap.get(title);
         this.customMatchingMap.delete(title);
@@ -93,15 +95,19 @@ export class GameService {
         this.customMatchingMap.set(title, new MatchInfo(client, userId, mode));
       }
     } else {
+      console.log("matchDto.mode === 0@@@@@@@@@@@");
       // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
       if (this.matchingQueue.length !== 0) {
         // NOTE: 매칭 대기열에 유저가 있으면, 매칭(로직이 문제 없는 지 고민해봐야 함)
         const opponent = this.matchingQueue.shift();
+        console.log("듀명@@@@@@@@@@@@@@@@@@@@@@@");
         this.match(client, uuidv4(), userId, opponent);
       } else {
         this.matchingQueue.push(new MatchInfo(client, matchDto.userId, 0));
+        console.log("한명@@@@@@@@@@@@@@@@@@@@@@@");
       }
     }
+    return {isMatched: true};
   }
 
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
@@ -165,8 +171,20 @@ export class GameService {
     await this.rankRepository.save([rank1, rank2]);
   }
 
-  async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
-    const { title } = roomTitleDto;
+  async handleStart(client: Socket, handleStartDto: HandleStartDto) {
+    const { title, userId } = handleStartDto;
+    if (!this.readyMap.get(title)) {
+      this.readyMap.set(title, userId);
+      return;
+    } else {
+      const arr1 = [userId, this.readyMap.get(title)].sort();
+      const arr2 = [
+        this.gameInfoMap.get(title).player.left,
+        this.gameInfoMap.get(title).player.right,
+      ].sort();
+      if (JSON.stringify(arr1) !== JSON.stringify(arr2))
+        throw new WsException('There is an incorrect user in the game room.');
+    }
     await this.addInterval(title, 1000 / 6, client);
   }
 
@@ -197,7 +215,7 @@ export class GameService {
     };
   }
 
-  addInterval(title: string, milliseconds: number, client: Socket) {
+  async addInterval(title: string, milliseconds: number, client: Socket) {
     // 여기서 mode에 대한 변경도 바꿔주기
     if (this.gameInfoMap.get(title).mode == 2) {
       this.gameInfoMap.get(title).ballSpeed.x *= 2;

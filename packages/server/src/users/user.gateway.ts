@@ -27,10 +27,12 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   server: Server;
 
-  setConnection(userId: number, onGame: boolean) {
+  async setConnection(userId: number, onGame: boolean) {
+    console.log('????????');
+    const result = await this.userService.setConnection(userId, onGame);
     this.server.emit(
       'changeUserStatus',
-      this.userService.setConnection(userId, onGame),
+      result
     );
   }
 

@@ -1,7 +1,12 @@
 import { atom } from 'recoil';
 import { GameRoomDto } from '../types/Game.type';
 
-export const gameInfo = atom<GameRoomDto | null>({
-  key: 'gameInfo',
+export const gameInfoAtom = atom<GameRoomDto | null>({
+  key: 'gameInfoAtom',
   default: null,
+});
+
+export const gameModeAtom = atom<number>({
+  key: 'gameModeAtom',
+  default: 0
 });
