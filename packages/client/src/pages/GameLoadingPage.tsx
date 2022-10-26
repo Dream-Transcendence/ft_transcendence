@@ -44,8 +44,7 @@ const ButtonLayout = styled('div')(({ theme }) => ({
 }));
 
 //위치 확인후 게임 입장
-const moveToGame = (args: GameRoomDto, userId: number) => {
-};
+const moveToGame = (args: GameRoomDto, userId: number) => {};
 
 function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
   const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;

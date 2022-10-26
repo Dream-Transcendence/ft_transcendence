@@ -20,12 +20,12 @@ function GameRoutePage() {
   }
   console.log('router',gameInfo);
   useEffect(() => {
-    function connectGame() {
+    function connectGameSocket() {
       connect();
       console.log('game socket 연결')
     }
-    connectGame();
-    
+    connectGameSocket();
+
     return () => {
       disconnect();
       console.log('game socket 해제')
