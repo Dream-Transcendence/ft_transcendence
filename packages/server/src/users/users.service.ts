@@ -571,8 +571,10 @@ export class UserService {
         clientId = key;
       }
     }
-    this.connectionList.get(clientId).onGame = onGame;
     const connection = this.connectionList.get(clientId);
+    if (connection === undefined)
+      throw new WsException('로그온 상태가 아닌 유저입니다.');
+    this.connectionList.get(clientId).onGame = onGame;
     const connectionDto = new ConnectionDto(
       connection.userId,
       connection.onGame,
@@ -589,13 +591,12 @@ export class UserService {
     console.log('User Client disconnected', client.id);
     if (this.connectionList.get(client.id)) {
       const userId = this.connectionList.get(client.id).userId;
+      this.connectionList.delete(client.id);
       const connectionDto: ConnectionDto = {
         userId: userId,
         onGame: false,
       };
       client.broadcast.emit('userLogOff', connectionDto);
-
-      this.connectionList.delete(client.id);
     }
   }
 
