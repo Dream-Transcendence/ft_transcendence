@@ -75,8 +75,9 @@ export class MatchInfo {
   mode: GAME_MODE;
 }
 
-export class RoomTitleDto {
+export class HandleStartDto {
   title: string;
+  userId: number;
 }
 
 export class SizeDto {
