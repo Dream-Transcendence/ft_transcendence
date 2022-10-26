@@ -10,8 +10,11 @@ import GamePlayPage from './GamePlayPage';
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   useEffect(() => {
-    connect();
-    
+    function connectGameSocket() {
+      connect();
+    }
+    connectGameSocket();
+
     return () => {
       disconnect();
     };

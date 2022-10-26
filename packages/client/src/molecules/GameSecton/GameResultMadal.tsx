@@ -9,6 +9,9 @@ import GameScore from './GameScore';
 import { UserProfileBoxType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { GameResultModalControl } from '../../types/Game.type';
+import { useNavigate } from 'react-router-dom';
+import { PROFILEURL } from '../../configs/Link.url';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -61,13 +64,12 @@ const GameResultLayout = styled('div')(({ theme }) => ({
   justifyContents: 'center',
 }));
 
-function GameResultModal() {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => {
-    setOpen(true);
-  };
+function GameResultModal(openControl: GameResultModalControl) {
+  const { open, setOpen, score } = openControl;
+  const navigate = useNavigate();
   const handleClose = () => {
     setOpen(false);
+    navigate(`${PROFILEURL}`);
   };
 
   const user = useRecoilValue(userDataAtom);
@@ -87,10 +89,10 @@ function GameResultModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>
+      {/* <Button onClick={handleOpen}>
         Open Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
         modal
-      </Button>
+      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -106,7 +108,10 @@ function GameResultModal() {
               <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
             </OtherProfileBoxLayout>
             <GameScoreLayout>
-              <GameScore player1Score="10" player2Score="9" />
+              <GameScore
+                player1Score={String(score.left)}
+                player2Score={String(score.right)}
+              />
               {/* {GameScore({ player1Score: '10', player2Score: '9' })} */}
             </GameScoreLayout>
             <ExitButtonLayout>
