@@ -6,6 +6,7 @@ import {
   gameNameSpace,
   GAMEPROCESS,
   GAMESTART,
+  MOVEPADDLE,
   RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
@@ -20,8 +21,10 @@ import {
   ResponsiveGameProps,
   ScoreProps,
 } from '../../types/Game.type';
-import { LARGE, SMALL } from '../../configs/Game.type';
+import { DOWN, LARGE, SMALL, STOP, UP } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const GameLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -162,6 +165,7 @@ const ScoreLayout = styled('span')(({ theme }) => ({
 
 function GamePlayWindowOrganism() {
   const [socket] = useSocket(gameNameSpace);
+  const userData = useRecoilValue(userDataAtom);
   const [time, setTime] = useState<number>(3);
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);
@@ -182,17 +186,20 @@ function GamePlayWindowOrganism() {
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const [moveDir, setMoveDir] = useState<number>(STOP);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
+  /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
   useEffect(() => {
     const startGame = async () => {
       setTimeout(() => {
         console.log('GAME START');
         // socket.emit(`${GAMESTART}`, {
         //   title: '',
+        //  userId: userData.id,
         // });
       }, 4500);
       setIsStart(false);
@@ -202,6 +209,8 @@ function GamePlayWindowOrganism() {
 
   //마운트시 초기화가 되어서 무한랜더링됨.
   //ref로 해결
+
+  /* 게임 시작을 위한 카운트 다운을 세는 로직 */
   useEffect(() => {
     const countReady = async () => {
       const intervalId = await setInterval(() => {
@@ -213,6 +222,7 @@ function GamePlayWindowOrganism() {
     if (IsStart === false && time === 3) countReady();
   }, [IsStart, time]);
 
+  /* 게임 시작 시, 현재 패들과 공의 위치값 받아오는 로직 */
   useEffect(() => {
     const getGameProcess = () => {
       socket.on(`${GAMEPROCESS}`, (res) => {
@@ -235,6 +245,7 @@ function GamePlayWindowOrganism() {
     getGameProcess();
   }, [IsStart, time]);
 
+  /* 게임 결과를 산정하고, 조건 미달 시, 재시작을 위한 상태초기화 */
   useEffect(() => {
     const getGameResult = () => {
       socket.on(`${GAMEEND}`, (res) => {
@@ -252,16 +263,10 @@ function GamePlayWindowOrganism() {
   }, [IsStart, socket]);
 
   function resizeWindow() {
-    // if (
-    //   //불필요한 상태변경을 막기위한 조건
-    //   windowSize.height !== window.innerHeight ||
-    //   windowSize.width !== window.innerWidth
-    // ) {
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    // }
     console.log(
       'window size:',
       window.innerHeight,
@@ -270,15 +275,7 @@ function GamePlayWindowOrganism() {
     );
   }
 
-  useEffect(() => {
-    let timeId: any = null;
-    window.onresize = function () {
-      clearTimeout(timeId);
-      resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
-      // timeId = setTimeout(resizeWindow, 100);
-    };
-  }, [windowSize]);
-
+  /*변경된 사이즈를 분석하여 현재 테마의 크기상태를 변경하는 로직 */
   useEffect(() => {
     if (
       windowSize.width >= largeTheme.canvasImgProps.width + 400 &&
@@ -299,22 +296,80 @@ function GamePlayWindowOrganism() {
     }
   }, [windowSize, size]);
 
+  /* 사이즈 변경 사항을 저장하는 로직 */
   useEffect(() => {
     let timeId: any = null;
     window.onresize = function () {
       clearTimeout(timeId);
-      resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
-      // timeId = setTimeout(resizeWindow, 100);
+      // resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
+      timeId = setTimeout(resizeWindow, 100);
     };
   }, [windowSize]);
 
+  /* 사이즈 변경 사항을 서버에 알려주는 로직 */
   useEffect(() => {
-    socket.emit(`${RESIZEWINDOW}`, {
-      size: size,
-    });
+    // socket.emit(`${RESIZEWINDOW}`, {
+    //   title: '',
+    //   size: size,
+    // });
   }, [size]);
 
-  window.addEventListener('keydown', (e) => console.log(e));
+  /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
+  window.addEventListener('keydown', (e) => {
+    // console.log('keyevent', e.key, e.key === 'ArrowUp');
+    if (e.key === 'ArrowUp') {
+      socket.emit(`${MOVEPADDLE}`, {
+        title: '',
+        playerId: userData.id,
+        moveDir: UP,
+      });
+      console.log('keyevent', e.key, 'ArrowUp');
+    } else if (e.key === 'ArrowDown') {
+      socket.emit(`${MOVEPADDLE}`, {
+        title: '',
+        playerId: userData.id,
+        moveDir: DOWN,
+      });
+      console.log('keyevent', e.key, 'ArrowDown');
+    }
+  });
+
+  /* 상태관리를 통한 게임 구현 */
+
+  // useEffect(() => {
+  //   window.addEventListener('keydown', (e) => {
+  //     console.log('???lkkk??? ', moveDir);
+  //     // console.log('keyevent', e.key, e.key === 'ArrowUp');
+  //     if (e.key === 'ArrowUp') {
+  //       console.log('up', moveDir);
+  //       setMoveDir(STOP);
+  //       setMoveDir(UP);
+  //     } else if (e.key === 'ArrowDown') {
+  //       console.log('down', moveDir);
+  //       setMoveDir(STOP);
+  //       setMoveDir(DOWN);
+  //     }
+  //   });
+  // }, [setMoveDir]);
+
+  // useEffect(() => {
+  //   console.log('??? stopr??? ', moveDir);
+  //   if (moveDir !== STOP) {
+  //     // socket.emit(`${MOVEPADDLE}`, {
+  //     //   title: '',
+  //     //   playerId: userData.id,
+  //     //   moveDir: moveDir,
+  //     // });
+  //     // setMoveDir(null);
+  //     if (moveDir === UP) {
+  //       console.log('STOP up', moveDir);
+  //       setMoveDir(STOP);
+  //     } else if (moveDir === DOWN) {
+  //       console.log('STOP down', moveDir);
+  //       setMoveDir(STOP);
+  //     }
+  //   }
+  // }, [moveDir, setMoveDir]);
 
   // const handleKeyDown = (event) => {
   //   console.log;
