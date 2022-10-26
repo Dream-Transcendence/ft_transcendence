@@ -6,6 +6,7 @@ import {
   gameNameSpace,
   GAMEPROCESS,
   GAMESTART,
+  RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { height } from '@mui/system';
@@ -14,11 +15,13 @@ import {
   CanvasImgProps,
   CanvasProps,
   GameOffsetProps,
+  GameWindowInfo,
   PaddleProps,
   ResponsiveGameProps,
   ScoreProps,
 } from '../../types/Game.type';
 import { LARGE, SMALL } from '../../configs/Game.type';
+import { largeTheme, smallTheme } from './GmaePlayTheme';
 
 const GameLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -157,36 +160,6 @@ const ScoreLayout = styled('span')(({ theme }) => ({
   height: `20%`,
 }));
 
-const smallCanvasImgProps: CanvasImgProps = {
-  width: 480,
-  height: 250,
-};
-
-const smallBallProps: BallProps = {
-  diameter: 20,
-};
-
-const smallPaddleProps: PaddleProps = {
-  width: 10,
-  height: 75,
-  posX: 470,
-};
-
-const largeCanvasImgProps: CanvasImgProps = {
-  width: 480,
-  height: 250,
-};
-
-const largeBallProps: BallProps = {
-  diameter: 20,
-};
-
-const largePaddleProps: PaddleProps = {
-  width: 10,
-  height: 75,
-  posX: 470,
-};
-
 function GamePlayWindowOrganism() {
   const [socket] = useSocket(gameNameSpace);
   const [time, setTime] = useState<number>(3);
@@ -203,10 +176,11 @@ function GamePlayWindowOrganism() {
     LeftPaddlePosY: 100,
     RightPaddlePosY: 100,
   });
-  const [size, setSize] = useState<ResponsiveGameProps>({
-    canvasImgProps: largeCanvasImgProps,
-    ballProps: largeBallProps,
-    paddleProps: largePaddleProps,
+  const [theme, setTheme] = useState<ResponsiveGameProps>(largeTheme);
+  const [size, setSize] = useState<number>(LARGE);
+  const [windowSize, setWindowSize] = useState<GameWindowInfo>({
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
 
   const handleOpen = () => {
@@ -242,18 +216,13 @@ function GamePlayWindowOrganism() {
   useEffect(() => {
     const getGameProcess = () => {
       socket.on(`${GAMEPROCESS}`, (res) => {
+        if (time > 1) setTime(1);
         if (res.size === LARGE) {
-          setSize({
-            canvasImgProps: largeCanvasImgProps,
-            ballProps: largeBallProps,
-            paddleProps: largePaddleProps,
-          });
+          setTheme(largeTheme);
+          setSize(LARGE);
         } else {
-          setSize({
-            canvasImgProps: smallCanvasImgProps,
-            ballProps: smallBallProps,
-            paddleProps: smallPaddleProps,
-          });
+          setTheme(smallTheme);
+          setSize(SMALL);
         }
         setOffset({
           ballPosX: res.ballPos.x,
@@ -282,6 +251,75 @@ function GamePlayWindowOrganism() {
     getGameResult();
   }, [IsStart, socket]);
 
+  function resizeWindow() {
+    // if (
+    //   //불필요한 상태변경을 막기위한 조건
+    //   windowSize.height !== window.innerHeight ||
+    //   windowSize.width !== window.innerWidth
+    // ) {
+    setWindowSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+    // }
+    console.log(
+      'window size:',
+      window.innerHeight,
+      window.innerWidth,
+      windowSize,
+    );
+  }
+
+  useEffect(() => {
+    let timeId: any = null;
+    window.onresize = function () {
+      clearTimeout(timeId);
+      resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
+      // timeId = setTimeout(resizeWindow, 100);
+    };
+  }, [windowSize]);
+
+  useEffect(() => {
+    if (
+      windowSize.width >= largeTheme.canvasImgProps.width + 400 &&
+      windowSize.height >= largeTheme.canvasImgProps.height
+    ) {
+      if (size === SMALL) {
+        setSize(LARGE);
+        setTheme(largeTheme);
+      }
+    } else if (
+      windowSize.width < largeTheme.canvasImgProps.width + 300 ||
+      windowSize.height < largeTheme.canvasImgProps.height - 100
+    ) {
+      if (size === LARGE) {
+        setSize(SMALL);
+        setTheme(smallTheme);
+      }
+    }
+  }, [windowSize, size]);
+
+  useEffect(() => {
+    let timeId: any = null;
+    window.onresize = function () {
+      clearTimeout(timeId);
+      resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
+      // timeId = setTimeout(resizeWindow, 100);
+    };
+  }, [windowSize]);
+
+  useEffect(() => {
+    socket.emit(`${RESIZEWINDOW}`, {
+      size: size,
+    });
+  }, [size]);
+
+  window.addEventListener('keydown', (e) => console.log(e));
+
+  // const handleKeyDown = (event) => {
+  //   console.log;
+  // };
+
   return (
     <GameWindowLayout>
       <GameLayout>
@@ -290,8 +328,8 @@ function GamePlayWindowOrganism() {
         </ScoreLayout>
         {time < 4 && time > 0 ? (
           <PreGamePlayCanvasLayout
-            width={size.canvasImgProps.width}
-            height={size.canvasImgProps.height}
+            width={theme.canvasImgProps.width}
+            height={theme.canvasImgProps.height}
           >
             <ReadCountLayout>
               <ReadCount>{time}</ReadCount>
@@ -299,24 +337,24 @@ function GamePlayWindowOrganism() {
           </PreGamePlayCanvasLayout>
         ) : (
           <GamePlayCanvasLayout
-            width={size.canvasImgProps.width}
-            height={size.canvasImgProps.height}
+            width={theme.canvasImgProps.width}
+            height={theme.canvasImgProps.height}
           >
             <LeftPaddleLayout
-              width={size.paddleProps.width}
-              height={size.paddleProps.height}
+              width={theme.paddleProps.width}
+              height={theme.paddleProps.height}
               posX={0}
               posY={offset.LeftPaddlePosY}
             />
             <BallLayout
-              diameter={size.ballProps.diameter}
+              diameter={theme.ballProps.diameter}
               posX={offset.ballPosX}
               posY={offset.ballPosY}
             />
             <RightPaddleLayout
-              width={size.paddleProps.width}
-              height={size.paddleProps.height}
-              posX={size.paddleProps.posX}
+              width={theme.paddleProps.width}
+              height={theme.paddleProps.height}
+              posX={theme.paddleProps.posX}
               posY={offset.RightPaddlePosY}
             />
           </GamePlayCanvasLayout>

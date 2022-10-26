@@ -12,6 +12,7 @@ export const gameLadderMatch = 'match';
 export const GAMESTART = 'start';
 export const GAMEPROCESS = 'gameProcess';
 export const GAMEEND = 'gameEnd';
+export const RESIZEWINDOW = 'resizeWindow';
 
 export const PATCHUSERINFO = 'patchUserInfo';
 export const PATCHMESSAGE = 'patchMessage';

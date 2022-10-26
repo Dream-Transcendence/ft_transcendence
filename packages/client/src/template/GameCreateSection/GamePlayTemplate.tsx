@@ -10,6 +10,8 @@ const GameTemplateLayout = styled('section')(({ theme }) => ({
   borderRadius: '10%',
   width: '80%',
   height: '90%',
+  minHeight: '520px',
+  minWidth: '500px',
 }));
 
 const GameHeaderLayout = styled('div')(({ theme }) => ({

@@ -66,3 +66,8 @@ export interface GameResultModalControl {
   setOpen: (open: boolean) => void;
   score: ScoreProps;
 }
+
+export interface GameWindowInfo {
+  width: number;
+  height: number;
+}
