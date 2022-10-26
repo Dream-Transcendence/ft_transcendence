@@ -59,8 +59,7 @@ const ButtonLayout = styled('div')(({ theme }) => ({
 // }
 
 //위치 확인후 게임 입장
-const moveToGame = (args: GameRoomDto, userId: number) => {
-};
+const moveToGame = (args: GameRoomDto, userId: number) => {};
 
 function GameLoadingPage() {
   const navigate = useNavigate();
@@ -107,11 +106,11 @@ function GameLoadingPage() {
     return () => {
       //unmount
       // socket.emit(`${gameCancel}`)
-      socket.removeAllListeners(); //모든 리스너 제거
-      disconnect();
+      // socket.removeAllListeners(); //모든 리스너 제거
+      // disconnect();
     };
   }, []);
-  
+
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}
