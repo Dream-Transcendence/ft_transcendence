@@ -55,6 +55,7 @@ function PingpongRoutePage() {
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
       connect();
+      console.log('로그온입니다.');
       socket.emit(
         logOn,
         {
@@ -62,14 +63,15 @@ function PingpongRoutePage() {
           onGame: false,
         },
         (response: ConnectionsDto) => {
-          console.log('complete emit');
+          console.log('로그온 유저 목록');
           console.log(response);
           setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
         },
       );
     return () => {
       socket.off('exception');
-      disconnect();
+      console.log('로그오프입니다.')
+      // disconnect();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
     //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
@@ -80,23 +82,25 @@ function PingpongRoutePage() {
   useEffect(() => {
     //check friend's log state changing
     socket.on(CHANGEUSERSTATUS, (response: ConnectionDto) => {
+      console.log('불특정 유저 상태 변경');
       const idx = findChanged(response);
       if (userLogStateList.length > 0 && idx !== -1) { //emit한 결과를 받은 list가 존재해야함
         const newList = [...userLogStateList]
         //기존 상태값 변경
         newList.splice(idx, 1, response);
+        console.log("기존 상태 변경",newList);
         setUserLogStateList(newList);
       } else if (idx === -1) {
         //로그인 유저 추가
         const newList = [...userLogStateList, response];
-        console.log(newList);
+        console.log('새로운 유저 로그인', newList);
         setUserLogStateList(newList);
       }
     });
     return () => {
       socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     }
-  }, [userLogStateList, setUserLogStateList, findChanged, socket])
+  }, []) //userLogStateList, setUserLogStateList, findChanged, socket
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response)
@@ -110,7 +114,7 @@ function PingpongRoutePage() {
     return () => {
       socket.removeAllListeners(); //모든 리스너 제거
     }
-  }, [userLogStateList, setUserLogStateList, findChanged, socket])
+  }, []) //userLogStateList, setUserLogStateList, findChanged, socket
   return (
     <PageSection>
       <header>

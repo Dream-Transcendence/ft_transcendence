@@ -1,3 +1,6 @@
+import { Socket } from "socket.io-client";
+import { DefaultEventsMap } from '@socket.io/component-emitter';
+
 export interface GameRoomDto {
   title: string;
   leftPlayer: {
@@ -19,4 +22,5 @@ export interface GameRoomDto {
 export interface gameInfoPropsType {
   value: GameRoomDto | undefined,
   setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>,
+  socket: Socket<DefaultEventsMap, DefaultEventsMap>,
 }

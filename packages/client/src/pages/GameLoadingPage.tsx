@@ -63,9 +63,8 @@ const moveToGame = (args: GameRoomDto, userId: number) => {
 };
 
 function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
-  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
+  const {value: gameInfo, setter: setGameInfo, socket} = props.gameInfoProps;
   const { id: userId } = useRecoilValue(userDataAtom);
-  const [socket] = useSocket(gameNameSpace);
   const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
     // connect(); //game namespace socket 연결
@@ -77,6 +76,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
         `${gameLadderMatch}`,
         {
           userId: userId,
+          mode: 0,
         },
         (response: any) => {
           console.log('match emit 성공 : ', response);
@@ -88,6 +88,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
         `${gameLadderMatch}`,
         {
           userId: userId,
+          mode: 0,
         },
         (response: any) => {
           console.log('match emit 성공 : ', response);

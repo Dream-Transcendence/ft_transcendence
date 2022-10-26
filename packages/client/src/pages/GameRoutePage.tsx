@@ -17,6 +17,7 @@ function GameRoutePage() {
   const gameInfoProps: gameInfoPropsType = {
     value: gameInfo,
     setter: setGameInfo,
+    socket: socket,
   }
   console.log('router',gameInfo);
   useEffect(() => {
@@ -29,9 +30,9 @@ function GameRoutePage() {
     };
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-  }, [gameInfo])
+  // }, [gameInfo])
 
   return (
     <Routes>
