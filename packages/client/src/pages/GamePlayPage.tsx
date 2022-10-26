@@ -35,7 +35,7 @@ const GameStartButton = styled('button')(({ theme }) => ({
 function GamePlayPage(props: {gameInfoProps: gameInfoPropsType}) {
   const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
-
+  console.log('?????');
   /* 버튼 누르는 버전*/
 
   // const gameStart = async () => {

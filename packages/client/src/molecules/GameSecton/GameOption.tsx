@@ -20,9 +20,9 @@ function GameOption() {
         value={state}
         onChange={handleChange}
       >
-        <FormControlLabel value="base" control={<Radio />} label="base" />
-        <FormControlLabel value="sizeDown" control={<Radio />} label="sizeDown" />
-        <FormControlLabel value="speedUp" control={<Radio />} label="speedUp" />
+        <FormControlLabel value={1} control={<Radio />} label="base" />
+        <FormControlLabel value={2} control={<Radio />} label="sizeDown" />
+        <FormControlLabel value={3} control={<Radio />} label="speedUp" />
       </RadioGroup>
     </FormControl>
   );

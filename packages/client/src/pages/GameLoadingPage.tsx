@@ -7,7 +7,7 @@ import useSocket from '../socket/useSocket';
 import { ALREADFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
-import { GAMEPLAYURL } from '../configs/Link.url';
+import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
 import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
@@ -43,14 +43,13 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#0E359B',
 }));
 
-//위치 확인후 게임 입장
-const moveToGame = (args: GameRoomDto, userId: number) => {};
-
 function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
   const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
+  const navigate = useNavigate();
+
   useEffect(() => {
     // connect(); //game namespace socket 연결
     //ladder 일때
@@ -95,6 +94,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
     useEffect(() => {
       socket.on(ALREADFORMATCH, (response: GameRoomDto) => {
         setGameInfo(response);
+        navigate(`${GAMEPLAYURL}/${response.title}`);
       });
       return () => {
         socket.off(ALREADFORMATCH);
@@ -106,9 +106,8 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
     //GameRoomDto로 수정 예정
     socket.on('exception', (response: any) => {
       alert(response.message);
-      console.log(response);
+      console.log('게임 에러', response);
     });
-    console.log('?');
 
   return (
     <GameLodingLayout>
