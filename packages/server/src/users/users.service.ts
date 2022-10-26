@@ -574,9 +574,10 @@ export class UserService {
         clientId = key;
       }
     }
-    console.log("setConnection:",clientId);
-    this.connectionList.get(clientId).onGame = onGame;
     const connection = this.connectionList.get(clientId);
+    if (connection === undefined)
+      throw new WsException('로그온 상태가 아닌 유저입니다.');
+    this.connectionList.get(clientId).onGame = onGame;
     const connectionDto = new ConnectionDto(
       connection.userId,
       connection.onGame,
@@ -599,7 +600,6 @@ export class UserService {
         onGame: false,
       };
       client.broadcast.emit('userLogOff', connectionDto);
-
     }
   }
 
@@ -610,6 +610,7 @@ export class UserService {
         throw new WsException('이미 로그인 되어있습니다.');
       }
     });
+    connectionDto.onGame = false;
 
     this.connectionList.set(client.id, {
       userId: connectionDto.userId,
@@ -622,6 +623,7 @@ export class UserService {
     connectionsDto.connections = onlineUserList.map((value) => {
       return new ConnectionDto(value.userId, value.onGame);
     });
+    connectionsDto.push(connectionDto);
 
     return connectionsDto;
   }
