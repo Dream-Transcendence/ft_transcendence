@@ -4,11 +4,11 @@ import { Socket } from 'socket.io';
 import {
   GameInfo,
   MatchDto,
-  RoomTitleDto,
   MovePaddleDto,
   MatchInfo,
   AddGameResultDto,
   SizeDto,
+  HandleStartDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -26,6 +26,7 @@ export class GameService {
     private userGateway: UserGateway,
   ) {}
   private matchingQueue: MatchInfo[] = [];
+  private readyMap: Map<string, number> = new Map();
   private gameInfoMap: Map<string, GameInfo> = new Map();
   private customMatchingMap: Map<string, MatchInfo> = new Map();
 
@@ -58,8 +59,12 @@ export class GameService {
     opponent.socket.join(title);
 
     this.gameInfoMap.set(title, gameInfo);
-    console.log("match!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", userId, opponent.userId);
-    this.emitToEveryone(client, title, 'alreadyForMatch', gameInfo.getGameRoomDto(title));
+    this.emitToEveryone(
+      client,
+      title,
+      'alreadyForMatch',
+      gameInfo.getGameRoomDto(title),
+    );
   }
 
   // 매칭에는 게임설정이 없다
@@ -166,8 +171,20 @@ export class GameService {
     await this.rankRepository.save([rank1, rank2]);
   }
 
-  async handleStart(client: Socket, roomTitleDto: RoomTitleDto) {
-    const { title } = roomTitleDto;
+  async handleStart(client: Socket, handleStartDto: HandleStartDto) {
+    const { title, userId } = handleStartDto;
+    if (!this.readyMap.get(title)) {
+      this.readyMap.set(title, userId);
+      return;
+    } else {
+      const arr1 = [userId, this.readyMap.get(title)].sort();
+      const arr2 = [
+        this.gameInfoMap.get(title).player.left,
+        this.gameInfoMap.get(title).player.right,
+      ].sort();
+      if (JSON.stringify(arr1) !== JSON.stringify(arr2))
+        throw new WsException('There is an incorrect user in the game room.');
+    }
     await this.addInterval(title, 1000 / 6, client);
   }
 
@@ -198,7 +215,7 @@ export class GameService {
     };
   }
 
-  addInterval(title: string, milliseconds: number, client: Socket) {
+  async addInterval(title: string, milliseconds: number, client: Socket) {
     // 여기서 mode에 대한 변경도 바꿔주기
     if (this.gameInfoMap.get(title).mode == 2) {
       this.gameInfoMap.get(title).ballSpeed.x *= 2;
