@@ -138,7 +138,7 @@ export class Game extends BaseEntity {
 
 @Entity()
 export class Rank extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()

@@ -121,9 +121,6 @@ export class UserService {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
 
     // NOTE: 파일을 S3에 저장하고, 그 주소를 DB에 저장한다.
-    console.log(file);
-    console.log(process.env);
-    console.log(process.env.AWS_S3_BUCKET_NAME);
     const params = {
       Bucket: process.env.AWS_S3_BUCKET_NAME,
       Key: file.originalname,
@@ -132,7 +129,6 @@ export class UserService {
 
     try {
       const data = await this.s3.upload(params).promise();
-      console.log(data);
       user.image = data.Location;
       await this.usersRepository.save(user);
     } catch (error) {
@@ -566,10 +562,7 @@ export class UserService {
 
   setConnection(userId: number, onGame: boolean) {
     let clientId: string;
-    console.log("connection list############# ",this.connectionList);
     for (const [key, value] of this.connectionList) {
-      console.log("key^^6^^^ ", key);
-      console.log("id 비교 ",value.userId, " ",userId);
       if (value.userId === userId) {
         clientId = key;
       }
