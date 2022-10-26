@@ -27,3 +27,24 @@ export interface ControlRoomInfo {
   roomInfo: GetRoomInfoDto;
   controlMessage: ControlMessage;
 }
+
+// export interface InviteMassageListType {
+//   id: number,
+//   requestor: {
+//     id: number,
+//     nickname: string,
+//     image: string,
+//   },
+//   responser: {
+//     id: number,
+//     nickname: string,
+//     image: string,
+//   }
+// }
+
+export interface InviteMassageListType {
+  id?: number,
+  massage: string,
+  type: string,
+  mode?: number,
+}

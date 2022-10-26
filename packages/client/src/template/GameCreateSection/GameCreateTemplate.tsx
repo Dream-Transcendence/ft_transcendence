@@ -8,8 +8,13 @@ import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageCompone
 import { Typography } from '@mui/material';
 import { GAMECREATEURL, GAMELOADINGURL } from '../../configs/Link.url';
 import { CUSTOM } from '../../configs/Game.type';
-import { useRecoilState } from 'recoil';
-import { gameTypeAtom } from '../../recoil/user.recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
+import useSocket from '../../socket/useSocket';
+import { GAMEINVITE, gameNameSpace } from '../../socket/event';
+import { useEffect } from 'react';
+import { BaseUserProfileData } from '../../types/Profile.type';
+import { gameModeAtom, gameOpponetAtom } from '../../recoil/game.recoil';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -48,11 +53,24 @@ const ButtonComponentLayout = styled('div')(({ theme }) => ({
 }));
 
 function GameCreateTemplate() {
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const opponentId = useRecoilValue<number>(gameOpponetAtom);
   const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+  const gameMode = useRecoilValue<number>(gameModeAtom);
+  const [socket] = useSocket(gameNameSpace);
 
   const setNomal = () => {
     setUserGameType(CUSTOM);
   };
+
+  useEffect(() => {
+    socket.emit(GAMEINVITE,
+      {
+        hostId: userData.id,
+        opponentId: opponentId,
+        mode: gameMode, // 게임 모드(1 normal, 2 speed up, 3 size up)
+      })
+  }, [userGameType]) //, gameMode, opponentId, userData.id, socket
 
   //[수정사항] gameloading으로 넘어가야함
   const EnterGame: LinkComponentResource = {

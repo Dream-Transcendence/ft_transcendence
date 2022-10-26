@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { PROFILEURL } from '../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { CHANGEUSERSTATUS, logOn, USERLOGOFF, userNameSpace } from '../socket/event';
 import {
   userDataAtom,
@@ -21,6 +21,10 @@ import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
+import InviteMassageList from '../organisms/Massage/InviteMassageList';
+import axios from 'axios';
+import { InviteMassageListType } from '../types/Message.type';
+import { inviteMassageListAtom } from '../recoil/common.recoil';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -37,6 +41,8 @@ function PingpongRoutePage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
+  const [inviteMassageList, setInviteMassageList] = 
+    useRecoilState<InviteMassageListType[]>(inviteMassageListAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -117,6 +123,30 @@ function PingpongRoutePage() {
     }
   }, []) //userLogStateList, setUserLogStateList, findChanged, socket
 
+  //유저의 메시지 기록 받아오기
+  useEffect(() => {
+    async function getMessageList() {
+      await axios.get(`${SERVERURL}/users/${userData.id}/requests`)
+      .then((response: any) => {
+        console.log('a?a',response);
+        if (response.length > 0) {
+        const massage = response.map((massage: any) => {
+          return {
+            id: response.id,
+            massage:`${massage.requestor.nickname}님이 친구요청을 보냈습니다.`,
+            type: 'friend',
+          }
+        })
+        setInviteMassageList(massage);
+      }
+      }).catch((error) => {
+        alert(error);
+        console.log(error);
+      })
+    }
+    getMessageList();
+  },[])
+
   return (
     <PageSection>
       <header>
@@ -134,9 +164,6 @@ function PingpongRoutePage() {
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="game/*" element={<GameRoutePage />} />
       </Routes>
-      {/* <footer>
-       <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
-      </footer> */}
     </PageSection>
   );
 }

@@ -8,5 +8,10 @@ export const gameInfoAtom = atom<GameRoomDto | null>({
 
 export const gameModeAtom = atom<number>({
   key: 'gameModeAtom',
-  default: 0
+  default: 0,
 });
+
+export const gameOpponetAtom = atom<number>({
+  key: 'gameOpponetAtom',
+  default: 0,
+})

@@ -10,6 +10,7 @@ export const USERLOGOFF = 'userLogOff';
 export const chatNameSpace = 'chat';
 export const userNameSpace = 'user';
 export const gameNameSpace = 'game';
+export const GAMEINVITE = 'inviteGame';
 export const gameLadderMatch = 'match';
 export const ALREADYFORMATCH = 'alreadyForMatch';
 export const GAMECANCLE = 'cancel';
