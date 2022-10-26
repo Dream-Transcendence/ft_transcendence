@@ -7,7 +7,7 @@ const GAME_MODE = {
   ladder: 0,
   normal: 1,
   powerUp: 2,
-  sizeUp: 3,
+  sizeDown: 3,
 } as const;
 export type GAME_MODE = typeof GAME_MODE[keyof typeof GAME_MODE];
 
@@ -79,9 +79,15 @@ export class RoomTitleDto {
   title: string;
 }
 
+export class SizeDto {
+  size: number;
+  title: string;
+}
+
 export class GameInfoDto {
   ballPos: { x: number; y: number };
   paddlePos: { left: number; right: number };
+  size: number;
 }
 export class GameScoreDto {
   score: { left: number; right: number };
@@ -113,10 +119,10 @@ export class GameInfo {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
     this.ballPos = { x: 240, y: 125 };
-    this.ballSpeed = { x: 3, y: -3 };
+    this.ballSpeed = { x: 4, y: -4 };
     this.paddlePos = { left: (250 - 75) / 2, right: 0 };
-    // this.mode = mode;
-    // mode도 받기
+    this.mode = mode;
+    this.size = 1;
   }
 
   player: { left: User; right: User };
@@ -124,7 +130,7 @@ export class GameInfo {
   ballPos: { x: number; y: number };
   ballSpeed: { x: number; y: number };
   paddlePos: { left: number; right: number };
-  // mode: GAME_MODE;
+  size: number;
 
   public getGameRoomDto(title: string): GameRoomDto {
     return {
@@ -155,10 +161,17 @@ export class GameInfo {
   //   };
   // }
 
-  public getGameInfoDto(): GameInfoDto {
+  public getGameInfoDto(ballRadius: number): GameInfoDto {
     return {
-      ballPos: this.ballPos,
-      paddlePos: this.paddlePos,
+      ballPos: {
+        x: this.ballPos.x * this.size - ballRadius,
+        y: this.ballPos.y * this.size - ballRadius,
+      },
+      paddlePos: {
+        left: this.paddlePos.left * this.size,
+        right: this.paddlePos.right * this.size,
+      },
+      size: this.size,
     };
   }
 
