@@ -17,12 +17,14 @@ function GameRoutePage() {
   const gameInfoProps: gameInfoPropsType = {
     value: gameInfo,
     setter: setGameInfo,
-    socket: socket,
   }
   console.log('router',gameInfo);
   useEffect(() => {
-    connect();
-    console.log('game socket 연결')
+    function connectGame() {
+      connect();
+      console.log('game socket 연결')
+    }
+    connectGame();
     
     return () => {
       disconnect();
@@ -38,7 +40,7 @@ function GameRoutePage() {
     <Routes>
       <Route path="create/*" element={<GameCreatePage />} />
       <Route path="play/" element={<Navigate replace to={PROFILEURL} />} />
-      <Route path="play/:title" element={<GamePlayPage />} />
+      <Route path="play/:title" element={<GamePlayPage gameInfoProps={gameInfoProps}/>} />
       <Route path="loading/*" element={<GameLoadingPage gameInfoProps={gameInfoProps}/>} />
     </Routes>
   );

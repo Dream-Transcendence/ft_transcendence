@@ -22,5 +22,4 @@ export interface GameRoomDto {
 export interface gameInfoPropsType {
   value: GameRoomDto | undefined,
   setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>,
-  socket: Socket<DefaultEventsMap, DefaultEventsMap>,
 }

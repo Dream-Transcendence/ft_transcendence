@@ -43,27 +43,13 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#0E359B',
 }));
 
-// const goback = () => {
-//   const navigate = useNavigate();
-//   navigate(-1);
-//   return <div></div>;
-// };
-
-// 사용자가 어느쪽 플레이어인지 확인
-// function findPlayerSpot(args: GameRoomDto, userId: number) {
-//   if (args.leftPlayer.id === userId) {
-//     return 'left';
-//   } else {
-//     return 'right';
-//   }
-// }
-
 //위치 확인후 게임 입장
 const moveToGame = (args: GameRoomDto, userId: number) => {
 };
 
 function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
-  const {value: gameInfo, setter: setGameInfo, socket} = props.gameInfoProps;
+  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
+  const [socket] = useSocket(gameNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   useEffect(() => {
@@ -110,7 +96,6 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
     useEffect(() => {
       socket.on(ALREADFORMATCH, (response: GameRoomDto) => {
         setGameInfo(response);
-        console.log('metch info : ', response);
       });
       return () => {
         socket.off(ALREADFORMATCH);

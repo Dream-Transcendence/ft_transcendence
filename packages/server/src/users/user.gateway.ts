@@ -41,7 +41,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(client: Socket) {
-    // this.userService.handleDisconnect(client);
+    this.userService.handleDisconnect(client);
   }
 
   @SubscribeMessage('logOn')

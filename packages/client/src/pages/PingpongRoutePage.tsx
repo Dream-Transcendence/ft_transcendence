@@ -71,7 +71,7 @@ function PingpongRoutePage() {
     return () => {
       socket.off('exception');
       console.log('로그오프입니다.')
-      // disconnect();
+      disconnect();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
     //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
@@ -101,6 +101,7 @@ function PingpongRoutePage() {
       socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     }
   }, []) //userLogStateList, setUserLogStateList, findChanged, socket
+
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response)
@@ -115,6 +116,12 @@ function PingpongRoutePage() {
       socket.removeAllListeners(); //모든 리스너 제거
     }
   }, []) //userLogStateList, setUserLogStateList, findChanged, socket
+
+  useEffect(() => {
+    if (socket.disconnected === true) {
+      console.log('===========================disconnect=====================');
+    }
+  })
   return (
     <PageSection>
       <header>

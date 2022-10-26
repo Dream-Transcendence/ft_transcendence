@@ -593,13 +593,13 @@ export class UserService {
     console.log('User Client disconnected', client.id);
     if (this.connectionList.get(client.id)) {
       const userId = this.connectionList.get(client.id).userId;
+      this.connectionList.delete(client.id);
       const connectionDto: ConnectionDto = {
         userId: userId,
         onGame: false,
       };
       client.broadcast.emit('userLogOff', connectionDto);
 
-      this.connectionList.delete(client.id);
     }
   }
 

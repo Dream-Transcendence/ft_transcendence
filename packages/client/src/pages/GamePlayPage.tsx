@@ -4,6 +4,7 @@ import { gameNameSpace, GAMESTART } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
+import { gameInfoPropsType } from '../types/Game.type';
 
 const GamePlayLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -28,8 +29,10 @@ const GameStartButton = styled('button')(({ theme }) => ({
   backgroundColor: 'red',
 }));
 
-function GamePlayPage() {
+function GamePlayPage(props: {gameInfoProps: gameInfoPropsType}) {
+  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
+
   const gameStart = () => {
     try {
       socket.emit(`${GAMESTART}`, {
