@@ -606,6 +606,7 @@ export class UserService {
         throw new WsException('이미 로그인 되어있습니다.');
       }
     });
+    connectionDto.onGame = false;
 
     this.connectionList.set(client.id, {
       userId: connectionDto.userId,
@@ -618,6 +619,7 @@ export class UserService {
     connectionsDto.connections = onlineUserList.map((value) => {
       return new ConnectionDto(value.userId, value.onGame);
     });
+    connectionsDto.push(connectionDto);
 
     return connectionsDto;
   }
