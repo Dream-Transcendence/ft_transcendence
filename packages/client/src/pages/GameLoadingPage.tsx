@@ -4,7 +4,7 @@ import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
-import { ALREADFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
+import { ALREADYFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
@@ -12,6 +12,7 @@ import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
+import { gameModeAtom } from '../recoil/game.recoil';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -49,6 +50,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   const navigate = useNavigate();
+  const gameMode = useRecoilValue(gameModeAtom);
 
   useEffect(() => {
     // connect(); //game namespace socket 연결
@@ -60,7 +62,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
         `${gameLadderMatch}`,
         {
           userId: userId,
-          mode: 0,
+          mode: gameMode,
         },
         (response: any) => {
           console.log('match emit 성공 : ', response);
@@ -72,7 +74,7 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
         `${gameLadderMatch}`,
         {
           userId: userId,
-          mode: 0,
+          mode: gameMode,
         },
         (response: any) => {
           console.log('match emit 성공 : ', response);
@@ -80,34 +82,40 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
       );
     }
     return () => {
-      socket.emit(`${GAMECANCLE}`,
+      socket.emit(GAMECANCLE,
       {
         useId: userId,
         onGame: false,
       })
       console.log('match cancel!');
-      socket.removeAllListeners(); //모든 리스너 제거
+      socket.off(GAMECANCLE); //모든 리스너 제거
     }
   }, []);
 
     //match 성공시 값 받아서 동작시켜야함
     useEffect(() => {
-      socket.on(ALREADFORMATCH, (response: GameRoomDto) => {
+      socket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
         setGameInfo(response);
         navigate(`${GAMEPLAYURL}/${response.title}`);
       });
       return () => {
-        socket.off(ALREADFORMATCH);
+        socket.off(ALREADYFORMATCH);
       }
     }, [])
 
     //게임 취소 로직 이어 구현하기
     // socket.on(`${gameCancel}`)
     //GameRoomDto로 수정 예정
-    socket.on('exception', (response: any) => {
-      alert(response.message);
-      console.log('게임 에러', response);
-    });
+    useEffect(() => {
+      socket.on('exception', (response: any) => {
+        alert(response.message);
+        console.log('게임 에러', response);
+      });
+      return () => {
+        socket.off('exception')
+      }
+    }, [])
+
 
   return (
     <GameLodingLayout>

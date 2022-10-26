@@ -117,11 +117,6 @@ function PingpongRoutePage() {
     }
   }, []) //userLogStateList, setUserLogStateList, findChanged, socket
 
-  useEffect(() => {
-    if (socket.disconnected === true) {
-      console.log('===========================disconnect=====================');
-    }
-  })
   return (
     <PageSection>
       <header>

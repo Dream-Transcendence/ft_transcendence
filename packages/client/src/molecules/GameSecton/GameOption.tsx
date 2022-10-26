@@ -6,23 +6,23 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 
 function GameOption() {
-  const [state, setState] = React.useState('base');
+  const [state, setState] = React.useState('1');
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setState((event.target as HTMLInputElement).value);
   };
 
   return (
     <FormControl>
-      <FormLabel id="demo-controlled-radio-buttons-group">Game Option</FormLabel>
+      <FormLabel id="game-option-radio-button">Game Option</FormLabel>
       <RadioGroup
-        aria-labelledby="demo-controlled-radio-buttons-group"
-        name="controlled-radio-buttons-group"
+        aria-labelledby="game-option-radio-button"
+        name="game-option-radio-button"
         value={state}
         onChange={handleChange}
       >
-        <FormControlLabel value={1} control={<Radio />} label="base" />
-        <FormControlLabel value={2} control={<Radio />} label="sizeDown" />
-        <FormControlLabel value={3} control={<Radio />} label="speedUp" />
+        <FormControlLabel value='1' control={<Radio />} label="base" />
+        <FormControlLabel value='2' control={<Radio />} label="speedUp" />
+        <FormControlLabel value='3' control={<Radio />} label="sizeDown" />
       </RadioGroup>
     </FormControl>
   );

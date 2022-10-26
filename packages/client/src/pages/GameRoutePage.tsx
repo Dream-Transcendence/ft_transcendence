@@ -4,7 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { CUSTOM, LADDER } from '../configs/Game.type';
 import { PROFILEURL } from '../configs/Link.url';
 import { gameTypeAtom, userDataAtom } from '../recoil/user.recoil';
-import { ALREADFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
+import { ALREADYFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
 import GameCreatePage from './GameCreatePage';
@@ -14,6 +14,7 @@ import GamePlayPage from './GamePlayPage';
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const [gameInfo, setGameInfo] = useState<GameRoomDto | undefined>();
+  
   const gameInfoProps: gameInfoPropsType = {
     value: gameInfo,
     setter: setGameInfo,
@@ -31,10 +32,6 @@ function GameRoutePage() {
       console.log('game socket 해제')
     };
   }, []);
-
-  // useEffect(() => {
-
-  // }, [gameInfo])
 
   return (
     <Routes>

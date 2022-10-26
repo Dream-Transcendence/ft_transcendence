@@ -74,7 +74,6 @@ function GameCreateTemplate() {
         <ButtonComponentLayout>
           <LinkPageComponentButton linkComponentprops={EnterGame} />
         </ButtonComponentLayout>
-        {/* <ButtonComponentLayout LinkTextResource={EnterRoom} /> */}
       </GameFooterLayout>
     </GameTemplateLayout>
   );
