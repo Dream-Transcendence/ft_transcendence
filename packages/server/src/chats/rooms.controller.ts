@@ -7,13 +7,18 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import {
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import {
   CreateChannelDto,
@@ -22,9 +27,11 @@ import {
   PatchChannelInfoDto,
   CreateDmDto,
   GetRoomInfoDto,
+  PostChannelImageDto,
 } from './dto/rooms.dto';
 import { RoomService } from './rooms.service';
 import { AuthGuard } from '@nestjs/passport';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('room')
 @Controller('rooms')
@@ -97,6 +104,23 @@ export class RoomsController {
   ): Promise<ChannelParticipantDto[]> {
     this.logger.log('getChannelParticipants');
     return this.roomService.getChannelParticipants(userId, roomId);
+  }
+
+  @Post('/:roomId')
+  @ApiOperation({ summary: '채널 이미지 변경' })
+  @ApiConsumes('multipart/form-data')
+  @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({
+    description: 'Channel image update',
+    type: PostChannelImageDto,
+  })
+  @ApiOkResponse({ description: '채널 이미지 변경 성공' })
+  @ApiUnauthorizedResponse({ description: '권한이 없습니다' })
+  patchChannelImage(
+    @Param('roomId') roomId: number,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.roomService.postChannelImage(roomId, file);
   }
 
   @Patch('/:roomId')
