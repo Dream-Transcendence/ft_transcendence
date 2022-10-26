@@ -7,7 +7,7 @@ import { LinkComponentResource, LinkTextResource } from '../../types/Link.type';
 import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
 import { Typography } from '@mui/material';
 import { GAMECREATEURL, GAMELOADINGURL } from '../../configs/Link.url';
-import { NOMAL } from '../../configs/Game.type';
+import { CUSTOM } from '../../configs/Game.type';
 import { useRecoilState } from 'recoil';
 import { gameTypeAtom } from '../../recoil/user.recoil';
 
@@ -51,7 +51,7 @@ function GameCreateTemplate() {
   const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
 
   const setNomal = () => {
-    setUserGameType(NOMAL);
+    setUserGameType(CUSTOM);
   };
 
   //[수정사항] gameloading으로 넘어가야함

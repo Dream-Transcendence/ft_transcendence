@@ -30,7 +30,7 @@ import {
   IsBlockedDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { Auth, Block, Friend, Request, User } from './users.entity';
+import { Auth, Block, Friend, Request, User, Rank } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
 import { MailerService } from '@nestjs-modules/mailer';
@@ -57,6 +57,8 @@ export class UserService {
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
     private dmParticipantsRepository: Repository<DmParticipant>,
+    @Inject('RANK_REPOSITORY')
+    private rankRepository: Repository<Rank>,
     private readonly mailerService: MailerService,
   ) {}
 
@@ -71,7 +73,6 @@ export class UserService {
     });
     user = await this.usersRepository.save(user);
 
-    // FIXME: 테스트용
     let authId = 1;
     const maxAuthId = await this.authRepository
       .createQueryBuilder('auth')
@@ -86,6 +87,22 @@ export class UserService {
       user,
     });
     await this.authRepository.save(auth);
+
+    let rankId = 1;
+    const maxRankId = await this.rankRepository
+      .createQueryBuilder('Rank')
+      .select('MAX(Rank.id)', 'id')
+      .getRawOne();
+    if (maxRankId.id !== null) rankId = maxRankId.id + 1;
+
+    const rank = this.rankRepository.create({
+      id: rankId,
+      rank: 0,
+      win: 0,
+      lose: 0,
+      user,
+    });
+    await this.rankRepository.save(rank);
 
     const userDto = new UserDto(user.id, user.nickname, user.image);
     return userDto;
@@ -155,7 +172,7 @@ export class UserService {
     });
 
     // NOTE: 인증코드를 생성한다.(000000 ~ 999999)
-    const authCode = Math.floor(Math.random() * 1000000);
+    const authCode = Math.floor(Math.random() * 900000 + 100000);
     this.authCodeList.set(id, authCode);
     // NOTE: 생성한 코드는 5분 후에 만료된다.
     setTimeout(() => {
@@ -572,8 +589,11 @@ export class UserService {
     console.log('User Client disconnected', client.id);
     if (this.connectionList.get(client.id)) {
       const userId = this.connectionList.get(client.id).userId;
-
-      client.broadcast.emit('userLogOff', { userId: userId });
+      const connectionDto: ConnectionDto = {
+        userId: userId,
+        onGame: false,
+      };
+      client.broadcast.emit('userLogOff', connectionDto);
 
       this.connectionList.delete(client.id);
     }
@@ -592,9 +612,7 @@ export class UserService {
       onGame: false,
     });
 
-    client.broadcast.emit('changeUserStatus', {
-      connection: { userId: connectionDto.userId, onGame: false },
-    });
+    client.broadcast.emit('changeUserStatus', connectionDto);
 
     const connectionsDto = new ConnectionsDto();
     connectionsDto.connections = onlineUserList.map((value) => {
@@ -673,6 +691,7 @@ export class UserService {
       throw new WsException('호스트를 찾을 수 없습니다.');
 
     this.connectionList.get(hostClientId).onGame = false;
+    server.emit('changeUserStatus', { userId: userIdDto.id, onGame: false });
 
     server.to(hostClientId).emit('rejectGame');
   }

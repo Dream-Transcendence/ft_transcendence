@@ -4,7 +4,7 @@ import { PROFILEURL } from '../configs/Link.url';
 import { gameNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import GameCreatePage from './GameCreatePage';
-import GameLoadingPage from './GameLodingPage';
+import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
 
 function GameRoutePage() {
@@ -12,9 +12,9 @@ function GameRoutePage() {
   useEffect(() => {
     function connectGameSocket() {
       connect();
-      console.log('sls');
     }
     connectGameSocket();
+
     return () => {
       disconnect();
     };

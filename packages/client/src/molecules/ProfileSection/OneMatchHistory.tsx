@@ -14,12 +14,12 @@ import {
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'nowrap',
-  alignItems: 'center',
   border: 'solid 1px',
   width: '97%',
   height: '90%',
   borderRadius: '10%',
   overflow: 'hidden',
+  // margin: '1rem',
   margin: 0,
 }));
 
@@ -29,7 +29,7 @@ const PlayerInfoLayout = styled('div')(({theme}) => ({
   alignItems: 'center',
   height: '100%',
   width: '100%',
-  justifyContent: 'space-around',
+  // justifyContent: 'space-around',
 }));
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
@@ -39,8 +39,8 @@ function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
     <OneMatchHistoryLayout
       style={{ backgroundColor: isWin ? 'yellow' : 'green' }}
     >
-      <PlayerInfoLayout>
         {MatchType(isLadder)}
+      <PlayerInfoLayout>
         {GamePlayer(userData.nickname)}
         <Typography>VS</Typography>
         {GamePlayer(opponent)}
