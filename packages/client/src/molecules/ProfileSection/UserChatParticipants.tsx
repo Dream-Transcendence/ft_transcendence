@@ -30,6 +30,7 @@ import { userDataAtom } from '../../recoil/user.recoil';
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
   display: 'flex',
+  width: '100%',
   justifyContent: 'space-between',
 }));
 
@@ -37,7 +38,6 @@ const UserFuntionLayout = styled('div')(({ theme }) => ({
   width: '60%',
   height: '100%',
   display: 'flex',
-  justifyContent: 'center',
   flexDirection: 'row',
   marginLeft: '20%',
 }));
@@ -45,6 +45,7 @@ const UserFuntionLayout = styled('div')(({ theme }) => ({
 const UserStateLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '40%',
+  minWidth: '40%',
   display: 'flex',
   paddingRight: '10%',
 }));
@@ -195,9 +196,9 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
       </UserStateLayout>
       <UserFuntionLayout>
         <LinkPageIconButton linkIconProps={linkPersonal} />
-        {/* [axios POST 요청] 상대방을 차단 혹은 차단해제가능 */}
-        {/* 차단 유무에 따라 아이콘을 다르게 줄 예정 */}
-        <CustomIconButton customProps={customProps} />
+        {userData.id !== participantInfo.user.id && (
+          <CustomIconButton customProps={customProps} />
+        )}
         {/* admin 권한에 따라 활성/비활성화 */}
         {userType !== null && (
           <SpeedDialLayout>
