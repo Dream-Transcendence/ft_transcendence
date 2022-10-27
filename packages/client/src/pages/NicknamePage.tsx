@@ -44,7 +44,7 @@ function NicknamePage() {
     }
     try {
       //이미 로그인 된 유저면 바로 프로필로보내기
-      if (user.id === 0 || user.id !== 0 && user.nickname.length > 10) {
+      if (user.id === 0 || (user.id !== 0 && user.nickname.length > 10)) {
         getUserData();
       } else if (user.id !== 0 && user.nickname.length <= 10) {
         navigate(`${PROFILEURL}/${user.id}`);
@@ -63,6 +63,10 @@ function NicknamePage() {
             console.log(res);
             if (!res.data.authenticated) {
               // 2nd 가 설정되지않은경우
+              setPassSecondOauth({
+                checkIsSecondOauth: false,
+                checkIsValid: true,
+              });
               navigate(`${PROFILEURL}/${user.id}`);
             } else {
               setPassSecondOauth({

@@ -3,7 +3,12 @@ import { styled } from '@mui/material/styles';
 import SmsIcon from '@mui/icons-material/Sms';
 import { color } from '@mui/system';
 import { Typography } from '@mui/material';
-//임시방편으로 만들어 놓음 디자인은 나중에 수정할 것
+import { useRecoilValue } from 'recoil';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
+import { useNavigate } from 'react-router-dom';
+import { UserSecondAuth } from '../../types/Profile.type';
+import { useEffect } from 'react';
+
 const ChattingRoomDefaultLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
@@ -26,8 +31,15 @@ const TypoLayout = styled('div')(({ theme }) => ({
   display: 'flex',
 }));
 function ChatRoomDefaultTemplate() {
-  const [dense, setDense] = React.useState(false);
-  const [secondary, setSecondary] = React.useState(false);
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   return (
     <ChattingRoomDefaultLayout>

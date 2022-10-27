@@ -4,8 +4,8 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import styled from '@emotion/styled';
 import { Edit, WidthFull } from '@mui/icons-material';
 import { IconButton, Input, InputAdornment, TextField } from '@mui/material';
-import { useRecoilState, useResetRecoilState } from 'recoil';
-import { BaseUserProfileData } from '../../types/Profile.type';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { BaseUserProfileData, UserSecondAuth } from '../../types/Profile.type';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useEffect, useState } from 'react';
@@ -13,7 +13,7 @@ import CustomIconButton from '../button/icon/CustomIconButtion';
 import EditIcon from '@mui/icons-material/Edit';
 import { CustomIconProps } from '../../types/Link.type';
 import { useParams } from 'react-router-dom';
-import { userDataAtom } from '../../recoil/user.recoil';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { checkValidNickname } from '../button/block/NicknameConfirmButton';
 
 const ProfileNicnameLayout = styled('span')(({ theme }) => ({
@@ -28,16 +28,20 @@ function ProfileNickname() {
   /* Here's a custom control */
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
   const [nickname, setNickname] = useState(user.nickname);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const userData = useRecoilValue(userDataAtom);
 
   async function changeName(value: string) {
     try {
-      const response = await axios.patch(
-        `${SERVERURL}/users/${user.id}/nickname`,
-        { nickname: value },
-      );
-      if (response.status === 200) {
-        console.log('변경 성공');
-        handleName(value);
+      if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+        const response = await axios.patch(
+          `${SERVERURL}/users/${user.id}/nickname`,
+          { nickname: value },
+        );
+        if (response.status === 200) {
+          console.log('변경 성공');
+          handleName(value);
+        }
       }
     } catch (error) {
       alert(error);
@@ -69,10 +73,12 @@ function ProfileNickname() {
   useEffect(() => {
     async function getUserData() {
       try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/profile`,
-        );
-        setUser(response.data);
+        if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+          const response = await axios.get(
+            `${SERVERURL}/users/${userId}/profile`,
+          );
+          setUser(response.data);
+        }
       } catch (error) {
         alert(error);
         console.log(error);

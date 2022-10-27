@@ -21,7 +21,7 @@ import {
   ControlRoomInfo,
   SocketMessage,
 } from '../../types/Message.type';
-import { userDataAtom } from '../../recoil/user.recoil';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
 import {
   chatNameSpace,
@@ -30,6 +30,7 @@ import {
   PATCHMESSAGE,
 } from '../../socket/event';
 import { SocketAddress } from 'net';
+import { UserSecondAuth } from '../../types/Profile.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -84,6 +85,13 @@ function EnteredChatRoomTemplate() {
   const [userState, setUserState] = useRecoilState(userStatus);
   const [blockedUser, setBlockedUser] = useState<ParticipantInfo[]>([]);
   const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
     async function getRoomInfo() {
@@ -98,7 +106,9 @@ function EnteredChatRoomTemplate() {
         throw console.dir(error);
       }
     }
-    getRoomInfo();
+    if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+      getRoomInfo();
+    }
   }, [
     roomId,
     userData.id,

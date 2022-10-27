@@ -6,6 +6,10 @@ import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
 import { gameInfoPropsType } from '../types/Game.type';
 import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
+import { useNavigate } from 'react-router-dom';
+import { UserSecondAuth } from '../types/Profile.type';
 
 const GamePlayLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -28,7 +32,19 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
 
 function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
   const gameInfoProps = props.gameInfoProps;
-  const [socket] = useSocket(gameNameSpace);
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (
+      userData.id === 0 ||
+      passSecondOauth.checkIsValid === false ||
+      gameInfoProps === undefined
+    )
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   return (
     <GamePlayLayout>

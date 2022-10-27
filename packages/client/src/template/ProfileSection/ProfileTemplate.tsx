@@ -12,8 +12,6 @@ import ProfilePersonal from '../../organisms/ProfilePersonal/ProfilePersonal';
 import { userDataAtom } from '../../recoil/user.recoil';
 
 function ProfileTemplate() {
-  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const { userId } = useParams();
   return (
     <ProfileLayout>
       <ProfilePersonal />

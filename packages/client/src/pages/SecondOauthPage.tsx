@@ -90,7 +90,6 @@ function SecondOauthPage() {
         code: +seconedOauth,
       })
       .then((res) => {
-        console.log('res!', res);
         setPassSecondOauth({
           checkIsSecondOauth: true,
           checkIsValid: true,

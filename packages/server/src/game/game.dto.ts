@@ -120,7 +120,7 @@ export class GameInfo {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
     this.ballPos = { x: 512, y: 310 };
-    this.ballSpeed = { x: 10, y: -10 };
+    this.ballSpeed = { x: 20, y: -20 };
     this.paddlePos = { left: (620 - 186) / 2, right: 0 };
     this.mode = mode;
     this.size = 1;

@@ -4,15 +4,21 @@ import { LinkTextResource } from '../types/Link.type';
 import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
-import { ALREADYFORMATCH, GAMECANCLE, gameLadderMatch, gameNameSpace } from '../socket/event';
+import {
+  ALREADYFORMATCH,
+  GAMECANCLE,
+  gameLadderMatch,
+  gameNameSpace,
+} from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
 import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
-import { gameTypeAtom } from '../recoil/user.recoil';
+import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
 import { gameModeAtom } from '../recoil/game.recoil';
+import { UserSecondAuth } from '../types/Profile.type';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -44,13 +50,21 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   backgroundColor: '#0E359B',
 }));
 
-function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
-  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
+function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
+  const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   const navigate = useNavigate();
   const gameMode = useRecoilValue(gameModeAtom);
+  const userData = useRecoilValue(userDataAtom);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
     // connect(); //game namespace socket 연결
@@ -82,40 +96,38 @@ function GameLoadingPage(props: {gameInfoProps: gameInfoPropsType}) {
       );
     }
     return () => {
-      socket.emit(GAMECANCLE,
-      {
+      socket.emit(GAMECANCLE, {
         useId: userId,
         onGame: false,
-      })
+      });
       console.log('match cancel!');
       socket.off(GAMECANCLE); //모든 리스너 제거
-    }
+    };
   }, []);
 
-    //match 성공시 값 받아서 동작시켜야함
-    useEffect(() => {
-      socket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
-        setGameInfo(response);
-        navigate(`${GAMEPLAYURL}/${response.title}`);
-      });
-      return () => {
-        socket.off(ALREADYFORMATCH);
-      }
-    }, [])
+  //match 성공시 값 받아서 동작시켜야함
+  useEffect(() => {
+    socket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
+      setGameInfo(response);
+      navigate(`${GAMEPLAYURL}/${response.title}`);
+    });
+    return () => {
+      socket.off(ALREADYFORMATCH);
+    };
+  }, []);
 
-    //게임 취소 로직 이어 구현하기
-    // socket.on(`${gameCancel}`)
-    //GameRoomDto로 수정 예정
-    useEffect(() => {
-      socket.on('exception', (response: any) => {
-        alert(response.message);
-        console.log('게임 에러', response);
-      });
-      return () => {
-        socket.off('exception')
-      }
-    }, [])
-
+  //게임 취소 로직 이어 구현하기
+  // socket.on(`${gameCancel}`)
+  //GameRoomDto로 수정 예정
+  useEffect(() => {
+    socket.on('exception', (response: any) => {
+      alert(response.message);
+      console.log('게임 에러', response);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   return (
     <GameLodingLayout>

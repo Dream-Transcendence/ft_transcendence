@@ -12,20 +12,25 @@ import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { CustomIconProps } from '../../types/Link.type';
 import { useEffect, useState } from 'react';
-import { BaseUserProfileData, FriendType } from '../../types/Profile.type';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserSecondAuth,
+} from '../../types/Profile.type';
 import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
 import { useRecoilValue } from 'recoil';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
-import { userDataAtom } from '../../recoil/user.recoil';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 
 function OtherInfo(props: { friendProps: FriendPropsType }) {
   const { id } = useRecoilValue(userDataAtom);
   const { userId: otherId } = useParams();
   const { value: friendList, setter: setFriendList } = props.friendProps;
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
 
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
@@ -36,8 +41,12 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
 
   async function getUserData() {
     try {
-      const response = await axios.get(`${SERVERURL}/users/${otherId}/profile`);
-      setUserData(response.data);
+      if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+        const response = await axios.get(
+          `${SERVERURL}/users/${otherId}/profile`,
+        );
+        setUserData(response.data);
+      }
     } catch (error) {
       alert(error);
       console.log(error);
@@ -50,22 +59,25 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
 
   //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
   async function checkIsFriend() {
-    await axios.get(
-      `${SERVERURL}/users/${id}/friends/${otherId}`,
-    ).then((response: any) => {
-      if (response.status === 201) {
-        setIsFriend(true);
-      }
-    }).catch((error: any) => {
-      console.log('error status : ', error.response.data.statusCode);
-      if (error.response.data.statusCode === 404) {
-        setIsFriend(false);
-      }
-    })
+    await axios
+      .get(`${SERVERURL}/users/${id}/friends/${otherId}`)
+      .then((response: any) => {
+        if (response.status === 201) {
+          setIsFriend(true);
+        }
+      })
+      .catch((error: any) => {
+        console.log('error status : ', error.response.data.statusCode);
+        if (error.response.data.statusCode === 404) {
+          setIsFriend(false);
+        }
+      });
   }
 
   useEffect(() => {
-    checkIsFriend();
+    if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+      checkIsFriend();
+    }
   }, [otherId]);
 
   async function sendRequestFriend() {
