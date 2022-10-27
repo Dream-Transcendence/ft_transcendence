@@ -15,6 +15,7 @@ import {
   BallProps,
   CanvasImgProps,
   CanvasProps,
+  gameInfoPropsType,
   GameOffsetProps,
   GameWindowInfo,
   PaddleProps,
@@ -81,6 +82,7 @@ const BallLayout = ({ children, diameter, posX, posY }: BallProps) => {
       style={{
         backgroundColor: '#ffffff',
         borderRadius: '100%',
+        position: 'absolute',
         width: `${diameter}px`,
         height: `${diameter}px`,
         top: `${posY}px`,
@@ -163,22 +165,20 @@ const ScoreLayout = styled('span')(({ theme }) => ({
   height: `20%`,
 }));
 
-function GamePlayWindowOrganism() {
+function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
+  const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const [time, setTime] = useState<number>(3);
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);
-  const [score, setScore] = useState<ScoreProps>({
-    left: 0,
-    right: 0,
-  });
+  const [score, setScore] = useState<ScoreProps | undefined>(gameInfo?.score);
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<GameOffsetProps>({
-    ballPosX: 100,
-    ballPosY: 100,
-    LeftPaddlePosY: 100,
-    RightPaddlePosY: 100,
+    ballPosX: gameInfo?.ballPos.x,
+    ballPosY: gameInfo?.ballPos.y,
+    LeftPaddlePosY: gameInfo?.paddlePos.left,
+    RightPaddlePosY: gameInfo?.paddlePos.right,
   });
   const [theme, setTheme] = useState<ResponsiveGameProps>(largeTheme);
   const [size, setSize] = useState<number>(LARGE);
@@ -189,6 +189,7 @@ function GamePlayWindowOrganism() {
   const [moveDir, setMoveDir] = useState<number>(STOP);
 
   const handleOpen = () => {
+    console.log('opne?????????????????????????????????');
     setOpen(true);
   };
 
@@ -197,10 +198,10 @@ function GamePlayWindowOrganism() {
     const startGame = async () => {
       setTimeout(() => {
         console.log('GAME START');
-        // socket.emit(`${GAMESTART}`, {
-        //   title: '',
-        //  userId: userData.id,
-        // });
+        socket.emit(`${GAMESTART}`, {
+          title: gameInfo?.title,
+          userId: userData.id,
+        });
       }, 4500);
       setIsStart(false);
     };
@@ -214,7 +215,7 @@ function GamePlayWindowOrganism() {
   useEffect(() => {
     const countReady = async () => {
       const intervalId = await setInterval(() => {
-        if (timeRef.current <= 1) clearInterval(intervalId);
+        if (timeRef.current <= 0) clearInterval(intervalId);
         timeRef.current -= 1;
         setTime(timeRef.current);
       }, 1000);
@@ -226,7 +227,7 @@ function GamePlayWindowOrganism() {
   useEffect(() => {
     const getGameProcess = () => {
       socket.on(`${GAMEPROCESS}`, (res) => {
-        if (time > 1) setTime(1);
+        if (time > 0) setTime(0);
         if (res.size === LARGE) {
           setTheme(largeTheme);
           setSize(LARGE);
@@ -243,16 +244,25 @@ function GamePlayWindowOrganism() {
       });
     };
     getGameProcess();
-  }, [IsStart, time]);
+  }, [IsStart, time, offset, setOffset]);
 
   /* 게임 결과를 산정하고, 조건 미달 시, 재시작을 위한 상태초기화 */
   useEffect(() => {
     const getGameResult = () => {
       socket.on(`${GAMEEND}`, (res) => {
-        if (res.left === 3 || res.right === 3) {
+        if (res.score.left === 3 || res.score.right === 3) {
           handleOpen();
+          setOpen(true);
+          console.log('game resu', res.score);
         } else {
-          setScore(res);
+          console.log('game resu ing', res);
+          console.log('game score ing', score);
+          if (score !== undefined)
+            setScore({
+              ...score,
+              left: res.score.left,
+              right: res.score.right,
+            });
           setIsStart(true);
           setTime(3);
           timeRef.current = 4;
@@ -260,7 +270,7 @@ function GamePlayWindowOrganism() {
       });
     };
     getGameResult();
-  }, [IsStart, socket]);
+  }, [IsStart, socket, score, setScore, setOpen]);
 
   function resizeWindow() {
     setWindowSize({
@@ -308,10 +318,10 @@ function GamePlayWindowOrganism() {
 
   /* 사이즈 변경 사항을 서버에 알려주는 로직 */
   useEffect(() => {
-    // socket.emit(`${RESIZEWINDOW}`, {
-    //   title: '',
-    //   size: size,
-    // });
+    socket.emit(`${RESIZEWINDOW}`, {
+      title: gameInfo?.title,
+      size: size,
+    });
   }, [size]);
 
   /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
@@ -319,14 +329,14 @@ function GamePlayWindowOrganism() {
     // console.log('keyevent', e.key, e.key === 'ArrowUp');
     if (e.key === 'ArrowUp') {
       socket.emit(`${MOVEPADDLE}`, {
-        title: '',
+        title: gameInfo?.title,
         playerId: userData.id,
         moveDir: UP,
       });
       console.log('keyevent', e.key, 'ArrowUp');
     } else if (e.key === 'ArrowDown') {
       socket.emit(`${MOVEPADDLE}`, {
-        title: '',
+        title: gameInfo?.title,
         playerId: userData.id,
         moveDir: DOWN,
       });
@@ -374,12 +384,12 @@ function GamePlayWindowOrganism() {
   // const handleKeyDown = (event) => {
   //   console.log;
   // };
-
+  console.log('res process!!!!', score);
   return (
     <GameWindowLayout>
       <GameLayout>
         <ScoreLayout>
-          {score.left} : {score.right}
+          {score?.left} : {score?.right}
         </ScoreLayout>
         {time < 4 && time > 0 ? (
           <PreGamePlayCanvasLayout

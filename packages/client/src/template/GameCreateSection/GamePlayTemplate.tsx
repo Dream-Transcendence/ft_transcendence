@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
+import { gameInfoPropsType } from '../../types/Game.type';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -32,14 +33,16 @@ const GameSectionLayout = styled('div')(({ theme }) => ({
   height: '80%',
 }));
 
-function GamePlayTemplate() {
+function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
+  const gameInfoProps = props.gameInfoProps;
+
   return (
     <GameTemplateLayout>
       <GameHeaderLayout>
         <TextBox value={'Ladder'} size={'2rem'} fontColor={'black'} />
       </GameHeaderLayout>
       <GameSectionLayout>
-        <GamePlayWindowOrganism />
+        <GamePlayWindowOrganism gameInfoProps={gameInfoProps} />
       </GameSectionLayout>
     </GameTemplateLayout>
   );

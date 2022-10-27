@@ -18,6 +18,7 @@ import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomI
 import { useParams } from 'react-router-dom';
 import { BLOCK } from '../../configs/Block.case';
 import axios from 'axios';
+import ChatRoomImageProfile from '../../atoms/profile/ChatRoomImageProfile';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -122,20 +123,21 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
           <Avatar alt="DMImg" src={roomInfo.image} />
         </UserStateLayout>
       ) : (
-        <IconButton
-          color="primary"
-          aria-label="upload picture"
-          component="label"
-        >
-          {/* [수정사항] 이미지 수정기능 추가해야함 */}
-          <input
-            hidden
-            accept="image/*"
-            type="file"
-            onChange={handleRoomImage}
-          />
-          <Avatar alt="Remy Sharp" src={roomImage} />
-        </IconButton>
+        <ChatRoomImageProfile />
+        // <IconButton
+        //   color="primary"
+        //   aria-label="upload picture"
+        //   component="label"
+        // >
+        //   {/* [수정사항] 이미지 수정기능 추가해야함 */}
+        //   <input
+        //     hidden
+        //     accept="image/*"
+        //     type="file"
+        //     onChange={handleRoomImage}
+        //   />
+        //   <Avatar alt="Remy Sharp" src={roomImage} />
+        // </IconButton>
       )}
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
