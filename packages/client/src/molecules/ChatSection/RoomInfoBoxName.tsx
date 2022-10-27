@@ -19,6 +19,7 @@ import { useParams } from 'react-router-dom';
 import { BLOCK } from '../../configs/Block.case';
 import axios from 'axios';
 import ChatRoomImageProfile from '../../atoms/profile/ChatRoomImageProfile';
+import { ADMIN, OWNER } from '../../configs/userType';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -69,7 +70,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
   const { roomId } = useParams();
-  const { name, type, image } = roomInfo;
+  const { name, type, image, auth } = roomInfo;
   const [roomName, setRoomName] = useState<string>(name);
   const [roomImage, setRoomImage] = useState<string>(image);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
@@ -92,25 +93,12 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     setRoomName(value);
   };
 
-  const handleRoomImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      console.log(file);
-      const fd = new FormData();
-      setRoomImage(file.name);
-      console.log('image', roomImage);
-      roomInfo['image'] = roomImage;
-      fd.append('image', file, roomImage);
-      console.log(fd, '이미지 변경할할거유');
-      //api부를 위치
-    }
-  };
-
   const handleChangeRoomName = () => {
     roomInfo['name'] = roomName;
     setChangeRoomName(true);
   };
 
+  console.log('auth', auth);
   return (
     <InfoBoxNameLayout>
       {type === DM ? (
@@ -122,22 +110,14 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
           )}
           <Avatar alt="DMImg" src={roomInfo.image} />
         </UserStateLayout>
+      ) : auth === OWNER ? (
+        <ChatRoomImageProfile roomInfoSet={roomInfoSet} />
       ) : (
-        <ChatRoomImageProfile />
-        // <IconButton
-        //   color="primary"
-        //   aria-label="upload picture"
-        //   component="label"
-        // >
-        //   {/* [수정사항] 이미지 수정기능 추가해야함 */}
-        //   <input
-        //     hidden
-        //     accept="image/*"
-        //     type="file"
-        //     onChange={handleRoomImage}
-        //   />
-        //   <Avatar alt="Remy Sharp" src={roomImage} />
-        // </IconButton>
+        <Avatar
+          style={{ marginRight: '3%' }}
+          alt="Remy Sharp"
+          src={roomImage}
+        />
       )}
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
@@ -145,11 +125,10 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
           <Typography paddingLeft={'10px'} color={'white'}>
             {name}
           </Typography>
-        ) : (
+        ) : auth === OWNER ? (
           <Input
             disableUnderline
             style={divStyle}
-            value={name}
             placeholder={name}
             onChange={handleRoomName()}
             onKeyPress={(event) => {
@@ -158,6 +137,10 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
               }
             }}
           ></Input>
+        ) : (
+          <Typography paddingLeft={'10px'} color={'white'}>
+            {name}
+          </Typography>
         )}
       </FormControl>
     </InfoBoxNameLayout>

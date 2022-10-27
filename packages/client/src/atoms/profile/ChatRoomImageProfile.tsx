@@ -2,6 +2,10 @@ import styled from '@emotion/styled';
 import { Typography, Button } from '@mui/material';
 import React, { createRef, useRef, useState } from 'react';
 import { Avatar } from '@mui/material';
+import { RoomInfoSet } from '../../types/Room.type';
+import { useParams } from 'react-router-dom';
+import { SERVERURL } from '../../configs/Link.url';
+import axios from 'axios';
 
 const CenteredContent = styled('div')(({ theme }) => ({
   display: 'relative',
@@ -12,28 +16,20 @@ const CenteredContent = styled('div')(({ theme }) => ({
   marginTop: '7%',
 }));
 
-const ChatRoomImageProfile = () => {
-  const [image, setImage] = useState<any>(null);
-  // const inputFileRef = useRef<any>();
-
-  const cleanup = () => {
-    URL.revokeObjectURL(image); // URL.createObjectURL(newImage)에 대한 이미지값을 초기화
-    // console.log('??!!', inputFileRef.current.value);
-    // inputFileRef.current.value = null;
-  };
-
-  const setCleanImage = (newImage: any) => {
-    if (image) {
-      // cleanup();
-    }
-    setImage(newImage);
-  };
+const ChatRoomImageProfile = (props: { roomInfoSet: RoomInfoSet }) => {
+  const { roomInfo, handler: setRoomInfo } = props.roomInfoSet;
+  const [image, setImage] = useState<FormData | undefined>();
+  const { roomId } = useParams();
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newImage = event.target?.files?.[0];
 
     if (newImage) {
-      setCleanImage(URL.createObjectURL(newImage));
+      if (setRoomInfo !== undefined)
+        setRoomInfo({ ...roomInfo, image: URL.createObjectURL(newImage) });
+      const formData = new FormData();
+      formData.append('file', newImage);
+      setImage(formData);
     }
   };
 
@@ -41,8 +37,17 @@ const ChatRoomImageProfile = () => {
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     if (image) {
-      event.preventDefault();
-      setCleanImage(null);
+      event.preventDefault(); //저장을 위해 연결된 기본동작 막아주기
+      axios
+        .post(`${SERVERURL}/rooms/${roomId}`, image)
+        .then((response) => {
+          console.log('이미지 변경 성공');
+          setImage(undefined);
+        })
+        .catch((error) => {
+          alert(error);
+          console.log('error : ', error);
+        });
     }
   };
 
@@ -50,7 +55,7 @@ const ChatRoomImageProfile = () => {
     <CenteredContent>
       <Avatar
         alt="Avatar"
-        src={image}
+        src={roomInfo.image}
         imgProps={{
           style: {
             maxHeight: '100%',
