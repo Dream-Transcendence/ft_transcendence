@@ -29,6 +29,16 @@ export interface ControlRoomInfo {
   controlMessage: ControlMessage;
 }
 
+export interface ClientAcceptGameDto {
+  hostId: number;
+  mode: number;
+}
+
+export interface ServerAcceptGameDto {
+  title: string; // 게임 네임스페이스 연결 후, 둘을 식별하기 위한 roomID
+  mode: number;
+}
+
 // export interface InviteMessageListType {
 //   id: number,
 //   requestor: {
@@ -44,11 +54,11 @@ export interface ControlRoomInfo {
 // }
 
 export interface InviteInfoListType {
-  id?: number, //친구 초대시 필요 정보
-  userId: number,
-  message: string,
-  type: string,
-  mode?: number, //게임 초대시 필요 정보
+  id?: number; //친구 초대시 필요 정보
+  userId: number;
+  message: string;
+  type: string;
+  mode?: number; //게임 초대시 필요 정보
 }
 
 // export interface InviteMessagesListType {
@@ -57,6 +67,6 @@ export interface InviteInfoListType {
 
 export interface RequestDto {
   id: number;
-	requestor: BaseUserProfileData;
-	responser: BaseUserProfileData; // 필요하진 않을 수 있음
+  requestor: BaseUserProfileData;
+  responser: BaseUserProfileData; // 필요하진 않을 수 있음
 }

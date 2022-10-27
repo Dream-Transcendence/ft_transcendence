@@ -16,101 +16,140 @@ import { Typography } from '@mui/material';
 import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
 import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
 import { WidthFull } from '@mui/icons-material';
-import { FRIENDREQUESTACCEPTED, userNameSpace } from '../../socket/event';
+import {
+  ACCEPTFRIENDREQUEST,
+  ACCEPTGAME,
+  FRIENDREQUESTACCEPTED,
+  REJECTFRIENDREQUEST,
+  REJECTGAME,
+  userNameSpace,
+} from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 
-const InviteMessageListLayout = styled('div')(({theme}) => ({
+const InviteMessageListLayout = styled('div')(({ theme }) => ({
   bottom: '500px',
   right: '0',
   position: 'absolute',
   width: '30%',
   height: '8%',
   overflow: 'hidden',
-  backgroundColor: '#1976D2'
-}))
+  backgroundColor: '#1976D2',
+}));
 
-const InviteMessageButtonLayout = styled('div')(({theme}) => ({
+const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-}))
+}));
 
 function InviteMessageList() {
   const [socket] = useSocket(userNameSpace);
-  const [inviteInfoList, setInviteInfoList] = 
+  const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
 
   const handleAcceptMessage = (info: InviteInfoListType) => {
     if (info.type === 'friend') {
-      socket.emit(FRIENDREQUESTACCEPTED,
-        {
-          id: info.id,
-        })
+      socket.emit(ACCEPTFRIENDREQUEST, {
+        id: info.id,
+      });
     } else if (info.type === 'game') {
-      console.log('game')
-    } else if (info.type === 'check') {
-      console.log(info.message);
+      socket.emit(ACCEPTGAME, {
+        hostId: info.userId,
+        mode: info.mode,
+      });
     }
+    //수락을 눌렀습니다.
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)]
+      return [...prev.filter((i) => i !== info)];
     });
   };
 
-  const element =  inviteInfoList.map((info: InviteInfoListType) => {
+  const handleRejecttMessage = (info: InviteInfoListType) => {
+    if (info.type === 'friend') {
+      socket.emit(REJECTFRIENDREQUEST, {
+        id: info.id,
+      });
+    } else if (info.type === 'game') {
+      socket.emit(REJECTGAME, {
+        id: info.userId,
+      });
+    }
+    //수락을 눌렀습니다.
+    setInviteInfoList((prev) => {
+      return [...prev.filter((i) => i !== info)];
+    });
+  };
+
+  const handleCheckMessage = (info: InviteInfoListType) => {
+    setInviteInfoList((prev) => {
+      return [...prev.filter((i) => i !== info)];
+    });
+  };
+
+  const element = inviteInfoList.map((info: InviteInfoListType) => {
     // console.log('why : ', info);
     return (
       <Collapse key={info.message}>
         <ListItem
           secondaryAction={
-            <InviteMessageButtonLayout>
+            info.type !== 'check' ? (
+              <InviteMessageButtonLayout>
+                <IconButton
+                  edge="end"
+                  aria-label="accept"
+                  title="accept"
+                  sx={{ padding: 0 }}
+                  onClick={() => handleAcceptMessage(info)}
+                >
+                  <CheckCircleTwoToneIcon />
+                </IconButton>
+                <IconButton
+                  edge="end"
+                  aria-label="refuse"
+                  title="refuse"
+                  onClick={() => handleRejecttMessage(info)}
+                >
+                  <RemoveCircleTwoToneIcon />
+                </IconButton>
+              </InviteMessageButtonLayout>
+            ) : (
               <IconButton
                 edge="end"
                 aria-label="accept"
                 title="accept"
-                sx={{padding: 0}}
-                onClick={() => handleAcceptMessage(info)}
+                sx={{ padding: 0 }}
+                onClick={() => handleCheckMessage(info)}
               >
                 <CheckCircleTwoToneIcon />
               </IconButton>
-              <IconButton
-                edge="end"
-                aria-label="refuse"
-                title="refuse"
-                onClick={() => handleAcceptMessage(info)}
-              >
-                <RemoveCircleTwoToneIcon />
-              </IconButton>
-            </InviteMessageButtonLayout>
+            )
           }
         >
-          <ListItemText 
-            primary={  
+          <ListItemText
+            primary={
               <Typography overflow={'hidden'} maxWidth={'100%'}>
                 {info.message}
-              </Typography>} 
-            sx={{ backgroundColor:'white', width:'10px' }}/>
-        </ListItem>    
+              </Typography>
+            }
+            sx={{ backgroundColor: 'white', width: '10px' }}
+          />
+        </ListItem>
       </Collapse>
-    )
-    }
-  )
+    );
+  });
 
   return (
     <div>
-    {
-      inviteInfoList.length > 0 ?
+      {inviteInfoList.length > 0 ? (
         <InviteMessageListLayout>
-        <Box>
-          <List>
-            <TransitionGroup>
-              {element}
-            </TransitionGroup>
-          </List>
-        </Box>
-      </InviteMessageListLayout> : null
-    }
+          <Box>
+            <List>
+              <TransitionGroup>{element}</TransitionGroup>
+            </List>
+          </Box>
+        </InviteMessageListLayout>
+      ) : null}
     </div>
   );
 }
-
 
 export default InviteMessageList;

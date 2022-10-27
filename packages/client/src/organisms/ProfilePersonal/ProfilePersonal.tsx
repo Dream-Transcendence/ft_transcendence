@@ -28,34 +28,26 @@ export interface FriendPropsType {
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
 }
 
+export async function getFriendList(
+  id: string | undefined,
+  setFriendList: React.Dispatch<React.SetStateAction<FriendType[]>>,
+) {
+  try {
+    const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
+    setFriendList(response.data);
+  } catch (error) {
+    alert(error);
+    console.log(error);
+  }
+}
+
 function ProfilePersonal() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { userId } = useParams();
-  const [friendList, setFriendList] = useState<FriendType[]>([
-    {
-      id: 0,
-      user: {
-        id: 0,
-        nickname: 'noname',
-        image: 'noimage',
-      },
-      isBlocked: false,
-    },
-  ]);
+  const [friendList, setFriendList] = useState<FriendType[]>([]);
 
   useEffect(() => {
-    async function getFriendList() {
-      try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/friends`,
-        );
-        setFriendList(response.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
-    getFriendList();
+    getFriendList(userId, setFriendList);
   }, [userId]);
 
   const friendProps: FriendPropsType = {

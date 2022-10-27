@@ -756,8 +756,9 @@ export class UserService {
   }
 
   async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
-    const request = await this.requestsRepository.findOneBy({
-      id: requestIdDto.id,
+    const request = await this.requestsRepository.findOne({
+      relations: ['requestor', 'responser'],
+      where: { id: requestIdDto.id },
     });
     const friendDto = await this.addFriend(
       request.requestor.id,

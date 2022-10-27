@@ -17,18 +17,22 @@ import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import { userDataAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 import { FRIENDREQUEST, userNameSpace } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
+import { InviteInfoListType } from '../../types/Message.type';
+import { inviteInfoListAtom } from '../../recoil/common.recoil';
 
 function OtherInfo(props: { friendProps: FriendPropsType }) {
   const { id } = useRecoilValue(userDataAtom);
   const [socket] = useSocket(userNameSpace);
   const { userId: otherId } = useParams();
   const { value: friendList, setter: setFriendList } = props.friendProps;
+  const [inviteInfoList, setInviteInfoList] =
+    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
 
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
@@ -40,7 +44,9 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   useEffect(() => {
     async function getUserData() {
       try {
-        const response = await axios.get(`${SERVERURL}/users/${otherId}/profile`);
+        const response = await axios.get(
+          `${SERVERURL}/users/${otherId}/profile`,
+        );
         setUserData(response.data);
       } catch (error) {
         alert(error);
@@ -50,24 +56,24 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     getUserData();
   }, [otherId]);
 
-
   useEffect(() => {
     //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
     async function checkIsFriend() {
-      await axios.get(
-        `${SERVERURL}/users/${id}/friends/${otherId}`,
-      ).then((response: any) => {
-        if (response.status === 200) {
-          setIsFriend(true);
-        }
-      }).catch((error: any) => {
-        console.log('error status : ', error.response.data.statusCode);
-        if (error.response.data.statusCode === 404) {
-          setIsFriend(false);
-        } else {
-          alert(error)
-        }
-      })
+      await axios
+        .get(`${SERVERURL}/users/${id}/friends/${otherId}`)
+        .then((response: any) => {
+          if (response.status === 200) {
+            setIsFriend(true);
+          }
+        })
+        .catch((error: any) => {
+          console.log('error status : ', error.response.data.statusCode);
+          if (error.response.data.statusCode === 404) {
+            setIsFriend(false);
+          } else {
+            alert(error);
+          }
+        });
     }
     checkIsFriend();
   }, [id, otherId]);
@@ -89,18 +95,24 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   //   }
   // }
 
-
   async function sendRequestFriend() {
     try {
-      socket.emit(FRIENDREQUEST,
-        {
-          requestorId: id,
-          responserId: Number(otherId),
-        });
+      socket.emit(FRIENDREQUEST, {
+        requestorId: id,
+        responserId: Number(otherId),
+      });
     } catch (error) {
       alert(error);
       console.log(error);
     }
+    const reply = () => {
+      return {
+        userId: userData.id,
+        message: `${userData.nickname}님에게 친구 초대를 보냈습니다.`,
+        type: 'check',
+      };
+    };
+    setInviteInfoList([...inviteInfoList, reply()]);
     console.log('socket : 친구 요청 보냈습니다.');
   }
 
