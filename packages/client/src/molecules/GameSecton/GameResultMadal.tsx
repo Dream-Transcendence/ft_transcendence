@@ -7,7 +7,10 @@ import UserProfileBox from '../ProfileSection/UserProfileBox';
 import { color } from '@mui/system';
 import GameScore from './GameScore';
 import { useEffect } from 'react';
-import { UserProfileBoxType } from '../../types/Profile.type';
+import {
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 import { GameResultModalControl } from '../../types/Game.type';
@@ -66,31 +69,36 @@ const GameResultLayout = styled('div')(({ theme }) => ({
 }));
 
 function GameResultModal(openControl: GameResultModalControl) {
-  const { open, setOpen, score } = openControl;
+  const { open, setOpen, score, gameInfo } = openControl;
   const navigate = useNavigate();
   const handleClose = () => {
     setOpen(false);
     navigate(`${PROFILEURL}`);
   };
-
   const user = useRecoilValue(userDataAtom);
+  const defaultUser: UserProfileBoxDataType = {
+    id: 0,
+    nickname: '',
+    image: '',
+  };
 
   //axios get을 통해서 현재 게임에 참여자 2명의 데이터를 받아와야함
   const userProfileBoxProps: UserProfileBoxType = {
     isButton: false,
     avatarType: 'default',
-    userData: user,
+    userData: gameInfo?.leftPlayer || defaultUser,
   };
 
   const otherProfileBoxProps: UserProfileBoxType = {
     isButton: false,
     avatarType: 'circle',
-    userData: user,
+    userData: gameInfo?.rightPlayer || defaultUser,
   };
-  useEffect(() => {
-    console.log('rest! ', open);
-  }, [open]);
-  console.log('open??? ', open);
+
+  // useEffect(() => {
+  //   console.log('rest! ', open);
+  // }, [open]);
+  // console.log('open??? ', open);
 
   return (
     <div>
