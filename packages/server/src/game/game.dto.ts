@@ -162,11 +162,11 @@ export class GameInfo {
   //   };
   // }
 
-  public getGameInfoDto(ballRadius: number): GameInfoDto {
+  public getGameInfoDto(): GameInfoDto {
     return {
       ballPos: {
-        x: this.ballPos.x * this.size - ballRadius,
-        y: this.ballPos.y * this.size - ballRadius,
+        x: this.ballPos.x * this.size,
+        y: this.ballPos.y * this.size,
       },
       paddlePos: {
         left: this.paddlePos.left * this.size,
