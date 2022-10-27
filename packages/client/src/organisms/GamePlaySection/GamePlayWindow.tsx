@@ -22,7 +22,7 @@ import {
   ResponsiveGameProps,
   ScoreProps,
 } from '../../types/Game.type';
-import { DOWN, LARGE, SMALL, STOP, UP } from '../../configs/Game.type';
+import { DOWN, LARGE, NORMALBALLMODE, SIZEDOWN, SMALL, SMALLBALLMODE, STOP, UP } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -212,11 +212,11 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   });
   const [theme, setTheme] = useState<ResponsiveGameProps>(smallTheme);
   const [size, setSize] = useState<number>(SMALL);
+  const [ballMode, setBallMode] = useState<number>(NORMALBALLMODE);
   const [windowSize, setWindowSize] = useState<GameWindowInfo>({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [moveDir, setMoveDir] = useState<number>(STOP);
   const defaultUser: UserProfileBoxDataType = {
     id: 0,
     nickname: '',
@@ -226,6 +226,11 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (gameInfo?.mode === SIZEDOWN)
+    setBallMode(SMALLBALLMODE);
+  }, []);
 
   /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
   useEffect(() => {
@@ -300,12 +305,6 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    console.log(
-      'window size:',
-      window.innerHeight,
-      window.innerWidth,
-      windowSize,
-    );
   }
 
   /*변경된 사이즈를 분석하여 현재 테마의 크기상태를 변경하는 로직 */
@@ -341,6 +340,7 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
 
   useEffect(() => {
     /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
+    // 관전유저가 들어올 경우, 이벤트 처리  막아줌
     if (userData.id === gameInfo?.leftPlayer.id || userData.id === gameInfo?.rightPlayer.id) {
       window.addEventListener('keydown', (e) => {
         // console.log('keyevent', e.key, e.key === 'ArrowUp');
@@ -408,7 +408,7 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
               posY={offset.LeftPaddlePosY}
             />
             <BallLayout
-              diameter={theme.ballProps.diameter}
+              diameter={theme.ballProps.diameter * ballMode}
               posX={offset.ballPosX}
               posY={offset.ballPosY}
             />
