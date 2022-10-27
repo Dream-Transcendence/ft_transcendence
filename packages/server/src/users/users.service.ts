@@ -611,7 +611,6 @@ export class UserService {
     });
 
     client.broadcast.emit('changeUserStatus', connectionDto);
-
     const connectionsDto = new ConnectionsDto();
     connectionsDto.connections = onlineUserList.map((value) => {
       return new ConnectionDto(value.userId, value.onGame);

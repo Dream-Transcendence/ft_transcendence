@@ -21,9 +21,12 @@ import { useRecoilValue } from 'recoil';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import { userDataAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
+import { FRIENDREQUEST, userNameSpace } from '../../socket/event';
+import useSocket from '../../socket/useSocket';
 
 function OtherInfo(props: { friendProps: FriendPropsType }) {
   const { id } = useRecoilValue(userDataAtom);
+  const [socket] = useSocket(userNameSpace);
   const { userId: otherId } = useParams();
   const { value: friendList, setter: setFriendList } = props.friendProps;
 
@@ -34,103 +37,76 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   });
   const [isFriend, setIsFriend] = useState<boolean | undefined>(false);
 
-  async function getUserData() {
-    try {
-      const response = await axios.get(`${SERVERURL}/users/${otherId}/profile`);
-      setUserData(response.data);
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
-  }
-
   useEffect(() => {
+    async function getUserData() {
+      try {
+        const response = await axios.get(`${SERVERURL}/users/${otherId}/profile`);
+        setUserData(response.data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    }
     getUserData();
   }, [otherId]);
 
-  //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
-  async function checkIsFriend() {
-    await axios.get(
-      `${SERVERURL}/users/${id}/friends/${otherId}`,
-    ).then((response: any) => {
-      if (response.status === 201) {
-        setIsFriend(true);
-      }
-    }).catch((error: any) => {
-      console.log('error status : ', error.response.data.statusCode);
-      if (error.response.data.statusCode === 404) {
-        setIsFriend(false);
-      }
-    })
-  }
 
   useEffect(() => {
+    //해당 유저가 본인과 친구인지 확인하여 친구 추가 버튼 vislble 정하기
+    async function checkIsFriend() {
+      await axios.get(
+        `${SERVERURL}/users/${id}/friends/${otherId}`,
+      ).then((response: any) => {
+        if (response.status === 200) {
+          setIsFriend(true);
+        }
+      }).catch((error: any) => {
+        console.log('error status : ', error.response.data.statusCode);
+        if (error.response.data.statusCode === 404) {
+          setIsFriend(false);
+        } else {
+          alert(error)
+        }
+      })
+    }
     checkIsFriend();
-  }, [otherId]);
+  }, [id, otherId]);
+
+  // async function addRequestFriend() {
+  //   try {
+  //     const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
+  //       id: Number(otherId),
+  //     });
+  //     if (responseAdd.status === 201) {
+  //       setFriendList(friendList.concat(responseAdd.data));
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (error: any) {
+  //     alert(error);
+  //     console.log(error);
+  //   }
+  // }
+
 
   async function sendRequestFriend() {
     try {
-      const responseReq = await axios.post(
-        `${SERVERURL}/users/${id}/requests`,
+      socket.emit(FRIENDREQUEST,
         {
-          id: Number(otherId),
-        },
-      );
-      if (responseReq.status === 200) {
-        return true;
-      }
-      return false;
+          requestorId: id,
+          responserId: Number(otherId),
+        });
     } catch (error) {
       alert(error);
       console.log(error);
     }
-  }
-
-  async function addRequestFriend() {
-    try {
-      const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
-        id: Number(otherId),
-      });
-      if (responseAdd.status === 201) {
-        setFriendList(friendList.concat(responseAdd.data));
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error: any) {
-      alert(error);
-      console.log(error);
-    }
-  }
-  async function addFriend() {
-    try {
-      /**
-       * 1. 소켓으로 친구 요청 메시지를 보내기
-       * 2. 요청 전송완료 alert 띄워 주어야 함
-       * 3. 수락시 post 보내기
-       */
-      //친구 요청
-      const sendReq = await sendRequestFriend();
-      console.log('11', sendReq);
-      if (!sendReq) {
-        //비동기 처리에 의해서 값 변경이 바로 안되어 반대로 처리해둠 추후 요청 확인을 받는 것으로 처리할 예정
-        //요청을 보낸 쪽이 확인 응답을 받고 다시 추가 요청을 보내는데 수신 쪽에서 확인을 받고 친구 추가를 바로 하면 될 것 같음
-        //
-        const addReq = await addRequestFriend();
-        if (addReq) {
-          alert('친구 추가 완료');
-          console.log('친구 추가 완료');
-        }
-      }
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
+    console.log('socket : 친구 요청 보냈습니다.');
   }
 
   const addFriendProps: CustomIconProps = {
     icon: <PersonAddIcon />,
-    action: addFriend,
+    action: sendRequestFriend,
   };
 
   const alreadFriendProps: CustomIconProps = {
@@ -140,7 +116,6 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
       console.log('이미 친구입니다.');
     },
   };
-  // console.log(isFriend);
 
   return (
     <UserInfoLayout>

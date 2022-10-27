@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
-import { CHANGEUSERSTATUS, logOn, USERLOGOFF, userNameSpace } from '../socket/event';
+import { CHANGEUSERSTATUS, FRIENDREQUEST, FRIENDREQUESTACCEPTED, logOn, USERLOGOFF, userNameSpace } from '../socket/event';
 import {
   userDataAtom,
   gameTypeAtom,
@@ -21,10 +21,9 @@ import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
-import InviteMassageList from '../organisms/Massage/InviteMassageList';
 import axios from 'axios';
-import { InviteMassageListType } from '../types/Message.type';
-import { inviteMassageListAtom } from '../recoil/common.recoil';
+import { InviteInfoListType, RequestDto } from '../types/Message.type';
+import { inviteInfoListAtom } from '../recoil/common.recoil';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -41,8 +40,8 @@ function PingpongRoutePage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
-  const [inviteMassageList, setInviteMassageList] = 
-    useRecoilState<InviteMassageListType[]>(inviteMassageListAtom);
+  const [inviteInfoList, setInviteInfoList] = 
+    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -75,7 +74,6 @@ function PingpongRoutePage() {
         },
       );
     return () => {
-      socket.off('exception');
       console.log('로그오프입니다.')
       disconnect();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
@@ -106,8 +104,9 @@ function PingpongRoutePage() {
     return () => {
       socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     }
-  }, []) //userLogStateList, setUserLogStateList, findChanged, socket
+  }, []); //userLogStateList, setUserLogStateList, findChanged, socket
 
+  //logoff한 친구 받기
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response)
@@ -121,23 +120,27 @@ function PingpongRoutePage() {
     return () => {
       socket.removeAllListeners(); //모든 리스너 제거
     }
-  }, []) //userLogStateList, setUserLogStateList, findChanged, socket
+  }, []); //userLogStateList, setUserLogStateList, findChanged, socket
 
-  //유저의 메시지 기록 받아오기
+  /**
+   * 유저의 미확인 메시지 기록 받아오기
+   */
   useEffect(() => {
     async function getMessageList() {
       await axios.get(`${SERVERURL}/users/${userData.id}/requests`)
       .then((response: any) => {
-        console.log('a?a',response);
-        if (response.length > 0) {
-        const massage = response.map((massage: any) => {
+        if (response.data.length > 0) {
+          console.log('유저 메시지 기록 있다 : ',response);
+        const infoList = response.data.map((message: any) => {
           return {
-            id: response.id,
-            massage:`${massage.requestor.nickname}님이 친구요청을 보냈습니다.`,
+            id: message.id,
+            userId: message.requestor.id,
+            message:`${message.requestor.nickname}님이 친구요청을 보냈습니다.`,
             type: 'friend',
           }
         })
-        setInviteMassageList(massage);
+        console.log(inviteInfoList,'to', infoList);
+        setInviteInfoList([...inviteInfoList, ...infoList]);
       }
       }).catch((error) => {
         alert(error);
@@ -145,7 +148,44 @@ function PingpongRoutePage() {
       })
     }
     getMessageList();
-  },[])
+    console.log(inviteInfoList);
+  },[]);
+
+  useEffect(() => {
+    socket.onAny((res) => {
+      console.log(res, "what! tje fucl");
+    });
+  }, []);
+
+  //친구 요청 받기
+  useEffect(() => {
+    socket.on(FRIENDREQUEST, (response: RequestDto) => {
+      const {id, requestor} = response;
+      const {id: userId, nickname} = requestor;
+      const newMessage: InviteInfoListType = {
+        id: id,
+        userId: userId,
+        message: `${nickname}님이 친구초대를 요청하셨습니다.`,
+        type: 'friend'
+      }
+      setInviteInfoList([...inviteInfoList, newMessage]);
+      console.log('socket : 친구 요청을 받았습니다.', newMessage)      
+    })
+    return () => {
+      socket.off(FRIENDREQUEST)
+    }
+  }, [inviteInfoList, setInviteInfoList, socket]);
+
+
+  useEffect(() => {
+    socket.on('exception', (error: any) => {
+      alert(error.message);
+    })
+  })
+
+  useEffect(() => {
+    console.log(' is?? ',inviteInfoList);
+  },[inviteInfoList]);
 
   return (
     <PageSection>
