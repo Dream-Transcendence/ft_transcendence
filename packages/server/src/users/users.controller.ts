@@ -72,6 +72,7 @@ export class UsersController {
   })
   @ApiOkResponse({ description: '유저 정보 가져오기 성공', type: UserDto })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiNotFoundResponse({ description: 'Not Found' })
   getUser(@Param('id') id: number): Promise<UserDto> {
     return this.userService.getUser(id);
   }
@@ -150,6 +151,7 @@ export class UsersController {
     description: 'User ID 객체를 바디에 담아 요청하면 해당 유저 차단',
   })
   @ApiCreatedResponse({ description: '유저 차단 성공', type: UserDto })
+  @ApiNotFoundResponse({ description: 'Not Found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   blockUser(
     @Param('id') id: number,
@@ -183,6 +185,7 @@ export class UsersController {
     description: 'URL이 가르키는 유저 차단 해제',
   })
   @ApiOkResponse({ description: '유저 차단 해제 성공', type: UserDto })
+  @ApiNotFoundResponse({ description: 'Not Found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   unblockUser(
     @Param('id') id: number,

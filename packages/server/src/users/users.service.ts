@@ -112,7 +112,7 @@ export class UserService {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
     // if (user === null) throw new EntityNotFoundError(User, id);
 
-    if (!user) return null;
+    if (!user) throw new NotFoundException(`User with id ${id} not found`);
     const userDto = new UserDto(user.id, user.nickname, user.image);
     return userDto;
   }
@@ -241,7 +241,8 @@ export class UserService {
     const blockedUser = await this.usersRepository.findOne({
       where: [{ id: userId }],
     });
-    if (blockedUser === null) throw new EntityNotFoundError(User, id);
+    if (blockedUser === null)
+      throw new NotFoundException('User who blocked not found');
 
     // FIXME: 테스트용
     let blockId = 1;
@@ -267,6 +268,7 @@ export class UserService {
       relations: ['user', 'blockedUser'],
       where: [{ user: { id: id }, blockedUser: { id: userId } }],
     });
+    if (blockRow === null) throw new NotFoundException('Block not found');
 
     this.blocksRepository.delete(blockRow.id);
     const user: UserDto = new UserDto(
