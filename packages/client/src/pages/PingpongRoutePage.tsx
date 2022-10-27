@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { PROFILEURL } from '../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
 import {
   CHANGEUSERSTATUS,
   logOn,
@@ -23,6 +23,7 @@ import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
+import NotFoundPage from './NotFoundPage';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -40,7 +41,6 @@ function PingpongRoutePage() {
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
 
-  console.log('???', userData.id, passSecondOauth.checkIsValid);
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
@@ -140,6 +140,7 @@ function PingpongRoutePage() {
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="game/*" element={<GameRoutePage />} />
+        <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
       </Routes>
       {/* <footer>
        <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>

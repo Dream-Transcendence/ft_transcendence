@@ -15,6 +15,7 @@ import { BaseUserProfileData } from './types/Profile.type';
 import React from 'react';
 import Loader from './atoms/Loading/Loader';
 import SecondOauthPage from './pages/SecondOauthPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
             element={<Navigate replace to={PROFILEURL} />}
           />
           <Route path="/pingpong/*" element={<PingpongRoutePage />} />
+          <Route path="/404" element={<NotFoundPage />} />
           <Route path="/*" element={<LandingPage />} />
           {/* 추후에 url을 통해 직접들어가지 못하고 game 버튼을 통해서만 접근 가능하도록 수정 */}
         </Routes>
