@@ -26,6 +26,11 @@ import { DOWN, LARGE, SMALL, STOP, UP } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
+import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
+import {
+  UserProfileBoxDataType,
+  UserProfileBoxType,
+} from '../../types/Profile.type';
 
 const GameLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -105,6 +110,7 @@ const LeftPaddleLayout = ({
     <div
       style={{
         backgroundColor: '#00ffff',
+        borderRadius: '30%',
         position: 'absolute',
         width: `${width}px`,
         height: `${height}px`,
@@ -128,6 +134,7 @@ const RightPaddleLayout = ({
     <div
       style={{
         backgroundColor: '#Ff7ad5',
+        borderRadius: '30%',
         position: 'absolute',
         width: `${width}px`,
         height: `${height}px`,
@@ -159,10 +166,32 @@ const ReadCount = styled('span')(({ theme }) => ({
 const ScoreLayout = styled('span')(({ theme }) => ({
   fontSize: '500%',
   textAlign: 'center',
+  position: 'relative',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
   marginBottom: '4%',
   color: '#ffdd',
   width: `100%`,
   height: `20%`,
+}));
+
+const LeftUserProfile = styled('div')(({ theme }) => ({
+  width: '12%',
+  height: '60%',
+  zIndex: '2',
+  marginTop: '8%',
+  marginRight: '50%',
+  position: 'absolute',
+}));
+
+const RightUserProfile = styled('div')(({ theme }) => ({
+  width: '12%',
+  height: '60%',
+  marginTop: '8%',
+  marginLeft: '50%',
+  zIndex: '2',
+  position: 'absolute',
 }));
 
 function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
@@ -180,16 +209,20 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
     LeftPaddlePosY: gameInfo?.paddlePos.left,
     RightPaddlePosY: gameInfo?.paddlePos.right,
   });
-  const [theme, setTheme] = useState<ResponsiveGameProps>(largeTheme);
-  const [size, setSize] = useState<number>(LARGE);
+  const [theme, setTheme] = useState<ResponsiveGameProps>(smallTheme);
+  const [size, setSize] = useState<number>(SMALL);
   const [windowSize, setWindowSize] = useState<GameWindowInfo>({
     width: window.innerWidth,
     height: window.innerHeight,
   });
   const [moveDir, setMoveDir] = useState<number>(STOP);
+  const defaultUser: UserProfileBoxDataType = {
+    id: 0,
+    nickname: '',
+    image: '',
+  };
 
   const handleOpen = () => {
-    console.log('opne?????????????????????????????????');
     setOpen(true);
   };
 
@@ -250,19 +283,15 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   useEffect(() => {
     const getGameResult = () => {
       socket.on(`${GAMEEND}`, (res) => {
+        setScore({
+          ...score,
+          left: res.score.left,
+          right: res.score.right,
+        });
         if (res.score.left === 3 || res.score.right === 3) {
           handleOpen();
           setOpen(true);
-          console.log('game resu', res.score);
         } else {
-          console.log('game resu ing', res);
-          console.log('game score ing', score);
-          if (score !== undefined)
-            setScore({
-              ...score,
-              left: res.score.left,
-              right: res.score.right,
-            });
           setIsStart(true);
           setTime(3);
           timeRef.current = 4;
@@ -289,7 +318,7 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   useEffect(() => {
     if (
       windowSize.width >= largeTheme.canvasImgProps.width + 400 &&
-      windowSize.height >= largeTheme.canvasImgProps.height
+      windowSize.height >= largeTheme.canvasImgProps.height + 500
     ) {
       if (size === SMALL) {
         setSize(LARGE);
@@ -324,25 +353,27 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
     });
   }, [size]);
 
-  /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
-  window.addEventListener('keydown', (e) => {
-    // console.log('keyevent', e.key, e.key === 'ArrowUp');
-    if (e.key === 'ArrowUp') {
-      socket.emit(`${MOVEPADDLE}`, {
-        title: gameInfo?.title,
-        playerId: userData.id,
-        moveDir: UP,
-      });
-      console.log('keyevent', e.key, 'ArrowUp');
-    } else if (e.key === 'ArrowDown') {
-      socket.emit(`${MOVEPADDLE}`, {
-        title: gameInfo?.title,
-        playerId: userData.id,
-        moveDir: DOWN,
-      });
-      console.log('keyevent', e.key, 'ArrowDown');
-    }
-  });
+  useEffect(() => {
+    /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
+    window.addEventListener('keydown', (e) => {
+      // console.log('keyevent', e.key, e.key === 'ArrowUp');
+      if (e.key === 'ArrowUp') {
+        socket.emit(`${MOVEPADDLE}`, {
+          title: gameInfo?.title,
+          playerId: userData.id,
+          moveDir: UP,
+        });
+        console.log('keyevent', e.key, 'ArrowUp');
+      } else if (e.key === 'ArrowDown') {
+        socket.emit(`${MOVEPADDLE}`, {
+          title: gameInfo?.title,
+          playerId: userData.id,
+          moveDir: DOWN,
+        });
+        console.log('keyevent', e.key, 'ArrowDown');
+      }
+    });
+  }, []);
 
   /* 상태관리를 통한 게임 구현 */
 
@@ -384,12 +415,32 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   // const handleKeyDown = (event) => {
   //   console.log;
   // };
-  console.log('res process!!!!', score);
+
+  const leftPlayerProfile: UserProfileBoxType = {
+    isButton: false,
+    avatarType: 'default',
+    userData: gameInfo?.leftPlayer || defaultUser,
+  };
+
+  const rightPlayerProfile: UserProfileBoxType = {
+    isButton: false,
+    avatarType: 'circle',
+    userData: gameInfo?.rightPlayer || defaultUser,
+  };
+
   return (
     <GameWindowLayout>
       <GameLayout>
         <ScoreLayout>
+          <LeftUserProfile>
+            {' '}
+            <UserProfileBox userProfileBoxProps={leftPlayerProfile} />
+          </LeftUserProfile>
           {score?.left} : {score?.right}
+          <RightUserProfile>
+            {' '}
+            <UserProfileBox userProfileBoxProps={rightPlayerProfile} />
+          </RightUserProfile>
         </ScoreLayout>
         {time < 4 && time > 0 ? (
           <PreGamePlayCanvasLayout
@@ -425,7 +476,12 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
           </GamePlayCanvasLayout>
         )}
       </GameLayout>
-      <GameResultModal open={open} setOpen={setOpen} score={score} />
+      <GameResultModal
+        open={open}
+        setOpen={setOpen}
+        score={score}
+        gameInfo={gameInfo}
+      />
     </GameWindowLayout>
   );
 }

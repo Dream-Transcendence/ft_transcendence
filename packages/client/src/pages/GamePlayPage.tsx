@@ -26,12 +26,6 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-const GameStartButton = styled('button')(({ theme }) => ({
-  width: '20%',
-  height: '20%',
-  backgroundColor: 'red',
-}));
-
 function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
   const gameInfoProps = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
