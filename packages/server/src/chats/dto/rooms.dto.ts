@@ -65,7 +65,6 @@ export class ChannelDto {
   type?: CHAT_TYPE;
 
   @ApiProperty()
-  //@IsUrl()
   image: string;
 
   @ApiProperty()
@@ -290,16 +289,16 @@ export class RoomPasswordDto {
   salt: string;
 }
 
+export class PostChannelImageDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  file: any;
+}
+
 export class PatchChannelInfoDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
   name: string;
-
-  @ApiProperty()
-  //@IsUrl()
-  @IsOptional()
-  image: string;
 
   @ApiProperty()
   @IsString()

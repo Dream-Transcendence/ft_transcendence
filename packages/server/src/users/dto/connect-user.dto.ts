@@ -8,5 +8,9 @@ export class ConnectionDto {
 }
 
 export class ConnectionsDto {
-  connections: ConnectionDto[];
+  public push(connection: ConnectionDto) {
+    this.connections.push(connection);
+  }
+
+  connections: ConnectionDto[] = [];
 }

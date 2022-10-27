@@ -26,16 +26,9 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-const GameStartButton = styled('button')(({ theme }) => ({
-  width: '20%',
-  height: '20%',
-  backgroundColor: 'red',
-}));
-
-function GamePlayPage(props: {gameInfoProps: gameInfoPropsType}) {
-  const {value: gameInfo, setter: setGameInfo} = props.gameInfoProps;
+function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
+  const gameInfoProps = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
-  console.log('?????');
   /* 버튼 누르는 버전*/
 
   // const gameStart = async () => {
@@ -57,7 +50,7 @@ function GamePlayPage(props: {gameInfoProps: gameInfoPropsType}) {
       <GamePlayTemplateLayout>
         {/* <GameStartButton onClick={handleGameStart}> START </GameStartButton> */}
         {/* [SocketIO 요청] 게임구현 시, socket을 사용하겠지? */}
-        <GamePlayTemplate />
+        <GamePlayTemplate gameInfoProps={gameInfoProps} />
       </GamePlayTemplateLayout>
     </GamePlayLayout>
   );

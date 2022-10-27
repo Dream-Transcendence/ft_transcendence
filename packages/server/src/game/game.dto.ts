@@ -119,9 +119,9 @@ export class GameInfo {
   ) {
     this.player = { left: player1, right: player2 };
     this.score = { left: 0, right: 0 };
-    this.ballPos = { x: 240, y: 125 };
-    this.ballSpeed = { x: 4, y: -4 };
-    this.paddlePos = { left: (250 - 75) / 2, right: 0 };
+    this.ballPos = { x: 512, y: 310 };
+    this.ballSpeed = { x: 10, y: -10 };
+    this.paddlePos = { left: (620 - 186) / 2, right: 0 };
     this.mode = mode;
     this.size = 1;
   }
@@ -162,11 +162,11 @@ export class GameInfo {
   //   };
   // }
 
-  public getGameInfoDto(ballRadius: number): GameInfoDto {
+  public getGameInfoDto(): GameInfoDto {
     return {
       ballPos: {
-        x: this.ballPos.x * this.size - ballRadius,
-        y: this.ballPos.y * this.size - ballRadius,
+        x: this.ballPos.x * this.size,
+        y: this.ballPos.y * this.size,
       },
       paddlePos: {
         left: this.paddlePos.left * this.size,

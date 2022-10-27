@@ -6,8 +6,8 @@ import {
 } from '../../types/Game.type';
 
 const smallCanvasImgProps: CanvasImgProps = {
-  width: 480,
-  height: 250,
+  width: 512,
+  height: 310,
 };
 
 const smallBallProps: BallProps = {
@@ -16,8 +16,8 @@ const smallBallProps: BallProps = {
 
 const smallPaddleProps: PaddleProps = {
   width: 10,
-  height: 75,
-  posX: 470,
+  height: 93,
+  posX: 502,
 };
 
 const largeCanvasImgProps: CanvasImgProps = {

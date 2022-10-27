@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
   ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
@@ -27,6 +28,7 @@ import { DmParticipant } from './rooms.entity';
 import { Socket } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { WsException } from '@nestjs/websockets';
+import * as AWS from 'aws-sdk';
 
 @Injectable()
 export class RoomService {
@@ -44,6 +46,8 @@ export class RoomService {
     @Inject('MESSAGES_REPOSITORY')
     private messagesRepository: Repository<Message>,
   ) {}
+
+  s3 = new AWS.S3();
 
   // ANCHOR Room Service
   async createChannel(createChannelDto: CreateChannelDto): Promise<ChannelDto> {
@@ -227,14 +231,43 @@ export class RoomService {
     return [user[0], ...participants];
   }
 
+  async postChannelImage(roomId: number, file: Express.Multer.File) {
+    const room = await this.roomsRepository.findOne({
+      where: { id: roomId },
+    });
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: file.originalname,
+      Body: file.buffer,
+    };
+
+    try {
+      const data = await this.s3.upload(params).promise();
+      room.image = data.Location;
+      await this.roomsRepository.save(room);
+    } catch (error) {
+      console.log(error);
+      throw new InternalServerErrorException();
+    }
+
+    const channelDto = new ChannelDto(
+      room.id,
+      room.name,
+      room.type,
+      room.image,
+      room.title,
+    );
+    return channelDto;
+  }
+
   async patchChannelInfo(
     roomId: number,
     patchChannelInfoDto: PatchChannelInfoDto,
   ) {
-    const { name, image, salt } = patchChannelInfoDto;
+    const { name, salt } = patchChannelInfoDto;
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (name !== undefined) room.name = name;
-    if (image !== undefined) room.image = image;
     if (salt && salt !== '') {
       room.type = 2;
       room.salt = salt;
