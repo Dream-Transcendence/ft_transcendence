@@ -7,6 +7,7 @@ const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignContent: 'center',
+  justifyContent: 'center',
   backgroundColor: '#194DD2',
   borderRadius: '10%',
   width: '80%',
@@ -20,7 +21,9 @@ const GameHeaderLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   width: '100%',
-  height: '10%',
+  height: '4%',
+  marginTop: '-7%',
+  marginBottom: '3%',
 }));
 
 const GameSectionLayout = styled('div')(({ theme }) => ({
@@ -30,7 +33,7 @@ const GameSectionLayout = styled('div')(({ theme }) => ({
   justifyItems: 'center',
   backgroundColor: '#435ff3',
   width: '100%',
-  height: '80%',
+  height: '73%',
 }));
 
 function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
@@ -39,7 +42,7 @@ function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
   return (
     <GameTemplateLayout>
       <GameHeaderLayout>
-        <TextBox value={'Ladder'} size={'2rem'} fontColor={'black'} />
+        <TextBox value={'🎮'} size={'2rem'} fontColor={'black'} />
       </GameHeaderLayout>
       <GameSectionLayout>
         <GamePlayWindowOrganism gameInfoProps={gameInfoProps} />

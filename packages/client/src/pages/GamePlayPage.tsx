@@ -14,7 +14,7 @@ const GamePlayLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '100%',
   minHeight: '620px',
-  minWidth: '800px',
+  minWidth: '1200px',
 }));
 
 const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
@@ -29,21 +29,6 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
 function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
   const gameInfoProps = props.gameInfoProps;
   const [socket] = useSocket(gameNameSpace);
-  /* 버튼 누르는 버전*/
-
-  // const gameStart = async () => {
-  //   try {
-  //     //await 걸어야함?
-  //     setTimeout(() => {
-  //       socket.emit(`${GAMESTART}`, {
-  //         title: '',
-  //       });
-  //     }, 3000);
-  //   } catch (error) {}
-  // };
-  // const handleGameStart = () => {
-  //   gameStart();
-  // };
 
   return (
     <GamePlayLayout>

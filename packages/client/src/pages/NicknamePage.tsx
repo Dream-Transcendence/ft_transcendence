@@ -44,9 +44,9 @@ function NicknamePage() {
     }
     try {
       //이미 로그인 된 유저면 바로 프로필로보내기
-      if (user.id === 0) {
+      if (user.id === 0 || user.id !== 0 && user.nickname.length > 10) {
         getUserData();
-      } else {
+      } else if (user.id !== 0 && user.nickname.length <= 10) {
         navigate(`${PROFILEURL}/${user.id}`);
       }
     } catch {
