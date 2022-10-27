@@ -7,6 +7,7 @@ import {
   HttpException,
   HttpStatus,
   Logger,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
@@ -94,7 +95,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
         message = (exception as ConflictException).message;
         code = (exception as any).code;
         break;
-      case NotFoundError:
+      case NotFoundException:
         status = HttpStatus.NOT_FOUND;
         message = (exception as NotFoundError).message;
         code = (exception as any).code;
