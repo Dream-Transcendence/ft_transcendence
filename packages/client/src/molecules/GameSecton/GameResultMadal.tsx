@@ -91,7 +91,7 @@ function GameResultModal(openControl: GameResultModalControl) {
 
   const otherProfileBoxProps: UserProfileBoxType = {
     isButton: false,
-    avatarType: 'circle',
+    avatarType: 'default',
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
