@@ -6,6 +6,7 @@ import { styled } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import { color } from '@mui/system';
 import GameScore from './GameScore';
+import { useEffect } from 'react';
 import { UserProfileBoxType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -86,6 +87,10 @@ function GameResultModal(openControl: GameResultModalControl) {
     avatarType: 'circle',
     userData: user,
   };
+  useEffect(() => {
+    console.log('rest! ', open);
+  }, [open]);
+  console.log('open??? ', open);
 
   return (
     <div>
@@ -109,8 +114,8 @@ function GameResultModal(openControl: GameResultModalControl) {
             </OtherProfileBoxLayout>
             <GameScoreLayout>
               <GameScore
-                player1Score={String(score.left)}
-                player2Score={String(score.right)}
+                player1Score={String(score?.left)}
+                player2Score={String(score?.right)}
               />
               {/* {GameScore({ player1Score: '10', player2Score: '9' })} */}
             </GameScoreLayout>

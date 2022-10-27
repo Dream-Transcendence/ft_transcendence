@@ -9,6 +9,7 @@ import {
   AddGameResultDto,
   SizeDto,
   HandleStartDto,
+  GameScoreDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -30,11 +31,11 @@ export class GameService {
   private gameInfoMap: Map<string, GameInfo> = new Map();
   private customMatchingMap: Map<string, MatchInfo> = new Map();
 
-  ballRadius = 10;
-  canvasWidth = 480;
-  canvasHeight = 250;
-  paddleWidth = 10;
-  paddleHeight = 75;
+  ballRadius = 20;
+  canvasWidth = 1024;
+  canvasHeight = 620;
+  paddleWidth = 20;
+  paddleHeight = 186;
 
   emitToEveryone(client: Socket, title: string, event: string, data: any) {
     client.to(title).emit(event, data);
@@ -86,7 +87,7 @@ export class GameService {
 
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
-      console.log("matchDto.mode !== 0@@@@@@@@@@@");
+      console.log('matchDto.mode !== 0@@@@@@@@@@@');
       if (this.customMatchingMap.has(title)) {
         const opponent = this.customMatchingMap.get(title);
         this.customMatchingMap.delete(title);
@@ -95,19 +96,19 @@ export class GameService {
         this.customMatchingMap.set(title, new MatchInfo(client, userId, mode));
       }
     } else {
-      console.log("matchDto.mode === 0@@@@@@@@@@@");
+      console.log('matchDto.mode === 0@@@@@@@@@@@');
       // NOTE: 매칭 대기열에 동일 유저가 있으면, WsException 발생
       if (this.matchingQueue.length !== 0) {
         // NOTE: 매칭 대기열에 유저가 있으면, 매칭(로직이 문제 없는 지 고민해봐야 함)
         const opponent = this.matchingQueue.shift();
-        console.log("듀명@@@@@@@@@@@@@@@@@@@@@@@");
+        console.log('듀명@@@@@@@@@@@@@@@@@@@@@@@');
         this.match(client, uuidv4(), userId, opponent);
       } else {
         this.matchingQueue.push(new MatchInfo(client, matchDto.userId, 0));
-        console.log("한명@@@@@@@@@@@@@@@@@@@@@@@");
+        console.log('한명@@@@@@@@@@@@@@@@@@@@@@@');
       }
     }
-    return {isMatched: true};
+    return { isMatched: true };
   }
 
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
@@ -178,10 +179,12 @@ export class GameService {
       return;
     } else {
       const arr1 = [userId, this.readyMap.get(title)].sort();
+
       const arr2 = [
-        this.gameInfoMap.get(title).player.left,
-        this.gameInfoMap.get(title).player.right,
+        this.gameInfoMap.get(title).player.left.id,
+        this.gameInfoMap.get(title).player.right.id,
       ].sort();
+      console.log(arr1, 'arr1 -< ', arr2, 'arr12 -< ');
       if (JSON.stringify(arr1) !== JSON.stringify(arr2))
         throw new WsException('There is an incorrect user in the game room.');
     }
@@ -239,6 +242,8 @@ export class GameService {
         paddleHeight,
       } = this.initializeVariables(title);
 
+      let gameScoreDto: GameScoreDto = null;
+
       if (x + dx > canvasWidth - ballRadius || x + dx < ballRadius) {
         if (
           (y > leftPaddleY &&
@@ -256,24 +261,21 @@ export class GameService {
             '@@@@@@@@@@@@ 패들에 부딫힘 @@@@@@@@@@@@@@',
           );
         } else {
-          this.gameInfoMap.get(title).ballPos.x = 240;
-          this.gameInfoMap.get(title).ballPos.y = 125;
-          this.gameInfoMap.get(title).ballSpeed.y = -4;
-          this.gameInfoMap.get(title).ballSpeed.x = 4;
-          this.gameInfoMap.get(title).paddlePos.left = (250 - 75) / 2;
+          this.gameInfoMap.get(title).ballPos.x = 512;
+          this.gameInfoMap.get(title).ballPos.y = 310;
+          this.gameInfoMap.get(title).ballSpeed.y = -10;
+          this.gameInfoMap.get(title).ballSpeed.x = 10;
+          this.gameInfoMap.get(title).paddlePos.left = (620 - 186) / 2;
           this.gameInfoMap.get(title).paddlePos.right = 0;
 
           if (x + dx < this.ballRadius)
             this.gameInfoMap.get(title).score.right += 1;
           else this.gameInfoMap.get(title).score.left += 1;
+          const players = this.gameInfoMap.get(title).player;
           if (
             this.gameInfoMap.get(title).score.right === 3 ||
             this.gameInfoMap.get(title).score.left === 3
           ) {
-            const players = this.gameInfoMap.get(title).player;
-            // NOTE: 게임 중 상태를 온라인으로 바꿈
-            this.userGateway.setConnection(players.left.id, false);
-            this.userGateway.setConnection(players.right.id, false);
             const gameResult: AddGameResultDto = {
               players,
               score: this.gameInfoMap.get(title).score,
@@ -281,14 +283,17 @@ export class GameService {
             };
             await this.addGameResult(gameResult);
             if (gameResult.mode === 0) await this.updateRank(gameResult);
+            gameScoreDto = this.gameInfoMap.get(title).getGameScoreDto();
             this.gameInfoMap.delete(title);
           }
-          this.emitToEveryone(
-            client,
-            title,
-            'gameEnd',
-            this.gameInfoMap.get(title).getGameScoreDto(),
-          );
+          if (this.gameInfoMap.get(title) !== undefined)
+            gameScoreDto = this.gameInfoMap.get(title).getGameScoreDto();
+          this.emitToEveryone(client, title, 'gameEnd', gameScoreDto);
+          if (gameScoreDto.score.left === 3 || gameScoreDto.score.right === 3) {
+            // NOTE: 게임 중 상태를 온라인으로 바꿈
+            this.userGateway.setConnection(players.left.id, false);
+            this.userGateway.setConnection(players.right.id, false);
+          }
           this.schedulerRegistry.deleteInterval(title);
           return;
         }
@@ -320,14 +325,27 @@ export class GameService {
 
   async handleMovePaddle(client: Socket, movePaddleDto: MovePaddleDto) {
     const { title, playerId, moveDir } = movePaddleDto;
-    let movement;
-    if (this.gameInfoMap.get(title).size === 0.5) movement = 4;
-    else movement = 8;
-    if (moveDir) movement = -movement;
+    const leftPaddleY = this.gameInfoMap.get(title).paddlePos.left;
+    const rightPaddleY = this.gameInfoMap.get(title).paddlePos.right;
+    const canvasHeight = this.canvasHeight;
+    const paddleHeight = this.paddleHeight;
 
-    if (playerId === this.gameInfoMap.get(title).player.left.id) {
+    let movement;
+    if (this.gameInfoMap.get(title).size === 0.5) movement = 5;
+    else movement = 10;
+    if (!moveDir) movement = -movement;
+
+    if (
+      playerId === this.gameInfoMap.get(title).player.left.id &&
+      0 < leftPaddleY + movement &&
+      leftPaddleY + movement < canvasHeight - paddleHeight
+    ) {
       this.gameInfoMap.get(title).paddlePos.left += movement;
-    } else {
+    } else if (
+      playerId === this.gameInfoMap.get(title).player.right.id &&
+      0 < rightPaddleY + movement &&
+      rightPaddleY + movement < canvasHeight - paddleHeight
+    ) {
       this.gameInfoMap.get(title).paddlePos.right += movement;
     }
   }

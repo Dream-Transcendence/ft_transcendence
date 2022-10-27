@@ -1,4 +1,4 @@
-import { Socket } from "socket.io-client";
+import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 
 export interface GameRoomDto {
@@ -20,8 +20,8 @@ export interface GameRoomDto {
 }
 
 export interface gameInfoPropsType {
-  value: GameRoomDto | undefined,
-  setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>,
+  value: GameRoomDto | undefined;
+  setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>;
 }
 export interface CanvasProps {
   children?: JSX.Element[];
@@ -62,16 +62,16 @@ export interface ResponsiveGameProps {
 }
 
 export interface GameOffsetProps {
-  ballPosX: number;
-  ballPosY: number;
-  LeftPaddlePosY: number;
-  RightPaddlePosY: number;
+  ballPosX?: number;
+  ballPosY?: number;
+  LeftPaddlePosY?: number;
+  RightPaddlePosY?: number;
 }
 
 export interface GameResultModalControl {
   open: boolean;
   setOpen: (open: boolean) => void;
-  score: ScoreProps;
+  score?: ScoreProps;
 }
 
 export interface GameWindowInfo {
