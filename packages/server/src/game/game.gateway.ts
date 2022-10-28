@@ -6,7 +6,13 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
-import { HandleStartDto, MatchDto, MovePaddleDto, SizeDto } from './game.dto';
+import {
+  HandleStartDto,
+  MatchDto,
+  MovePaddleDto,
+  SizeDto,
+  WatchDto,
+} from './game.dto';
 import { GameService } from './game.service';
 
 @WebSocketGateway(4242, {
@@ -50,5 +56,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('resizeWindow')
   handleGameSize(client: Socket, sizeDto: SizeDto) {
     this.gameService.handleGameSize(client, sizeDto);
+  }
+
+  @SubscribeMessage('watch')
+  async handleWatch(client: Socket, watchDto: WatchDto) {
+    return await this.gameService.handleWatch(client, watchDto);
   }
 }

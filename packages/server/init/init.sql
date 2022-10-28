@@ -29,10 +29,10 @@ ALTER TABLE "rank" ADD CONSTRAINT "FK_0319fdc8ba0d4c2f456815dafea" FOREIGN KEY (
 
 INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://cdn.intra.42.fr/users/dha.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (1, 'dha@student.42seoul.kr', true, 1);
-INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (1, 0, 0, 0, 1);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (1, 0, 2, 0, 1);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (2, 'junghan', 'https://cdn.intra.42.fr/users/junghan.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (2, 'junghan@student.42seoul.kr', false, 2);
-INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (2, 0, 0, 0, 2);
+INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (2, 0, 2, 0, 2);
 INSERT INTO "user" ("id", "nickname", "image") VALUES (3, 'doyun', 'https://cdn.intra.42.fr/users/doyun.jpg');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (3, 'doyun@student.42seoul.kr', false, 3);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (3, 0, 0, 0, 3);
@@ -77,4 +77,8 @@ INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "u
 INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (3, NULL, 0, NULL, NULL, NULL);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (1, 1, 3);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (2, 2, 3);
+
+INSERT INTO "game" ("id", "win", "ladder", "userId", "opponentId") VALUES (1, true, true, 1, 2);
+INSERT INTO "game" ("id", "win", "ladder", "userId", "opponentId") VALUES (2, true, true, 1, 2);
+INSERT INTO "game" ("id", "win", "ladder", "userId", "opponentId") VALUES (3, false, false, 1, 2);
 COMMIT;

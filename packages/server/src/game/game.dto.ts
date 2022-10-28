@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { UserDto } from 'src/users/dto/user.dto';
-import { User } from '../users/users.entity';
+import { Game, Rank, User } from '../users/users.entity';
 import { Socket } from 'socket.io';
 
 const GAME_MODE = {
@@ -18,6 +18,11 @@ const MOVE_DIR = {
 export type MOVE_DIR = typeof MOVE_DIR[keyof typeof MOVE_DIR];
 
 export class GameLadderDto {
+  constructor(rank: Rank) {
+    this.rank = rank.rank;
+    this.winCount = rank.win;
+    this.loseCount = rank.lose;
+  }
   @ApiProperty({ example: 1 })
   rank: number;
 
@@ -29,6 +34,13 @@ export class GameLadderDto {
 }
 
 export class GameRecordDto {
+  constructor(game: Game) {
+    const { id, win, ladder, opponent } = game;
+    this.id = id;
+    this.opponent = new UserDto(opponent.id, opponent.nickname, opponent.image);
+    this.isWin = win;
+    this.isLadder = ladder;
+  }
   @ApiProperty({ example: 1 })
   id: number;
 
@@ -60,6 +72,10 @@ export class MatchDto {
   userId: number;
 
   mode: GAME_MODE;
+}
+
+export class WatchDto {
+  userId: number;
 }
 
 export class MatchInfo {
