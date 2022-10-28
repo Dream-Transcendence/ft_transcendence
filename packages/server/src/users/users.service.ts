@@ -777,8 +777,9 @@ export class UserService {
   }
 
   async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
-    const request = await this.requestsRepository.findOneBy({
-      id: requestIdDto.id,
+    const request = await this.requestsRepository.findOne({
+      relations: ['requestor', 'responser'],
+      where: { id: requestIdDto.id },
     });
 
     await this.requestsRepository.delete(request.id);

@@ -2,8 +2,9 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../configs/Link.url';
+import { checkFriendRequestAtom } from '../../recoil/common.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData, FriendType } from '../../types/Profile.type';
 import FreindList from '../ProfileFreindList/FreindList';
@@ -28,13 +29,14 @@ export interface FriendPropsType {
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
 }
 
-export async function getFriendList(
+export async function getSetFriendList(
   id: string | undefined,
-  setFriendList: React.Dispatch<React.SetStateAction<FriendType[]>>,
+  setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
 ) {
   try {
     const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
-    setFriendList(response.data);
+    setter(response.data);
+    console.log('친구 목록을 최신화 하였습니다.');
   } catch (error) {
     alert(error);
     console.log(error);
@@ -43,12 +45,26 @@ export async function getFriendList(
 
 function ProfilePersonal() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const { userId } = useParams();
+  const { userId: paramsId } = useParams();
   const [friendList, setFriendList] = useState<FriendType[]>([]);
+  const [checkFriendRequest, setSheckFriendRequest] = useRecoilState(
+    checkFriendRequestAtom,
+  );
 
+  /**
+   * 친구 목록 최신화
+   */
   useEffect(() => {
-    getFriendList(userId, setFriendList);
-  }, [userId]);
+    //보고있는 화면이 본인 화면이면
+    console.log(user.id === Number(paramsId) ? '본인화면' : '상대화면');
+    if (user.id === Number(paramsId)) {
+      getSetFriendList(paramsId, setFriendList);
+      //보고있는 화면인 친구 화면이면
+    } else if (user.id !== Number(paramsId)) {
+      getSetFriendList(paramsId, setFriendList);
+    }
+    setSheckFriendRequest(false);
+  }, [paramsId, checkFriendRequest, user.id, setSheckFriendRequest]);
 
   const friendProps: FriendPropsType = {
     value: friendList,
@@ -56,7 +72,7 @@ function ProfilePersonal() {
   };
   return (
     <ProfilePersonalLayout>
-      {`${user.id}` === userId ? (
+      {`${user.id}` === paramsId ? (
         <UserInfo />
       ) : (
         <OtherInfo friendProps={friendProps} />

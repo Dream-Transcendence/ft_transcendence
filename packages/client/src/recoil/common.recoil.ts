@@ -5,3 +5,8 @@ export const inviteInfoListAtom = atom<InviteInfoListType[]>({
   key: 'inviteInfoListAtom',
   default: [],
 });
+
+export const checkFriendRequestAtom = atom<boolean>({
+  key: 'checkFriendRequestAtom',
+  default: false,
+});

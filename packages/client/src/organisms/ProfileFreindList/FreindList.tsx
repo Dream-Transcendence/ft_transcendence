@@ -19,7 +19,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom, userLogStateListAtom } from '../../recoil/user.recoil';
 import {
   FriendPropsType,
-  getFriendList,
+  getSetFriendList,
 } from '../ProfilePersonal/ProfilePersonal';
 import {
   FRIENDREQUESTACCEPTED,
@@ -96,84 +96,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
       setListElement(element);
     }
   }, [friendList, navigate]);
-
-  //친구 추가 수락 메시지 받기
-  useEffect(() => {
-    socket.on(FRIENDREQUESTACCEPTED, (response: BaseUserProfileData) => {
-      console.log('friendRequestAccepted', response);
-      if (response) {
-        const userData: FriendType = {
-          id: response.id,
-          user: {
-            id: response.id,
-            nickname: response.nickname,
-            image: response.image,
-          },
-          isBlocked: false,
-        };
-        if (id === Number(userId)) {
-          getFriendList(userId, setFriendList);
-        } else if (id !== Number(userId)) {
-          getFriendList(`${id}`, setFriendList);
-        }
-        // setFriendList([...friendList, userData]);
-        //   const otherProfileBoxProp: UserProfileBoxType = {
-        //     isButton: true,
-        //     avatarType: 'circle',
-        //     userData: userData,
-        //     action: () => {
-        //       navigate(`${PROFILEURL}/${response.id}`);
-        //     },
-        //   };
-        //   return (
-        //     <ListLayout key={response.id}>
-        //       <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
-        //     </ListLayout>
-        // );
-        // };
-        // console.log('상대방이 수락하였습니다.');
-        // const newList = () => {
-        //   const newList = listElement?.map((ele) => ele);
-        //   newList?.push(newFriend());
-        //   return newList;
-        // setListElement(newList());
-        /**
-         * 상대방 수락 확인 메시지 기록 추가
-         */
-        const reply = () => {
-          return {
-            userId: response.id,
-            message: `${response.nickname}님이 요청을 수락했습니다.`,
-            type: 'check',
-          };
-        };
-        console.log(inviteInfoList, 'to accecpt', reply);
-        setInviteInfoList([...inviteInfoList, reply()]);
-      }
-    });
-  }, []);
-
-  //친구 추가 거절 메시지 받기
-  useEffect(() => {
-    socket.on(REJECTFRIENDREQUEST, (response: BaseUserProfileData) => {
-      if (response) {
-        console.log('rejectFriendRequest', response);
-
-        /**
-         * 상대방 거절 확인 메시지 기록
-         */
-        const reply = () => {
-          return {
-            userId: response.id,
-            message: `${response.nickname}님이 요청을 거절했습니다.`,
-            type: 'check',
-          };
-        };
-        console.log(inviteInfoList, 'to reject', reply);
-        setInviteInfoList([...inviteInfoList, reply()]);
-      }
-    });
-  }, []);
 
   return (
     <FreindListLayout>

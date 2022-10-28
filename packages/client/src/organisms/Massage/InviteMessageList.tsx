@@ -9,8 +9,11 @@ import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TransitionGroup } from 'react-transition-group';
 import { InviteInfoListType } from '../../types/Message.type';
-import { useRecoilState } from 'recoil';
-import { inviteInfoListAtom } from '../../recoil/common.recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  checkFriendRequestAtom,
+  inviteInfoListAtom,
+} from '../../recoil/common.recoil';
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
@@ -25,6 +28,9 @@ import {
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
+import { getSetFriendList } from '../ProfilePersonal/ProfilePersonal';
+import { userDataAtom } from '../../recoil/user.recoil';
+import { useParams } from 'react-router-dom';
 
 const InviteMessageListLayout = styled('div')(({ theme }) => ({
   bottom: '500px',
@@ -43,14 +49,25 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 
 function InviteMessageList() {
   const [socket] = useSocket(userNameSpace);
+  const { id } = useRecoilValue(userDataAtom);
+  const { userId } = useParams();
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-
+  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
+    checkFriendRequestAtom,
+  );
+  /**
+   * 요청 수락
+   */
   const handleAcceptMessage = (info: InviteInfoListType) => {
     if (info.type === 'friend') {
       socket.emit(ACCEPTFRIENDREQUEST, {
         id: info.id,
       });
+      //디비에 저장하는 시간이 필요함
+      setTimeout(() => {
+        setCheckFriendRequest(true);
+      }, 1000);
     } else if (info.type === 'game') {
       socket.emit(ACCEPTGAME, {
         hostId: info.userId,
@@ -63,6 +80,9 @@ function InviteMessageList() {
     });
   };
 
+  /**
+   * 요청 거절
+   */
   const handleRejecttMessage = (info: InviteInfoListType) => {
     if (info.type === 'friend') {
       socket.emit(REJECTFRIENDREQUEST, {
@@ -73,12 +93,15 @@ function InviteMessageList() {
         id: info.userId,
       });
     }
-    //수락을 눌렀습니다.
+    //거절을 눌렀습니다.
     setInviteInfoList((prev) => {
       return [...prev.filter((i) => i !== info)];
     });
   };
 
+  /**
+   * 단순 확인 이벤트
+   */
   const handleCheckMessage = (info: InviteInfoListType) => {
     setInviteInfoList((prev) => {
       return [...prev.filter((i) => i !== info)];
