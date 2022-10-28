@@ -274,7 +274,7 @@ export class RoomService {
     if (name !== undefined) room.name = name;
     if (salt && salt !== '') {
       room.type = 2;
-      const genSalt = await bcrypt.gentSalt();
+      const genSalt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(salt, genSalt);
       room.salt = hashedPassword;
     } else if (salt === '') {
