@@ -251,8 +251,8 @@ export class GameService {
       } else if (x + dx > canvasWidth - ballDiameter || x + dx < 0) {
         this.gameInfoMap.get(title).ballPos.x = 512;
         this.gameInfoMap.get(title).ballPos.y = 310;
-        this.gameInfoMap.get(title).ballSpeed.y = -10;
-        this.gameInfoMap.get(title).ballSpeed.x = 10;
+        this.gameInfoMap.get(title).ballSpeed.y = -20;
+        this.gameInfoMap.get(title).ballSpeed.x = 20;
         this.gameInfoMap.get(title).paddlePos.left = (620 - 186) / 2;
         this.gameInfoMap.get(title).paddlePos.right = 0;
 
@@ -311,23 +311,32 @@ export class GameService {
     const paddleHeight = this.paddleHeight;
 
     let movement;
-    if (this.gameInfoMap.get(title).size === 0.5) movement = 5;
-    else movement = 10;
+    if (this.gameInfoMap.get(title).size === 0.5) movement = 10;
+    else movement = 20;
     if (!moveDir) movement = -movement;
 
-    if (
-      playerId === this.gameInfoMap.get(title).player.left.id &&
-      0 < leftPaddleY + movement &&
-      leftPaddleY + movement < canvasHeight - paddleHeight
-    ) {
+    if (playerId === this.gameInfoMap.get(title).player.left.id)
+    { 
+      if(0 > leftPaddleY + movement) {
+        this.gameInfoMap.get(title).paddlePos.left = 0;
+      } else if(leftPaddleY + movement >    canvasHeight - paddleHeight)
+      {
+        this.gameInfoMap.get(title).paddlePos.left = canvasHeight - paddleHeight;
+      } else {
       this.gameInfoMap.get(title).paddlePos.left += movement;
-    } else if (
-      playerId === this.gameInfoMap.get(title).player.right.id &&
-      0 < rightPaddleY + movement &&
-      rightPaddleY + movement < canvasHeight - paddleHeight
-    ) {
+    }}
+
+    if (playerId === this.gameInfoMap.get(title).player.right.id)
+    { 
+      if(
+      0 > rightPaddleY + movement) {
+        this.gameInfoMap.get(title).paddlePos.right = 0;
+      } else if(rightPaddleY + movement >    canvasHeight - paddleHeight)
+      {
+        this.gameInfoMap.get(title).paddlePos.right = canvasHeight - paddleHeight;
+      } else {
       this.gameInfoMap.get(title).paddlePos.right += movement;
-    }
+    }}
   }
 
   handleGameSize(client: Socket, sizeDto: SizeDto) {

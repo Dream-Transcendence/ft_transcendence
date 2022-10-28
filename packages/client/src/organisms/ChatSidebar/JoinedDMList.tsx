@@ -74,8 +74,10 @@ function JoinedDMListOrganisms() {
   const [socket] = useSocket(chatNameSpace);
 
   useEffect(() => {
-    setRoomList(joinedChatList.dmList);
-  }, [joinedChatList.dmList, setRoomList]);
+    if (joinedChatList !== null) {
+      setRoomList(joinedChatList.dmList);
+    }
+  }, [joinedChatList, setRoomList]);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {

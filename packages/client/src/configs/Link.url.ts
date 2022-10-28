@@ -5,5 +5,6 @@ export const GAMEPLAYURL = '/pingpong/game/play';
 export const CHATROOMURL = '/pingpong/channel/room/';
 export const CHATDMURL = '/pingpong/channel/DM';
 export const CHANNELURL = '/pingpong/channel/';
+export const NOTFOUNDURL = '/404';
 export const SERVERURL = 'http://localhost:3000';
 export const SOCKETURL = 'http://localhost:4242';

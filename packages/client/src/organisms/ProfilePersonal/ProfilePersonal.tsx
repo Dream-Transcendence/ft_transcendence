@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../configs/Link.url';
-import { userDataAtom } from '../../recoil/user.recoil';
-import { BaseUserProfileData, FriendType } from '../../types/Profile.type';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserSecondAuth,
+} from '../../types/Profile.type';
 import FreindList from '../ProfileFreindList/FreindList';
 import OtherInfo from '../ProfileUserInfo/OtherInfo';
 import UserInfo from '../ProfileUserInfo/UserInfo';
@@ -31,6 +35,8 @@ export interface FriendPropsType {
 function ProfilePersonal() {
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { userId } = useParams();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const userData = useRecoilValue(userDataAtom);
   const [friendList, setFriendList] = useState<FriendType[]>([
     {
       id: 0,
@@ -55,7 +61,9 @@ function ProfilePersonal() {
         console.log(error);
       }
     }
-    getFriendList();
+    if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+      getFriendList();
+    }
   }, [userId]);
 
   const friendProps: FriendPropsType = {

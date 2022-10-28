@@ -6,6 +6,11 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
+import { UserSecondAuth } from '../../types/Profile.type';
 
 const ChattingRoomListLayout = styled('div')(({ theme }) => ({
   width: '97%',
@@ -18,6 +23,16 @@ const ChattingRoomListLayout = styled('div')(({ theme }) => ({
  */
 //[수정사항] DTO 확정되면 수정할 것 any => ChannelDto[]
 function ChatRoomListTemplate(props: { roomList: any[] }) {
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
+
   const roomList = props.roomList;
   const listElement: React.ReactElement[] = roomList.map((room: any) => {
     return (

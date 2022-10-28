@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { CUSTOM, LADDER } from '../configs/Game.type';
 import { PROFILEURL } from '../configs/Link.url';
-import { gameTypeAtom, userDataAtom } from '../recoil/user.recoil';
+import {
+  gameTypeAtom,
+  userDataAtom,
+  userSecondAuth,
+} from '../recoil/user.recoil';
 import {
   ALREADYFORMATCH,
   GAMECANCLE,
@@ -12,6 +16,7 @@ import {
 } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
+import { UserSecondAuth } from '../types/Profile.type';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
@@ -19,6 +24,15 @@ import GamePlayPage from './GamePlayPage';
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const [gameInfo, setGameInfo] = useState<GameRoomDto | undefined>();
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   const gameInfoProps: gameInfoPropsType = {
     value: gameInfo,

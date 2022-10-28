@@ -22,7 +22,7 @@ import {
   ResponsiveGameProps,
   ScoreProps,
 } from '../../types/Game.type';
-import { DOWN, LARGE, SMALL, STOP, UP } from '../../configs/Game.type';
+import { DOWN, LARGE, NORMALBALLMODE, SIZEDOWN, SMALL, SMALLBALLMODE, STOP, UP } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -173,11 +173,12 @@ const ScoreLayout = styled('span')(({ theme }) => ({
   marginBottom: '4%',
   color: '#ffdd',
   width: `100%`,
-  height: `20%`,
+  height: `10%`,
+  minHeight: '80px',
 }));
 
 const LeftUserProfile = styled('div')(({ theme }) => ({
-  width: '12%',
+  width: '2%',
   height: '60%',
   zIndex: '2',
   marginTop: '8%',
@@ -186,7 +187,7 @@ const LeftUserProfile = styled('div')(({ theme }) => ({
 }));
 
 const RightUserProfile = styled('div')(({ theme }) => ({
-  width: '12%',
+  width: '2%',
   height: '60%',
   marginTop: '8%',
   marginLeft: '50%',
@@ -211,11 +212,11 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   });
   const [theme, setTheme] = useState<ResponsiveGameProps>(smallTheme);
   const [size, setSize] = useState<number>(SMALL);
+  const [ballMode, setBallMode] = useState<number>(NORMALBALLMODE);
   const [windowSize, setWindowSize] = useState<GameWindowInfo>({
     width: window.innerWidth,
     height: window.innerHeight,
   });
-  const [moveDir, setMoveDir] = useState<number>(STOP);
   const defaultUser: UserProfileBoxDataType = {
     id: 0,
     nickname: '',
@@ -225,6 +226,11 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   const handleOpen = () => {
     setOpen(true);
   };
+
+  useEffect(() => {
+    if (gameInfo?.mode === SIZEDOWN)
+    setBallMode(SMALLBALLMODE);
+  }, []);
 
   /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
   useEffect(() => {
@@ -261,23 +267,16 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
     const getGameProcess = () => {
       socket.on(`${GAMEPROCESS}`, (res) => {
         if (time > 0) setTime(0);
-        if (res.size === LARGE) {
-          setTheme(largeTheme);
-          setSize(LARGE);
-        } else {
-          setTheme(smallTheme);
-          setSize(SMALL);
-        }
         setOffset({
-          ballPosX: res.ballPos.x,
-          ballPosY: res.ballPos.y,
-          LeftPaddlePosY: res.paddlePos.left,
-          RightPaddlePosY: res.paddlePos.right,
+          ballPosX: res.ballPos.x * size,
+          ballPosY: res.ballPos.y * size,
+          LeftPaddlePosY: res.paddlePos.left * size,
+          RightPaddlePosY: res.paddlePos.right * size,
         });
       });
     };
     getGameProcess();
-  }, [IsStart, time, offset, setOffset]);
+  }, [IsStart, time, offset, setOffset, size]);
 
   /* 게임 결과를 산정하고, 조건 미달 시, 재시작을 위한 상태초기화 */
   useEffect(() => {
@@ -306,27 +305,21 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
       width: window.innerWidth,
       height: window.innerHeight,
     });
-    console.log(
-      'window size:',
-      window.innerHeight,
-      window.innerWidth,
-      windowSize,
-    );
   }
 
   /*변경된 사이즈를 분석하여 현재 테마의 크기상태를 변경하는 로직 */
   useEffect(() => {
     if (
       windowSize.width >= largeTheme.canvasImgProps.width + 400 &&
-      windowSize.height >= largeTheme.canvasImgProps.height + 500
+      windowSize.height >= largeTheme.canvasImgProps.height + 700
     ) {
       if (size === SMALL) {
         setSize(LARGE);
         setTheme(largeTheme);
       }
     } else if (
-      windowSize.width < largeTheme.canvasImgProps.width + 300 ||
-      windowSize.height < largeTheme.canvasImgProps.height - 100
+      windowSize.width < largeTheme.canvasImgProps.width + 400 ||
+      windowSize.height < largeTheme.canvasImgProps.height + 700
     ) {
       if (size === LARGE) {
         setSize(SMALL);
@@ -345,76 +338,30 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
     };
   }, [windowSize]);
 
-  /* 사이즈 변경 사항을 서버에 알려주는 로직 */
-  useEffect(() => {
-    socket.emit(`${RESIZEWINDOW}`, {
-      title: gameInfo?.title,
-      size: size,
-    });
-  }, [size]);
-
   useEffect(() => {
     /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
-    window.addEventListener('keydown', (e) => {
-      // console.log('keyevent', e.key, e.key === 'ArrowUp');
-      if (e.key === 'ArrowUp') {
-        socket.emit(`${MOVEPADDLE}`, {
-          title: gameInfo?.title,
-          playerId: userData.id,
-          moveDir: UP,
-        });
-        console.log('keyevent', e.key, 'ArrowUp');
-      } else if (e.key === 'ArrowDown') {
-        socket.emit(`${MOVEPADDLE}`, {
-          title: gameInfo?.title,
-          playerId: userData.id,
-          moveDir: DOWN,
-        });
-        console.log('keyevent', e.key, 'ArrowDown');
-      }
-    });
+    // 관전유저가 들어올 경우, 이벤트 처리  막아줌
+    if (userData.id === gameInfo?.leftPlayer.id || userData.id === gameInfo?.rightPlayer.id) {
+      window.addEventListener('keydown', (e) => {
+        // console.log('keyevent', e.key, e.key === 'ArrowUp');
+        if (e.key === 'ArrowUp') {
+          socket.emit(`${MOVEPADDLE}`, {
+            title: gameInfo?.title,
+            playerId: userData.id,
+            moveDir: UP,
+          });
+          console.log('keyevent', e.key, 'ArrowUp');
+        } else if (e.key === 'ArrowDown') {
+          socket.emit(`${MOVEPADDLE}`, {
+            title: gameInfo?.title,
+            playerId: userData.id,
+            moveDir: DOWN,
+          });
+          console.log('keyevent', e.key, 'ArrowDown');
+        }
+      });
+    }
   }, []);
-
-  /* 상태관리를 통한 게임 구현 */
-
-  // useEffect(() => {
-  //   window.addEventListener('keydown', (e) => {
-  //     console.log('???lkkk??? ', moveDir);
-  //     // console.log('keyevent', e.key, e.key === 'ArrowUp');
-  //     if (e.key === 'ArrowUp') {
-  //       console.log('up', moveDir);
-  //       setMoveDir(STOP);
-  //       setMoveDir(UP);
-  //     } else if (e.key === 'ArrowDown') {
-  //       console.log('down', moveDir);
-  //       setMoveDir(STOP);
-  //       setMoveDir(DOWN);
-  //     }
-  //   });
-  // }, [setMoveDir]);
-
-  // useEffect(() => {
-  //   console.log('??? stopr??? ', moveDir);
-  //   if (moveDir !== STOP) {
-  //     // socket.emit(`${MOVEPADDLE}`, {
-  //     //   title: '',
-  //     //   playerId: userData.id,
-  //     //   moveDir: moveDir,
-  //     // });
-  //     // setMoveDir(null);
-  //     if (moveDir === UP) {
-  //       console.log('STOP up', moveDir);
-  //       setMoveDir(STOP);
-  //     } else if (moveDir === DOWN) {
-  //       console.log('STOP down', moveDir);
-  //       setMoveDir(STOP);
-  //     }
-  //   }
-  // }, [moveDir, setMoveDir]);
-
-  // const handleKeyDown = (event) => {
-  //   console.log;
-  // };
 
   const leftPlayerProfile: UserProfileBoxType = {
     isButton: false,
@@ -424,7 +371,7 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
 
   const rightPlayerProfile: UserProfileBoxType = {
     isButton: false,
-    avatarType: 'circle',
+    avatarType: 'default',
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
@@ -433,12 +380,10 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
       <GameLayout>
         <ScoreLayout>
           <LeftUserProfile>
-            {' '}
             <UserProfileBox userProfileBoxProps={leftPlayerProfile} />
           </LeftUserProfile>
           {score?.left} : {score?.right}
           <RightUserProfile>
-            {' '}
             <UserProfileBox userProfileBoxProps={rightPlayerProfile} />
           </RightUserProfile>
         </ScoreLayout>
@@ -463,7 +408,7 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
               posY={offset.LeftPaddlePosY}
             />
             <BallLayout
-              diameter={theme.ballProps.diameter}
+              diameter={theme.ballProps.diameter * ballMode}
               posX={offset.ballPosX}
               posY={offset.ballPosY}
             />

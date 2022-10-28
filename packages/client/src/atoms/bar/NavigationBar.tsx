@@ -36,7 +36,7 @@ import { LADDER } from '../../configs/Game.type';
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '100%',
-  minWidth: '100px',
+  minWidth: '1200px',
   display: 'flex',
 }));
 
