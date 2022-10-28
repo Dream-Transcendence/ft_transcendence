@@ -51,7 +51,7 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
+function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
   //chatpage에 있있던  비번 옮겨옴
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;

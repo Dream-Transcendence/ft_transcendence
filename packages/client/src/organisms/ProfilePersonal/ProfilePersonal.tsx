@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import { SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import {
   BaseUserProfileData,
@@ -37,6 +37,7 @@ function ProfilePersonal() {
   const { userId } = useParams();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
   const [friendList, setFriendList] = useState<FriendType[]>([
     {
       id: 0,
@@ -49,16 +50,17 @@ function ProfilePersonal() {
     },
   ]);
 
+  //[수정사항] DB에 없는 유저를 호출할 경우, [] 빈배열만 와서 진짜 친구가없는 유저와 구분하기가 힘듦
   useEffect(() => {
     async function getFriendList() {
       try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/friends`,
-        );
-        setFriendList(response.data);
+        await axios.get(`${SERVERURL}/users/${userId}/friends`).then((res) => {
+          console.log(res.data);
+          setFriendList(res.data);
+        });
       } catch (error) {
-        alert(error);
-        console.log(error);
+        alert('존재하지 않는 프로필입니다.');
+        navigate('/'); //[수정사항] 게임후 가끔 서버가 내려감 원인찾아야함 존재하지 않는프로필처리
       }
     }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {

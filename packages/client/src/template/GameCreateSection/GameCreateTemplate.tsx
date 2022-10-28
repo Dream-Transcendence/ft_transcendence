@@ -54,7 +54,6 @@ function GameCreateTemplate() {
     setUserGameType(CUSTOM);
   };
 
-  //[수정사항] gameloading으로 넘어가야함
   const EnterGame: LinkComponentResource = {
     url: GAMELOADINGURL,
     component: <Button onClick={setNomal}>Invite</Button>,

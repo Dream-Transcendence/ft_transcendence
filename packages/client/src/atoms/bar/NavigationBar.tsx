@@ -66,7 +66,7 @@ function NavigationBar() {
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: GAMELOADINGURL, //[수정사항][게임]임시 수정 doyun님 작업끝나면 원래대로 돌릴 것
+    url: GAMELOADINGURL,
     // url: GAMEPLAYURL + '1',
     // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,

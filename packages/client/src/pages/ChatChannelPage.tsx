@@ -5,7 +5,7 @@ import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTempla
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { CHANNELURL } from '../configs/Link.url';
+import { CHANNELURL, NOTFOUNDURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
 import useSocket from '../socket/useSocket';
@@ -106,6 +106,7 @@ function ChatroomPage() {
             ) : (
               <Route path="/" element={<ChatRoomDefaultTemplate />} />
             )}
+            <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
             {/* <Route path="*" element={<Navigate replace to={CHANNELURL} />} /> */}
           </Routes>
         </Section>

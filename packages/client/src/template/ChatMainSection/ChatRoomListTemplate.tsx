@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { UserSecondAuth } from '../../types/Profile.type';
+import { UnJoinedRoomList } from '../../types/Room.type';
 
 const ChattingRoomListLayout = styled('div')(({ theme }) => ({
   width: '97%',
@@ -21,8 +22,7 @@ const ChattingRoomListLayout = styled('div')(({ theme }) => ({
 /*
  * public, protect, 가입된 방 제외 채팅방 목록을 나타내는 템플릿입니다.
  */
-//[수정사항] DTO 확정되면 수정할 것 any => ChannelDto[]
-function ChatRoomListTemplate(props: { roomList: any[] }) {
+function ChatRoomListTemplate(props: { roomList: UnJoinedRoomList[] }) {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
@@ -34,13 +34,15 @@ function ChatRoomListTemplate(props: { roomList: any[] }) {
   }, [userData.id, passSecondOauth, navigate]);
 
   const roomList = props.roomList;
-  const listElement: React.ReactElement[] = roomList.map((room: any) => {
-    return (
-      <ListLayout key={room.id}>
-        <ChatRoomElementOrganisms roomInfo={room} />
-      </ListLayout>
-    );
-  });
+  const listElement: React.ReactElement[] = roomList.map(
+    (room: UnJoinedRoomList) => {
+      return (
+        <ListLayout key={room.id}>
+          <ChatRoomElementOrganisms roomInfo={room} />
+        </ListLayout>
+      );
+    },
+  );
 
   return (
     <ChattingRoomListLayout>

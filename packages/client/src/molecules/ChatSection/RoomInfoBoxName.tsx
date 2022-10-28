@@ -65,7 +65,6 @@ const divStyle = {
   color: 'white',
 };
 
-//[수정사항] any => ChannelDto
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
