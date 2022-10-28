@@ -29,6 +29,7 @@ import { Socket } from 'socket.io';
 import { v4 as uuidv4 } from 'uuid';
 import { WsException } from '@nestjs/websockets';
 import * as AWS from 'aws-sdk';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class RoomService {
@@ -60,11 +61,14 @@ export class RoomService {
       .getRawOne();
     if (maxRoomId != null) roomRowId = maxRoomId.id + 1;
 
+    const genSalt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(salt, genSalt);
+
     let room = this.roomsRepository.create({
       id: roomRowId,
       name,
       type,
-      salt,
+      salt: hashedPassword,
       title: uuidv4(),
     });
     room = await this.roomsRepository.save(room);
@@ -270,7 +274,9 @@ export class RoomService {
     if (name !== undefined) room.name = name;
     if (salt && salt !== '') {
       room.type = 2;
-      room.salt = salt;
+      const genSalt = await bcrypt.gentSalt();
+      const hashedPassword = await bcrypt.hash(salt, genSalt);
+      room.salt = hashedPassword;
     } else if (salt === '') {
       room.type = 1;
       room.salt = null;
@@ -393,7 +399,7 @@ export class RoomService {
         where: { user: { id: userId }, room: { id: roomId } },
       });
       if (!participant) {
-        if (room.type == 2 && salt !== room.salt)
+        if (room.type == 2 && !(await bcrypt.compare(salt, room.salt)))
           throw new WsException('Password is not correct');
 
         const maxId = await this.channelParticipantsRepository
