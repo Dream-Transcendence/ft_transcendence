@@ -125,13 +125,23 @@ export class GameService {
 
   async addGameResult(addGameResultDto: AddGameResultDto) {
     const { players, score, mode } = addGameResultDto;
+
+    let id = 1;
+    const rank = await this.gamesRepository
+      .createQueryBuilder('game')
+      .select('MAX(rank.id)', 'id')
+      .getRawOne();
+    if (rank.id !== null) id = rank.id + 1;
+
     const result1 = this.gamesRepository.create({
+      id,
       win: score.left > score.right ? true : false,
       ladder: mode === 0 ? true : false,
       user: players.left,
       opponent: players.right,
     });
     const result2 = this.gamesRepository.create({
+      id: id + 1,
       win: score.left < score.right ? true : false,
       ladder: mode === 0 ? true : false,
       user: players.right,
