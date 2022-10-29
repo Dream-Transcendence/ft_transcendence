@@ -4299,6 +4299,9 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bcryptjs@^2.4.2":
+  "version" "2.4.2"
+
 "@types/body-parser@*":
   "integrity" "sha512-ALYone6pm6QmwZoAgeyNksccT9Q4AWZQ6PvfwR37GT6r6FWUPguq6sUmNGSMV2Wr761oQoBxwGGa6DR5o1DC9g=="
   "resolved" "https://registry.npmjs.org/@types/body-parser/-/body-parser-1.19.2.tgz"
@@ -6222,7 +6225,7 @@
   "resolved" "https://registry.npmjs.org/cli-width/-/cli-width-3.0.0.tgz"
   "version" "3.0.0"
 
-"client@file:/Users/songju/Desktop/ft_transcendence/packages/client":
+"client@file:/Users/dha/dev/ft_transcendence/packages/client":
   "resolved" "file:packages/client"
   "version" "0.1.0"
   dependencies:
@@ -10930,11 +10933,7 @@
     "js-tokens" "^3.0.0 || ^4.0.0"
 
 "lower-case@^1.1.1":
-  "integrity" "sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg=="
-  "resolved" "https://registry.npmjs.org/lower-case/-/lower-case-2.0.2.tgz"
-  "version" "2.0.2"
-  dependencies:
-    "tslib" "^2.0.3"
+  "version" "1.1.4"
 
 "lower-case@^2.0.2":
   "integrity" "sha512-7fm3l3NAF9WfN6W3JOmf5drwpVqX78JtoGJ3A6W0a6ZnldM41w2fV5D490psKFTpMds8TJse/eHLFFsNHHjHgg=="
@@ -11910,7 +11909,17 @@
     "is-docker" "^2.0.0"
     "is-wsl" "^2.1.1"
 
-"optionator@^0.8.1", "optionator@^0.9.1":
+"optionator@^0.8.1":
+  "version" "0.8.3"
+  dependencies:
+    "deep-is" "~0.1.3"
+    "fast-levenshtein" "~2.0.6"
+    "levn" "~0.3.0"
+    "prelude-ls" "~1.1.2"
+    "type-check" "~0.3.2"
+    "word-wrap" "~1.2.3"
+
+"optionator@^0.9.1":
   "integrity" "sha512-74RlY5FCnhq4jRxVUPKDaRwrVNXMqsGsiW6AJw4XK8hmtm10wC0ypZBLw5IIp85NZMr91+qd1RvvENwg7jjRFw=="
   "resolved" "https://registry.npmjs.org/optionator/-/optionator-0.9.1.tgz"
   "version" "0.9.1"
@@ -13554,7 +13563,7 @@
     "parse-json" "^5.0.0"
     "type-fest" "^0.6.0"
 
-"readable-stream@^2.0.1":
+"readable-stream@^2.0.1", "readable-stream@^2.2.2":
   "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
   "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
   "version" "2.3.7"
@@ -13567,18 +13576,12 @@
     "string_decoder" "~1.1.1"
     "util-deprecate" "~1.0.1"
 
-"readable-stream@^2.2.2", "readable-stream@^3.0.6":
-  "integrity" "sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw=="
-  "resolved" "https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz"
-  "version" "2.3.7"
+"readable-stream@^3.0.6":
+  "version" "3.6.0"
   dependencies:
-    "core-util-is" "~1.0.0"
-    "inherits" "~2.0.3"
-    "isarray" "~1.0.0"
-    "process-nextick-args" "~2.0.0"
-    "safe-buffer" "~5.1.1"
-    "string_decoder" "~1.1.1"
-    "util-deprecate" "~1.0.1"
+    "inherits" "^2.0.3"
+    "string_decoder" "^1.1.1"
+    "util-deprecate" "^1.0.1"
 
 "readable-stream@^3.4.0":
   "integrity" "sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA=="
@@ -14163,7 +14166,7 @@
     "parseurl" "~1.3.3"
     "send" "0.18.0"
 
-"server@file:/Users/songju/Desktop/ft_transcendence/packages/server":
+"server@file:/Users/dha/dev/ft_transcendence/packages/server":
   "resolved" "file:packages/server"
   "version" "0.0.1"
   dependencies:
@@ -14182,6 +14185,7 @@
     "@nestjs/websockets" "^9.1.2"
     "@types/dotenv" "^8.2.0"
     "aws-sdk" "^2.1238.0"
+    "bcryptjs" "^2.4.3"
     "class-transformer" "^0.5.1"
     "class-validator" "^0.13.2"
     "cookie-parser" "^1.4.6"
@@ -15157,26 +15161,7 @@
     "micromatch" "^4.0.0"
     "semver" "^7.3.4"
 
-"ts-node@^10.0.0", "ts-node@^10.7.0", "ts-node@>=9.0.0":
-  "integrity" "sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw=="
-  "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
-  "version" "10.9.1"
-  dependencies:
-    "@cspotcode/source-map-support" "^0.8.0"
-    "@tsconfig/node10" "^1.0.7"
-    "@tsconfig/node12" "^1.0.7"
-    "@tsconfig/node14" "^1.0.0"
-    "@tsconfig/node16" "^1.0.2"
-    "acorn" "^8.4.1"
-    "acorn-walk" "^8.1.1"
-    "arg" "^4.1.0"
-    "create-require" "^1.1.0"
-    "diff" "^4.0.1"
-    "make-error" "^1.1.1"
-    "v8-compile-cache-lib" "^3.0.1"
-    "yn" "3.1.1"
-
-"ts-node@^10.8.1", "ts-node@>=10":
+"ts-node@^10.0.0", "ts-node@^10.7.0", "ts-node@^10.8.1", "ts-node@>=10", "ts-node@>=9.0.0":
   "integrity" "sha512-NtVysVPkxxrwFGUUxGYhfux8k78pQB3JqYBXlLRZgdGUqTO5wU/UyHop5p70iEbGhB7q5KmiZiU0Y3KlJrScEw=="
   "resolved" "https://registry.npmjs.org/ts-node/-/ts-node-10.9.1.tgz"
   "version" "10.9.1"
