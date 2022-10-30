@@ -4,6 +4,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Equal, Repository, In, Not } from 'typeorm';
 import { ChannelParticipant, Message, Room } from '../chats/rooms.entity';
@@ -30,6 +31,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { WsException } from '@nestjs/websockets';
 import * as AWS from 'aws-sdk';
 import * as bcrypt from 'bcryptjs';
+import { AuthorizationError } from 'passport-oauth2';
 
 @Injectable()
 export class RoomService {
@@ -106,6 +108,11 @@ export class RoomService {
   }
 
   async getChannels(userId: number): Promise<ChannelInfoDto[]> {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+    if (!user)
+      throw new NotFoundException(`유저(${userId})를 찾을 수 없습니다.`);
     const roomType = [1, 2];
     const channelLists = await this.roomsRepository.find({
       where: { type: In(roomType) },
@@ -152,6 +159,12 @@ export class RoomService {
     });
     // room이 dm일 때
     if (room.type == 0) {
+      const user = await this.dmParticipantsRepository.findOne({
+        relations: ['user'],
+        where: { room: { id: roomId }, user: { id: userId } },
+      });
+      if (!user)
+        throw new NotFoundException(`채널(${roomId}) 참여자가 아닙니다.`);
       const participant = await this.dmParticipantsRepository.findOne({
         relations: { user: true },
         where: { room: { id: roomId }, user: { id: Not(userId) } },
@@ -178,6 +191,8 @@ export class RoomService {
       const user = await this.channelParticipantsRepository.findOne({
         where: { room: { id: roomId }, user: { id: userId } },
       });
+      if (!user)
+        throw new NotFoundException(`채널(${roomId}) 참여자가 아닙니다.`);
       const roomInfo = {
         id: room.id,
         name: room.name,
@@ -195,6 +210,12 @@ export class RoomService {
     userId: number,
     roomId: number,
   ): Promise<ChannelParticipantDto[]> {
+    const user = await this.channelParticipantsRepository.findOne({
+      relations: ['user'],
+      where: { room: { id: roomId }, user: { id: userId } },
+    });
+    if (!user)
+      throw new NotFoundException(`채널(${roomId}) 참여자가 아닙니다.`);
     const blockUsers = await this.blocksRepository.find({
       relations: { blockedUser: true },
       where: { user: { id: userId } },
@@ -230,9 +251,9 @@ export class RoomService {
       );
       results.push(result);
     });
-    const user = results.filter((result) => result.user.id == userId);
+    const users = results.filter((result) => result.user.id == userId);
     const participants = results.filter((result) => result.user.id != userId);
-    return [user[0], ...participants];
+    return [users[0], ...participants];
   }
 
   async postChannelImage(roomId: number, file: Express.Multer.File) {
@@ -252,7 +273,7 @@ export class RoomService {
       await this.roomsRepository.save(room);
     } catch (error) {
       console.log(error);
-      throw new InternalServerErrorException();
+      throw new InternalServerErrorException('이미지 업로드를 실패했습니다.');
     }
 
     const channelDto = new ChannelDto(
@@ -351,7 +372,26 @@ export class RoomService {
   async getMessages(
     roomId: number,
     messageId: number,
+    userId: number,
   ): Promise<GetMessageDto[]> {
+    const room = await this.roomsRepository.findOneBy({ id: roomId });
+    if (!room) throw new NotFoundException(`Can't find room ${roomId}`);
+    if (room.type === 0) {
+      const dmParticipant = await this.dmParticipantsRepository.findOne({
+        relations: ['user', 'room'],
+        where: { room: { id: roomId }, user: { id: userId } },
+      });
+      if (!dmParticipant)
+        throw new UnauthorizedException('채팅방에 포함되지 않은 유저입니다.');
+    } else {
+      const channelParticipant =
+        await this.channelParticipantsRepository.findOne({
+          relations: ['user', 'room'],
+          where: { room: { id: roomId }, user: { id: userId } },
+        });
+      if (!channelParticipant)
+        throw new UnauthorizedException('채팅방에 포함되지 않은 유저입니다.');
+    }
     const msgs = await this.messagesRepository.find({
       relations: { user: true },
       where: { room: { id: roomId } },

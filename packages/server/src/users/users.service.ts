@@ -10,7 +10,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GetUserRoomDto, GetUserRoomsDto } from 'src/chats/dto/rooms.dto';
 import { ChannelParticipant, DmParticipant } from 'src/chats/rooms.entity';
-import { EntityNotFoundError, Like, Not, Repository } from 'typeorm';
+import { Like, Not, Repository } from 'typeorm';
 import { AuthUserDto } from './dto/auth-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PatchNicknameDto } from './dto/patch-user.dto';
@@ -110,7 +110,6 @@ export class UserService {
 
   async getUser(id: number): Promise<UserDto> {
     const user = await this.usersRepository.findOne({ where: [{ id: id }] });
-    // if (user === null) throw new EntityNotFoundError(User, id);
 
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     const userDto = new UserDto(user.id, user.nickname, user.image);
@@ -200,7 +199,8 @@ export class UserService {
       relations: { user: true },
       where: { user: { id: id } },
     });
-    // if (auth === null) throw new EntityNotFoundError(Auth, id);
+    if (auth === null)
+      throw new NotFoundException('유저의 인증 정보가 없습니다.');
 
     const authUserDto = new AuthUserDto();
     authUserDto.authenticated = auth.authenticated;
@@ -421,7 +421,7 @@ export class UserService {
     const friend = await this.usersRepository.findOne({
       where: [{ id: friendId }],
     });
-    if (friend === null) throw new EntityNotFoundError(User, friendId);
+    if (friend === null) throw new NotFoundException('없는 유저입니다.');
 
     let rowId = 1;
     const maxFriendId = await this.friendsRepository
@@ -464,6 +464,8 @@ export class UserService {
   }
 
   async getFriends(id: number): Promise<FriendDto[]> {
+    const user = await this.usersRepository.findOne({ where: [{ id: id }] });
+    if (user === null) throw new NotFoundException('유저가 존재하지 않습니다.');
     // SELECT * FROM public."friend"
     // LEFT JOIN "user" ON "user"."id" = friendId
     // WHERE "friend"."userId = "user"."id";
@@ -506,7 +508,8 @@ export class UserService {
     const responser = await this.usersRepository.findOne({
       where: [{ id: responserId }],
     });
-    if (responser === null) throw new EntityNotFoundError(User, responserId);
+    if (responser === null)
+      throw new NotFoundException('유저가 존재하지 않습니다.');
 
     const duplicateRequestCheck = await this.requestsRepository.findOne({
       where: { requestor: { id: requestorId }, responser: { id: responserId } },
