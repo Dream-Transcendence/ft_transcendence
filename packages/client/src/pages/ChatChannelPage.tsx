@@ -29,14 +29,15 @@ const MainSection = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  backgroundColor: '#6BADE2',
+  background:
+    'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
   flex: 1,
 }));
 
 const Section = styled('section')(({ theme }) => ({
   width: '59%',
   height: '100%',
-  backgroundColor: '#231ab4',
+  backgroundColor: '#231ab4dd',
 }));
 
 const Aside = styled('aside')(({ theme }) => ({

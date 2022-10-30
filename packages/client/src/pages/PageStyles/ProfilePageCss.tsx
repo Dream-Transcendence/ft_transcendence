@@ -5,6 +5,8 @@ export const ProfileLayout = styled('div')(({ theme }) => ({
   display: 'grid',
   placeContent: 'end',
   backgroundColor: '#6BADE2',
+  // background:
+  //   'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
   height: '90%',
   width: '100%',
   gridTemplateColumns: '4fr 5fr',
@@ -30,6 +32,8 @@ export const ProfilePageLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   backgroundColor: '#6BADE2',
+  // background:
+  //   'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
   height: '100%',
   width: '100%',
 }));

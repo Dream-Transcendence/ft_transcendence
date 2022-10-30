@@ -48,7 +48,7 @@ function ChatRoomDefaultTemplate() {
           sx={{
             width: '100%',
             height: '100%',
-            fontSize: '1.0rem',
+            fontSize: '3vh',
             left: '20%',
             '@media (min-width:1300px)': {
               fontSize: '2.5rem',
@@ -56,6 +56,7 @@ function ChatRoomDefaultTemplate() {
             },
             position: 'absolute',
             bottom: '10%',
+            color: 'whitesmoke',
           }}
         >
           친구와 대화를 시작해보세요
