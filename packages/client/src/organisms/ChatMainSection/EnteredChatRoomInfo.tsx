@@ -25,7 +25,7 @@ const RoomInfoBox = styled('div')(({ theme }) => ({
   display: 'flex',
   marginRight: '1%',
   borderRadius: '15px',
-  backgroundColor: '#003566',
+  background: 'linear-gradient(to bottom right, #f796c033, #76aef177)',
 }));
 
 /*

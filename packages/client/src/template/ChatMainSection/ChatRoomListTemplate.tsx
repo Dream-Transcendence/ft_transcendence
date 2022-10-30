@@ -14,8 +14,9 @@ import { UserSecondAuth } from '../../types/Profile.type';
 import { UnJoinedRoomList } from '../../types/Room.type';
 
 const ChattingRoomListLayout = styled('div')(({ theme }) => ({
+  marginTop: '1%',
   width: '97%',
-  height: '100%',
+  height: '99%',
   marginLeft: '2%',
 }));
 

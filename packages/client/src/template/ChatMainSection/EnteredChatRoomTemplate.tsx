@@ -59,7 +59,7 @@ const BannedSpan = styled('span')(({ theme }) => ({
 
 const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   width: '100%',
-  height: '87%',
+  height: '85.7%',
   display: 'flex',
   marginTop: '0%',
 }));

@@ -18,9 +18,11 @@ function ChatSidebarTemplate() {
     <ChatSidebarLayout>
       <SearchBoxModule />
       <Typography
+        fontFamily="Lato, sans-serif"
+        fontWeight={'bold'}
         borderRadius={20}
         border={5}
-        borderColor="#9C27B0"
+        borderColor="#44113211"
         color="#0A92B0"
       >
         채팅방 목록
@@ -28,11 +30,13 @@ function ChatSidebarTemplate() {
       <JoinedChatRoomModule />
       <Typography
         borderRadius={20}
+        fontFamily="Lato, sans-serif"
+        fontWeight={'bold'}
         border={5}
-        borderColor="#9C27B0"
+        borderColor="#44113211"
         color="#0A92B0"
       >
-        DM 목록{' '}
+        DM 목록
       </Typography>
       <JoinedDMListOrganisms />
       <CreateChatRoomModule />

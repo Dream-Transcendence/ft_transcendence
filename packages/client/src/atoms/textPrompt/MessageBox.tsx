@@ -29,7 +29,7 @@ const ListTextLayout = styled('div')(({ theme }) => ({
 
 const OtherTextInput = styled('section')(({ theme }) => ({
   width: '40%',
-  backgroundColor: '#003566',
+  backgroundColor: '#19226699',
   borderRadius: '0px 10px 10px 10px',
   justifyContent: 'center',
   float: 'left',
@@ -37,7 +37,7 @@ const OtherTextInput = styled('section')(({ theme }) => ({
 
 const OwnTextInput = styled('section')(({ theme }) => ({
   width: '40%',
-  backgroundColor: '#5154ff',
+  backgroundColor: '#76aef199',
   marginRight: '-40%',
   borderRadius: '10px 0px 10px 10px',
   justifyContent: 'center',

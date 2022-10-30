@@ -27,7 +27,8 @@ const JoinedChatRoomBox = styled('div')(({ theme }) => ({
   height: '87%',
   width: '90%',
   borderRadius: '13px',
-  backgroundColor: '#001D3D',
+  background: 'linear-gradient( #f796c088, #76aef177)',
+  border: 'none',
 }));
 
 const BoxLayout = styled('div')(({ theme }) => ({
