@@ -77,9 +77,9 @@ function PingpongRoutePage() {
         onGame: false,
       },
       (response: ConnectionsDto) => {
+        setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
         console.log('로그온 유저 목록');
         console.log(response);
-        setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
       },
     );
     return () => {
@@ -124,8 +124,10 @@ function PingpongRoutePage() {
     console.log(inviteInfoList);
   }, []);
 
+  //hook에서 사용되는 함수로써 매번 랜더링시마다 새로 함수가 만들어 져야하므로 useCallback으로 함수의 재생성 방지
   const findChanged = useCallback(
     (userChangedState: ConnectionDto) => {
+      console.log('기존 로그인 중인 사람들 목록', userLogStateList);
       console.log('상태 바뀐사람 : ', userChangedState);
       const myIndex: number = userLogStateList.findIndex((user) => {
         return user.userId === userChangedState?.userId;
@@ -160,7 +162,7 @@ function PingpongRoutePage() {
     return () => {
       socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     };
-  }, []); //userLogStateList, setUserLogStateList, findChanged, socket
+  }, [userLogStateList, setUserLogStateList, findChanged, socket]); //userLogStateList, setUserLogStateList, findChanged, socket
 
   /**
    * logoff한 친구 상태 받기

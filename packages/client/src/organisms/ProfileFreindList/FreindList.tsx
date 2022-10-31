@@ -61,13 +61,8 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 
 function FreindList(props: { friendProps: FriendPropsType }) {
   const navigate = useNavigate();
-  const { id } = useRecoilValue(userDataAtom);
-  const { userId } = useParams();
   const { value: friendList, setter: setFriendList } = props.friendProps;
   const [listElement, setListElement] = useState<JSX.Element[]>();
-  const [socket] = useSocket(userNameSpace);
-  const [inviteInfoList, setInviteInfoList] =
-    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
 
   useEffect(() => {
     if (friendList.length > 0) {

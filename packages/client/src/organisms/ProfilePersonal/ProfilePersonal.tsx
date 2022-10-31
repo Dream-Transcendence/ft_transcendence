@@ -73,7 +73,11 @@ function ProfilePersonal() {
   };
   return (
     <ProfilePersonalLayout>
-      {`${userData.id}` === paramsId ? <UserInfo /> : <OtherInfo />}
+      {`${userData.id}` === paramsId ? (
+        <UserInfo />
+      ) : (
+        <OtherInfo friendProps={friendProps} />
+      )}
       <FreindList friendProps={friendProps} />
     </ProfilePersonalLayout>
   );

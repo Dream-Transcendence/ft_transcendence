@@ -18,22 +18,17 @@ import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import CheckCircleTwoToneIcon from '@mui/icons-material/CheckCircleTwoTone';
 import RemoveCircleTwoToneIcon from '@mui/icons-material/RemoveCircleTwoTone';
-import { WidthFull } from '@mui/icons-material';
 import {
   ACCEPTFRIENDREQUEST,
   ACCEPTGAME,
-  FRIENDREQUESTACCEPTED,
   REJECTFRIENDREQUEST,
   REJECTGAME,
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { getSetFriendList } from '../ProfilePersonal/ProfilePersonal';
-import { userDataAtom } from '../../recoil/user.recoil';
-import { useParams } from 'react-router-dom';
 
 const InviteMessageListLayout = styled('div')(({ theme }) => ({
-  bottom: '500px',
+  bottom: '0',
   right: '0',
   position: 'absolute',
   width: '30%',
@@ -49,8 +44,6 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 
 function InviteMessageList() {
   const [socket] = useSocket(userNameSpace);
-  const { id } = useRecoilValue(userDataAtom);
-  const { userId } = useParams();
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
   const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(

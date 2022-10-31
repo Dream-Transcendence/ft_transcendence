@@ -30,7 +30,8 @@ import useSocket from '../../socket/useSocket';
 import { InviteInfoListType } from '../../types/Message.type';
 import { inviteInfoListAtom } from '../../recoil/common.recoil';
 
-function OtherInfo() {
+function OtherInfo(props: { friendProps: FriendPropsType }) {
+  const { value: friendList, setter: setFriendList } = props.friendProps;
   const { id } = useRecoilValue(userDataAtom);
   const [socket] = useSocket(userNameSpace);
   const { userId: otherId } = useParams();
@@ -82,7 +83,7 @@ function OtherInfo() {
     if (id !== 0 && passSecondOauth.checkIsValid !== false) {
       checkIsFriend();
     }
-  }, [otherId]);
+  }, [otherId, friendList]);
 
   // async function addRequestFriend() {
   //   try {
