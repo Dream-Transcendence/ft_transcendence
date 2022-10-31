@@ -35,11 +35,9 @@ const SecondOauthInitLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
   display: 'flex',
   alignItems: 'center',
-  justifyItems: 'center',
-  backgroundColor: '#0288D1',
   width: '30%',
-  height: '8%',
-  border: 'solid 1px',
+  borderRadius: '5%',
+  border: 'solid 2px grey',
 }));
 
 const SecondOauthInputLayout = styled('section')(({ theme }) => ({
@@ -146,6 +144,8 @@ function SecondOauthPage() {
             <Input
               // style={divStyle}
               // value={name}
+              fullWidth
+              sx={{ backgroundColor: '#0288D1' }}
               placeholder="인증번호를 입력해주세요"
               onChange={handleSecondOauth}
             ></Input>
