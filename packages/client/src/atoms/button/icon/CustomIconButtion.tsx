@@ -5,7 +5,7 @@ function CustomIconButton(props: { customProps: CustomIconProps }) {
   const { icon, action } = props.customProps;
 
   return (
-    <IconButton onClick={action} aria-label="game" size="large">
+    <IconButton onClick={action} aria-label="button" size="large">
       {icon}
     </IconButton>
   );

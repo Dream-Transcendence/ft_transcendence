@@ -72,6 +72,7 @@ function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
     // connect(); //game namespace socket 연결
     //ladder 일때
     console.log('gametype: ', gameType);
+    console.log('gameMOde : ', gameMode);
     if (gameType === LADDER) {
       console.log('before emit');
       socket.emit(
@@ -89,6 +90,7 @@ function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
       socket.emit(
         `${gameLadderMatch}`,
         {
+          title: gameInfo?.title,
           userId: userId,
           mode: gameMode,
         },

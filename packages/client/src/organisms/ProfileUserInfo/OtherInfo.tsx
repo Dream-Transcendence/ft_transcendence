@@ -21,18 +21,24 @@ import axios from 'axios';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
+import { FRIENDREQUEST, userNameSpace } from '../../socket/event';
+import useSocket from '../../socket/useSocket';
+import { InviteInfoListType } from '../../types/Message.type';
+import { inviteInfoListAtom } from '../../recoil/common.recoil';
 
 function OtherInfo(props: { friendProps: FriendPropsType }) {
-  const { id } = useRecoilValue(userDataAtom);
-  const { userId: otherId } = useParams();
   const { value: friendList, setter: setFriendList } = props.friendProps;
+  const { id } = useRecoilValue(userDataAtom);
+  const [socket] = useSocket(userNameSpace);
+  const { userId: otherId } = useParams();
+  const [inviteInfoList, setInviteInfoList] =
+    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const navigate = useNavigate();
-
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
     nickname: 'noname',
@@ -40,21 +46,20 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   });
   const [isFriend, setIsFriend] = useState<boolean | undefined>(false);
 
-  async function getUserData() {
-    try {
-      if (id !== 0 && passSecondOauth.checkIsValid !== false) {
-        const response = await axios.get(
-          `${SERVERURL}/users/${otherId}/profile`,
-        );
-        setUserData(response.data);
-      }
-    } catch (error) {
-      // alert(error);
-      // console.log(error);
-    }
-  }
-
   useEffect(() => {
+    async function getUserData() {
+      try {
+        if (id !== 0 && passSecondOauth.checkIsValid !== false) {
+          const response = await axios.get(
+            `${SERVERURL}/users/${otherId}/profile`,
+          );
+          setUserData(response.data);
+        }
+      } catch (error) {
+        // alert(error);
+        // console.log(error);
+      }
+    }
     getUserData();
   }, [otherId]);
 
@@ -63,7 +68,7 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     await axios
       .get(`${SERVERURL}/users/${id}/friends/${otherId}`)
       .then((response: any) => {
-        if (response.status === 201) {
+        if (response.status === 200) {
           setIsFriend(true);
         }
       })
@@ -76,84 +81,61 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   }
 
   useEffect(() => {
-    if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+    if (id !== 0 && passSecondOauth.checkIsValid !== false) {
       checkIsFriend();
     }
-  }, [otherId]);
+  }, [otherId, friendList]);
+
+  // async function addRequestFriend() {
+  //   try {
+  //     const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
+  //       id: Number(otherId),
+  //     });
+  //     if (responseAdd.status === 201) {
+  //       setFriendList(friendList.concat(responseAdd.data));
+  //       return true;
+  //     } else {
+  //       return false;
+  //     }
+  //   } catch (error: any) {
+  //     alert(error);
+  //     console.log(error);
+  //   }
+  // }
 
   async function sendRequestFriend() {
     try {
-      const responseReq = await axios.post(
-        `${SERVERURL}/users/${id}/requests`,
-        {
-          id: Number(otherId),
-        },
-      );
-      if (responseReq.status === 200) {
-        return true;
-      }
-      return false;
-    } catch (error) {
-      alert(error);
-      console.log(error);
-    }
-  }
-
-  async function addRequestFriend() {
-    try {
-      const responseAdd = await axios.post(`${SERVERURL}/users/${id}/friends`, {
-        id: Number(otherId),
+      socket.emit(FRIENDREQUEST, {
+        requestorId: id,
+        responserId: Number(otherId),
       });
-      if (responseAdd.status === 201) {
-        setFriendList(friendList.concat(responseAdd.data));
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error: any) {
-      alert(error);
-      console.log(error);
-    }
-  }
-  async function addFriend() {
-    try {
-      /**
-       * 1. 소켓으로 친구 요청 메시지를 보내기
-       * 2. 요청 전송완료 alert 띄워 주어야 함
-       * 3. 수락시 post 보내기
-       */
-      //친구 요청
-      const sendReq = await sendRequestFriend();
-      console.log('11', sendReq);
-      if (!sendReq) {
-        //비동기 처리에 의해서 값 변경이 바로 안되어 반대로 처리해둠 추후 요청 확인을 받는 것으로 처리할 예정
-        //요청을 보낸 쪽이 확인 응답을 받고 다시 추가 요청을 보내는데 수신 쪽에서 확인을 받고 친구 추가를 바로 하면 될 것 같음
-        //
-        const addReq = await addRequestFriend();
-        if (addReq) {
-          alert('친구 추가 완료');
-          console.log('친구 추가 완료');
-        }
-      }
     } catch (error) {
       alert(error);
       console.log(error);
     }
+    const reply = () => {
+      return {
+        userId: userData.id,
+        message: `${userData.nickname}님에게 친구 초대를 보냈습니다.`,
+        type: 'check',
+      };
+    };
+    setInviteInfoList([...inviteInfoList, reply()]);
+    console.log('socket : 친구 요청 보냈습니다.');
   }
 
   const addFriendProps: CustomIconProps = {
     icon: <PersonAddIcon />,
-    action: addFriend,
+    action: sendRequestFriend,
   };
 
-  const alreadFriendProps: CustomIconProps = {
+  const alreadyFriendProps: CustomIconProps = {
     icon: <Diversity1Icon />,
     action: () => {
       alert('이미 친구입니다.');
       console.log('이미 친구입니다.');
     },
   };
-  // console.log(isFriend);
 
   return (
     <UserInfoLayout>
@@ -166,7 +148,7 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
       <ProfileActionLayout>
         {/* [Socket IO 요청] 상대방에게 친구수락 팝업 뜨게할 것 */}
         {isFriend ? (
-          <CustomIconButton customProps={alreadFriendProps} />
+          <CustomIconButton customProps={alreadyFriendProps} />
         ) : (
           <CustomIconButton customProps={addFriendProps} />
         )}

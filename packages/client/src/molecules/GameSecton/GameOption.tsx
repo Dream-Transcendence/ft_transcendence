@@ -4,11 +4,14 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import { useRecoilState } from 'recoil';
+import { gameModeAtom } from '../../recoil/game.recoil';
 
 function GameOption() {
-  const [state, setState] = React.useState('1');
+  const [gameMode, setGameMode] = useRecoilState<number>(gameModeAtom);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setState((event.target as HTMLInputElement).value);
+    setGameMode(+(event.target as HTMLInputElement).value);
   };
 
   return (
@@ -17,7 +20,7 @@ function GameOption() {
       <RadioGroup
         aria-labelledby="game-option-radio-button"
         name="game-option-radio-button"
-        value={state}
+        value={gameMode}
         onChange={handleChange}
       >
         <FormControlLabel value='1' control={<Radio />} label="base" />

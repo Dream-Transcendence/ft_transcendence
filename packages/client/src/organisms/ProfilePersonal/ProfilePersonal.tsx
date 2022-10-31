@@ -2,14 +2,15 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
-import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
+import { checkFriendRequestAtom } from '../../recoil/common.recoil';
 import {
   BaseUserProfileData,
   FriendType,
   UserSecondAuth,
 } from '../../types/Profile.type';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import FreindList from '../ProfileFreindList/FreindList';
 import OtherInfo from '../ProfileUserInfo/OtherInfo';
 import UserInfo from '../ProfileUserInfo/UserInfo';
@@ -32,11 +33,13 @@ export interface FriendPropsType {
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
 }
 
-function ProfilePersonal() {
-  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const { userId } = useParams();
+export function ProfilePersonal() {
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const { userId: paramsId } = useParams();
+  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState<boolean>(
+    checkFriendRequestAtom,
+  );
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
-  const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const [friendList, setFriendList] = useState<FriendType[]>([
     {
@@ -50,28 +53,32 @@ function ProfilePersonal() {
     },
   ]);
 
-  //[수정사항] DB에 없는 유저를 호출할 경우, [] 빈배열만 와서 진짜 친구가없는 유저와 구분하기가 힘듦
+  async function getSetFriendList(
+    id: string | undefined,
+    setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
+  ) {
+    try {
+      console.log(id, '의 친구 목록');
+      const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
+      setter(response.data);
+      console.log('친구 목록을 최신화 하였습니다.');
+    } catch (error) {
+      alert('존재하지 않는 프로필입니다.');
+      navigate(PROFILEURL);
+      // alert(error);
+      // console.log(error);
+    }
+  }
+
+  /**
+   * 친구 목록 최신화
+   */
   useEffect(() => {
-    async function getFriendList() {
-      try {
-        if (Number(userId) !== 0) {
-          await axios
-            .get(`${SERVERURL}/users/${userId}/friends`)
-            .then((res) => {
-              console.log(res.data);
-              setFriendList(res.data);
-            });
-        }
-      } catch (error) {
-        alert('존재하지 않는 프로필입니다.');
-        navigate(PROFILEURL);
-        // navigate('/'); //[수정사항] 게임후 가끔 서버가 내려감 원인찾아야함 존재하지 않는프로필처리
-      }
-    }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
-      getFriendList();
+      setCheckFriendRequest(false);
+      getSetFriendList(paramsId, setFriendList);
     }
-  }, [userId]);
+  }, [paramsId, checkFriendRequest, userData.id, setCheckFriendRequest]);
 
   const friendProps: FriendPropsType = {
     value: friendList,
@@ -79,7 +86,7 @@ function ProfilePersonal() {
   };
   return (
     <ProfilePersonalLayout>
-      {`${user.id}` === userId ? (
+      {`${userData.id}` === paramsId ? (
         <UserInfo />
       ) : (
         <OtherInfo friendProps={friendProps} />
