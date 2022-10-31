@@ -358,7 +358,7 @@ export class GameService {
     for (const [key, value] of this.gameInfoMap) {
       if (value.player.left.id === userId || value.player.right.id === userId) {
         client.join(key);
-        return key;
+        return { title: key };
       }
     }
     throw new WsException('게임이 존재하지 않습니다');
