@@ -8,7 +8,7 @@ import {
   UserProfileBoxType,
 } from '../../types/Profile.type';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
   ListGenerateLayout,
@@ -20,12 +20,21 @@ import { userDataAtom, userLogStateListAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 import {
   FRIENDREQUESTACCEPTED,
+  gameNameSpace,
   REJECTFRIENDREQUEST,
   userNameSpace,
+  WATCH,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { InviteInfoListType } from '../../types/Message.type';
 import { inviteInfoListAtom } from '../../recoil/common.recoil';
+import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
+import { CustomIconProps } from '../../types/Link.type';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { ConnectionDto } from '../../types/LogOn.type';
+import { getUserState } from '../../atoms/profile/ProfileAvatar';
+import { Socket } from 'socket.io-client';
+import { WatchGameType } from '../../types/Game.type';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -62,6 +71,10 @@ function FreindList(props: { friendProps: FriendPropsType }) {
   const navigate = useNavigate();
   const { value: friendList, setter: setFriendList } = props.friendProps;
   const [listElement, setListElement] = useState<JSX.Element[]>();
+  const userLogStateList =
+    useRecoilValue<ConnectionDto[]>(userLogStateListAtom);
+  let userState = useRef<string | undefined>();
+  const [socket] = useSocket(gameNameSpace);
 
   useEffect(() => {
     if (friendList.length > 0) {
@@ -80,9 +93,34 @@ function FreindList(props: { friendProps: FriendPropsType }) {
             navigate(`${PROFILEURL}/${friendData.user.id}`);
           },
         };
+
+        function handlerObserver() {
+          socket.emit(
+            WATCH,
+            {
+              userId: userData.id,
+            },
+            (res: WatchGameType) => {
+              // navigate(`GAMEPLAYURL/${res}`);
+              console.log('enter! ', res);
+            },
+          );
+        }
+
+        console.log('!!!!!!!', userLogStateList, userData.id);
+        userState.current = getUserState(userLogStateList, userData.id);
+        const customProps: CustomIconProps = {
+          icon: <VisibilityIcon />,
+          action: handlerObserver,
+        };
+        console.log(userState.current, 'cunrrr');
+
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
+            {/* {userState.current === 'onGame' && (
+              <CustomIconButton customProps={customProps} />
+            )} */}
           </ListLayout>
         );
       });

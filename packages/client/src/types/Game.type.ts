@@ -16,6 +16,10 @@ export interface GameRoomDto {
   mode: number;
 }
 
+export interface WatchGameType {
+  title: string;
+}
+
 export interface gameInfoPropsType {
   value: GameRoomDto | undefined;
   setter: React.Dispatch<React.SetStateAction<GameRoomDto | undefined>>;
