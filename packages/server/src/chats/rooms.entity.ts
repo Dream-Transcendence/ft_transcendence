@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { AUTH_TYPE, CHAT_TYPE, STATUS_TYPE } from './dto/rooms.dto';
 import { User } from '../users/users.entity';
 
