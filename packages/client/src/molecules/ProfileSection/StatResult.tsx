@@ -8,7 +8,6 @@ const StatResultLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
   width: '100%',
   height: '100%',
-  border: 'solid 1px',
 }));
 
 function UserStatResult(props: { userLadder: UserLadderType }) {

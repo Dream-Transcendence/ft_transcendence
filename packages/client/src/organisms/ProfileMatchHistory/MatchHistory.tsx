@@ -24,8 +24,10 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   height: '90%',
   width: '60%',
   gridArea: 'MatchHistory',
-  backgroundColor: '#1976D2',
-  border: 'solid 1px',
+  borderRadius: '7%',
+  background:
+    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
+  boxShadow: '0 15px 35px #00000066',
 }));
 
 const TextLayout = styled('div')(({ theme }) => ({
@@ -50,7 +52,7 @@ function MatchHistory() {
   //userId로 받아온 리스트
   const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
     return (
-      <ListLayout key={matchHistory.id} sx={{justifyContent:'center'}}>
+      <ListLayout key={matchHistory.id} sx={{ justifyContent: 'center' }}>
         <OneMatchHistory matchHistory={matchHistory} />
       </ListLayout>
     );
@@ -63,10 +65,17 @@ function MatchHistory() {
           MatchHistory
         </Typography>
       </TextLayout>
-      <div style={{backgroundColor: 'white', width: '90%', height: '90%', borderRadius: '3%'}}>
-      <ListGenerateLayout>
-        <ListUlLayout>{listElement}</ListUlLayout>
-      </ListGenerateLayout>
+      <div
+        style={{
+          backgroundColor: '#aacdffff',
+          width: '90%',
+          height: '85%',
+          borderRadius: '3%',
+        }}
+      >
+        <ListGenerateLayout>
+          <ListUlLayout>{listElement}</ListUlLayout>
+        </ListGenerateLayout>
       </div>
     </MatchHistoryLayout>
   );

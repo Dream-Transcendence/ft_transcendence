@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { CUSTOM, LADDER } from '../configs/Game.type';
-import { PROFILEURL } from '../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
 import {
   gameTypeAtom,
   userDataAtom,
@@ -54,16 +54,19 @@ function GameRoutePage() {
 
   return (
     <Routes>
-      <Route path="create/*" element={<GameCreatePage />} />
-      <Route path="play/" element={<Navigate replace to={PROFILEURL} />} />
+      <Route path="create" element={<GameCreatePage />} />
+      <Route path="create/*" element={<Navigate replace to={NOTFOUNDURL} />} />
+      <Route path="play/" element={<Navigate replace to={NOTFOUNDURL} />} />
       <Route
-        path="play/:title"
+        path="play/:urlTitle"
         element={<GamePlayPage gameInfoProps={gameInfoProps} />}
       />
       <Route
-        path="loading/*"
+        path="loading"
         element={<GameLoadingPage gameInfoProps={gameInfoProps} />}
       />
+      <Route path="loading/*" element={<Navigate replace to={NOTFOUNDURL} />} />
+      <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
     </Routes>
   );
 }

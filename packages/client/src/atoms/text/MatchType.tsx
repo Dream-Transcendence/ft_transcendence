@@ -12,7 +12,7 @@ const MatchTypeLayout = styled('div')(({ theme }) => ({
   height: '100%',
   width: '20%',
   minWidth: '3rem',
-  borderRight: 'solid 1px',
+  borderRight: 'solid 1px #cccccc99',
   marginLeft: '0.3rem',
 }));
 

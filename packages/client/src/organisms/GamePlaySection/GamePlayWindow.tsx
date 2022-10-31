@@ -22,7 +22,16 @@ import {
   ResponsiveGameProps,
   ScoreProps,
 } from '../../types/Game.type';
-import { DOWN, LARGE, NORMALBALLMODE, SIZEDOWN, SMALL, SMALLBALLMODE, STOP, UP } from '../../configs/Game.type';
+import {
+  DOWN,
+  LARGE,
+  NORMALBALLMODE,
+  SIZEDOWN,
+  SMALL,
+  SMALLBALLMODE,
+  STOP,
+  UP,
+} from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -31,6 +40,8 @@ import {
   UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
+import { useNavigate, useParams } from 'react-router-dom';
+import { NOTFOUNDURL } from '../../configs/Link.url';
 
 const GameLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -212,11 +223,13 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   });
   const [theme, setTheme] = useState<ResponsiveGameProps>(smallTheme);
   const [size, setSize] = useState<number>(SMALL);
+  const { urlTitle } = useParams();
   const [ballMode, setBallMode] = useState<number>(NORMALBALLMODE);
   const [windowSize, setWindowSize] = useState<GameWindowInfo>({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const navigate = useNavigate();
   const defaultUser: UserProfileBoxDataType = {
     id: 0,
     nickname: '',
@@ -228,8 +241,18 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   };
 
   useEffect(() => {
-    if (gameInfo?.mode === SIZEDOWN)
-    setBallMode(SMALLBALLMODE);
+    console.log(
+      '???? tlte ',
+      urlTitle !== gameInfo?.title,
+      urlTitle,
+      gameInfo?.title,
+    );
+    if (urlTitle !== gameInfo?.title || gameInfo?.title === undefined)
+      navigate(`${NOTFOUNDURL}`);
+  }, [urlTitle]);
+
+  useEffect(() => {
+    if (gameInfo?.mode === SIZEDOWN) setBallMode(SMALLBALLMODE);
   }, []);
 
   /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
@@ -341,7 +364,10 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   useEffect(() => {
     /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
     // 관전유저가 들어올 경우, 이벤트 처리  막아줌
-    if (userData.id === gameInfo?.leftPlayer.id || userData.id === gameInfo?.rightPlayer.id) {
+    if (
+      userData.id === gameInfo?.leftPlayer.id ||
+      userData.id === gameInfo?.rightPlayer.id
+    ) {
       window.addEventListener('keydown', (e) => {
         // console.log('keyevent', e.key, e.key === 'ArrowUp');
         if (e.key === 'ArrowUp') {

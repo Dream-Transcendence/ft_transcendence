@@ -39,6 +39,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
+    "@nestjs/platform-express": "^9.1.6",
     "@nestjs/schedule": "^2.1.0",
     "axios": "^0.27.2",
     "eslint-plugin-react-hooks": "^4.6.0",

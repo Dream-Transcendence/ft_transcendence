@@ -64,13 +64,12 @@ function GameCreateTemplate() {
   };
 
   useEffect(() => {
-    socket.emit(GAMEINVITE,
-      {
-        hostId: userData.id,
-        opponentId: opponentId,
-        mode: gameMode, // 게임 모드(1 normal, 2 speed up, 3 size up)
-      })
-  }, [userGameType]) //, gameMode, opponentId, userData.id, socket
+    socket.emit(GAMEINVITE, {
+      hostId: userData.id,
+      opponentId: opponentId,
+      mode: gameMode, // 게임 모드(1 normal, 2 speed up, 3 size up)
+    });
+  }, [userGameType]); //, gameMode, opponentId, userData.id, socket
 
   //[수정사항] gameloading으로 넘어가야함
   const EnterGame: LinkComponentResource = {

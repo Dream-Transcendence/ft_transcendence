@@ -53,7 +53,7 @@ function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
       case POWERUP:
         setMode('1 VS 1 🏋️');
         break;
-      case  SIZEDOWN:
+      case SIZEDOWN:
         setMode('1 VS 1 🧘‍♂️');
         break;
     }
