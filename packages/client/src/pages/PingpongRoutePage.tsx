@@ -4,10 +4,13 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import {
   CHANGEUSERSTATUS,
+  FRIENDREQUEST,
+  FRIENDREQUESTACCEPTED,
   logOn,
+  REJECTFRIENDREQUEST,
   USERLOGOFF,
   userNameSpace,
 } from '../socket/event';
@@ -19,10 +22,20 @@ import {
 } from '../recoil/user.recoil';
 import useSocket from '../socket/useSocket';
 import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
-import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
+import {
+  BaseUserProfileData,
+  FriendType,
+  UserSecondAuth,
+} from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
+import axios from 'axios';
+import { InviteInfoListType, RequestDto } from '../types/Message.type';
+import {
+  checkFriendRequestAtom,
+  inviteInfoListAtom,
+} from '../recoil/common.recoil';
 import NotFoundPage from './NotFoundPage';
 
 const PageSection = styled('section')(({ theme }) => ({
@@ -40,22 +53,17 @@ function PingpongRoutePage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
+  const [inviteInfoList, setInviteInfoList] =
+    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
+  const [checkFriendRequest, setSheckFriendRequest] = useRecoilState(
+    checkFriendRequestAtom,
+  );
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
-
-  const findChanged = useCallback(
-    (userChangedState: ConnectionDto) => {
-      const myIndex: number = userLogStateList.findIndex((user) => {
-        return user.userId === userChangedState?.userId;
-      });
-      return myIndex;
-    },
-    [userLogStateList],
-  );
 
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
@@ -69,22 +77,69 @@ function PingpongRoutePage() {
         onGame: false,
       },
       (response: ConnectionsDto) => {
+        setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
         console.log('로그온 유저 목록');
         console.log(response);
-        setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
       },
     );
     return () => {
-      socket.off('exception');
+      // socket.off('exception'); //exception 리스너가 없는데 off를 해야하나???
       console.log('로그오프입니다.');
       disconnect();
+      socket.close();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
     //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
   }, []);
   //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함, id 또한 재 로그인 하지 않는이상 다시 바뀔 일은 없겠지만 일단 남겨 둠
 
-  //다른 유저의 state 변경 감지 effect
+  /**
+   * 유저의 미확인 메시지 기록 받아오기
+   */
+  useEffect(() => {
+    async function getMessageList() {
+      await axios
+        .get(`${SERVERURL}/users/${userData.id}/requests`)
+        .then((response: any) => {
+          if (response.data.length > 0) {
+            console.log('유저 메시지 기록 가져오기 : ', response);
+            const infoList = response.data.map((message: any) => {
+              return {
+                id: message.id,
+                userId: message.requestor.id,
+                message: `${message.requestor.nickname}님이 친구요청을 보냈습니다.`,
+                type: 'friend',
+              };
+            });
+            console.log(inviteInfoList, 'to', infoList);
+            setInviteInfoList([...inviteInfoList, ...infoList]);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+          console.log(error);
+        });
+    }
+    getMessageList();
+    console.log(inviteInfoList);
+  }, []);
+
+  //hook에서 사용되는 함수로써 매번 랜더링시마다 새로 함수가 만들어 져야하므로 useCallback으로 함수의 재생성 방지
+  const findChanged = useCallback(
+    (userChangedState: ConnectionDto) => {
+      console.log('기존 로그인 중인 사람들 목록', userLogStateList);
+      console.log('상태 바뀐사람 : ', userChangedState);
+      const myIndex: number = userLogStateList.findIndex((user) => {
+        return user.userId === userChangedState?.userId;
+      });
+      return myIndex;
+    },
+    [userLogStateList],
+  );
+
+  /**
+   * 다른 유저의 state 변경 감지 effect
+   */
   useEffect(() => {
     //check friend's log state changing
     socket.on(CHANGEUSERSTATUS, (response: ConnectionDto) => {
@@ -107,8 +162,11 @@ function PingpongRoutePage() {
     return () => {
       socket.off(CHANGEUSERSTATUS); //모든 리스너 제거
     };
-  }, []); //userLogStateList, setUserLogStateList, findChanged, socket
+  }, [userLogStateList, setUserLogStateList, findChanged, socket]); //userLogStateList, setUserLogStateList, findChanged, socket
 
+  /**
+   * logoff한 친구 상태 받기
+   */
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response);
@@ -120,9 +178,87 @@ function PingpongRoutePage() {
       }
     });
     return () => {
-      socket.removeAllListeners(); //모든 리스너 제거
+      socket.off(USERLOGOFF); //모든 리스너 제거
     };
-  }, []); //userLogStateList, setUserLogStateList, findChanged, socket
+  }, [userLogStateList, setUserLogStateList, findChanged, socket]); //userLogStateList, setUserLogStateList, findChanged, socket
+
+  // useEffect(() => {
+  //   socket.onAny((res) => {
+  //     console.log(res, 'what! tje fucl');
+  //   });
+  // }, []);
+
+  /**
+   * 친구 요청 받기
+   */
+  useEffect(() => {
+    socket.on(FRIENDREQUEST, (response: RequestDto) => {
+      const { id, requestor } = response;
+      const { id: userId, nickname } = requestor;
+      const newMessage: InviteInfoListType = {
+        id: id,
+        userId: userId,
+        message: `${nickname}님이 친구초대를 요청하셨습니다.`,
+        type: 'friend',
+      };
+      setInviteInfoList([...inviteInfoList, newMessage]);
+      console.log('socket : 친구 요청을 받았습니다.', newMessage);
+    });
+    return () => {
+      socket.off(FRIENDREQUEST);
+    };
+  }, [inviteInfoList, setInviteInfoList, socket]);
+
+  /**
+   * 친구 요청 받은 상대방이 수락 했는지 확인
+   */
+  useEffect(() => {
+    socket.on(FRIENDREQUESTACCEPTED, (response: BaseUserProfileData) => {
+      console.log('friendRequestAccepted', response);
+      if (response) {
+        setSheckFriendRequest(true);
+        /**
+         * 상대방 수락 확인 메시지 기록 추가
+         */
+        const reply = () => {
+          return {
+            userId: response.id,
+            message: `${response.nickname}님이 요청을 수락했습니다.`,
+            type: 'check',
+          };
+        };
+        console.log(inviteInfoList, 'to accecpt', reply);
+        setInviteInfoList([...inviteInfoList, reply()]);
+      }
+    });
+  }, []);
+
+  //친구 추가 거절 메시지 받기
+  useEffect(() => {
+    socket.on(REJECTFRIENDREQUEST, (response: BaseUserProfileData) => {
+      if (response) {
+        console.log('rejectFriendRequest', response);
+        /**
+         * 상대방 거절 확인 메시지 기록
+         */
+        const reply = () => {
+          return {
+            userId: response.id,
+            message: `${response.nickname}님이 요청을 거절했습니다.`,
+            type: 'check',
+          };
+        };
+        console.log(inviteInfoList, 'to reject', reply);
+        setInviteInfoList([...inviteInfoList, reply()]);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on('exception', (error: any) => {
+      alert(error.message);
+    });
+  });
 
   return (
     <PageSection>
@@ -142,9 +278,6 @@ function PingpongRoutePage() {
         <Route path="game/*" element={<GameRoutePage />} />
         <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
       </Routes>
-      {/* <footer>
-       <Popup>{SendMessageAlert(`${user.id} === ${userId}`)}</Popup>
-      </footer> */}
     </PageSection>
   );
 }

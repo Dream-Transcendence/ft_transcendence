@@ -18,6 +18,7 @@ import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { gameOpponetAtom } from '../../recoil/game.recoil';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -64,6 +65,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const userData = useRecoilValue(userDataAtom);
   const { roomInfo, handler } = roomInfoSet;
   const [roomlist, setRoomList] = useRecoilState(DMList);
+  const [gameOpponet, setGameOpponent] = useRecoilState(gameOpponetAtom);
   const findRoom = roomlist.find((room) => {
     return room.name === roomInfo.name;
   });
@@ -96,6 +98,12 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
       unBlockUser(roomInfo.userId, userData.id, setUnBlock);
   }
 
+  function handleMatch() {
+    if (roomInfo.userId){
+      setGameOpponent(roomInfo.userId);
+    }
+  }
+
   const personal: LinkIconResource = {
     url: PROFILEURL,
     icon: <PersonIcon />,
@@ -104,6 +112,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const goToGame: LinkIconResource = {
     url: GAMECREATEURL,
     icon: <SportsKabaddiIcon />,
+    action: handleMatch,
   };
 
   const customBlockProps: CustomIconProps = {

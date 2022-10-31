@@ -11,6 +11,7 @@ import {
 import { useRecoilValue } from 'recoil';
 import { ConnectionDto } from '../../types/LogOn.type';
 import { userLogStateListAtom } from '../../recoil/user.recoil';
+import { useEffect, useMemo, useRef } from 'react';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
@@ -77,8 +78,13 @@ function ProfileAvatar(props: {
   const { avatarType, avartarProps } = props;
   const { id, nickname, image } = avartarProps;
   //logStateList : 로그인중인 유저 list
-  const userLogStateList = useRecoilValue<ConnectionDto[]>(userLogStateListAtom);
-  const userState = getUserState(userLogStateList, id);
+  const userLogStateList =
+    useRecoilValue<ConnectionDto[]>(userLogStateListAtom);
+  let userState = useRef<string | undefined>();
+
+  useMemo(() => {
+    userState.current = getUserState(userLogStateList, id);
+  }, [userLogStateList, id]);
 
   if (avatarType === 'circle') {
     return (
@@ -88,9 +94,9 @@ function ProfileAvatar(props: {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           variant="dot"
           color={
-            userState === 'onGame'
+            userState.current === 'onGame'
               ? 'secondary'
-              : userState === 'logOn'
+              : userState.current === 'logOn'
               ? 'success'
               : 'error'
           }

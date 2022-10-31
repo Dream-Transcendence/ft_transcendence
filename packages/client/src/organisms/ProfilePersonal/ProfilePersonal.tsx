@@ -2,14 +2,15 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { SERVERURL } from '../../configs/Link.url';
-import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
+import { checkFriendRequestAtom } from '../../recoil/common.recoil';
 import {
   BaseUserProfileData,
   FriendType,
   UserSecondAuth,
 } from '../../types/Profile.type';
+import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import FreindList from '../ProfileFreindList/FreindList';
 import OtherInfo from '../ProfileUserInfo/OtherInfo';
 import UserInfo from '../ProfileUserInfo/UserInfo';
@@ -32,39 +33,39 @@ export interface FriendPropsType {
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
 }
 
-function ProfilePersonal() {
-  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const { userId } = useParams();
-  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
-  const userData = useRecoilValue(userDataAtom);
-  const [friendList, setFriendList] = useState<FriendType[]>([
-    {
-      id: 0,
-      user: {
-        id: 0,
-        nickname: 'noname',
-        image: 'noimage',
-      },
-      isBlocked: false,
-    },
-  ]);
+export async function getSetFriendList(
+  id: string | undefined,
+  setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
+) {
+  try {
+    console.log(id, '의 친구 목록');
+    const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
+    setter(response.data);
+    console.log('친구 목록을 최신화 하였습니다.');
+  } catch (error) {
+    alert(error);
+    console.log(error);
+  }
+}
 
+function ProfilePersonal() {
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const { userId: paramsId } = useParams();
+  const [friendList, setFriendList] = useState<FriendType[]>([]);
+  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState<boolean>(
+    checkFriendRequestAtom,
+  );
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  /**
+   * 친구 목록 최신화
+   */
   useEffect(() => {
-    async function getFriendList() {
-      try {
-        const response = await axios.get(
-          `${SERVERURL}/users/${userId}/friends`,
-        );
-        setFriendList(response.data);
-      } catch (error) {
-        alert(error);
-        console.log(error);
-      }
-    }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
-      getFriendList();
+      setCheckFriendRequest(false);
+      getSetFriendList(paramsId, setFriendList);
     }
-  }, [userId]);
+  }, [paramsId, checkFriendRequest, userData.id, setCheckFriendRequest]);
 
   const friendProps: FriendPropsType = {
     value: friendList,
@@ -72,7 +73,7 @@ function ProfilePersonal() {
   };
   return (
     <ProfilePersonalLayout>
-      {`${user.id}` === userId ? (
+      {`${userData.id}` === paramsId ? (
         <UserInfo />
       ) : (
         <OtherInfo friendProps={friendProps} />

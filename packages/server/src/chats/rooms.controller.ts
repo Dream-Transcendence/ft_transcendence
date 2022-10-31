@@ -113,6 +113,17 @@ export class RoomsController {
     return this.roomService.getChannelParticipants(userId, roomId);
   }
 
+  // ANCHOR DM Controller
+  @Post('/dm')
+  @ApiOperation({ summary: 'DM 채널 생성 BodyType: createDmDto' })
+  @ApiCreatedResponse({
+    description: 'DM 채널 생성 type: DmDto',
+  })
+  @ApiNotFoundResponse({ description: 'DM 참여자를 찾을 수 없습니다' })
+  createDm(@Body() createDmDto: CreateDmDto) {
+    return this.roomService.createDm(createDmDto);
+  }
+
   @Post('/:roomId')
   @ApiOperation({ summary: '채널 이미지 변경' })
   @ApiConsumes('multipart/form-data')
@@ -142,16 +153,5 @@ export class RoomsController {
   ) {
     this.logger.log('patchChannelInfo');
     return this.roomService.patchChannelInfo(roomId, patchChannelInfoDto);
-  }
-
-  // ANCHOR DM Controller
-  @Post('/dm')
-  @ApiOperation({ summary: 'DM 채널 생성 BodyType: createDmDto' })
-  @ApiCreatedResponse({
-    description: 'DM 채널 생성 type: DmDto',
-  })
-  @ApiNotFoundResponse({ description: 'DM 참여자를 찾을 수 없습니다' })
-  createDm(@Body() createDmDto: CreateDmDto) {
-    return this.roomService.createDm(createDmDto);
   }
 }
