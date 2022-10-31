@@ -3,7 +3,7 @@ import TextBox from '../../texts/TextBox';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
 import { gameInfoPropsType } from '../../types/Game.type';
 import { useEffect, useState } from 'react';
-import { LADDER, NORMAL, POWERUP, SIZEDOWN } from '../../configs/Game.type';
+import { CUSTOM, LADDER, SIZEDOWN, SPEEDUP } from '../../configs/Game.type';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -47,13 +47,13 @@ function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
       case LADDER:
         setMode('Ladder 🎮');
         break;
-      case NORMAL:
+      case CUSTOM:
         setMode('1 VS 1 🤼');
         break;
-      case POWERUP:
+      case SPEEDUP:
         setMode('1 VS 1 🏋️');
         break;
-      case  SIZEDOWN:
+      case SIZEDOWN:
         setMode('1 VS 1 🧘‍♂️');
         break;
     }

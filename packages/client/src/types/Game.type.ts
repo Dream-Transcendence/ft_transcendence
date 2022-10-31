@@ -1,5 +1,18 @@
 import { Socket } from 'socket.io-client';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
+import { BaseUserProfileData } from './Profile.type';
+
+export interface GameInviteInfoType {
+  title: string;
+  hostId: number;
+  opponentId: number;
+  mode: number;
+}
+
+export interface ServerInviteGameDto {
+  host: BaseUserProfileData;
+  mode: number;
+}
 
 export interface GameRoomDto {
   title: string;

@@ -7,18 +7,28 @@ import useSocket from '../socket/useSocket';
 import {
   ALREADYFORMATCH,
   GAMECANCLE,
-  gameLadderMatch,
+  GAMEMATCH,
   gameNameSpace,
+  INVITEGAME,
+  REJECTGAME,
+  userNameSpace,
 } from '../socket/event';
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
-import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
+import {
+  gameInfoPropsType,
+  GameInviteInfoType,
+  GameRoomDto,
+  ServerInviteGameDto,
+} from '../types/Game.type';
 import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
-import { gameModeAtom } from '../recoil/game.recoil';
 import { UserSecondAuth } from '../types/Profile.type';
+import { InviteInfoListType } from '../types/Message.type';
+import { inviteInfoListAtom } from '../recoil/common.recoil';
+import { gameInviteInfoAtom } from '../recoil/game.recoil';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -52,13 +62,17 @@ const ButtonLayout = styled('div')(({ theme }) => ({
 
 function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
   const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
-  const [socket] = useSocket(gameNameSpace);
+  const [gameSocket] = useSocket(gameNameSpace);
+  const [userSocket] = useSocket(userNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   const navigate = useNavigate();
-  const gameMode = useRecoilValue(gameModeAtom);
   const userData = useRecoilValue(userDataAtom);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const [inviteInfoList, setInviteInfoList] =
+    useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -69,28 +83,13 @@ function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
   useEffect(() => {
     // connect(); //game namespace socket 연결
     //ladder 일때
-    console.log('gametype: ', gameType);
-    console.log('gameMOde : ', gameMode);
     if (gameType === LADDER) {
       console.log('before emit');
-      socket.emit(
-        `${gameLadderMatch}`,
+      gameSocket.emit(
+        GAMEMATCH,
         {
           userId: userId,
-          mode: gameMode,
-        },
-        (response: any) => {
-          console.log('match emit 성공 : ', response);
-        },
-      );
-    } else if (gameType === CUSTOM) {
-      //1:1일때
-      socket.emit(
-        `${gameLadderMatch}`,
-        {
-          title: gameInfo?.title,
-          userId: userId,
-          mode: gameMode,
+          mode: LADDER,
         },
         (response: any) => {
           console.log('match emit 성공 : ', response);
@@ -98,36 +97,51 @@ function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
       );
     }
     return () => {
-      socket.emit(GAMECANCLE, {
+      gameSocket.emit(GAMECANCLE, {
         useId: userId,
         onGame: false,
       });
       console.log('match cancel!');
-      socket.off(GAMECANCLE); //모든 리스너 제거
     };
   }, []);
 
   //match 성공시 값 받아서 동작시켜야함
   useEffect(() => {
-    socket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
+    gameSocket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
       setGameInfo(response);
       navigate(`${GAMEPLAYURL}/${response.title}`);
     });
     return () => {
-      socket.off(ALREADYFORMATCH);
+      gameSocket.off(ALREADYFORMATCH);
     };
   }, []);
 
-  //게임 취소 로직 이어 구현하기
-  // socket.on(`${gameCancel}`)
-  //GameRoomDto로 수정 예정
+  /**
+   * 게임 거절 이벤트 받기
+   */
   useEffect(() => {
-    socket.on('exception', (response: any) => {
+    userSocket.on(REJECTGAME, () => {
+      const newMessage: InviteInfoListType = {
+        userId: userId,
+        message: `상대방이 게임을 거절하였습니다.`,
+        type: 'check',
+      };
+      setInviteInfoList([...inviteInfoList, newMessage]);
+      console.log('socket : 게임 초대를 거절당했습니다.', newMessage);
+      navigate(-1);
+    });
+    return () => {
+      userSocket.off(REJECTGAME);
+    };
+  }, [inviteInfoList, setInviteInfoList, userSocket, navigate, userId]);
+
+  useEffect(() => {
+    gameSocket.on('exception', (response: any) => {
       alert(response.message);
       console.log('게임 에러', response);
     });
     return () => {
-      socket.off('exception');
+      gameSocket.off('exception');
     };
   }, []);
 

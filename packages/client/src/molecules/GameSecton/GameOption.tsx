@@ -5,13 +5,17 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { useRecoilState } from 'recoil';
-import { gameModeAtom } from '../../recoil/game.recoil';
+import { gameInviteInfoAtom } from '../../recoil/game.recoil';
+import { GameInviteInfoType } from '../../types/Game.type';
+import { CUSTOM, SIZEDOWN, SPEEDUP } from '../../configs/Game.type';
 
 function GameOption() {
-  const [gameMode, setGameMode] = useRecoilState<number>(gameModeAtom);
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGameMode(+(event.target as HTMLInputElement).value);
+    const mode = +(event.target as HTMLInputElement).value;
+    setGameInviteInfo({ ...gameInviteInfo, mode: mode });
   };
 
   return (
@@ -20,12 +24,16 @@ function GameOption() {
       <RadioGroup
         aria-labelledby="game-option-radio-button"
         name="game-option-radio-button"
-        value={gameMode}
+        value={gameInviteInfo.mode}
         onChange={handleChange}
       >
-        <FormControlLabel value='1' control={<Radio />} label="base" />
-        <FormControlLabel value='2' control={<Radio />} label="speedUp" />
-        <FormControlLabel value='3' control={<Radio />} label="sizeDown" />
+        <FormControlLabel value={CUSTOM} control={<Radio />} label="base" />
+        <FormControlLabel value={SPEEDUP} control={<Radio />} label="speedUp" />
+        <FormControlLabel
+          value={SIZEDOWN}
+          control={<Radio />}
+          label="sizeDown"
+        />
       </RadioGroup>
     </FormControl>
   );

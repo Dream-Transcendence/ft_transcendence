@@ -72,8 +72,7 @@ function NavigationBar() {
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const Channels: LinkIconResource = {
-    // url: CHANNELURL,
-    url: '/pingpong/channel/room/4',
+    url: CHANNELURL,
     icon: <ChatIcon fontSize="inherit" />,
   };
 

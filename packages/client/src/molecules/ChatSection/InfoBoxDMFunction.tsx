@@ -18,7 +18,8 @@ import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { gameOpponetAtom } from '../../recoil/game.recoil';
+import { gameInviteInfoAtom } from '../../recoil/game.recoil';
+import { GameInviteInfoType } from '../../types/Game.type';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -65,7 +66,8 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const userData = useRecoilValue(userDataAtom);
   const { roomInfo, handler } = roomInfoSet;
   const [roomlist, setRoomList] = useRecoilState(DMList);
-  const [gameOpponet, setGameOpponent] = useRecoilState(gameOpponetAtom);
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
   const findRoom = roomlist.find((room) => {
     return room.name === roomInfo.name;
   });
@@ -99,8 +101,8 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   }
 
   function handleMatch() {
-    if (roomInfo.userId){
-      setGameOpponent(roomInfo.userId);
+    if (roomInfo.userId) {
+      setGameInviteInfo({ ...gameInviteInfo, opponentId: roomInfo.userId });
     }
   }
 

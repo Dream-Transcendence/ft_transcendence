@@ -14,6 +14,7 @@ const GameOptionLayout = styled('div')(({ theme }) => ({
   alignContent: 'center',
   justifyContent: 'center',
   backgroundColor: '#7777D2',
+  overflow: 'hidden',
   width: '80%',
   height: '55%',
 }));

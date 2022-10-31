@@ -11,7 +11,7 @@ import {
 import {
   ALREADYFORMATCH,
   GAMECANCLE,
-  gameLadderMatch,
+  GAMEMATCH,
   gameNameSpace,
 } from '../socket/event';
 import useSocket from '../socket/useSocket';
@@ -38,7 +38,6 @@ function GameRoutePage() {
     value: gameInfo,
     setter: setGameInfo,
   };
-  console.log('router', gameInfo);
   useEffect(() => {
     function connectGameSocket() {
       connect();
