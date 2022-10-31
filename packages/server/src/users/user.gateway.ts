@@ -30,10 +30,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async setConnection(userId: number, onGame: boolean) {
     console.log('????????');
     const result = await this.userService.setConnection(userId, onGame);
-    this.server.emit(
-      'changeUserStatus',
-      result
-    );
+    this.server.emit('changeUserStatus', result);
   }
 
   async handleConnection(client: Socket) {
@@ -69,7 +66,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client: Socket,
     clientRequestDto: ClientRequestDto,
   ) {
-    await this.userService.handleFriendRequest(client, clientRequestDto);
+    return await this.userService.handleFriendRequest(client, clientRequestDto);
   }
 
   @SubscribeMessage('acceptFriendRequest')
