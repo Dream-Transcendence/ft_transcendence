@@ -20,7 +20,6 @@ const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   display: 'flex',
   width: '100%',
   height: '100%',
-  backgroundColor: 'green',
 }));
 
 function ProfileNickname() {

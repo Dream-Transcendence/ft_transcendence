@@ -41,7 +41,7 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
 
   async function getUserData() {
     try {
-      if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
+      if (id !== 0 && passSecondOauth.checkIsValid !== false) {
         const response = await axios.get(
           `${SERVERURL}/users/${otherId}/profile`,
         );

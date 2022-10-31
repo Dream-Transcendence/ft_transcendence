@@ -315,28 +315,26 @@ export class GameService {
     else movement = 20;
     if (!moveDir) movement = -movement;
 
-    if (playerId === this.gameInfoMap.get(title).player.left.id)
-    { 
-      if(0 > leftPaddleY + movement) {
+    if (playerId === this.gameInfoMap.get(title).player.left.id) {
+      if (0 > leftPaddleY + movement) {
         this.gameInfoMap.get(title).paddlePos.left = 0;
-      } else if(leftPaddleY + movement >    canvasHeight - paddleHeight)
-      {
-        this.gameInfoMap.get(title).paddlePos.left = canvasHeight - paddleHeight;
+      } else if (leftPaddleY + movement > canvasHeight - paddleHeight) {
+        this.gameInfoMap.get(title).paddlePos.left =
+          canvasHeight - paddleHeight;
       } else {
-      this.gameInfoMap.get(title).paddlePos.left += movement;
-    }}
-
-    if (playerId === this.gameInfoMap.get(title).player.right.id)
-    { 
-      if(
-      0 > rightPaddleY + movement) {
+        this.gameInfoMap.get(title).paddlePos.left += movement;
+      }
+    }
+    if (playerId === this.gameInfoMap.get(title).player.right.id) {
+      if (0 > rightPaddleY + movement) {
         this.gameInfoMap.get(title).paddlePos.right = 0;
-      } else if(rightPaddleY + movement >    canvasHeight - paddleHeight)
-      {
-        this.gameInfoMap.get(title).paddlePos.right = canvasHeight - paddleHeight;
+      } else if (rightPaddleY + movement > canvasHeight - paddleHeight) {
+        this.gameInfoMap.get(title).paddlePos.right =
+          canvasHeight - paddleHeight;
       } else {
-      this.gameInfoMap.get(title).paddlePos.right += movement;
-    }}
+        this.gameInfoMap.get(title).paddlePos.right += movement;
+      }
+    }
   }
 
   handleGameSize(client: Socket, sizeDto: SizeDto) {

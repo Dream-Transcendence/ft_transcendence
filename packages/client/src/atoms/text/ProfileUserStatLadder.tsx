@@ -3,10 +3,14 @@ import { Typography } from '@mui/material';
 
 const StatLadderLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
+  justifyContent: 'center',
+  alignItems: 'center',
   flexGrow: '1',
-  width: '50%',
+  display: 'flex',
+  fload: 'right',
+  width: '20%',
   height: '100%',
-  border: 'solid 1px',
+  borderRadius: '7%',
 }));
 
 function UserStatLadder(props: { value: string }) {
@@ -16,7 +20,7 @@ function UserStatLadder(props: { value: string }) {
   }
   return (
     <StatLadderLayout>
-      <Typography variant="h3">{value}</Typography>
+      <Typography variant="h2">{value}</Typography>
     </StatLadderLayout>
   );
 }
