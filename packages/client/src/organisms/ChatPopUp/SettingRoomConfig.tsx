@@ -29,7 +29,8 @@ const SettingRoomConfigBox = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
   borderRadius: '10px',
-  backgroundColor: '#40C6FF',
+  background:
+    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 200%)',
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'center',

@@ -10,7 +10,6 @@ export const UserInfoLayout = styled('div')(({ theme }) => ({
   width: '55%',
   gridArea: 'Profile',
   borderRadius: '7%',
-
   background:
     'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
   boxShadow: '0 15px 35px #00000066',

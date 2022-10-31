@@ -103,7 +103,7 @@ function EnteredChatRoomTemplate() {
         setUserState(roomInfo.status);
       } catch (error) {
         navigate(`${CHANNELURL}`);
-        throw console.dir(error);
+        // throw console.dir(error);
       }
     }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {

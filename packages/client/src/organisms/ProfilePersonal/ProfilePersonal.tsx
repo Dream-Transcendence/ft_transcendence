@@ -54,13 +54,18 @@ function ProfilePersonal() {
   useEffect(() => {
     async function getFriendList() {
       try {
-        await axios.get(`${SERVERURL}/users/${userId}/friends`).then((res) => {
-          console.log(res.data);
-          setFriendList(res.data);
-        });
+        if (Number(userId) !== 0) {
+          await axios
+            .get(`${SERVERURL}/users/${userId}/friends`)
+            .then((res) => {
+              console.log(res.data);
+              setFriendList(res.data);
+            });
+        }
       } catch (error) {
         alert('존재하지 않는 프로필입니다.');
-        navigate('/'); //[수정사항] 게임후 가끔 서버가 내려감 원인찾아야함 존재하지 않는프로필처리
+        navigate(PROFILEURL);
+        // navigate('/'); //[수정사항] 게임후 가끔 서버가 내려감 원인찾아야함 존재하지 않는프로필처리
       }
     }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {

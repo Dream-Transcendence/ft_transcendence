@@ -100,7 +100,7 @@ function ChatroomPage() {
             ) : (
               <Route path="/" element={<ChatRoomDefaultTemplate />} />
             )}
-            {/* <Route path="*" element={<Navigate replace to={CHANNELURL} />} /> */}
+            <Route path="/*" element={<Navigate replace to={CHANNELURL} />} />
           </Routes>
         </Section>
       </MainSection>
