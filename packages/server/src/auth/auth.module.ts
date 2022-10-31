@@ -32,7 +32,9 @@ import { ConfigModule } from '@nestjs/config';
     ...roomsProviders,
     bakingKimStrategy,
     JwtStrategy,
+    JwtModule,
   ],
   controllers: [AuthController],
+  exports: [JwtModule],
 })
 export class AuthModule {}

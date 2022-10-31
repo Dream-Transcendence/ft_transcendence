@@ -9,6 +9,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Req,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -32,13 +33,17 @@ import {
 import { RoomService } from './rooms.service';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtService } from '@nestjs/jwt';
 
 @ApiTags('room')
 @Controller('rooms')
 @UseGuards(AuthGuard('jwt'))
 export class RoomsController {
   private logger = new Logger('RoomsController');
-  constructor(private roomService: RoomService) {}
+  constructor(
+    private roomService: RoomService,
+    private jwtService: JwtService,
+  ) {}
 
   // ANCHOR Channel Controller
 
@@ -72,9 +77,11 @@ export class RoomsController {
   getMessages(
     @Param('roomId') roomId: number,
     @Param('messageId') messageId: number,
+    @Req() req,
   ) {
     this.logger.log(`getMessages`);
-    return this.roomService.getMessages(roomId, messageId);
+    const { userId } = req.user;
+    return this.roomService.getMessages(roomId, messageId, userId);
   }
 
   @Get('/:roomId/:userId')

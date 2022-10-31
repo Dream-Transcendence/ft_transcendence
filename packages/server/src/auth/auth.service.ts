@@ -63,4 +63,8 @@ export class AuthService {
     console.log('🥎🥎🥎🥎🥎🥎🥎🥎 우리가 만든 jwt token ', access_token);
     res.redirect(`http://localhost:3005/nickname`);
   }
+
+  logOut() {
+    return 'Authentication=; Path=/; HttpOnly; Max-Age=0';
+  }
 }
