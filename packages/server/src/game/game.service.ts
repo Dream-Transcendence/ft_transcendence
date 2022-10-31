@@ -127,11 +127,11 @@ export class GameService {
     const { players, score, mode } = addGameResultDto;
 
     let id = 1;
-    const rank = await this.gamesRepository
+    const game = await this.gamesRepository
       .createQueryBuilder('game')
-      .select('MAX(rank.id)', 'id')
+      .select('MAX(game.id)', 'id')
       .getRawOne();
-    if (rank.id !== null) id = rank.id + 1;
+    if (game.id !== null) id = game.id + 1;
 
     const result1 = this.gamesRepository.create({
       id,
