@@ -158,6 +158,8 @@ export class RoomService {
       where: { id: roomId },
     });
     // room이 dm일 때
+    if (!room)
+      throw new NotFoundException(`채널(${roomId})이 존재하지 않습니다.`);
     if (room.type == 0) {
       const user = await this.dmParticipantsRepository.findOne({
         relations: ['user'],
