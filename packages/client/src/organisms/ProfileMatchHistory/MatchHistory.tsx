@@ -67,9 +67,9 @@ function MatchHistory() {
       </TextLayout>
       <div
         style={{
-          backgroundColor: '#cccdffff',
+          backgroundColor: '#aacdffff',
           width: '90%',
-          height: '90%',
+          height: '85%',
           borderRadius: '3%',
         }}
       >

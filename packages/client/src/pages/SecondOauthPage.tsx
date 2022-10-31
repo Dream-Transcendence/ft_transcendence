@@ -115,7 +115,6 @@ function SecondOauthPage() {
   };
 
   const handleRegist = () => {
-    console.log('second:', seconedOauth);
     if (seconedOauth === '') {
       alert('인증코드를 입력해주세요.');
       return;
@@ -148,6 +147,11 @@ function SecondOauthPage() {
               sx={{ backgroundColor: '#0288D1' }}
               placeholder="인증번호를 입력해주세요"
               onChange={handleSecondOauth}
+              onKeyPress={(event) => {
+                if (event.key === 'Enter') {
+                  handleRegist();
+                }
+              }}
             ></Input>
             <Button fullWidth variant="contained" onClick={handleRegist}>
               등록하기
