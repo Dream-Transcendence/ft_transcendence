@@ -41,17 +41,7 @@ export function ProfilePersonal() {
   );
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const navigate = useNavigate();
-  const [friendList, setFriendList] = useState<FriendType[]>([
-    {
-      id: 0,
-      user: {
-        id: 0,
-        nickname: 'noname',
-        image: 'noimage',
-      },
-      isBlocked: false,
-    },
-  ]);
+  const [friendList, setFriendList] = useState<FriendType[]>([]);
 
   async function getSetFriendList(
     id: string | undefined,
