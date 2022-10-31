@@ -788,6 +788,7 @@ export class UserService {
       const requestDto = new ServerRequestDto(request.id, requestor, responser);
       client.to(responserClientId).emit('friendRequest', requestDto);
     }
+    return { isDone: true };
   }
 
   async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
