@@ -198,8 +198,6 @@ export class GameService {
   initializeVariables(title: string) {
     const x = this.gameInfoMap.get(title).ballPos.x;
     const y = this.gameInfoMap.get(title).ballPos.y;
-    const dx = this.gameInfoMap.get(title).ballSpeed.x;
-    const dy = this.gameInfoMap.get(title).ballSpeed.y;
     const leftPaddleY = this.gameInfoMap.get(title).paddlePos.left;
     const rightPaddleY = this.gameInfoMap.get(title).paddlePos.right;
     const canvasWidth = this.canvasWidth;
@@ -211,8 +209,6 @@ export class GameService {
     return {
       x,
       y,
-      dx,
-      dy,
       leftPaddleY,
       rightPaddleY,
       canvasWidth,
@@ -223,8 +219,63 @@ export class GameService {
     };
   }
 
+  initializeDxy(title: string) {
+    const {
+      x,
+      y,
+      leftPaddleY,
+      rightPaddleY,
+      canvasHeight,
+      canvasWidth,
+      ballDiameter,
+      paddleHeight,
+      paddleWidth,
+    } = this.initializeVariables(title);
+
+    let dx = this.gameInfoMap.get(title).ballSpeed.x;
+    let dy = this.gameInfoMap.get(title).ballSpeed.y;
+    const sign = dy === dx ? 1 : -1;
+
+    if (
+      y > leftPaddleY - ballDiameter / 2 &&
+      y < leftPaddleY + paddleHeight - ballDiameter / 2 &&
+      x !== paddleWidth &&
+      x + dx < paddleWidth
+    ) {
+      dx = paddleWidth - x;
+      dy = sign * dx;
+    } else if (
+      y > rightPaddleY - ballDiameter / 2 &&
+      y < rightPaddleY + paddleHeight - ballDiameter / 2 &&
+      x !== canvasWidth - ballDiameter - paddleWidth &&
+      x + dx > canvasWidth - ballDiameter - paddleWidth
+    ) {
+      dx = canvasWidth - ballDiameter - paddleWidth - x;
+      dy = sign * dx;
+    } else if (
+      x !== canvasWidth - ballDiameter &&
+      x + dx > canvasWidth - ballDiameter
+    ) {
+      dx = canvasWidth - ballDiameter - x;
+      dy = sign * dx;
+    } else if (x !== 0 && x + dx < 0) {
+      dx = -x;
+      dy = sign * dx;
+    } else if (
+      y !== canvasHeight - ballDiameter &&
+      y + dy > canvasHeight - ballDiameter
+    ) {
+      dy = canvasHeight - ballDiameter - y;
+      dx = sign * dy;
+    } else if (y !== 0 && y + dy < 0) {
+      dy = -y;
+      dx = sign * dy;
+    }
+
+    return { dx, dy };
+  }
+
   async addInterval(title: string, milliseconds: number, client: Socket) {
-    // 여기서 mode에 대한 변경도 바꿔주기
     if (this.gameInfoMap.get(title).mode == 2) {
       this.gameInfoMap.get(title).ballSpeed.x *= 2;
       this.gameInfoMap.get(title).ballSpeed.y *= 2;
@@ -237,8 +288,6 @@ export class GameService {
       const {
         x,
         y,
-        dx,
-        dy,
         leftPaddleY,
         rightPaddleY,
         canvasHeight,
@@ -247,28 +296,30 @@ export class GameService {
         paddleHeight,
         paddleWidth,
       } = this.initializeVariables(title);
+      const { dx, dy } = this.initializeDxy(title);
 
       let gameScoreDto: GameScoreDto = null;
 
       if (
         (y > leftPaddleY - ballDiameter / 2 &&
           y < leftPaddleY + paddleHeight - ballDiameter / 2 &&
-          x + dx < paddleWidth) ||
+          x + dx === paddleWidth) ||
         (y > rightPaddleY - ballDiameter / 2 &&
           y < rightPaddleY + paddleHeight - ballDiameter / 2 &&
-          x + dx > canvasWidth - ballDiameter - paddleWidth)
+          x + dx === canvasWidth - ballDiameter - paddleWidth)
       ) {
         this.gameInfoMap.get(title).ballSpeed.x *= -1;
-      } else if (x + dx > canvasWidth - ballDiameter || x + dx < 0) {
+      } else if (x === canvasWidth - ballDiameter || x === 0) {
         this.gameInfoMap.get(title).ballPos.x = 512;
         this.gameInfoMap.get(title).ballPos.y = 310;
-        this.gameInfoMap.get(title).ballSpeed.y = -20;
-        this.gameInfoMap.get(title).ballSpeed.x = 20;
+        this.gameInfoMap.get(title).ballSpeed.y = -40;
+        this.gameInfoMap.get(title).ballSpeed.x = 40;
         this.gameInfoMap.get(title).paddlePos.left = (620 - 186) / 2;
         this.gameInfoMap.get(title).paddlePos.right = 0;
 
-        if (x + dx < 0) this.gameInfoMap.get(title).score.right += 1;
-        else this.gameInfoMap.get(title).score.left += 1;
+        if (x === 0) this.gameInfoMap.get(title).score.right += 1;
+        else if (x === canvasWidth - ballDiameter)
+          this.gameInfoMap.get(title).score.left += 1;
         const players = this.gameInfoMap.get(title).player;
         if (
           this.gameInfoMap.get(title).score.right === 3 ||
@@ -295,13 +346,11 @@ export class GameService {
         this.schedulerRegistry.deleteInterval(title);
         return;
       }
-      if (y + dy > canvasHeight - ballDiameter || y + dy < 0) {
+      if (y + dy === canvasHeight - ballDiameter || y + dy === 0) {
         this.gameInfoMap.get(title).ballSpeed.y *= -1;
       }
-      this.gameInfoMap.get(title).ballPos.x +=
-        this.gameInfoMap.get(title).ballSpeed.x;
-      this.gameInfoMap.get(title).ballPos.y +=
-        this.gameInfoMap.get(title).ballSpeed.y;
+      this.gameInfoMap.get(title).ballPos.x += dx;
+      this.gameInfoMap.get(title).ballPos.y += dy;
       this.emitToEveryone(
         client,
         title,
