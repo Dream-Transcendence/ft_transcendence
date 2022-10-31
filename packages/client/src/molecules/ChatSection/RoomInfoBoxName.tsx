@@ -65,7 +65,6 @@ const divStyle = {
   color: 'white',
 };
 
-//[수정사항] any => ChannelDto
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const { roomInfo, handler } = roomInfoSet;
@@ -98,7 +97,6 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     setChangeRoomName(true);
   };
 
-  console.log('auth', auth);
   return (
     <InfoBoxNameLayout>
       {type === DM ? (

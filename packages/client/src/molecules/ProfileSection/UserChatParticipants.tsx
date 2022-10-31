@@ -75,7 +75,7 @@ const MuteBadge = styled('span')(({ theme }) => ({
 
 const BanBadge = styled('span')(({ theme }) => ({
   marginTop: '11%',
-  marginLeft: '72%',
+  marginLeft: '76%',
   fontSize: '5px',
   color: 'yellowgreen',
   position: 'absolute',

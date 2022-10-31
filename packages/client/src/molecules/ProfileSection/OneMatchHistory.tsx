@@ -10,42 +10,59 @@ import {
   BaseUserProfileData,
   UserMatchHistoryType,
 } from '../../types/Profile.type';
-
-const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
+const OneMatchLayout = styled('div')(({ theme }) => ({
   display: 'flex',
-  flexWrap: 'nowrap',
-  border: 'solid 1px',
-  width: '97%',
-  height: '90%',
-  borderRadius: '10%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: '100%',
+  height: '100%',
   overflow: 'hidden',
   // margin: '1rem',
   margin: 0,
 }));
 
-const PlayerInfoLayout = styled('div')(({theme}) => ({
+const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'nowrap',
+  width: '98%',
+  height: '95%',
+  borderRadius: '1rem',
+  overflow: 'hidden',
+  marginLeft: '10%',
+  // margin: '1rem',
+  margin: 0,
+}));
+
+const PlayerInfoLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'nowrap',
   alignItems: 'center',
   height: '100%',
   width: '100%',
-  // justifyContent: 'space-around',
+  marginLeft: '7%',
+  justifyContent: 'center',
 }));
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { opponent, isWin, isLadder } = props.matchHistory;
   return (
-    <OneMatchHistoryLayout
-      style={{ backgroundColor: isWin ? 'yellow' : 'green' }}
-    >
+    <OneMatchLayout>
+      <OneMatchHistoryLayout
+        style={{
+          background: isWin
+            ? 'linear-gradient(45deg,rgba(188,110,255,1) 0%,rgba(0,221,255,1) 180%)'
+            : 'linear-gradient(135deg, #ffb99f 0%, #f58d88 120%)',
+        }}
+      >
         {MatchType(isLadder)}
-      <PlayerInfoLayout>
-        {GamePlayer(userData.nickname)}
-        <Typography>VS</Typography>
-        {GamePlayer(opponent)}
-      </PlayerInfoLayout>
-    </OneMatchHistoryLayout>
+        <PlayerInfoLayout>
+          {GamePlayer(userData.nickname)}
+          <Typography>VS</Typography>
+          {GamePlayer(opponent)}
+        </PlayerInfoLayout>
+      </OneMatchHistoryLayout>
+    </OneMatchLayout>
   );
 }
 

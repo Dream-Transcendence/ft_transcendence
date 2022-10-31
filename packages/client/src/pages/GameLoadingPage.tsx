@@ -25,17 +25,19 @@ import {
 import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
-import { UserSecondAuth } from '../types/Profile.type';
 import { InviteInfoListType } from '../types/Message.type';
 import { inviteInfoListAtom } from '../recoil/common.recoil';
-import { gameInviteInfoAtom } from '../recoil/game.recoil';
+import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
+import { UserSecondAuth } from '../types/Profile.type';
+import { Typography } from '@mui/material';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#194DD2',
+  background: 'linear-gradient(to bottom right, #76aef1, #f796c0)',
+  border: 'none',
   height: '100%',
   width: '100%',
 }));
@@ -46,7 +48,7 @@ const LodingImageLayout = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   flexDirection: 'column',
   width: '100%',
-  height: '80%',
+  height: '90%',
 }));
 
 const BottomLayout = styled('div')(({ theme }) => ({
@@ -57,13 +59,14 @@ const BottomLayout = styled('div')(({ theme }) => ({
 }));
 
 const ButtonLayout = styled('div')(({ theme }) => ({
-  backgroundColor: '#0E359B',
+  background: '#0E359B',
 }));
 
-function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
-  const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
+function GameLoadingPage() {
   const [gameSocket] = useSocket(gameNameSpace);
   const [userSocket] = useSocket(userNameSpace);
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const [socket] = useSocket(gameNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   const navigate = useNavigate();
@@ -145,23 +148,45 @@ function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
     };
   }, []);
 
+  const buttonStyle = {
+    background: 'linear-gradient(to bottom right, #f796c0, #76aef1)',
+    border: 'none',
+  };
+
   return (
     <GameLodingLayout>
       {/* [axios GET 요청] 게임 큐 체크? */}
       {/* [axios POST 요청] 매칭 성공 시, 게임 방 생성요청 */}
       {/* [SocketIO 요청] 게임 큐 체크? */}
       <LodingImageLayout>
-        <TextBox
-          value={'상대방을 기다리는 중입니다.'}
-          size={'3rem'}
-          fontColor={'white'}
-        ></TextBox>
-        <TextBox value={'🏓'} size={'30rem'} fontColor={'white'}></TextBox>
+        <Typography
+          sx={{
+            fontSize: '5vh',
+            top: '20%',
+            fontSizeAdjust: 'from-font',
+            position: 'absolute',
+            zIndex: '3',
+            color: 'white',
+          }}
+        >
+          상대방을 기다리는 중입니다.
+        </Typography>
+        <Typography
+          sx={{
+            fontSize: '50vh',
+            top: '25%',
+            fontSizeAdjust: 'from-font',
+            position: 'absolute',
+            zIndex: '3',
+          }}
+        >
+          🏓
+        </Typography>
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
           {/*배경색 주기 위함*/}
-          <HistoryBackTextButton />
+          <HistoryBackTextButton backgroundColor="#76aef1" border="none" />
         </ButtonLayout>
       </BottomLayout>
     </GameLodingLayout>

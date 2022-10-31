@@ -1,9 +1,9 @@
 import { atom } from 'recoil';
 import { GameInviteInfoType, GameRoomDto } from '../types/Game.type';
 
-export const gameInfoAtom = atom<GameRoomDto | null>({
+export const gameInfoAtom = atom<GameRoomDto | undefined>({
   key: 'gameInfoAtom',
-  default: null,
+  default: undefined,
 });
 
 export const gameInviteInfoAtom = atom<GameInviteInfoType>({
@@ -11,7 +11,7 @@ export const gameInviteInfoAtom = atom<GameInviteInfoType>({
   default: {
     title: '',
     hostId: 0,
-    opponentId: 79654,
+    opponentId: 0,
     mode: 1,
   },
 });

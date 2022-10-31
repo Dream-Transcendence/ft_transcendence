@@ -1,4 +1,5 @@
 import { FormEvent } from 'react';
+import { styled } from '@mui/material/styles';
 
 export interface LinkIconResource {
   url: string;
@@ -9,6 +10,7 @@ export interface LinkIconResource {
 export interface LinkTextResource {
   content: string;
   handler?: () => void;
+  style?: any;
 }
 
 export interface LinkComponentResource {

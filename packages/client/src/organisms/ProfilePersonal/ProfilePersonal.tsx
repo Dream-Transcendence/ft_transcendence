@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { checkFriendRequestAtom } from '../../recoil/common.recoil';
 import {
   BaseUserProfileData,
@@ -33,29 +33,36 @@ export interface FriendPropsType {
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
 }
 
-export async function getSetFriendList(
-  id: string | undefined,
-  setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
-) {
-  try {
-    console.log(id, '의 친구 목록');
-    const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
-    setter(response.data);
-    console.log('친구 목록을 최신화 하였습니다.');
-  } catch (error) {
-    alert(error);
-    console.log(error);
-  }
-}
-
-function ProfilePersonal() {
+export function ProfilePersonal() {
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { userId: paramsId } = useParams();
-  const [friendList, setFriendList] = useState<FriendType[]>([]);
   const [checkFriendRequest, setCheckFriendRequest] = useRecoilState<boolean>(
     checkFriendRequestAtom,
   );
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const navigate = useNavigate();
+  const [friendList, setFriendList] = useState<FriendType[]>([]);
+
+  async function getSetFriendList(
+    id: string | undefined,
+    setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
+  ) {
+    try {
+      console.log(id, '의 친구 목록');
+      const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
+      setter(response.data);
+      console.log('친구 목록을 최신화 하였습니다.');
+    } catch (error: any) {
+      if (error.response.data.statusCode === 401) navigate('/');
+      else {
+        alert('존재하지 않는 프로필입니다.');
+        navigate(PROFILEURL);
+      }
+
+      // alert(error);
+      // console.log(error);
+    }
+  }
 
   /**
    * 친구 목록 최신화

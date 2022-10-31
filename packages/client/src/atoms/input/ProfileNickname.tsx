@@ -7,12 +7,12 @@ import { IconButton, Input, InputAdornment, TextField } from '@mui/material';
 import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { BaseUserProfileData, UserSecondAuth } from '../../types/Profile.type';
 import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useEffect, useState } from 'react';
 import CustomIconButton from '../button/icon/CustomIconButtion';
 import EditIcon from '@mui/icons-material/Edit';
 import { CustomIconProps } from '../../types/Link.type';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { checkValidNickname } from '../button/block/NicknameConfirmButton';
 
@@ -20,7 +20,6 @@ const ProfileNicnameLayout = styled('span')(({ theme }) => ({
   display: 'flex',
   width: '100%',
   height: '100%',
-  backgroundColor: 'green',
 }));
 
 function ProfileNickname() {
@@ -30,6 +29,7 @@ function ProfileNickname() {
   const [nickname, setNickname] = useState(user.nickname);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
 
   async function changeName(value: string) {
     try {
@@ -79,9 +79,12 @@ function ProfileNickname() {
           );
           setUser(response.data);
         }
-      } catch (error) {
-        alert(error);
-        console.log(error);
+      } catch (error: any) {
+        if (error.response.data.statusCode === 401) navigate('/');
+        else {
+          console.log(error);
+          alert(error);
+        }
       }
     }
     getUserData();

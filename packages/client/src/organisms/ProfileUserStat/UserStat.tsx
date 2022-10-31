@@ -13,9 +13,13 @@ const UserStatLayout = styled('div')(({ theme }) => ({
   alignItems: 'center', //내부 아이템이라고 생각하는 문자열이 좌측 상단 정렬 되어 있는 이유를 모르겠음
   justifySelf: 'start',
   height: '30%',
-  width: '65%',
+  width: '73%',
   gridArea: 'UserStat',
-  backgroundColor: '#1976D2',
+  borderRadius: '7%',
+  border: 'solid 10px #00000000',
+  background:
+    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
+  boxShadow: '0 15px 35px #00000066',
 }));
 
 const StatLadder = styled('div')(({ theme }) => ({
@@ -24,7 +28,6 @@ const StatLadder = styled('div')(({ theme }) => ({
   paddingLeft: '3%',
   width: '30%',
   height: '100%',
-  border: 'solid 1px',
 }));
 
 function UserStat() {

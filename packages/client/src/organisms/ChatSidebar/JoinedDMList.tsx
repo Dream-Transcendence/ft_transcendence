@@ -27,7 +27,8 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
   height: '80%',
   width: '90%',
   borderRadius: '13px',
-  backgroundColor: '#001D7D',
+  background: 'linear-gradient( #f796c088, #76aef177)',
+  border: 'none',
 }));
 
 const UserStateLayout = styled('section')(({ theme }) => ({

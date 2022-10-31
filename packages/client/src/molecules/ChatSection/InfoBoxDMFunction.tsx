@@ -102,6 +102,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   function handleMatch() {
     if (roomInfo.userId) {
+      //상대방 id 추가
       setGameInviteInfo({ ...gameInviteInfo, opponentId: roomInfo.userId });
     }
   }

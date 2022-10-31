@@ -2,7 +2,7 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL } from '../configs/Link.url';
@@ -11,8 +11,8 @@ import styled from '@emotion/styled';
 import useSocket from '../socket/useSocket';
 import { chatNameSpace } from '../socket/event';
 import { getUnJoinedChatList, unJoinedRoomList } from '../recoil/chat.recoil';
-import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
-import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
+import { BaseUserProfileData } from '../types/Profile.type';
+import { userDataAtom } from '../recoil/user.recoil';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -29,14 +29,15 @@ const MainSection = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'row',
   justifyContent: 'center',
-  backgroundColor: '#6BADE2',
+  background:
+    'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
   flex: 1,
 }));
 
 const Section = styled('section')(({ theme }) => ({
   width: '59%',
   height: '100%',
-  backgroundColor: '#432AC5',
+  backgroundColor: '#231ab4dd',
 }));
 
 const Aside = styled('aside')(({ theme }) => ({
@@ -54,16 +55,9 @@ const Aside = styled('aside')(({ theme }) => ({
 function ChatroomPage() {
   const userData = useRecoilValue(userDataAtom);
   const [roomList, setRoomList] = useRecoilState(unJoinedRoomList);
-  const [socket, connect, disconnect] = useSocket(chatNameSpace);
-  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    //정상적인 접근인지 판단하는 로직
-    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
-      navigate('/');
-  }, [userData.id, passSecondOauth, navigate]);
+  const [socket, connect, disconnect] = useSocket(chatNameSpace);
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
 
   useEffect(() => {
     setRoomList(unJoinedChatList);
@@ -106,7 +100,7 @@ function ChatroomPage() {
             ) : (
               <Route path="/" element={<ChatRoomDefaultTemplate />} />
             )}
-            {/* <Route path="*" element={<Navigate replace to={CHANNELURL} />} /> */}
+            <Route path="/*" element={<Navigate replace to={CHANNELURL} />} />
           </Routes>
         </Section>
       </MainSection>

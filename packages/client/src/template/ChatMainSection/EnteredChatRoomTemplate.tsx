@@ -59,7 +59,7 @@ const BannedSpan = styled('span')(({ theme }) => ({
 
 const ChatRoomFeaterLayout = styled('div')(({ theme }) => ({
   width: '100%',
-  height: '87%',
+  height: '85.7%',
   display: 'flex',
   marginTop: '0%',
 }));
@@ -103,7 +103,7 @@ function EnteredChatRoomTemplate() {
         setUserState(roomInfo.status);
       } catch (error) {
         navigate(`${CHANNELURL}`);
-        throw console.dir(error);
+        // throw console.dir(error);
       }
     }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {

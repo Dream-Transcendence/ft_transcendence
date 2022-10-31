@@ -120,7 +120,7 @@ export class Request extends BaseEntity {
 
 @Entity()
 export class Game extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
   id: number;
 
   @Column()
