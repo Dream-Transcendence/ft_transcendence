@@ -1,4 +1,12 @@
-import { Controller, Get, Request, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Req,
+  Request,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -26,5 +34,13 @@ export class AuthController {
   async bakingKimAuthRedirect(@Request() req, @Res({ passthrough: true }) res) {
     // passthrough : 응답을 보내기 위한 옵션
     await this.authService.createJwtToken(req.user, res);
+  }
+
+  @Post('logout')
+  @ApiTags('로그아웃')
+  @ApiOperation({ summary: '로그아웃 요청' })
+  logout(@Req() req, @Res() res) {
+    res.setHeader('Set-Cookie', this.authService.logOut());
+    return res.sendStatus(200);
   }
 }

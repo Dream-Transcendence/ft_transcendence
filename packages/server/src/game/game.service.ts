@@ -10,6 +10,7 @@ import {
   SizeDto,
   HandleStartDto,
   GameScoreDto,
+  WatchDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -124,13 +125,23 @@ export class GameService {
 
   async addGameResult(addGameResultDto: AddGameResultDto) {
     const { players, score, mode } = addGameResultDto;
+
+    let id = 1;
+    const rank = await this.gamesRepository
+      .createQueryBuilder('game')
+      .select('MAX(rank.id)', 'id')
+      .getRawOne();
+    if (rank.id !== null) id = rank.id + 1;
+
     const result1 = this.gamesRepository.create({
+      id,
       win: score.left > score.right ? true : false,
       ladder: mode === 0 ? true : false,
       user: players.left,
       opponent: players.right,
     });
     const result2 = this.gamesRepository.create({
+      id: id + 1,
       win: score.left < score.right ? true : false,
       ladder: mode === 0 ? true : false,
       user: players.right,
@@ -339,5 +350,17 @@ export class GameService {
 
   handleGameSize(client: Socket, sizeDto: SizeDto) {
     this.gameInfoMap.get(sizeDto.title).size = sizeDto.size;
+  }
+
+  async handleWatch(client: Socket, watchDto: WatchDto) {
+    const { userId } = watchDto;
+
+    for (const [key, value] of this.gameInfoMap) {
+      if (value.player.left.id === userId || value.player.right.id === userId) {
+        client.join(key);
+        return key;
+      }
+    }
+    throw new WsException('게임이 존재하지 않습니다');
   }
 }
