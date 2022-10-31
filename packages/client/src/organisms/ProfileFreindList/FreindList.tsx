@@ -41,10 +41,11 @@ const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'end',
-  justifySelf: 'start',
+  justifySelf: 'center',
+  justifyContent: 'center',
   alignItems: 'center',
   height: '42%',
-  width: '50%',
+  width: '77%',
   gridArea: 'FreindList',
   borderRadius: '7%',
   background:
@@ -59,13 +60,11 @@ const TextLayout = styled('div')(({ theme }) => ({
 }));
 
 const ProfileBoxLayout = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignSelf: 'start',
-  justifySelf: 'start',
-  width: '100%',
-  height: '90%',
-  borderBottom: 'solid 1px',
+  width: '90%',
+  height: '80%',
   borderColor: 'black',
+  borderRadius: '2rem',
+  border: 'solid 2px #cccccc77',
 }));
 
 function FreindList(props: { friendProps: FriendPropsType }) {

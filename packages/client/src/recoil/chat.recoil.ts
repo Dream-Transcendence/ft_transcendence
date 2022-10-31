@@ -54,7 +54,8 @@ export const getJoinedChatList = selectorFamily<any, number>({
         const response = await getRoomList(userId);
         return response;
       } catch (error) {
-        console.dir(error);
+        console.log(error);
+        alert(error);
       }
     },
 });

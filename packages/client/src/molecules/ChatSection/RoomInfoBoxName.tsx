@@ -97,7 +97,6 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
     setChangeRoomName(true);
   };
 
-  console.log('auth', auth);
   return (
     <InfoBoxNameLayout>
       {type === DM ? (

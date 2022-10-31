@@ -31,7 +31,11 @@ import {
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
-import { gameTypeAtom } from '../../recoil/user.recoil';
+import {
+  gameTypeAtom,
+  userDataAtom,
+  userSecondAuth,
+} from '../../recoil/user.recoil';
 import { LADDER } from '../../configs/Game.type';
 import CustomIconButton from '../button/icon/CustomIconButtion';
 import { CustomIconProps } from '../../types/Link.type';
@@ -54,6 +58,8 @@ const RightLayout = styled('section')(({ theme }) => ({
 
 function NavigationBar() {
   const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+  const [userData, setUserData] = useRecoilState(userDataAtom);
+  const [secondAuth, setSecondAuth] = useRecoilState(userSecondAuth);
   const navigate = useNavigate();
 
   const searchProps: SearchPropsType = useSearch(
@@ -65,6 +71,15 @@ function NavigationBar() {
   const logoutHandler = async () => {
     try {
       await axios.post(`${SERVERURL}/auth/logout`).then((res) => {
+        setUserData({
+          id: 0,
+          nickname: 'default',
+          image: '',
+        });
+        setSecondAuth({
+          checkIsSecondOauth: false,
+          checkIsValid: true,
+        });
         navigate('/');
         console.log('logout!!');
       });
@@ -88,8 +103,8 @@ function NavigationBar() {
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
   const Channels: LinkIconResource = {
-    // url: CHANNELURL,
-    url: '/pingpong/channel/room/4',
+    url: CHANNELURL,
+    // url: '/pingpong/channel/room/4',
     icon: <ChatIcon fontSize="inherit" />,
   };
 

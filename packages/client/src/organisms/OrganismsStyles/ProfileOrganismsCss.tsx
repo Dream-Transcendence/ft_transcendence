@@ -7,7 +7,7 @@ export const UserInfoLayout = styled('div')(({ theme }) => ({
   alignSelf: 'end',
   justifySelf: 'end',
   height: '47%',
-  width: '55%',
+  width: '77%',
   gridArea: 'Profile',
   borderRadius: '7%',
   background:

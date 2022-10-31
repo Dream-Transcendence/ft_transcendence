@@ -8,6 +8,7 @@ const MatchTypeLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
   alignSelf: 'center',
   backgroundColor: '#00000000',
+  justifyContent: 'center',
   // flexBasis: '20%', //matchtype width %
   height: '100%',
   width: '20%',
