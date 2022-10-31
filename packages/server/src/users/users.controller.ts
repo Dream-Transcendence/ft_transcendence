@@ -281,19 +281,7 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getLadderStat(@Param('id') id: number): Promise<GameLadderDto> {
-    return;
-  }
-
-  @Post('/:id/game/records')
-  @ApiTags('유저/게임')
-  @ApiOperation({ summary: '유저의 게임 기록 추가' })
-  @ApiCreatedResponse({
-    description: '유저 게임 기록 추가 성공',
-    type: GameRecordDto,
-  })
-  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  addGameRecord(@Param('id') id: number): Promise<GameRecordDto> {
-    return;
+    return this.userService.getLadderStat(id);
   }
 
   @Get('/:id/game/records')
@@ -305,7 +293,7 @@ export class UsersController {
   })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   getGameRecords(@Param('id') id: number): Promise<GameRecordDto[]> {
-    return;
+    return this.userService.getGameRecords(id);
   }
 
   @Post('/:id/requests')

@@ -30,11 +30,12 @@ import {
   IsBlockedDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { Auth, Block, Friend, Request, User, Rank } from './users.entity';
+import { Auth, Block, Friend, Request, User, Rank, Game } from './users.entity';
 import { ConnectionDto, ConnectionsDto } from './dto/connect-user.dto';
 import { WsException } from '@nestjs/websockets';
 import { MailerService } from '@nestjs-modules/mailer';
 import * as AWS from 'aws-sdk';
+import { GameLadderDto, GameRecordDto, WatchDto } from 'src/game/game.dto';
 
 @Injectable()
 export class UserService {
@@ -57,6 +58,8 @@ export class UserService {
     private channelParticipantsRepository: Repository<ChannelParticipant>,
     @Inject('DMPARTICIPANTS_REPOSITORY')
     private dmParticipantsRepository: Repository<DmParticipant>,
+    @Inject('GAMES_REPOSITORY')
+    private gamesRepository: Repository<Game>,
     @Inject('RANK_REPOSITORY')
     private rankRepository: Repository<Rank>,
     private readonly mailerService: MailerService,
@@ -560,6 +563,33 @@ export class UserService {
     return requestDtoList;
   }
 
+  async getLadderStat(id: number): Promise<GameLadderDto> {
+    const rank = await this.rankRepository.findOne({
+      relations: { user: true },
+      where: { user: { id: id } },
+    });
+
+    if (rank === null) throw new NotFoundException('랭크 정보가 없습니다.');
+
+    const ladderStat = new GameLadderDto(rank);
+    return ladderStat;
+  }
+
+  async getGameRecords(id: number): Promise<GameRecordDto[]> {
+    const gameRecords = await this.gamesRepository.find({
+      relations: { user: true, opponent: true },
+      where: { user: { id: id } },
+    });
+
+    const gameRecordDtoList: GameRecordDto[] = [];
+    gameRecords.map((gameRecord) => {
+      const gameRecordDto = new GameRecordDto(gameRecord);
+      gameRecordDtoList.push(gameRecordDto);
+    });
+
+    return gameRecordDtoList;
+  }
+
   // ANCHOR: Socket
 
   setConnection(userId: number, onGame: boolean) {
@@ -759,8 +789,9 @@ export class UserService {
   }
 
   async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
-    const request = await this.requestsRepository.findOneBy({
-      id: requestIdDto.id,
+    const request = await this.requestsRepository.findOne({
+      relations: ['requestor', 'responser'],
+      where: { id: requestIdDto.id },
     });
     const friendDto = await this.addFriend(
       request.requestor.id,
@@ -779,8 +810,9 @@ export class UserService {
   }
 
   async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
-    const request = await this.requestsRepository.findOneBy({
-      id: requestIdDto.id,
+    const request = await this.requestsRepository.findOne({
+      relations: ['requestor', 'responser'],
+      where: { id: requestIdDto.id },
     });
 
     await this.requestsRepository.delete(request.id);
