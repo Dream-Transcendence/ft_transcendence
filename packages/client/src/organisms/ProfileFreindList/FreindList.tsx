@@ -86,7 +86,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
             navigate(`${PROFILEURL}/${friendData.user.id}`);
           },
         };
-        console.log('why', friendData.user.id);
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />

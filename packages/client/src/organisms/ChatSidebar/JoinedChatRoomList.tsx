@@ -41,9 +41,12 @@ function JoinedChatRoomModule() {
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const [socket] = useSocket(chatNameSpace);
   const navigate = useNavigate();
+
   useEffect(() => {
-    setRoomList(joinedChatList.channelList);
-  }, [joinedChatList.channelList, setRoomList]);
+    if (joinedChatList !== null) {
+      setRoomList(joinedChatList.channelList);
+    }
+  }, [joinedChatList, setRoomList]);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {

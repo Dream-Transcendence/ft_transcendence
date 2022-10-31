@@ -38,8 +38,11 @@ export const newParticipant = atom<BaseUserProfileData[]>({
 //[수정사항] 전역으로 사용하는 데이터의 파일구조를 바꿀 것
 //현재 유저가 가입된 채팅방의 리스트를 받아옵니다.
 const getRoomList = async (userId: number) => {
-  const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`);
-  return response;
+  if (userId !== 0) {
+    const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`);
+    return response.data;
+  }
+  return null;
 };
 
 export const getJoinedChatList = selectorFamily<any, number>({
@@ -49,7 +52,7 @@ export const getJoinedChatList = selectorFamily<any, number>({
     async ({ get }) => {
       try {
         const response = await getRoomList(userId);
-        return response.data;
+        return response;
       } catch (error) {
         console.dir(error);
       }
@@ -57,8 +60,11 @@ export const getJoinedChatList = selectorFamily<any, number>({
 });
 
 const getUnJoinedRoomList = async (userId: number) => {
-  const response = await axios.get(`${SERVERURL}/rooms/${userId}/channels`);
-  return response;
+  if (userId !== 0) {
+    const response = await axios.get(`${SERVERURL}/rooms/${userId}/channels`);
+    return response.data;
+  }
+  return null;
 };
 
 export const getUnJoinedChatList = selectorFamily<any, number>({
@@ -68,7 +74,7 @@ export const getUnJoinedChatList = selectorFamily<any, number>({
     async ({ get }) => {
       try {
         const response = await getUnJoinedRoomList(userId);
-        return response.data;
+        return response;
       } catch (error) {
         console.dir(error);
       }

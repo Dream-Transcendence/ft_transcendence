@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import * as cookieParser from 'cookie-parser';
+import { GlobalExceptionFilter } from './app.filter';
 
 export class SocketIoAdapter extends IoAdapter {
   createIOServer(port: number, options?: any): any {
@@ -38,6 +39,8 @@ async function bootstrap() {
     .setDescription('Example')
     .setVersion('1.0')
     .build();
+
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -16,7 +16,7 @@ import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 const ChatLogLayout = styled('div')(({ theme }) => ({
-  width: '100%',
+  width: '90%',
   height: '92%',
   display: 'flex',
   flexDirection: 'column',
@@ -197,7 +197,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       {/* [axios GET 요청]해당 채팅방의 모든 로그 요청 */}
       <ListChatGenerateLayout ref={scrollLayout}>
         {!isLoaded && <Loader />}
-        <ListChatUlLayout ref={ulRef}>
+        <ListChatUlLayout className='scroll' ref={ulRef}>
           <AnchorLayout ref={messagesMiddleRef} />
           <div ref={messagesFirstRef} />
           {listElement} <div ref={messagesEndRef} />

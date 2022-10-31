@@ -1,6 +1,11 @@
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
+import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
+import { UserSecondAuth } from '../types/Profile.type';
 
 const GameCreateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -24,6 +29,15 @@ const GameCreateTemplateLayout = styled('section')(({ theme }) => ({
 }));
 
 function GameCreatePage() {
+  const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
   return (
     <GameCreateLayout>
       <GameCreateTemplateLayout>

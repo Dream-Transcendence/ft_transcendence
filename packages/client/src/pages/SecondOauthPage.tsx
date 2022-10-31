@@ -62,9 +62,19 @@ function SecondOauthPage() {
   const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
   const [passSecondOauth, setPassSecondOauth] =
     useRecoilState<UserSecondAuth>(userSecondAuth);
-
+  //[수정사항] 오류횟수 추가해야하나 고민중
   useEffect(() => {
     if (user.id === 0) navigate('/');
+  }, [user.id, navigate]);
+
+  useEffect(() => {
+    if (
+      //이미 설정되어있고, 인증되어있는 유저는 들어올 수 없도록 설정
+      user.id !== 0 &&
+      passSecondOauth.checkIsSecondOauth === true &&
+      passSecondOauth.checkIsValid === true
+    )
+      navigate(`${PROFILEURL}/${user.id}`);
   }, [user.id, navigate]);
 
   const handleSecondOauth = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,7 +100,6 @@ function SecondOauthPage() {
         code: +seconedOauth,
       })
       .then((res) => {
-        console.log('res!', res);
         setPassSecondOauth({
           checkIsSecondOauth: true,
           checkIsValid: true,

@@ -5,8 +5,9 @@ import { RoomService } from './rooms.service';
 import { roomsProviders } from './rooms.providers';
 import { usersProviders } from '../users/users.providers';
 import { RoomsGateway } from './rooms.gateway';
+import { AuthModule } from 'src/auth/auth.module';
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, AuthModule],
   controllers: [RoomsController],
   providers: [RoomService, RoomsGateway, ...roomsProviders, ...usersProviders],
 })

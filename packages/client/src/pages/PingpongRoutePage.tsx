@@ -4,7 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import {
   CHANGEUSERSTATUS,
   FRIENDREQUEST,
@@ -28,9 +28,6 @@ import {
   UserSecondAuth,
 } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
-import GameCreatePage from './GameCreatePage';
-import GameLoadingPage from './GameLoadingPage';
-import GamePlayPage from './GamePlayPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
 import axios from 'axios';
@@ -39,6 +36,7 @@ import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
 } from '../recoil/common.recoil';
+import NotFoundPage from './NotFoundPage';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -67,17 +65,6 @@ function PingpongRoutePage() {
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
 
-  const findChanged = useCallback(
-    (userChangedState: ConnectionDto) => {
-      console.log('상태 바뀐사람 : ', userChangedState);
-      const myIndex: number = userLogStateList.findIndex((user) => {
-        return user.userId === userChangedState?.userId;
-      });
-      return myIndex;
-    },
-    [userLogStateList],
-  );
-
   //로그온 정보 날리기 친구정보 가져다줄것
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
@@ -96,6 +83,7 @@ function PingpongRoutePage() {
       },
     );
     return () => {
+      // socket.off('exception'); //exception 리스너가 없는데 off를 해야하나???
       console.log('로그오프입니다.');
       disconnect();
       socket.close();
@@ -104,6 +92,48 @@ function PingpongRoutePage() {
     //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
   }, []);
   //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함, id 또한 재 로그인 하지 않는이상 다시 바뀔 일은 없겠지만 일단 남겨 둠
+
+  /**
+   * 유저의 미확인 메시지 기록 받아오기
+   */
+  useEffect(() => {
+    async function getMessageList() {
+      await axios
+        .get(`${SERVERURL}/users/${userData.id}/requests`)
+        .then((response: any) => {
+          if (response.data.length > 0) {
+            console.log('유저 메시지 기록 가져오기 : ', response);
+            const infoList = response.data.map((message: any) => {
+              return {
+                id: message.id,
+                userId: message.requestor.id,
+                message: `${message.requestor.nickname}님이 친구요청을 보냈습니다.`,
+                type: 'friend',
+              };
+            });
+            console.log(inviteInfoList, 'to', infoList);
+            setInviteInfoList([...inviteInfoList, ...infoList]);
+          }
+        })
+        .catch((error) => {
+          alert(error);
+          console.log(error);
+        });
+    }
+    getMessageList();
+    console.log(inviteInfoList);
+  }, []);
+
+  const findChanged = useCallback(
+    (userChangedState: ConnectionDto) => {
+      console.log('상태 바뀐사람 : ', userChangedState);
+      const myIndex: number = userLogStateList.findIndex((user) => {
+        return user.userId === userChangedState?.userId;
+      });
+      return myIndex;
+    },
+    [userLogStateList],
+  );
 
   /**
    * 다른 유저의 state 변경 감지 effect
@@ -133,59 +163,22 @@ function PingpongRoutePage() {
   }, []); //userLogStateList, setUserLogStateList, findChanged, socket
 
   /**
-   * logoff한 친구 받기
+   * logoff한 친구 상태 받기
    */
   useEffect(() => {
     socket.on(USERLOGOFF, (response: ConnectionDto) => {
       const idx = findChanged(response);
       if (userLogStateList.length > 0 && idx !== -1) {
         const newList = [...userLogStateList];
-        console.log('bb', newList[0], newList[1]);
-        console.log('bb2', userLogStateList[0], userLogStateList[1]);
-        console.log('bb3', newList);
-        console.log('bb4', userLogStateList);
-
         //logoff면 로그인 한 리스트에서 제거
         newList.splice(idx, 1);
         setUserLogStateList(newList);
-        console.log('aa', newList);
       }
     });
     return () => {
-      socket.removeAllListeners(); //모든 리스너 제거
+      socket.off(USERLOGOFF); //모든 리스너 제거
     };
   }, [userLogStateList, setUserLogStateList, findChanged, socket]); //userLogStateList, setUserLogStateList, findChanged, socket
-
-  /**
-   * 유저의 미확인 메시지 기록 받아오기
-   */
-  useEffect(() => {
-    async function getMessageList() {
-      await axios
-        .get(`${SERVERURL}/users/${userData.id}/requests`)
-        .then((response: any) => {
-          if (response.data.length > 0) {
-            console.log('유저 메시지 기록 있다 : ', response);
-            const infoList = response.data.map((message: any) => {
-              return {
-                id: message.id,
-                userId: message.requestor.id,
-                message: `${message.requestor.nickname}님이 친구요청을 보냈습니다.`,
-                type: 'friend',
-              };
-            });
-            console.log(inviteInfoList, 'to', infoList);
-            setInviteInfoList([...inviteInfoList, ...infoList]);
-          }
-        })
-        .catch((error) => {
-          alert(error);
-          console.log(error);
-        });
-    }
-    getMessageList();
-    console.log(inviteInfoList);
-  }, []);
 
   // useEffect(() => {
   //   socket.onAny((res) => {
@@ -281,6 +274,7 @@ function PingpongRoutePage() {
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="game/*" element={<GameRoutePage />} />
+        <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
       </Routes>
     </PageSection>
   );

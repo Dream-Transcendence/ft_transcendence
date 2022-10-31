@@ -1,13 +1,18 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { UserService } from '../users/users.service';
 import { v4 as uuidv4 } from 'uuid';
 import { JwtService } from '@nestjs/jwt';
+import { Repository } from 'typeorm';
+import { User } from '../users/users.entity';
+import { UserDto } from 'src/users/dto/user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject('USERS_REPOSITORY')
+    private usersRepository: Repository<User>,
     private readonly httpService: HttpService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -29,7 +34,9 @@ export class AuthService {
     });
     if (response) {
       console.log(response.data.id);
-      let user = await this.userService.getUser(response.data.id);
+      let user: UserDto = await this.usersRepository.findOne({
+        where: { id: response.data.id },
+      });
       if (user) {
         return user;
       } else {
@@ -55,5 +62,9 @@ export class AuthService {
     });
     console.log('🥎🥎🥎🥎🥎🥎🥎🥎 우리가 만든 jwt token ', access_token);
     res.redirect(`http://localhost:3005/nickname`);
+  }
+
+  logOut() {
+    return 'Authentication=; Path=/; HttpOnly; Max-Age=0';
   }
 }
