@@ -16,7 +16,6 @@ const OneMatchLayout = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   width: '100%',
   height: '100%',
-  borderRadius: '10%',
   overflow: 'hidden',
   // margin: '1rem',
   margin: 0,
@@ -25,9 +24,9 @@ const OneMatchLayout = styled('div')(({ theme }) => ({
 const OneMatchHistoryLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   flexWrap: 'nowrap',
-  width: '90%',
+  width: '98%',
   height: '95%',
-  borderRadius: '10%',
+  borderRadius: '1rem',
   overflow: 'hidden',
   marginLeft: '10%',
   // margin: '1rem',
@@ -41,7 +40,7 @@ const PlayerInfoLayout = styled('div')(({ theme }) => ({
   height: '100%',
   width: '100%',
   marginLeft: '7%',
-  // justifyContent: 'space-around',
+  justifyContent: 'center',
 }));
 
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {

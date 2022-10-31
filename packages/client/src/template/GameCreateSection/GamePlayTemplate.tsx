@@ -4,6 +4,8 @@ import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWind
 import { gameInfoPropsType } from '../../types/Game.type';
 import { useEffect, useState } from 'react';
 import { LADDER, NORMAL, POWERUP, SIZEDOWN } from '../../configs/Game.type';
+import { useRecoilState } from 'recoil';
+import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -38,9 +40,8 @@ const GameSectionLayout = styled('div')(({ theme }) => ({
   height: '73%',
 }));
 
-function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
-  const gameInfoProps = props.gameInfoProps;
-  const { value: gameInfo } = props.gameInfoProps;
+function GamePlayTemplate() {
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
   const [mode, setMode] = useState<string>('');
   useEffect(() => {
     switch (gameInfo?.mode) {
@@ -65,7 +66,7 @@ function GamePlayTemplate(props: { gameInfoProps: gameInfoPropsType }) {
         <TextBox value={`${mode}`} size={'2rem'} fontColor={'black'} />
       </GameHeaderLayout>
       <GameSectionLayout>
-        <GamePlayWindowOrganism gameInfoProps={gameInfoProps} />
+        <GamePlayWindowOrganism />
       </GameSectionLayout>
     </GameTemplateLayout>
   );

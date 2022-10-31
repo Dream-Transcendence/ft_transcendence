@@ -42,6 +42,7 @@ import {
 } from '../../types/Profile.type';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NOTFOUNDURL } from '../../configs/Link.url';
+import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const GameLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -206,8 +207,8 @@ const RightUserProfile = styled('div')(({ theme }) => ({
   position: 'absolute',
 }));
 
-function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
-  const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
+function GamePlayWindowOrganism() {
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
   const [socket] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const [time, setTime] = useState<number>(3);
@@ -258,17 +259,28 @@ function GamePlayWindowOrganism(props: { gameInfoProps: gameInfoPropsType }) {
   /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
   useEffect(() => {
     const startGame = async () => {
-      setTimeout(() => {
-        console.log('GAME START');
-        socket.emit(`${GAMESTART}`, {
-          title: gameInfo?.title,
-          userId: userData.id,
-        });
-      }, 4500);
+      if (
+        userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id
+      ) {
+        setTimeout(() => {
+          console.log('GAME START');
+          socket.emit(`${GAMESTART}`, {
+            title: gameInfo?.title,
+            userId: userData.id,
+          });
+        }, 4500);
+      }
       setIsStart(false);
     };
     if (IsStart === true) startGame();
   }, [IsStart]);
+
+  useEffect(() => {
+    return () => {
+      console.log('game over!!!!');
+    };
+  }, []);
 
   //마운트시 초기화가 되어서 무한랜더링됨.
   //ref로 해결

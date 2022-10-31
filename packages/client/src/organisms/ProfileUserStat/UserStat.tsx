@@ -13,7 +13,7 @@ const UserStatLayout = styled('div')(({ theme }) => ({
   alignItems: 'center', //내부 아이템이라고 생각하는 문자열이 좌측 상단 정렬 되어 있는 이유를 모르겠음
   justifySelf: 'start',
   height: '30%',
-  width: '57%',
+  width: '73%',
   gridArea: 'UserStat',
   borderRadius: '7%',
   border: 'solid 10px #00000000',

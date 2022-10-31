@@ -407,7 +407,10 @@ export class GameService {
     for (const [key, value] of this.gameInfoMap) {
       if (value.player.left.id === userId || value.player.right.id === userId) {
         client.join(key);
-        return { title: key };
+        // return { title: key };
+        const gameInfo = this.gameInfoMap.get(key);
+        console.log('gameinfo: ', gameInfo);
+        return gameInfo.getGameRoomDto(key);
       }
     }
     throw new WsException('게임이 존재하지 않습니다');

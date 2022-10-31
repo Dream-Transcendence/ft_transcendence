@@ -79,10 +79,12 @@ function ProfileNickname() {
           );
           setUser(response.data);
         }
-      } catch (error) {
-        alert(error);
-        navigate(PROFILEURL);
-        console.log(error);
+      } catch (error: any) {
+        if (error.response.data.statusCode === 401) navigate('/');
+        else {
+          console.log(error);
+          alert(error);
+        }
       }
     }
     getUserData();

@@ -59,7 +59,7 @@ function findUser(id: number | undefined) {
   };
 }
 
-function getUserState(
+export function getUserState(
   userLogStateList: ConnectionDto[],
   id: number | undefined,
 ): string | undefined {

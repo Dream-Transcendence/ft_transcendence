@@ -92,7 +92,7 @@ function ChatroomPage() {
             />
             {/* <Route path="dm/" element={<Navigate replace to={CHANNELURL} />} /> */}
             <Route path="room/:roomId" element={<EnteredChatRoomTemplate />} />
-            {roomList.length ? (
+            {roomList?.length ? (
               <Route
                 path="/"
                 element={<ChatRoomListTemplate roomList={roomList} />}

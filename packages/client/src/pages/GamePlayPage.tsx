@@ -6,10 +6,11 @@ import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
 import { gameInfoPropsType } from '../types/Game.type';
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { useNavigate } from 'react-router-dom';
 import { UserSecondAuth } from '../types/Profile.type';
+import { gameInfoAtom } from '../recoil/game.recoil';
 
 const GamePlayLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -30,18 +31,18 @@ const GamePlayTemplateLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
-  const gameInfoProps = props.gameInfoProps;
+function GamePlayPage() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
     if (
       userData.id === 0 ||
       passSecondOauth.checkIsValid === false ||
-      gameInfoProps === undefined
+      gameInfo === undefined
     )
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
@@ -51,7 +52,7 @@ function GamePlayPage(props: { gameInfoProps: gameInfoPropsType }) {
       <GamePlayTemplateLayout>
         {/* <GameStartButton onClick={handleGameStart}> START </GameStartButton> */}
         {/* [SocketIO 요청] 게임구현 시, socket을 사용하겠지? */}
-        <GamePlayTemplate gameInfoProps={gameInfoProps} />
+        <GamePlayTemplate />
       </GamePlayTemplateLayout>
     </GamePlayLayout>
   );

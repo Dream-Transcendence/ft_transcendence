@@ -116,8 +116,11 @@ function PingpongRoutePage() {
           }
         })
         .catch((error) => {
-          alert(error);
-          console.log(error);
+          if (error.response.data.statusCode === 401) navigate('/');
+          else {
+            console.log(error);
+            alert(error);
+          }
         });
     }
     getMessageList();

@@ -21,8 +21,8 @@ const MatchHistoryLayout = styled('section')(({ theme }) => ({
   alignSelf: 'start',
   justifySelf: 'start',
   alignItems: 'center',
-  height: '90%',
-  width: '60%',
+  height: '95%',
+  width: '77%',
   gridArea: 'MatchHistory',
   borderRadius: '7%',
   background:
@@ -69,7 +69,7 @@ function MatchHistory() {
         style={{
           backgroundColor: '#aacdffff',
           width: '90%',
-          height: '85%',
+          height: '88%',
           borderRadius: '3%',
         }}
       >
