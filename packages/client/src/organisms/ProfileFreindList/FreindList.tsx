@@ -7,7 +7,7 @@ import {
   FriendType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
-import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL, GAMEPLAYURL } from '../../configs/Link.url';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import {
@@ -34,7 +34,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ConnectionDto } from '../../types/LogOn.type';
 import { getUserState } from '../../atoms/profile/ProfileAvatar';
 import { Socket } from 'socket.io-client';
-import { WatchGameType } from '../../types/Game.type';
+import { GameRoomDto, WatchGameType } from '../../types/Game.type';
+import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -68,13 +69,27 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindList(props: { friendProps: FriendPropsType }) {
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
   const navigate = useNavigate();
   const { value: friendList, setter: setFriendList } = props.friendProps;
   const [listElement, setListElement] = useState<JSX.Element[]>();
+  const [onGame, setOnGame] = useState<boolean>(false);
   const userLogStateList =
     useRecoilValue<ConnectionDto[]>(userLogStateListAtom);
   let userState = useRef<string | undefined>();
-  const [socket] = useSocket(gameNameSpace);
+  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+
+  useEffect(() => {
+    if (userLogStateList.some((user) => user.onGame === true)) {
+      connect();
+      setOnGame(true);
+    } else {
+      if (onGame) {
+        disconnect();
+        setOnGame(false);
+      }
+    }
+  }, [userLogStateList]);
 
   useEffect(() => {
     if (friendList.length > 0) {
@@ -100,14 +115,17 @@ function FreindList(props: { friendProps: FriendPropsType }) {
             {
               userId: userData.id,
             },
-            (res: WatchGameType) => {
-              // navigate(`GAMEPLAYURL/${res}`);
-              console.log('enter! ', res);
+            (res: GameRoomDto) => {
+              setGameInfo(res);
+              console.log(res);
+              navigate(`${GAMEPLAYURL}/${res.title}`);
             },
           );
+          socket.on('exception', (error) => {
+            alert(error.message);
+          });
         }
 
-        console.log('!!!!!!!', userLogStateList, userData.id);
         userState.current = getUserState(userLogStateList, userData.id);
         const customProps: CustomIconProps = {
           icon: <VisibilityIcon />,
@@ -118,15 +136,15 @@ function FreindList(props: { friendProps: FriendPropsType }) {
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
-            {/* {userState.current === 'onGame' && (
+            {userState.current === 'onGame' && (
               <CustomIconButton customProps={customProps} />
-            )} */}
+            )}
           </ListLayout>
         );
       });
       setListElement(element);
     }
-  }, [friendList, navigate]);
+  }, [friendList, navigate, userLogStateList]);
 
   return (
     <FreindListLayout>

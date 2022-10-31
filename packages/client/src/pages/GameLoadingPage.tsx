@@ -11,13 +11,13 @@ import {
   gameNameSpace,
 } from '../socket/event';
 import { useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
 import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
-import { gameModeAtom } from '../recoil/game.recoil';
+import { gameInfoAtom, gameModeAtom } from '../recoil/game.recoil';
 import { UserSecondAuth } from '../types/Profile.type';
 import { Typography } from '@mui/material';
 
@@ -52,8 +52,8 @@ const ButtonLayout = styled('div')(({ theme }) => ({
   background: '#0E359B',
 }));
 
-function GameLoadingPage(props: { gameInfoProps: gameInfoPropsType }) {
-  const { value: gameInfo, setter: setGameInfo } = props.gameInfoProps;
+function GameLoadingPage() {
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
   const [socket] = useSocket(gameNameSpace);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);

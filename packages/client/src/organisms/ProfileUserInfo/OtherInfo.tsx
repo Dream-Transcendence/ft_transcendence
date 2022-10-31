@@ -103,7 +103,7 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   //   }
   // }
 
-  async function sendRequestFriend() {
+  function sendRequestFriend() {
     try {
       socket.emit(FRIENDREQUEST, {
         requestorId: id,
