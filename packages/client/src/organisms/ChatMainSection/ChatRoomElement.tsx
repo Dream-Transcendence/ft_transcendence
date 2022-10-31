@@ -19,6 +19,7 @@ import useSocket from '../../socket/useSocket';
 import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { Scale } from '@mui/icons-material';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -26,6 +27,7 @@ const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   marginBottom: '1%',
   borderRadius: '3px',
   backgroundColor: '#1976D2',
+  boxShadow: '2px 2px 2px 1px #03008855',
   display: 'flex',
   alignItems: 'center',
 }));
@@ -51,7 +53,7 @@ const EnterButtonLayout = styled('div')(({ theme }) => ({
   alignItems: 'center',
 }));
 
-function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
+function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
   //chatpage에 있있던  비번 옮겨옴
   const [password, setPassword] = useState('');
   const roomInfo = props.roomInfo;
@@ -104,6 +106,24 @@ function ChatRoomElementOrganisms(props: { roomInfo: GetRoomInfoDto }) {
     //데이터에 따라 다른 url
     content: '입장',
     handler: enterRoom,
+    style: {
+      background: 'linear-gradient(to bottom right, #f796c0, #76aef1)',
+      fontFamily: 'Lato, sans-serif',
+      fontWeight: 500,
+      marginTop: '-10%',
+      borderRadius: '5px',
+      boxShadow: '0 5px 7px #00000022',
+      padding: '10px 7px',
+      fontSize: '13px',
+      border: 'none',
+      color: 'whitesmoke',
+      transition: '0.25s',
+      '&:hover': {
+        letterSpacing: '1px',
+        transform: [{ scale: 5 }], //잘 작동이안됨
+        cursor: 'pointer',
+      },
+    },
   };
 
   return (

@@ -32,7 +32,7 @@ const RoomChattingLayout = styled('div')(({ theme }) => ({
 
 const ChattingLayout = styled('div')(({ theme }) => ({
   width: '70%',
-  height: '99%',
+  height: '98%',
 }));
 
 const BlockLayout = styled('div')(({ theme }) => ({

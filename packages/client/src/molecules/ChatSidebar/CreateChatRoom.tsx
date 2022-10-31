@@ -20,6 +20,25 @@ const AsideButtonBox = styled('div')(({ theme }) => ({
   flexDirection: 'row',
 }));
 
+const CreateButton = styled('button')(({ theme }) => ({
+  background: 'linear-gradient(to bottom right, #f796c0, #76aef1)',
+  fontFamily: 'Lato, sans-serif',
+  fontWeight: 500,
+  marginTop: '-10%',
+  borderRadius: '5px',
+  boxShadow: '0 15px 35px #00000066',
+  padding: '10px 25px',
+  fontSize: '20px',
+  border: 'none',
+  color: 'whitesmoke',
+  transition: '0.25s',
+  '&:hover': {
+    letterSpacing: '2px',
+    transform: '120%',
+    cursor: 'pointer',
+  },
+}));
+
 function CreateChatRoomModule() {
   const [open, setOpen] = React.useState(false);
   const user = useRecoilValue(userDataAtom);
@@ -34,9 +53,7 @@ function CreateChatRoomModule() {
   return (
     <CreateChatRoomLayout>
       <AsideButtonBox>
-        <Button onClick={handleToggle} variant="contained">
-          Create room
-        </Button>
+        <CreateButton onClick={handleToggle}>Create room</CreateButton>
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={open}

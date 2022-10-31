@@ -13,7 +13,26 @@ const MainSection = styled.section`
 function NotFoundPage() {
   return (
     <MainSection>
-      <Typography style={{ fontSize: '400px' }}> 404 </Typography>
+      <Typography
+        sx={{
+          fontSize: '30vh',
+          top: '20%',
+          fontSizeAdjust: 'from-font',
+          position: 'absolute',
+        }}
+      >
+        404
+      </Typography>
+      <Typography
+        sx={{
+          fontSize: '5vh',
+          top: '60%',
+          fontSizeAdjust: 'from-font',
+          position: 'absolute',
+        }}
+      >
+        페이지를 찾을 수 없습니다.
+      </Typography>
     </MainSection>
   );
 }

@@ -18,8 +18,8 @@ import {
   UserSecondAuth,
 } from '../../types/Profile.type';
 import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
-import { useParams } from 'react-router-dom';
+import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { useNavigate, useParams } from 'react-router-dom';
 import { AlternateEmailTwoTone } from '@mui/icons-material';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Diversity1Icon from '@mui/icons-material/Diversity1';
@@ -38,6 +38,7 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const navigate = useNavigate();
   const [userData, setUserData] = useState<BaseUserProfileData>({
     id: 0,
     nickname: 'noname',
@@ -55,8 +56,8 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
           setUserData(response.data);
         }
       } catch (error) {
-        alert(error);
-        console.log(error);
+        // alert(error);
+        // console.log(error);
       }
     }
     getUserData();

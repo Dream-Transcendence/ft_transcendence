@@ -15,6 +15,7 @@ import LogoutIconButton from '../button/icon/LogoutIconButton';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 import { Link, useNavigate } from 'react-router-dom';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
@@ -32,6 +33,9 @@ import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
 import { gameTypeAtom } from '../../recoil/user.recoil';
 import { LADDER } from '../../configs/Game.type';
+import CustomIconButton from '../button/icon/CustomIconButtion';
+import { CustomIconProps } from '../../types/Link.type';
+import axios from 'axios';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -50,12 +54,24 @@ const RightLayout = styled('section')(({ theme }) => ({
 
 function NavigationBar() {
   const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+  const navigate = useNavigate();
 
   const searchProps: SearchPropsType = useSearch(
     `${SERVERURL}/users/search`,
     `${PROFILEURL}/`,
     5, //profile type
   );
+
+  const logoutHandler = async () => {
+    try {
+      await axios.post(`${SERVERURL}/auth/logout`).then((res) => {
+        navigate('/');
+        console.log('logout!!');
+      });
+    } catch (error) {
+      console.dir(error);
+    }
+  };
 
   const setLadder = () => {
     setUserGameType(LADDER);
@@ -66,7 +82,7 @@ function NavigationBar() {
     icon: <NavProfile />,
   };
   const Ladder: LinkIconResource = {
-    url: GAMELOADINGURL, //[수정사항][게임]임시 수정 doyun님 작업끝나면 원래대로 돌릴 것
+    url: GAMELOADINGURL,
     // url: GAMEPLAYURL + '1',
     // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
@@ -90,6 +106,11 @@ function NavigationBar() {
     action: setLadder,
   };
 
+  const logoutButton: CustomIconProps = {
+    icon: <LogoutRoundedIcon />,
+    action: logoutHandler,
+  };
+
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
@@ -103,7 +124,7 @@ function NavigationBar() {
             <LinkPageIconButton linkIconProps={chatAction} />
             <RightLayout>
               <SearchBox searchProps={searchProps} />
-              <LogoutIconButton />
+              <CustomIconButton customProps={logoutButton} />
             </RightLayout>
           </Toolbar>
         </AppBar>

@@ -21,7 +21,7 @@ const ChatParticipantsLayout = styled('div')(({ theme }) => ({
 const ChatParticipantBox = styled('div')(({ theme }) => ({
   width: '100%',
   height: '65%',
-  backgroundColor: '#003566',
+  background: 'linear-gradient( #f796c044, #76aef177)',
   borderRadius: '15px',
   float: 'right',
   marginTop: '40%',
