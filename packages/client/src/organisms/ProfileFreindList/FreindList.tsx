@@ -130,7 +130,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
           icon: <VisibilityIcon />,
           action: handlerObserver,
         };
-        console.log(userState.current, 'cunrrr');
 
         return (
           <ListLayout key={friendData.user.id}>

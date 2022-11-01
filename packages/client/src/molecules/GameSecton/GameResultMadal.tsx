@@ -2,7 +2,7 @@ import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
 import { color } from '@mui/system';
 import GameScore from './GameScore';
@@ -69,7 +69,7 @@ const GameResultLayout = styled('div')(({ theme }) => ({
 }));
 
 function GameResultModal(openControl: GameResultModalControl) {
-  const { open, setOpen, score, gameInfo } = openControl;
+  const { open, setOpen, score, gameInfo, abstention } = openControl;
   const navigate = useNavigate();
   const handleClose = () => {
     setOpen(false);
@@ -95,17 +95,8 @@ function GameResultModal(openControl: GameResultModalControl) {
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
-  // useEffect(() => {
-  //   console.log('rest! ', open);
-  // }, [open]);
-  // console.log('open??? ', open);
-
   return (
     <div>
-      {/* <Button onClick={handleOpen}>
-        Open Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        modal
-      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -113,20 +104,29 @@ function GameResultModal(openControl: GameResultModalControl) {
         aria-describedby="parent-modal-description"
       >
         <Box sx={{ ...style, width: 400 }}>
+          {/* 임시로 기권한 사람 보여지게함 디자인 나중에 수정할 것 */}
           <GameResultLayout>
-            <UserProfileBoxLayout>
-              <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
-            </UserProfileBoxLayout>
-            <OtherProfileBoxLayout>
-              <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
-            </OtherProfileBoxLayout>
-            <GameScoreLayout>
-              <GameScore
-                player1Score={String(score?.left)}
-                player2Score={String(score?.right)}
-              />
-              {/* {GameScore({ player1Score: '10', player2Score: '9' })} */}
-            </GameScoreLayout>
+            {(abstention === 0 ||
+              abstention === userProfileBoxProps.userData.id) && (
+              <UserProfileBoxLayout>
+                <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
+              </UserProfileBoxLayout>
+            )}
+            {(abstention === 0 ||
+              abstention === otherProfileBoxProps.userData.id) && (
+              <OtherProfileBoxLayout>
+                <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
+              </OtherProfileBoxLayout>
+            )}
+            {abstention !== 0 && <Typography> 기권함! </Typography>}
+            {abstention === 0 && (
+              <GameScoreLayout>
+                <GameScore
+                  player1Score={String(score?.left)}
+                  player2Score={String(score?.right)}
+                />
+              </GameScoreLayout>
+            )}
             <ExitButtonLayout>
               <Button onClick={handleClose} style={{ color: 'white' }}>
                 나가기

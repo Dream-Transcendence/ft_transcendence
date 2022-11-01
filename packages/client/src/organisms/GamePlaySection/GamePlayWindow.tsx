@@ -7,6 +7,7 @@ import {
   GAMEPROCESS,
   GAMESTART,
   MOVEPADDLE,
+  PLAYERABSTENTION,
   RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
@@ -215,6 +216,7 @@ function GamePlayWindowOrganism() {
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);
   const [score, setScore] = useState<ScoreProps | undefined>(gameInfo?.score);
+  const [abstention, setAbstention] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<GameOffsetProps>({
     ballPosX: gameInfo?.ballPos.x,
@@ -235,10 +237,6 @@ function GamePlayWindowOrganism() {
     id: 0,
     nickname: '',
     image: '',
-  };
-
-  const handleOpen = () => {
-    setOpen(true);
   };
 
   useEffect(() => {
@@ -317,13 +315,13 @@ function GamePlayWindowOrganism() {
   useEffect(() => {
     const getGameResult = () => {
       socket.on(`${GAMEEND}`, (res) => {
+        console.log('result!!!!!!!', res);
         setScore({
           ...score,
           left: res.score.left,
           right: res.score.right,
         });
         if (res.score.left === 3 || res.score.right === 3) {
-          handleOpen();
           setOpen(true);
         } else {
           setIsStart(true);
@@ -377,8 +375,9 @@ function GamePlayWindowOrganism() {
     /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
     // 관전유저가 들어올 경우, 이벤트 처리  막아줌
     if (
-      userData.id === gameInfo?.leftPlayer.id ||
-      userData.id === gameInfo?.rightPlayer.id
+      (userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id) &&
+      abstention === 0
     ) {
       window.addEventListener('keydown', (e) => {
         // console.log('keyevent', e.key, e.key === 'ArrowUp');
@@ -388,18 +387,24 @@ function GamePlayWindowOrganism() {
             playerId: userData.id,
             moveDir: UP,
           });
-          console.log('keyevent', e.key, 'ArrowUp');
         } else if (e.key === 'ArrowDown') {
           socket.emit(`${MOVEPADDLE}`, {
             title: gameInfo?.title,
             playerId: userData.id,
             moveDir: DOWN,
           });
-          console.log('keyevent', e.key, 'ArrowDown');
         }
       });
     }
   }, []);
+
+  /* 상대방 기권 감지 */
+  useEffect(() => {
+    socket.on(PLAYERABSTENTION, (res) => {
+      setAbstention(res.abstainedPlayer); //나간사람 id로 셋팅할까?
+      setOpen(true);
+    });
+  }, [socket]);
 
   const leftPlayerProfile: UserProfileBoxType = {
     isButton: false,
@@ -464,6 +469,7 @@ function GamePlayWindowOrganism() {
         setOpen={setOpen}
         score={score}
         gameInfo={gameInfo}
+        abstention={abstention}
       />
     </GameWindowLayout>
   );
