@@ -81,6 +81,7 @@ function GameCreateTemplate() {
 
   //game invite
   const gameRequest = () => {
+    console.log(userData);
     userSocket.emit(GAMEINVITE, {
       hostId: userData.id,
       opponentId: gameInviteInfo.opponentId,
@@ -91,7 +92,7 @@ function GameCreateTemplate() {
   const setNomal = () => {
     setUserGameType(CUSTOM);
     gameRequest();
-    navigate(GAMELOADINGURL);
+    // navigate(GAMELOADINGURL);
   };
 
   //[수정사항] gameloading으로 넘어가야함

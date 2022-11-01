@@ -293,10 +293,11 @@ function PingpongRoutePage() {
   }, [inviteInfoList, setInviteInfoList, socket]);
 
   /**
-   * 게임 수락 이후 title 받기
+   * 게임 수락 이후 title 받고 match 요청
    */
   useEffect(() => {
     socket.on(ACCEPTGAME, (response: ServerAcceptGameDto) => {
+      console.log('hid');
       gameSocket.emit(
         GAMEMATCH,
         {
@@ -309,7 +310,7 @@ function PingpongRoutePage() {
         },
       );
     });
-  }, [gameInviteInfo, setGameInviteInfo, socket]);
+  }, []);
 
   useEffect(() => {
     socket.on('exception', (error: any) => {
