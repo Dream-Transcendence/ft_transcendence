@@ -31,9 +31,15 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
   border: 'none',
 }));
 
-const UserStateLayout = styled('section')(({ theme }) => ({
+const BoxLayout = styled('div')(({ theme }) => ({
   height: '100%',
+  marginLeft: '3%',
+}));
+
+const UserStateLayout = styled('section')(({ theme }) => ({
+  height: '50%',
   width: '40%',
+  marginTop: '10%',
   display: 'flex',
   paddingRight: '10%',
 }));
@@ -131,9 +137,11 @@ function JoinedDMListOrganisms() {
                 - Socket.emit으로 로그인 상태 보냄
                 - Socket.on으로  DM유저 로그인 상태 받음
                    */}
-        <ListGenerateLayout>
-          <ListUlLayout>{listElement}</ListUlLayout>
-        </ListGenerateLayout>
+        <BoxLayout>
+          <ListGenerateLayout>
+            <ListUlLayout>{listElement}</ListUlLayout>
+          </ListGenerateLayout>
+        </BoxLayout>
       </JoinedDMBox>
     </JoinedChatListLayout>
   );

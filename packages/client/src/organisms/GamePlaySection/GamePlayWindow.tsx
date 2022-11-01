@@ -315,7 +315,6 @@ function GamePlayWindowOrganism() {
   useEffect(() => {
     const getGameResult = () => {
       socket.on(`${GAMEEND}`, (res) => {
-        console.log('result!!!!!!!', res);
         setScore({
           ...score,
           left: res.score.left,
@@ -401,7 +400,7 @@ function GamePlayWindowOrganism() {
   /* 상대방 기권 감지 */
   useEffect(() => {
     socket.on(PLAYERABSTENTION, (res) => {
-      setAbstention(res.abstainedPlayer); //나간사람 id로 셋팅할까?
+      setAbstention(res.abstainedPlayer);
       setOpen(true);
     });
   }, [socket]);

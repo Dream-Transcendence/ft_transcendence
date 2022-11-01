@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { GAMEEXIT, gameNameSpace, GAMESTART } from '../socket/event';
+import { EXITGAME, gameNameSpace, GAMESTART } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
 import { gameInfoPropsType } from '../types/Game.type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { UserSecondAuth } from '../types/Profile.type';
 import { gameInfoAtom } from '../recoil/game.recoil';
 import { Socket } from 'socket.io';
@@ -38,7 +38,7 @@ function GamePlayPage() {
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
-  const [socket] = useSocket(gameNameSpace);
+  const [socket, connect, disconnect] = useSocket(gameNameSpace);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -48,19 +48,15 @@ function GamePlayPage() {
   }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
-    /* 비정상적인 네트워크로인한 연결끊김이나 화면전환 될 경우 기권처리 */
+    /* 비정상적인 네트워크로인한 연결끊김이나 새로고침 될 경우 기권처리 */
     return () => {
-      if (
-        (userData.id === gameInfo?.leftPlayer.id ||
-          userData.id === gameInfo?.rightPlayer.id) &&
-        gameInfo !== undefined
-      ) {
-        socket.emit(GAMEEXIT, {
-          playerId: userData.id,
-          title: gameInfo?.title,
-        });
-        console.log('game exit!!!!!!!!!!!!!');
-      }
+      connect();
+      socket.emit(`${EXITGAME}`, {
+        playerId: userData.id,
+        title: gameInfo?.title,
+      });
+      console.log('game exit!!!!!!!!!!!!!');
+      disconnect();
     };
   }, []);
 
