@@ -17,7 +17,7 @@ import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 const ChatLogLayout = styled('div')(({ theme }) => ({
   width: '90%',
-  height: '98%',
+  height: '93%', //늘리면 밑에 인풋 삐져나옴
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -102,19 +102,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   //최초 한번 마운트될 때 불러줌.
   useEffect(() => {
     async function getMessageHistory() {
-      console.log(
-        'cli',
-        ulRef.current.clientHeight,
-        'scroll',
-        ulRef.current.scrollHeight,
-        'screensize',
-        messageCount.current?.clientHeight,
-      );
-      // await axios.get(`${SERVERURL}/rooms/messages/${roomId}/0`).then((res) => {
-      //   setMessages(res.data);
-      //   if (isOverflow)
-      //     messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
-      // });
       if (clientHeight !== undefined) {
         await axios
           .get(`${SERVERURL}/rooms/messages/${roomId}/0`, {
@@ -131,7 +118,14 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     if (!isOverflow) {
       getMessageHistory();
     }
-  }, [roomId, isOverflow, startChatRender, setMessages]);
+  }, [
+    roomId,
+    isOverflow,
+    startChatRender,
+    setMessages,
+    clientHeight,
+    messageCount,
+  ]);
 
   useEffect(() => {
     const receiveMessage = () => {
@@ -162,12 +156,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         // 로딩 중이면 로더 컴포넌트 띄워줄것
         setIsLoaded(false);
         try {
-          // await axios
-          //   .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`)
-          //   .then((res) => {
-          //     setMessages([...res.data, ...messages]);
-          //     setIsLoaded(true);
-          //   });
           await axios
             .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`, {
               params: { count: messageCounts },
