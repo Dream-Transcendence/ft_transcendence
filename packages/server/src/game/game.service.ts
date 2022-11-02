@@ -122,8 +122,12 @@ export class GameService {
         throw new WsException('이미 매칭 대기열에 있습니다.');
     });
 
-    if (matchDto.mode === 0)
-      this.userGateway.setConnection(matchDto.userId, true);
+    if (matchDto.mode === 0) {
+      if (
+        (await this.userGateway.setConnection(matchDto.userId, true)) === null
+      )
+        throw new WsException('로그인 되지 않은 유저입니다.');
+    }
 
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
