@@ -83,8 +83,10 @@ export class GameService {
         throw new WsException('이미 매칭 대기열에 있습니다.');
     });
 
-    if (matchDto.mode === 0)
-      this.userGateway.setConnection(matchDto.userId, true);
+    if (matchDto.mode === 0) {
+      if (this.userGateway.setConnection(matchDto.userId, true) === null)
+        throw new WsException('로그인 되지 않은 유저입니다.');
+    }
 
     // NOTE: 래더가 아닐 때, 매치(타임 아웃을 걸어야할 지 고민)
     if (matchDto.mode !== 0) {
@@ -111,14 +113,15 @@ export class GameService {
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
     console.log('Game Client cancel', matchDto);
 
-    this.userGateway.setConnection(matchDto.userId, false);
+    if (!this.userGateway.setConnection(matchDto.userId, false)) {
+      throw new WsException('로그인 되지 않은 유저입니다.');
+    }
 
     const index = this.matchingQueue.findIndex(
       (matchingInfo) => matchingInfo.socket.id === client.id,
     );
     // NOTE: 리스트에서 해당 유저를 삭제하기만 하면 되는데, 응답을 보내야할까?
     this.matchingQueue.splice(index, 1);
-    client.disconnect();
     return { isCanceled: true };
     // NOTE disconnect를 할지 방에서만 빼낼지 고민
   }
@@ -340,6 +343,7 @@ export class GameService {
         this.emitToEveryone(client, title, 'gameEnd', gameScoreDto);
         if (gameScoreDto.score.left === 3 || gameScoreDto.score.right === 3) {
           // NOTE: 게임 중 상태를 온라인으로 바꿈
+
           this.userGateway.setConnection(players.left.id, false);
           this.userGateway.setConnection(players.right.id, false);
         }

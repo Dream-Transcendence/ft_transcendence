@@ -30,6 +30,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   async setConnection(userId: number, onGame: boolean) {
     console.log('????????');
     const result = await this.userService.setConnection(userId, onGame);
+    if (!result) return null;
     this.server.emit('changeUserStatus', result);
   }
 
