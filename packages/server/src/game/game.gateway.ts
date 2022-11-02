@@ -40,7 +40,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('cancelMatch')
   async handleCancel(client: Socket, matchDto: MatchDto) {
-    await this.gameService.handleCancelMatch(client, matchDto);
+    return await this.gameService.handleCancelMatch(client, matchDto);
   }
 
   @SubscribeMessage('start')
