@@ -30,6 +30,7 @@ import { inviteInfoListAtom } from '../recoil/common.recoil';
 import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
 import { UserSecondAuth } from '../types/Profile.type';
 import { Typography } from '@mui/material';
+import LinkPageTextButton from '../atoms/button/linkPage/LinkPageTextButton';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -82,24 +83,6 @@ function GameLoadingPage() {
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
-
-  /**
-   * 게임 취소 로직
-   */
-  useEffect(() => {
-    return () => {
-      socket.emit(
-        GAMECANCEL,
-        {
-          useId: userId,
-        },
-        (response: any) => {
-          console.log('매치 취소 결과 ', response);
-        },
-      );
-      console.log('match cancel!');
-    };
-  }, []);
 
   useEffect(() => {
     // connect(); //game namespace socket 연결
@@ -162,9 +145,32 @@ function GameLoadingPage() {
     };
   }, []);
 
+  /**
+   * 게임 취소 로직
+   */
+  const cancel = () => {
+    socket.emit(
+      GAMECANCEL,
+      {
+        useId: userId,
+      },
+      (response: any) => {
+        console.log('매치 취소 결과 ', response);
+      },
+    );
+    console.log('match cancel!');
+  };
+
   const buttonStyle = {
     background: 'linear-gradient(to bottom right, #f796c0, #76aef1)',
     border: 'none',
+  };
+
+  const linkTextResource = {
+    url: PROFILEURL,
+    content: '매칭 취소',
+    handler: cancel,
+    style: buttonStyle,
   };
 
   return (
@@ -199,7 +205,7 @@ function GameLoadingPage() {
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
-          <HistoryBackTextButton style={buttonStyle} border="none" />
+          <LinkPageTextButton LinkTextResource={linkTextResource} />
         </ButtonLayout>
       </BottomLayout>
     </GameLodingLayout>
