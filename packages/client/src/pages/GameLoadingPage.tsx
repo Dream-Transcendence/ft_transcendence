@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
 import {
   ALREADYFORMATCH,
-  GAMECANCLE,
+  GAMECANCEL,
   GAMEMATCH,
   gameNameSpace,
   INVITEGAME,
@@ -83,6 +83,24 @@ function GameLoadingPage() {
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
 
+  /**
+   * 게임 취소 로직
+   */
+  useEffect(() => {
+    return () => {
+      socket.emit(
+        GAMECANCEL,
+        {
+          useId: userId,
+        },
+        (response: any) => {
+          console.log('매치 취소 결과 ', response);
+        },
+      );
+      console.log('match cancel!');
+    };
+  }, []);
+
   useEffect(() => {
     // connect(); //game namespace socket 연결
     //ladder 일때
@@ -99,13 +117,6 @@ function GameLoadingPage() {
         },
       );
     }
-    return () => {
-      gameSocket.emit(GAMECANCLE, {
-        useId: userId,
-        onGame: false,
-      });
-      console.log('match cancel!');
-    };
   }, []);
 
   //match 성공시 값 받아서 동작시켜야함
@@ -131,13 +142,16 @@ function GameLoadingPage() {
       };
       setInviteInfoList([...inviteInfoList, newMessage]);
       console.log('socket : 게임 초대를 거절당했습니다.', newMessage);
-      navigate(-1);
+      navigate(PROFILEURL);
     });
     return () => {
       userSocket.off(REJECTGAME);
     };
   }, [inviteInfoList, setInviteInfoList, userSocket, navigate, userId]);
 
+  /**
+   * 게임 에러 받기
+   */
   useEffect(() => {
     gameSocket.on('exception', (response: any) => {
       alert(response.message);
@@ -185,8 +199,7 @@ function GameLoadingPage() {
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
-          {/*배경색 주기 위함*/}
-          <HistoryBackTextButton backgroundColor="#76aef1" border="none" />
+          <HistoryBackTextButton style={buttonStyle} border="none" />
         </ButtonLayout>
       </BottomLayout>
     </GameLodingLayout>

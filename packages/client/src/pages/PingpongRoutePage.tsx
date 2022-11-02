@@ -58,7 +58,8 @@ const PageSection = styled('section')(({ theme }) => ({
 
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
-  const [gameSocket] = useSocket(gameNameSpace);
+  const [gameSocket, gconnect, gdisconnect] = useSocket(gameNameSpace);
+
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const [passSecondOauth, setPassSecondOauth] =
@@ -310,6 +311,18 @@ function PingpongRoutePage() {
         },
       );
     });
+  }, []);
+
+  //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
+  //채팅관련 소켓 네임스페이스(chat) 연결작업
+  useEffect(() => {
+    function setChatSocketConnect() {
+      gconnect();
+    }
+    setChatSocketConnect();
+    return () => {
+      gdisconnect();
+    };
   }, []);
 
   useEffect(() => {

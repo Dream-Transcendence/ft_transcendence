@@ -38,6 +38,7 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(client: Socket) {
+    console.log('User Client disconnected@@@@@@@@@@@@@@@@@');
     this.userService.handleDisconnect(client);
   }
 

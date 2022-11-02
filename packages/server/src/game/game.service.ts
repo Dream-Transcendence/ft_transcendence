@@ -118,7 +118,7 @@ export class GameService {
     );
     // NOTE: 리스트에서 해당 유저를 삭제하기만 하면 되는데, 응답을 보내야할까?
     this.matchingQueue.splice(index, 1);
-    client.disconnect();
+    // client.disconnect();
     return { isCanceled: true };
     // NOTE disconnect를 할지 방에서만 빼낼지 고민
   }

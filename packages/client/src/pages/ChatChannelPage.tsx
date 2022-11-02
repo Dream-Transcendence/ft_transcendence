@@ -13,6 +13,7 @@ import { chatNameSpace } from '../socket/event';
 import { getUnJoinedChatList, unJoinedRoomList } from '../recoil/chat.recoil';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { userDataAtom } from '../recoil/user.recoil';
+import InviteMessageList from '../organisms/Massage/InviteMessageList';
 
 const ChatChannel = styled('section')(({ theme }) => ({
   width: '100%',
@@ -104,6 +105,7 @@ function ChatroomPage() {
           </Routes>
         </Section>
       </MainSection>
+      <InviteMessageList />
       <footer></footer>
     </ChatChannel>
   );
