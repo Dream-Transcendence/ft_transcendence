@@ -12,42 +12,61 @@ import { userDataAtom } from '../../recoil/user.recoil';
 function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const { url, listParams, action } = props.searchProps; //혹시 action 쓸 일 있을까봐 넣어두었습니다.
   const { value: parentTarget, setValue: setParentTarget } = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
-  const { nickname: atomNickname } = useRecoilValue(userDataAtom);
+  // const { nickname: atomNickname } = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
   const [value, setValue] = useState<string | null>(null);
-  // const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   async function getSearchUser() {
+  //     try {
+  //       const response = await axios.get(`${url}`, {
+  //         params: {
+  //           nickname: value,
+  //         },
+  //       });
+  //       if (response.status === 200 && response.data.length > 0) {
+  //         const list: BaseUserProfileData[] = response.data.map(
+  //           (person: BaseUserProfileData) => {
+  //             return person;
+  //           },
+  //         );
+  //         setUserList(list);
+  //       }
+  //     } catch (error: any) {
+  //       alert(error);
+  //       console.log('123', error.response.data.status);
+  //     }
+  //   } //[수정사항][doyun] 에러 발생 focus도 안됐는데 제멋대로 호출함
+  //   if (value) getSearchUser();
+  // }, [value, url]);
 
   useEffect(() => {
-    async function getSearchUser() {
-      try {
-        const response = await axios.get(`${url}`, {
-          params: {
-            nickname: value,
-          },
-        });
-        if (response.status === 200 && response.data.length > 0) {
-          const list: BaseUserProfileData[] = response.data.map(
-            (person: BaseUserProfileData) => {
-              return person;
-            },
-          );
-          setUserList(list);
-        }
-      } catch (error:any) {
+    axios
+      .get(`${url}`, {
+        params: {
+          nickname: value,
+        },
+      })
+      .then((response: any) => {
+        const searched: BaseUserProfileData[] = response.data;
+        console.log('검색결과 받기', searched);
+        setUserList([...searched]);
+      })
+      .catch((error) => {
         alert(error);
-        console.log('123', error.response.data.status);
-      }
-    } //[수정사항][doyun] 에러 발생 focus도 안됐는데 제멋대로 호출함
-    if (value) getSearchUser();
-  }, [value]);
+        console.log(error);
+      });
+  }, [url, value]);
 
   //닉네임 배열 만들기
   const nicknameList = userList.map((user) => {
     return user.nickname;
   });
+
   //리스트 클릭시 user내에 기입한 글자를 포함하는 최초의 nickname을 target으로 넣어 해당 id로 이동
   const handleEvent = (e: any) => {
     if (e.key === 'Enter') {
+      console.log('엔터 키가 눌렸습니다.');
       const target = userList.find((user) => {
         if (e.target.value && user.nickname.includes(e.target.value))
           return true;
@@ -55,27 +74,25 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
       });
       if (target) {
         setValue('');
-        setParentTarget(target);
+        setParentTarget({ ...parentTarget, nickname: e.target.value });
         // navigate(`${PROFILEURL}/${target?.id}`);
       }
     }
   };
-
   return (
     <Autocomplete
       //자동 완성의 값입니다.값을 선택하려면 옵션과 참조가 동일해야 합니다.
       value={value}
       onChange={(event, newValue) => {
+        console.log(newValue);
         setValue(newValue);
       }}
+      id="search-box"
       options={nicknameList} //옵션 배열
       getOptionLabel={(option) => {
         //값 입력시 해당하는 list출력
         // e.g value selected with enter, right from the input
         if (typeof option === 'string') {
-          return option;
-        }
-        if (option) {
           return option;
         }
         return option;

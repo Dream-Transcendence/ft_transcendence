@@ -8,6 +8,7 @@ import { SearchPropsType } from '../../types/search.type';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { BaseUserProfileData } from '../../types/Profile.type';
+import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -24,7 +25,7 @@ const Search = styled('div')(({ theme }) => ({
 
 function SearchBox(prop: { searchProps: SearchPropsType }) {
   const searchProps = prop.searchProps;
-
+  console.log('asdasd', searchProps);
   return (
     <Search>
       <AutoComplateSerchBox searchProps={searchProps} />
