@@ -29,8 +29,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   // TODO: 상대 유저가 disconnect 되었을 때 패배 처리
-  handleDisconnect() {
+  async handleDisconnect(client: Socket) {
     console.log('Game Client disconnected');
+    await this.gameService.handleDisconnect(client);
   }
 
   @SubscribeMessage('match')
