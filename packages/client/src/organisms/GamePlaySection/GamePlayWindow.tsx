@@ -176,6 +176,12 @@ const ReadCount = styled('span')(({ theme }) => ({
   color: '#ffd300',
 }));
 
+const ReadyCount = styled('span')(({ theme }) => ({
+  fontSize: '6.5vh',
+  marginLeft: '-50%',
+  color: '#ffd300',
+}));
+
 const ScoreLayout = styled('span')(({ theme }) => ({
   fontSize: '500%',
   textAlign: 'center',
@@ -240,12 +246,6 @@ function GamePlayWindowOrganism() {
   };
 
   useEffect(() => {
-    console.log(
-      '???? tlte ',
-      urlTitle !== gameInfo?.title,
-      urlTitle,
-      gameInfo?.title,
-    );
     if (urlTitle !== gameInfo?.title || gameInfo?.title === undefined)
       navigate(`${NOTFOUNDURL}`);
   }, [urlTitle]);
@@ -292,7 +292,14 @@ function GamePlayWindowOrganism() {
         setTime(timeRef.current);
       }, 1000);
     };
-    if (IsStart === false && time === 3) countReady();
+    if (
+      IsStart === false &&
+      time === 3 &&
+      (userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id)
+    ) {
+      countReady();
+    }
   }, [IsStart, time]);
 
   /* 게임 시작 시, 현재 패들과 공의 위치값 받아오는 로직 */
@@ -435,7 +442,12 @@ function GamePlayWindowOrganism() {
             height={theme.canvasImgProps.height}
           >
             <ReadCountLayout>
-              <ReadCount>{time}</ReadCount>
+              {userData.id === gameInfo?.leftPlayer.id ||
+              userData.id === gameInfo?.rightPlayer.id ? (
+                <ReadCount>{time}</ReadCount>
+              ) : (
+                <ReadyCount>READY</ReadyCount>
+              )}
             </ReadCountLayout>
           </PreGamePlayCanvasLayout>
         ) : (
