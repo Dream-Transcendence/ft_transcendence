@@ -375,6 +375,7 @@ export class RoomService {
     roomId: number,
     messageId: number,
     userId: number,
+    count: number,
   ): Promise<GetMessageDto[]> {
     const room = await this.roomsRepository.findOneBy({ id: roomId });
     if (!room) throw new NotFoundException(`Can't find room ${roomId}`);
@@ -403,8 +404,8 @@ export class RoomService {
     let idx = 0;
     const msgResult = msgs.filter((msg) => {
       if (
-        (!messageId && idx < 15) ||
-        (messageId && messageId > msg.id && idx < 15)
+        (!messageId && idx < count) ||
+        (messageId && messageId > msg.id && idx < count)
       ) {
         idx++;
         return true;
