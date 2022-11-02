@@ -28,10 +28,10 @@ export class GameService {
     private schedulerRegistry: SchedulerRegistry,
     private userGateway: UserGateway,
   ) {}
-  private matchingQueue: MatchInfo[] = [];
+  private matchingQueue: MatchInfo[] = []; // ladder
   private readyMap: Map<string, number> = new Map();
   private gameInfoMap: Map<string, GameInfo> = new Map();
-  private customMatchingMap: Map<string, MatchInfo> = new Map();
+  private customMatchingMap: Map<string, MatchInfo> = new Map(); // 1:1
 
   ballDiameter = 40;
   canvasWidth = 1024;
@@ -40,6 +40,7 @@ export class GameService {
   paddleHeight = 186;
 
   async handleDisconnect(client: Socket) {
+    // 게임 중 다른 페이지로 이동했을 때
     for (const [key, value] of this.gameInfoMap) {
       if (
         value.player.left.clientId === client.id ||
@@ -73,6 +74,14 @@ export class GameService {
         this.gameInfoMap.delete(key);
         this.schedulerRegistry.deleteInterval(key);
       }
+    }
+    // 게임 매치에서 다른 페이지로 이동했을 때
+    const index = this.matchingQueue.findIndex(
+      (matchingInfo) => matchingInfo.socket.id === client.id,
+    );
+
+    if (index !== -1) {
+      this.matchingQueue.splice(index, 1);
     }
   }
 
@@ -152,25 +161,6 @@ export class GameService {
       }
     }
     return { isMatched: true };
-  }
-
-  async handleCancelMatch(client: Socket, matchDto: MatchDto) {
-    console.log('Game Client cancel', matchDto);
-
-    if (matchDto.mode === 0) {
-      if (
-        (await this.userGateway.setConnection(matchDto.userId, true)) === null
-      )
-        throw new WsException('로그인 되지 않은 유저입니다.');
-    }
-
-    const index = this.matchingQueue.findIndex(
-      (matchingInfo) => matchingInfo.socket.id === client.id,
-    );
-    // NOTE: 리스트에서 해당 유저를 삭제하기만 하면 되는데, 응답을 보내야할까?
-    this.matchingQueue.splice(index, 1);
-    return { isCanceled: true };
-    // NOTE disconnect를 할지 방에서만 빼낼지 고민
   }
 
   async addGameResult(addGameResultDto: AddGameResultDto) {
