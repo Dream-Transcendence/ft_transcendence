@@ -67,6 +67,9 @@ export class GameService {
             this.gameInfoMap.get(key).getAbstentionDto(player.id),
           );
         client.leave(key);
+        const players = this.gameInfoMap.get(key).player;
+        this.userGateway.setConnection(players.left.id, false);
+        this.userGateway.setConnection(players.right.id, false);
         this.gameInfoMap.delete(key);
         this.schedulerRegistry.deleteInterval(key);
       }
@@ -123,7 +126,9 @@ export class GameService {
     });
 
     if (matchDto.mode === 0) {
-      if (!(await this.userGateway.setConnection(matchDto.userId, true)))
+      if (
+        (await this.userGateway.setConnection(matchDto.userId, true)) === null
+      )
         throw new WsException('로그인 되지 않은 유저입니다.');
     }
 
