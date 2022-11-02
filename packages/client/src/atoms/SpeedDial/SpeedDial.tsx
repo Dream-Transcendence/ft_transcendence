@@ -138,8 +138,8 @@ function BasicSpeedDial(props: {
   };
 
   const handleMute = () => {
-    if (auth === ADMIN) {
-      alert('관리자 권한을 해제한 뒤, 음소거 가능합니다.');
+    if (userType === ADMIN && auth === ADMIN) {
+      alert('같은 관리자는 음소거를 할 수 없습니다.');
       return;
     }
     if (status !== MUTE && status !== BAN) {
