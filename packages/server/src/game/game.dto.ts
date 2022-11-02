@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from 'src/users/dto/user.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Socket } from 'socket.io';
+import { UserDto } from 'src/users/dto/user.dto';
 
 const GAME_MODE = {
   ladder: 0,
@@ -31,6 +31,19 @@ export class GameLadderDto {
 
   @ApiProperty({ example: 2 })
   loseCount: number;
+}
+
+export class GameUserDto {
+  constructor(private player: User, private socketId: string) {
+    this.id = player.id;
+    this.nickname = player.nickname;
+    this.image = player.image;
+    this.clientId = socketId;
+  }
+  id: number;
+  nickname: string;
+  image: string;
+  clientId: string;
 }
 
 export class GameRecordDto {
@@ -122,15 +135,15 @@ export class MatchingInfo {
 }
 
 export class AddGameResultDto {
-  players: { left: User; right: User };
+  players: { left: UserDto; right: UserDto };
   score: { left: number; right: number };
   mode: GAME_MODE;
 }
 
 export class GameInfo {
   constructor(
-    private player1: User,
-    private player2: User,
+    private player1: GameUserDto,
+    private player2: GameUserDto,
     public mode: GAME_MODE,
   ) {
     this.player = { left: player1, right: player2 };
@@ -142,7 +155,7 @@ export class GameInfo {
     this.size = 1;
   }
 
-  player: { left: User; right: User };
+  player: { left: GameUserDto; right: GameUserDto };
   score: { left: number; right: number };
   ballPos: { x: number; y: number };
   ballSpeed: { x: number; y: number };
@@ -169,15 +182,6 @@ export class GameInfo {
     };
   }
 
-  // public getGameInfoDto(): GameInfoDto {
-  //   return {
-  //     score: this.score,
-  //     ballPos: this.ballPos,
-  //     paddlePos: this.paddlePos,
-  //     mode: this.mode,
-  //   };
-  // }
-
   public getGameInfoDto(): GameInfoDto {
     return {
       ballPos: {
@@ -195,6 +199,28 @@ export class GameInfo {
   public getGameScoreDto(): GameScoreDto {
     return {
       score: this.score,
+    };
+  }
+
+  public getUserDto(): { left: UserDto; right: UserDto } {
+    return {
+      left: {
+        id: this.player.left.id,
+        nickname: this.player.left.nickname,
+        image: this.player.left.image,
+      },
+      right: {
+        id: this.player.right.id,
+        nickname: this.player.right.nickname,
+        image: this.player.right.image,
+      },
+    };
+  }
+
+  public getAbstentionDto(playerId: number) {
+    return {
+      score: this.score,
+      abstainedPlayer: playerId,
     };
   }
 }

@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Req,
+  Query,
 } from '@nestjs/common';
 import {
   ApiBody,
@@ -18,6 +19,7 @@ import {
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -74,14 +76,16 @@ export class RoomsController {
 
   @Get('/messages/:roomId/:messageId')
   @ApiOperation({ summary: '채팅방 메시지 목록' })
+  @ApiQuery({ name: 'count', required: true })
   getMessages(
     @Param('roomId') roomId: number,
     @Param('messageId') messageId: number,
+    @Query('count') count: number,
     @Req() req,
   ) {
     this.logger.log(`getMessages`);
     const { userId } = req.user;
-    return this.roomService.getMessages(roomId, messageId, userId);
+    return this.roomService.getMessages(roomId, messageId, userId, count);
   }
 
   @Get('/:roomId/:userId')

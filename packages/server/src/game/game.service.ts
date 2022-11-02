@@ -11,6 +11,7 @@ import {
   HandleStartDto,
   GameScoreDto,
   WatchDto,
+  GameUserDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -38,6 +39,40 @@ export class GameService {
   paddleWidth = 20;
   paddleHeight = 186;
 
+  async handleDisconnect(client: Socket) {
+    for (const [key, value] of this.gameInfoMap) {
+      if (
+        value.player.left.clientId === client.id ||
+        value.player.right.clientId === client.id
+      ) {
+        let player;
+        if (this.gameInfoMap.get(key).player.left.clientId === client.id) {
+          this.gameInfoMap.get(key).score.right = 3;
+          player = this.gameInfoMap.get(key).player.left;
+        } else {
+          this.gameInfoMap.get(key).score.left = 3;
+          player = this.gameInfoMap.get(key).player.right;
+        }
+        const gameResult: AddGameResultDto = {
+          players: this.gameInfoMap.get(key).player,
+          score: this.gameInfoMap.get(key).score,
+          mode: this.gameInfoMap.get(key).mode,
+        };
+        await this.addGameResult(gameResult);
+        if (gameResult.mode === 0) await this.updateRank(gameResult);
+        client
+          .to(key)
+          .emit(
+            'playerAbstention',
+            this.gameInfoMap.get(key).getAbstentionDto(player.id),
+          );
+        client.leave(key);
+        this.gameInfoMap.delete(key);
+        this.schedulerRegistry.deleteInterval(key);
+      }
+    }
+  }
+
   emitToEveryone(client: Socket, title: string, event: string, data: any) {
     client.to(title).emit(event, data);
     client.emit(event, data);
@@ -55,7 +90,11 @@ export class GameService {
     const player2 = await this.userRepository.findOneBy({
       id: opponent.userId,
     });
-    const gameInfo = new GameInfo(player1, player2, opponent.mode);
+    const gameInfo = new GameInfo(
+      new GameUserDto(player1, client.id),
+      new GameUserDto(player2, opponent.socket.id),
+      opponent.mode,
+    );
 
     client.join(title);
     opponent.socket.join(title);
@@ -323,7 +362,7 @@ export class GameService {
         if (x === 0) this.gameInfoMap.get(title).score.right += 1;
         else if (x === canvasWidth - ballDiameter)
           this.gameInfoMap.get(title).score.left += 1;
-        const players = this.gameInfoMap.get(title).player;
+        const players = this.gameInfoMap.get(title).getUserDto();
         if (
           this.gameInfoMap.get(title).score.right === 3 ||
           this.gameInfoMap.get(title).score.left === 3
@@ -411,9 +450,7 @@ export class GameService {
     for (const [key, value] of this.gameInfoMap) {
       if (value.player.left.id === userId || value.player.right.id === userId) {
         client.join(key);
-        // return { title: key };
         const gameInfo = this.gameInfoMap.get(key);
-        console.log('gameinfo: ', gameInfo);
         return gameInfo.getGameRoomDto(key);
       }
     }
