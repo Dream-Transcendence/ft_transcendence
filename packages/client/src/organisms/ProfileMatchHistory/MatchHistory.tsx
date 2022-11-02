@@ -45,7 +45,7 @@ function MatchHistory() {
   useEffect(() => {
     async function getUserLadder() {
       await axios
-        .get(`${SERVERURL}/user/${userId}/game/ladder`)
+        .get(`${SERVERURL}/users/${userId}/game/records`)
         .then((response) => {
           const history: UserMatchHistoryType[] = response.data;
           setMatchHistoryList(history);

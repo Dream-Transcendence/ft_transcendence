@@ -5,13 +5,13 @@ import { useParams } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
 import { SERVERURL } from '../../configs/Link.url';
-import { MOUSE } from '../../configs/userType';
 import UserStatResult from '../../molecules/ProfileSection/StatResult';
 import { UserLadderType } from '../../types/Profile.type';
 
 const UserStatLayout = styled('div')(({ theme }) => ({
   display: 'flex',
   alignContent: 'wrap',
+  overflow: 'hidden',
   alignSelf: 'end',
   alignItems: 'center', //내부 아이템이라고 생각하는 문자열이 좌측 상단 정렬 되어 있는 이유를 모르겠음
   justifySelf: 'start',
@@ -34,7 +34,7 @@ const StatLadder = styled('div')(({ theme }) => ({
 }));
 
 function UserStat() {
-  const userId = useParams();
+  const { userId } = useParams();
   const [userLadder, setUserLadder] = useState<UserLadderType>({
     rank: 0,
     winCount: 0,
@@ -44,7 +44,7 @@ function UserStat() {
   useEffect(() => {
     async function getUserLadder() {
       await axios
-        .get(`${SERVERURL}/user/${userId}/game/ladder`)
+        .get(`${SERVERURL}/users/${userId}/game/ladder`)
         .then((response) => {
           const stat: UserLadderType = response.data;
           setUserLadder(stat);

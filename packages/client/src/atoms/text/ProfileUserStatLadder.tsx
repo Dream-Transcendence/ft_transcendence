@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
-import { CAT, MOUSE, TIGER } from '../../configs/userType';
+import { RANK } from '../../configs/userType';
 
 const StatLadderLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -19,9 +19,7 @@ function UserStatLadder(props: { value: number }) {
 
   return (
     <StatLadderLayout>
-      <Typography variant="h2">
-        {value > 10 ? TIGER : value > 5 ? CAT : MOUSE}
-      </Typography>
+      <Typography variant="h2">{RANK[value]}</Typography>
     </StatLadderLayout>
   );
 }
