@@ -2,7 +2,7 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { CHANNELURL } from '../configs/Link.url';
@@ -57,6 +57,7 @@ function ChatroomPage() {
   const [roomList, setRoomList] = useRecoilState(unJoinedRoomList);
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
   const [socket, connect, disconnect] = useSocket(chatNameSpace);
+  const navigate = useNavigate();
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
 
   useEffect(() => {
