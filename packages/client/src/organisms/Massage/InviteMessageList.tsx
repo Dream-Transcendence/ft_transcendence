@@ -63,7 +63,7 @@ function InviteMessageList() {
    * 요청 수락
    */
   const handleAcceptMessage = (info: InviteInfoListType) => {
-    console.log('수락을 눌렀습니다.');
+    console.log(info.type, '수락을 눌렀습니다.');
     setInviteInfoList((prev) => {
       return [...prev.filter((i) => i !== info)];
     });
@@ -75,6 +75,7 @@ function InviteMessageList() {
         },
         (response: boolean) => {
           if (response === true) {
+            console.log('ttt?');
             setCheckFriendRequest(true);
           }
         },

@@ -809,6 +809,8 @@ export class UserService {
 
     if (requestorClientId !== null)
       client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
+
+    return { isDone: true };
   }
 
   async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {

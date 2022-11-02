@@ -68,7 +68,7 @@ function PingpongRoutePage() {
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setSheckFriendRequest] = useRecoilState(
+  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
     checkFriendRequestAtom,
   );
   const [gameInviteInfo, setGameInviteInfo] =
@@ -234,7 +234,7 @@ function PingpongRoutePage() {
     socket.on(FRIENDREQUESTACCEPTED, (response: BaseUserProfileData) => {
       console.log('friendRequestAccepted', response);
       if (response) {
-        setSheckFriendRequest(true);
+        setCheckFriendRequest(true);
         /**
          * 상대방 수락 확인 메시지 기록 추가
          */

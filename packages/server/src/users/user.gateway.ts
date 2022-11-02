@@ -73,7 +73,10 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('acceptFriendRequest')
   async handleAcceptFriendRequest(client: Socket, requestIdDto: RequestIdDto) {
-    await this.userService.handleAcceptFriendRequest(client, requestIdDto);
+    return await this.userService.handleAcceptFriendRequest(
+      client,
+      requestIdDto,
+    );
   }
 
   @SubscribeMessage('rejectFriendRequest')

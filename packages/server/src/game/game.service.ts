@@ -113,8 +113,11 @@ export class GameService {
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
     console.log('Game Client cancel', matchDto);
 
-    if (!(await this.userGateway.setConnection(matchDto.userId, false))) {
-      throw new WsException('로그인 되지 않은 유저입니다.');
+    if (matchDto.mode === 0) {
+      if (
+        (await this.userGateway.setConnection(matchDto.userId, true)) === null
+      )
+        throw new WsException('로그인 되지 않은 유저입니다.');
     }
 
     const index = this.matchingQueue.findIndex(
