@@ -31,14 +31,14 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
 export async function blockUser(
   blockId: number,
   userId: number,
-  setBlock: () => void,
+  setBlock?: () => void,
 ) {
   try {
     await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
       id: blockId,
     });
     console.log('block!!');
-    setBlock();
+    if (setBlock) setBlock();
   } catch (error) {
     alert(error);
     throw console.dir(error);
@@ -48,12 +48,12 @@ export async function blockUser(
 export async function unBlockUser(
   blockId: number,
   userId: number,
-  setUnBlock: () => void,
+  setUnBlock?: () => void,
 ) {
   try {
     await axios.delete(`${SERVERURL}/users/${userId}/blocks/${blockId}`);
     console.log('unblock!!');
-    setUnBlock();
+    if (setUnBlock) setUnBlock();
   } catch (error) {
     alert(error);
     throw console.dir(error);
@@ -99,7 +99,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   }
 
   function handleMatch() {
-    if (roomInfo.userId){
+    if (roomInfo.userId) {
       setGameOpponent(roomInfo.userId);
     }
   }

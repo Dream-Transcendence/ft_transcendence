@@ -1,6 +1,6 @@
 import ProfileImage from '../../atoms/profile/ProfileImage';
-import SecondAuthSwitch from '../../atoms/button/switch/SecondAuth';
-import ProfileNickname from '../../atoms/input/ProfileNickname';
+import BlockIcon from '@mui/icons-material/Block';
+import FaceRetouchingOffIcon from '@mui/icons-material/FaceRetouchingOff';
 import {
   ProfileActionLayout,
   UserInfoLayout,
@@ -29,9 +29,19 @@ import { FRIENDREQUEST, userNameSpace } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { InviteInfoListType } from '../../types/Message.type';
 import { inviteInfoListAtom } from '../../recoil/common.recoil';
+import {
+  blockUser,
+  unBlockUser,
+} from '../../molecules/ChatSection/InfoBoxDMFunction';
+import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 
 function OtherInfo(props: { friendProps: FriendPropsType }) {
-  const { value: friendList, setter: setFriendList } = props.friendProps;
+  const {
+    value: friendList,
+    setter: setFriendList,
+    isBlock,
+    setIsBlock,
+  } = props.friendProps;
   const { id } = useRecoilValue(userDataAtom);
   const [socket] = useSocket(userNameSpace);
   const { userId: otherId } = useParams();
@@ -137,6 +147,27 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     },
   };
 
+  async function handlerBlock() {
+    //[수정요망] 나 block id roominfo에서 userid를 받아와야함
+    // roomInfo.id => roomInfo.userId
+
+    console.log('????!', isBlock);
+    if (userData.id !== undefined && isBlock === UNBLOCK)
+      blockUser(userData.id, id);
+    else if (userData.id !== undefined && isBlock === BLOCK)
+      unBlockUser(userData.id, id);
+  }
+
+  const customUnBlockProps: CustomIconProps = {
+    icon: <FaceRetouchingOffIcon />,
+    action: handlerBlock,
+  };
+
+  const customBlockProps: CustomIconProps = {
+    icon: <BlockIcon />,
+    action: handlerBlock,
+  };
+
   return (
     <UserInfoLayout>
       <UserPictureLayout>
@@ -151,6 +182,11 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
           <CustomIconButton customProps={alreadyFriendProps} />
         ) : (
           <CustomIconButton customProps={addFriendProps} />
+        )}
+        {isBlock ? (
+          <CustomIconButton customProps={customBlockProps} />
+        ) : (
+          <CustomIconButton customProps={customUnBlockProps} />
         )}
       </ProfileActionLayout>
     </UserInfoLayout>
