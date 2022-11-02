@@ -74,6 +74,7 @@ export function ProfilePersonal() {
     value: friendList,
     setter: setFriendList,
   };
+
   return (
     <ProfilePersonalLayout>
       {`${userData.id}` === paramsId ? (

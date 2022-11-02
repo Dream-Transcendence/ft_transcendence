@@ -34,4 +34,6 @@ export const ProfilePageLayout = styled('section')(({ theme }) => ({
     'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
   height: '100%',
   width: '100%',
+  minWidth: '1200px',
+  minHeight: '1000px',
 }));

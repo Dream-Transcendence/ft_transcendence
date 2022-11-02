@@ -145,32 +145,9 @@ function GameLoadingPage() {
     };
   }, []);
 
-  /**
-   * 게임 취소 로직
-   */
-  const cancel = () => {
-    socket.emit(
-      GAMECANCEL,
-      {
-        useId: userId,
-      },
-      (response: any) => {
-        console.log('매치 취소 결과 ', response);
-      },
-    );
-    console.log('match cancel!');
-  };
-
   const buttonStyle = {
     background: 'linear-gradient(to bottom right, #f796c0, #76aef1)',
     border: 'none',
-  };
-
-  const linkTextResource = {
-    url: PROFILEURL,
-    content: '매칭 취소',
-    handler: cancel,
-    style: buttonStyle,
   };
 
   return (
@@ -205,7 +182,7 @@ function GameLoadingPage() {
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
-          <LinkPageTextButton LinkTextResource={linkTextResource} />
+          <HistoryBackTextButton />
         </ButtonLayout>
       </BottomLayout>
     </GameLodingLayout>

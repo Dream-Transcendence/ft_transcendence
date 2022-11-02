@@ -34,18 +34,18 @@ function GameRoutePage() {
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
 
-  // useEffect(() => {
-  //   function connectGameSocket() {
-  //     connect();
-  //     console.log('game socket 연결');
-  //   }
-  //   connectGameSocket();
+  useEffect(() => {
+    function connectGameSocket() {
+      connect();
+      console.log('game socket 연결');
+    }
+    connectGameSocket();
 
-  //   return () => {
-  //     disconnect();
-  //     console.log('game socket 해제');
-  //   };
-  // }, []);
+    return () => {
+      disconnect();
+      console.log('game socket 해제');
+    };
+  }, []);
 
   return (
     <Routes>

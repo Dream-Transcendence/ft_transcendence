@@ -81,6 +81,7 @@ export class GameService {
     );
 
     if (index !== -1) {
+      this.userGateway.setConnection(this.matchingQueue[index].userId, false);
       this.matchingQueue.splice(index, 1);
     }
   }

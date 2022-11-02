@@ -298,7 +298,6 @@ function PingpongRoutePage() {
    */
   useEffect(() => {
     socket.on(ACCEPTGAME, (response: ServerAcceptGameDto) => {
-      console.log('hid');
       gameSocket.emit(
         GAMEMATCH,
         {
