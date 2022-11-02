@@ -603,8 +603,7 @@ export class UserService {
       }
     }
     const connection = this.connectionList.get(clientId);
-    if (connection === undefined)
-      throw new WsException('로그온 상태가 아닌 유저입니다.');
+    if (connection === undefined) return null;
     this.connectionList.get(clientId).onGame = onGame;
     const connectionDto = new ConnectionDto(
       connection.userId,
