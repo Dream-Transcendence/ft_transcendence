@@ -55,7 +55,7 @@ export const getJoinedChatList = selectorFamily<any, number>({
         return response;
       } catch (error) {
         console.log(error);
-        alert(error);
+        // alert(error);
       }
     },
 });

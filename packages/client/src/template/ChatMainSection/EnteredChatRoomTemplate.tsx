@@ -141,8 +141,9 @@ function EnteredChatRoomTemplate() {
           );
           setParticipantInfo(response.data);
         }
-      } catch (error) {
-        alert(error);
+      } catch (error: any) {
+        if (error.response.data.statusCode === 401) navigate('/');
+        // alert(error);
         throw console.dir(error);
       }
     }

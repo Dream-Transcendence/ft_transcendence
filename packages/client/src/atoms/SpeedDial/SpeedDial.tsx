@@ -127,13 +127,19 @@ function BasicSpeedDial(props: {
   };
 
   const handleBan = () => {
-    if (status !== BAN && status !== MUTE) {
-      const info = setInfo(auth, BAN);
-      setUserState(info, KickOff);
-      setTimeout(async () => {
-        const info = await setInfo(auth, NONE);
+    // 시간제한에서 영구변경으로 변경
+    if (status !== MUTE) {
+      if (status === BAN) {
+        const info = setInfo(auth, NONE);
         setUserState(info, beNone);
-      }, 5000);
+      } else if (status !== BAN) {
+        const info = setInfo(auth, BAN);
+        setUserState(info, KickOff);
+      }
+      // setTimeout(async () => {
+      //   const info = await setInfo(auth, NONE);
+      //   setUserState(info, beNone);
+      // }, 5000);
     }
   };
 
