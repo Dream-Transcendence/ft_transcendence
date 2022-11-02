@@ -29,7 +29,6 @@ export const GAMEPROCESS = 'gameProcess';
 export const GAMEEND = 'gameEnd';
 export const RESIZEWINDOW = 'resizeWindow';
 export const MOVEPADDLE = 'movePaddle';
-export const EXITGAME = 'exitGame';
 export const PLAYERABSTENTION = 'playerAbstention';
 
 export const PATCHUSERINFO = 'patchUserInfo';

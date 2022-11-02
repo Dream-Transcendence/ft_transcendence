@@ -117,8 +117,8 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       // });
       if (clientHeight !== undefined) {
         await axios
-          .post(`${SERVERURL}/rooms/messages/${roomId}/0`, {
-            count: messageCounts,
+          .get(`${SERVERURL}/rooms/messages/${roomId}/0`, {
+            params: { count: messageCounts },
           })
           .then((res) => {
             setMessages(res.data);
@@ -169,8 +169,8 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
           //     setIsLoaded(true);
           //   });
           await axios
-            .post(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`, {
-              count: 15,
+            .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`, {
+              params: { count: messageCounts },
             })
             .then((res) => {
               setMessages([...res.data, ...messages]);

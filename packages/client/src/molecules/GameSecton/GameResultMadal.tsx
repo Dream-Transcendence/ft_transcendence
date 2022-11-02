@@ -106,6 +106,7 @@ function GameResultModal(openControl: GameResultModalControl) {
         <Box sx={{ ...style, width: 400 }}>
           {/* 임시로 기권한 사람 보여지게함 디자인 나중에 수정할 것 */}
           <GameResultLayout>
+            {abstention !== 0 && <Typography> 기권함! </Typography>}
             {(abstention === 0 ||
               abstention === userProfileBoxProps.userData.id) && (
               <UserProfileBoxLayout>
@@ -118,7 +119,6 @@ function GameResultModal(openControl: GameResultModalControl) {
                 <UserProfileBox userProfileBoxProps={otherProfileBoxProps} />
               </OtherProfileBoxLayout>
             )}
-            {abstention !== 0 && <Typography> 기권함! </Typography>}
             {abstention === 0 && (
               <GameScoreLayout>
                 <GameScore

@@ -17,7 +17,6 @@ import {
 } from '../recoil/user.recoil';
 import {
   ALREADYFORMATCH,
-  EXITGAME,
   GAMECANCLE,
   gameLadderMatch,
   gameNameSpace,

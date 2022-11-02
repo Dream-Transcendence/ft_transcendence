@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { EXITGAME, gameNameSpace, GAMESTART } from '../socket/event';
+import { gameNameSpace, GAMESTART } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
@@ -47,18 +47,18 @@ function GamePlayPage() {
     else if (gameInfo === undefined) navigate(PROFILEURL);
   }, [userData.id, passSecondOauth, navigate]);
 
-  useEffect(() => {
-    /* 비정상적인 네트워크로인한 연결끊김이나 새로고침 될 경우 기권처리 */
-    return () => {
-      connect();
-      socket.emit(`${EXITGAME}`, {
-        playerId: userData.id,
-        title: gameInfo?.title,
-      });
-      console.log('game exit!!!!!!!!!!!!!');
-      disconnect();
-    };
-  }, []);
+  // useEffect(() => {
+  //   /* 비정상적인 네트워크로인한 연결끊김이나 새로고침 될 경우 기권처리 */
+  //   return () => {
+  //     connect();
+  //     socket.emit(`${EXITGAME}`, {
+  //       playerId: userData.id,
+  //       title: gameInfo?.title,
+  //     });
+  //     console.log('game exit!!!!!!!!!!!!!');
+  //     disconnect();
+  //   };
+  // }, []);
 
   return (
     <GamePlayLayout>
