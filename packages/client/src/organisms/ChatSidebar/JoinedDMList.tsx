@@ -1,7 +1,11 @@
 import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import {
   ListGenerateLayout,
   ListLayout,
@@ -79,11 +83,18 @@ function JoinedDMListOrganisms() {
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const navigate = useNavigate();
   const [socket] = useSocket(chatNameSpace);
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getJoinedChatList(userData.id),
+  );
 
   useEffect(() => {
     if (joinedChatList !== null) {
       setRoomList(joinedChatList.dmList);
     }
+    return () => {
+      //프로필로 나갔다가 다시  들어오면  데이터가 사라지는  현상을 고치기 위해 추가
+      refreshUserInfo();
+    };
   }, [joinedChatList, setRoomList]);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
