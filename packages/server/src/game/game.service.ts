@@ -67,6 +67,9 @@ export class GameService {
             this.gameInfoMap.get(key).getAbstentionDto(player.id),
           );
         client.leave(key);
+        const players = this.gameInfoMap.get(key).player;
+        this.userGateway.setConnection(players.left.id, false);
+        this.userGateway.setConnection(players.right.id, false);
         this.gameInfoMap.delete(key);
         this.schedulerRegistry.deleteInterval(key);
       }
