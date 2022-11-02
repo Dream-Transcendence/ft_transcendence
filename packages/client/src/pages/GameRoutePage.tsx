@@ -51,7 +51,7 @@ function GameRoutePage() {
     }
     if (socket.connected === false) connectGameSocket();
     return () => {
-      // disconnect(); 페이지 변경하면 disconnect됨
+      disconnect();
     };
   }, []);
 
