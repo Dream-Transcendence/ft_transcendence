@@ -84,7 +84,7 @@ export class GameService {
     });
 
     if (matchDto.mode === 0) {
-      if (this.userGateway.setConnection(matchDto.userId, true) === null)
+      if (!(await this.userGateway.setConnection(matchDto.userId, true)))
         throw new WsException('로그인 되지 않은 유저입니다.');
     }
 
@@ -113,7 +113,7 @@ export class GameService {
   async handleCancelMatch(client: Socket, matchDto: MatchDto) {
     console.log('Game Client cancel', matchDto);
 
-    if (!this.userGateway.setConnection(matchDto.userId, false)) {
+    if (!(await this.userGateway.setConnection(matchDto.userId, false))) {
       throw new WsException('로그인 되지 않은 유저입니다.');
     }
 
@@ -344,8 +344,8 @@ export class GameService {
         if (gameScoreDto.score.left === 3 || gameScoreDto.score.right === 3) {
           // NOTE: 게임 중 상태를 온라인으로 바꿈
 
-          this.userGateway.setConnection(players.left.id, false);
-          this.userGateway.setConnection(players.right.id, false);
+          await this.userGateway.setConnection(players.left.id, false);
+          await this.userGateway.setConnection(players.right.id, false);
         }
         this.schedulerRegistry.deleteInterval(title);
         return;
