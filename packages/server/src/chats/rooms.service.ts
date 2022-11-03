@@ -400,12 +400,20 @@ export class RoomService {
       where: { room: { id: roomId } },
       order: { id: 'DESC' },
     });
+    const blockIds = await this.blocksRepository.find({
+      relations: { blockedUser: true },
+      where: { user: { id: userId } },
+    });
     const result: GetMessageDto[] = [];
     let idx = 0;
     const msgResult = msgs.filter((msg) => {
+      const blocked = blockIds.find(
+        (block) => block.blockedUser.id === msg.user.id,
+      );
       if (
-        (!messageId && idx < count) ||
-        (messageId && messageId > msg.id && idx < count)
+        blocked === undefined &&
+        (!messageId || (messageId && messageId > msg.id)) &&
+        idx < count
       ) {
         idx++;
         return true;

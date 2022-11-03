@@ -18,22 +18,23 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const [value, setValue] = useState<string>('');
   const [subValue, setSubValue] = useState<string>('');
   useEffect(() => {
-    axios
-      .get(`${url}`, {
-        params: {
-          nickname: value,
-        },
-      })
-      .then((response: any) => {
-        const searched: BaseUserProfileData[] = response.data;
-        console.log('value: |', value, '| 검색결과 받기', searched);
-        setUserList([...searched]);
-      })
-      .catch((error) => {
-        // alert(error); //사용자에게 보여주지 않아도 되는 정보는 삭제
-        console.log(error);
-      });
-    // }
+    if (!(value === '' && subValue === '')) {
+      axios
+        .get(`${url}`, {
+          params: {
+            nickname: value,
+          },
+        })
+        .then((response: any) => {
+          const searched: BaseUserProfileData[] = response.data;
+          console.log('value: |', value, '| 검색결과 받기', searched);
+          setUserList([...searched]);
+        })
+        .catch((error) => {
+          // alert(error); //사용자에게 보여주지 않아도 되는 정보는 삭제
+          console.log(error);
+        });
+    }
   }, [url, value]);
 
   //닉네임 배열 만들기

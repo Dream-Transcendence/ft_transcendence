@@ -99,8 +99,13 @@ export class ServerInviteGameDto {
 }
 
 export class ClientAcceptGameDto {
+  userId: number;
   hostId: number;
   mode: number;
+}
+
+export class CancelInviteDto {
+  hostId: number;
 }
 
 export class ServerAcceptGameDto {
