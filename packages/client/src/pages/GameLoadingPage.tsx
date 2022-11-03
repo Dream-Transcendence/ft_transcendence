@@ -99,8 +99,21 @@ function GameLoadingPage() {
           console.log('match emit 성공 : ', response);
         },
       );
+    } else if (gameInviteInfo.title.length > 0) {
+      console.log('123', gameInviteInfo);
+      gameSocket.emit(
+        GAMEMATCH,
+        {
+          title: gameInviteInfo.title,
+          userId: userData.id,
+          mode: gameInviteInfo.mode,
+        },
+        (response: any) => {
+          console.log('match emit 성공 : ', response);
+        },
+      );
     }
-  }, []);
+  }, [gameInviteInfo]);
 
   //match 성공시 값 받아서 동작시켜야함
   useEffect(() => {
@@ -139,6 +152,7 @@ function GameLoadingPage() {
     gameSocket.on('exception', (response: any) => {
       alert(response.message);
       console.log('게임 에러', response);
+      // navigate(PROFILEURL);
     });
     return () => {
       gameSocket.off('exception');
