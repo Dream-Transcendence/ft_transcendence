@@ -46,6 +46,8 @@ const NavLayout = styled('section')(({ theme }) => ({
   width: '100%',
   minWidth: '1200px',
   display: 'flex',
+  backgroundColor: 'blue',
+  // 'linear-gradient(45deg,rgba(188,110,255,1) 0%,rgba(0,221,255,1) 180%)',
 }));
 
 const RightLayout = styled('section')(({ theme }) => ({
@@ -125,10 +127,10 @@ function NavigationBar() {
     action: logoutHandler,
   };
 
-  // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
+  // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패flexGrow: 1,
   return (
     <NavLayout>
-      <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
+      <Box sx={{ minWidth: '100px' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
             <LinkPageIconButton linkIconProps={avartarAction} />
