@@ -8,15 +8,12 @@ import {
   ListUlLayout,
   ListLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { ParticipantInfoSet } from '../../types/Participant.type';
+import {
+  ParticipantInfoSet,
+  ParticipantInfo,
+} from '../../types/Participant.type';
 
 const ChatParticipantsListLayout = styled('div')(({ theme }) => ({
-  // alignItems: 'center',
-  // alignContent: 'center',
-  // justifyContent: 'center',
-  // justifyItems: 'center',
-  // display: 'flex',
-  // flexDirection: 'column',
   width: '98%',
   height: '90%',
 }));
@@ -26,6 +23,17 @@ function ChatParticipantsListOrganisms(prop: {
 }) {
   const { participantInfo: participantArray, handler } =
     prop.participantInfoSet;
+
+  function compare(a: ParticipantInfo, b: ParticipantInfo) {
+    if (a.user.nickname < b.user.nickname) {
+      return -1;
+    }
+    if (a.user.nickname > b.user.nickname) {
+      return 1;
+    }
+    return 0;
+  }
+  participantArray.sort(compare);
   const listElement: React.ReactElement[] = participantArray.map(
     (participant: any) => {
       return (

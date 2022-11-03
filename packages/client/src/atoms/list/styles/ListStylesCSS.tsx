@@ -14,8 +14,6 @@ export const ListLayout = styled('li')(() => ({
 export const ListChatLayout = styled('li')(() => ({
   width: '70%',
   flex: 'auto',
-  paddingTop: '1%',
-  paddingBottom: '2%',
   bgcolor: '#00000000',
 }));
 
