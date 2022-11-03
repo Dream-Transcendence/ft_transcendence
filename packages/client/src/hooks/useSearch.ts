@@ -33,7 +33,6 @@ function useSearch(
     },
     type: type,
   };
-  console.log('useSearch', target);
   const createDM = async (participantId: number) => {
     try {
       const existDM = dmList.every((dm) => {
@@ -77,6 +76,7 @@ function useSearch(
     }
     return setTarget(initUser);
   }, [target, naviUrl, type, user.id, newParticipants]);
+
   return searchProps;
 }
 export default useSearch;

@@ -468,7 +468,9 @@ export class RoomService {
       }
     }
     // 유저 룸 초기화 후, roomId 룸에 추가
-    client.rooms.clear();
+    client.rooms.forEach((room) => {
+      client.leave(room);
+    });
     client.join(room.title);
 
     // 참여 성공
@@ -490,7 +492,9 @@ export class RoomService {
       id: deleteParticipant.id,
     });
     client.leave(deleteParticipant.room.title);
-    client.rooms.clear();
+    client.rooms.forEach((room) => {
+      client.leave(room);
+    });
 
     if (deleteParticipant.auth === 0) {
       const owner = await this.channelParticipantsRepository.findOne({

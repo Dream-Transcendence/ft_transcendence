@@ -58,13 +58,15 @@ function MatchHistory() {
   }, [userId]);
 
   //userId로 받아온 리스트
-  const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {
-    return (
-      <ListLayout key={matchHistory.id} sx={{ justifyContent: 'center' }}>
-        <OneMatchHistory matchHistory={matchHistory} />
-      </ListLayout>
-    );
-  });
+  const listElement: JSX.Element[] = matchHistoryList.map(
+    (matchHistory, index) => {
+      return (
+        <ListLayout key={index} sx={{ justifyContent: 'center' }}>
+          <OneMatchHistory matchHistory={matchHistory} />
+        </ListLayout>
+      );
+    },
+  );
 
   return (
     <MatchHistoryLayout>

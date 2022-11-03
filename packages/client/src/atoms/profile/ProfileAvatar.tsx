@@ -83,7 +83,7 @@ function ProfileAvatar(props: {
   let userState = useRef<string | undefined>();
 
   useMemo(() => {
-    userState.current = getUserState(userLogStateList, id);
+    if (id !== null) userState.current = getUserState(userLogStateList, id);
   }, [userLogStateList, id]);
 
   if (avatarType === 'circle') {

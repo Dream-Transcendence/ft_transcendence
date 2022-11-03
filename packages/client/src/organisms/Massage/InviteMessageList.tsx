@@ -73,19 +73,16 @@ function InviteMessageList() {
         {
           id: info.id,
         },
-        (response: boolean) => {
-          if (response === true) {
-            console.log('ttt?');
-            setCheckFriendRequest(true);
-          }
+        (response: any) => {
+          if (response) setCheckFriendRequest(true);
         },
       );
     } else if (info.type === 'game') {
+      console.log('게임 수락!!!!');
       socket.emit(ACCEPTGAME, {
         hostId: info.userId,
         mode: info.mode,
       });
-      navigate(GAMELOADINGURL);
     }
   };
 

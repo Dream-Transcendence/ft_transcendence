@@ -9,7 +9,7 @@ import {
   NOTFOUNDURL,
   PROFILEURL,
 } from '../configs/Link.url';
-import { gameInfoAtom } from '../recoil/game.recoil';
+import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
 import {
   gameTypeAtom,
   userDataAtom,
@@ -22,7 +22,11 @@ import {
   gameNameSpace,
 } from '../socket/event';
 import useSocket from '../socket/useSocket';
-import { gameInfoPropsType, GameRoomDto } from '../types/Game.type';
+import {
+  gameInfoPropsType,
+  GameInviteInfoType,
+  GameRoomDto,
+} from '../types/Game.type';
 import { UserSecondAuth } from '../types/Profile.type';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLoadingPage';
@@ -36,6 +40,8 @@ function GameRoutePage() {
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
   let location = useLocation();
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -50,6 +56,12 @@ function GameRoutePage() {
     }
     if (socket.connected === false) connectGameSocket();
     return () => {
+      setGameInviteInfo({
+        title: '',
+        hostId: 0,
+        opponentId: 0,
+        mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
+      });
       disconnect();
     };
   }, []);
