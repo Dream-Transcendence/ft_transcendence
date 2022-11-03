@@ -583,6 +583,7 @@ export class UserService {
     const gameRecords = await this.gamesRepository.find({
       relations: { user: true, opponent: true },
       where: { user: { id: id } },
+      order: { id: 'DESC' },
     });
 
     const gameRecordDtoList: GameRecordDto[] = [];
