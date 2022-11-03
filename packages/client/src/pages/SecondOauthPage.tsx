@@ -126,7 +126,7 @@ function SecondOauthPage() {
   };
 
   const handleOut = () => {
-    navigate(-1);
+    navigate(PROFILEURL);
   };
 
   return (

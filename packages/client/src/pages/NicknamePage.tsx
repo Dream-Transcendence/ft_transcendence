@@ -32,6 +32,7 @@ function NicknamePage() {
         .get(`${SERVERURL}/users/userinfo`)
         .then((res) => {
           setUser(res.data);
+          console.log('nickname!!', res.data.nickname);
           if (res.data.nickname.length <= 10) {
             //최초 가입 유저
             setCheckOauth(true);
@@ -44,10 +45,26 @@ function NicknamePage() {
     }
     try {
       //이미 로그인 된 유저면 바로 프로필로보내기
+      console.log(
+        user.id,
+        user.nickname.length,
+        passSecondOauth.checkIsValid,
+        passSecondOauth,
+      );
       if (user.id === 0 || (user.id !== 0 && user.nickname.length > 10)) {
         getUserData();
-      } else if (user.id !== 0 && user.nickname.length <= 10) {
+      } else if (
+        user.id !== 0 &&
+        user.nickname.length <= 10 &&
+        passSecondOauth.checkIsValid === true
+      ) {
         navigate(`${PROFILEURL}/${user.id}`);
+      } else if (
+        user.id !== 0 &&
+        user.nickname.length <= 10 &&
+        passSecondOauth.checkIsSecondOauth === true
+      ) {
+        navigate('/secondOauth');
       }
     } catch {
       console.log('error: PingpongRoutePage()');
@@ -84,7 +101,6 @@ function NicknamePage() {
       }
     }
   }, [checkOauth, user.id]);
-
   return (
     <NicknamePageLayout>{user.id !== 0 && <NicknameInit />}</NicknamePageLayout>
   );
