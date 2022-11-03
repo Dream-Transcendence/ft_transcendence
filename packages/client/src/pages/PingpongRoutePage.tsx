@@ -53,6 +53,7 @@ import {
 import NotFoundPage from './NotFoundPage';
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
+import LiveObservePage from './LiveObservePage';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -339,6 +340,7 @@ function PingpongRoutePage() {
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="game/*" element={<GameRoutePage />} />
+        <Route path="observe" element={<LiveObservePage />} />
         <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
       </Routes>
     </PageSection>

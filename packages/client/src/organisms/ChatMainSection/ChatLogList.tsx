@@ -181,6 +181,16 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   };
 
+  const checkBlock = (msg: SocketMessage) => {
+    if (
+      blockedUser.every((blockUser) => {
+        return blockUser !== msg.user.id;
+      })
+    )
+      return false;
+    else return true;
+  };
+
   // intersection observer로 특정 컴포넌트가 뷰포인트에 드러나는지 감지
   const { firstItemRef } = useInfiniteScroll(callApi);
 
@@ -190,10 +200,10 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         <ListChatLayout key={index}>
           {index === 0 && isOverflow ? (
             <CallAPI ref={firstItemRef}>
-              <MessageBox message={msg} />
+              {!checkBlock(msg) && <MessageBox message={msg} />}
             </CallAPI>
           ) : (
-            <MessageBox message={msg} />
+            !checkBlock(msg) && <MessageBox message={msg} />
           )}
         </ListChatLayout>
       );
