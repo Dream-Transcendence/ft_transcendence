@@ -712,7 +712,6 @@ export class UserService {
       if (value.userId === acceptGameDto.hostId) hostClientId = key;
     }
     if (hostClientId === null) {
-      this.invitationMap.delete(acceptGameDto.hostId);
       throw new WsException('호스트를 찾을 수 없습니다.');
     }
 
