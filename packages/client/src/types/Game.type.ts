@@ -74,6 +74,7 @@ export interface GameResultModalControl {
   setOpen: (open: boolean) => void;
   score?: ScoreProps;
   gameInfo?: GameRoomDto;
+  abstention?: number;
 }
 
 export interface GameWindowInfo {

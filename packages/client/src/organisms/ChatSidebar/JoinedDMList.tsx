@@ -1,7 +1,11 @@
 import { styled } from '@mui/material/styles';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import {
   ListGenerateLayout,
   ListLayout,
@@ -31,9 +35,15 @@ const JoinedDMBox = styled('div')(({ theme }) => ({
   border: 'none',
 }));
 
-const UserStateLayout = styled('section')(({ theme }) => ({
+const BoxLayout = styled('div')(({ theme }) => ({
   height: '100%',
+  marginLeft: '3%',
+}));
+
+const UserStateLayout = styled('section')(({ theme }) => ({
+  height: '50%',
   width: '40%',
+  marginTop: '10%',
   display: 'flex',
   paddingRight: '10%',
 }));
@@ -73,11 +83,18 @@ function JoinedDMListOrganisms() {
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const navigate = useNavigate();
   const [socket] = useSocket(chatNameSpace);
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getJoinedChatList(userData.id),
+  );
 
   useEffect(() => {
     if (joinedChatList !== null) {
       setRoomList(joinedChatList.dmList);
     }
+    return () => {
+      //프로필로 나갔다가 다시  들어오면  데이터가 사라지는  현상을 고치기 위해 추가
+      refreshUserInfo();
+    };
   }, [joinedChatList, setRoomList]);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
@@ -131,9 +148,11 @@ function JoinedDMListOrganisms() {
                 - Socket.emit으로 로그인 상태 보냄
                 - Socket.on으로  DM유저 로그인 상태 받음
                    */}
-        <ListGenerateLayout>
-          <ListUlLayout>{listElement}</ListUlLayout>
-        </ListGenerateLayout>
+        <BoxLayout>
+          <ListGenerateLayout>
+            <ListUlLayout>{listElement}</ListUlLayout>
+          </ListGenerateLayout>
+        </BoxLayout>
       </JoinedDMBox>
     </JoinedChatListLayout>
   );

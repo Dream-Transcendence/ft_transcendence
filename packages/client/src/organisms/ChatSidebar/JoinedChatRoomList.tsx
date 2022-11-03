@@ -1,7 +1,11 @@
 import { styled } from '@mui/material/styles';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import {
   ListGenerateLayout,
   ListLayout,
@@ -42,11 +46,17 @@ function JoinedChatRoomModule() {
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const [socket] = useSocket(chatNameSpace);
   const navigate = useNavigate();
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getJoinedChatList(userData.id),
+  );
 
   useEffect(() => {
     if (joinedChatList !== null) {
       setRoomList(joinedChatList.channelList);
     }
+    return () => {
+      refreshUserInfo();
+    };
   }, [joinedChatList, setRoomList]);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {

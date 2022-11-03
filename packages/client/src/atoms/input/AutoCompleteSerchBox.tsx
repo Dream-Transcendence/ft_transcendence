@@ -33,7 +33,7 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
           );
           setUserList(list);
         }
-      } catch (error:any) {
+      } catch (error: any) {
         alert(error);
         console.log('123', error.response.data.status);
       }
