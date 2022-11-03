@@ -367,6 +367,7 @@ export class UserService {
   async searchUser(nickname: string): Promise<UserDto[]> {
     // SELECT * FROM public."user"
     // WHERE "user"."nickname" LIKE '%nickname%';
+    if (nickname === '') return [];
     const users = await this.usersRepository.find({
       where: { nickname: Like(`%${nickname}%`) },
     });
@@ -582,6 +583,7 @@ export class UserService {
     const gameRecords = await this.gamesRepository.find({
       relations: { user: true, opponent: true },
       where: { user: { id: id } },
+      order: { id: 'DESC' },
     });
 
     const gameRecordDtoList: GameRecordDto[] = [];

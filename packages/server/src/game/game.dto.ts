@@ -48,8 +48,9 @@ export class GameUserDto {
 
 export class GameRecordDto {
   constructor(game: Game) {
-    const { id, win, ladder, opponent } = game;
+    const { id, win, ladder, user, opponent } = game;
     this.id = id;
+    this.user = new UserDto(user.id, user.nickname, user.image);
     this.opponent = new UserDto(opponent.id, opponent.nickname, opponent.image);
     this.isWin = win;
     this.isLadder = ladder;
@@ -59,6 +60,15 @@ export class GameRecordDto {
 
   @ApiProperty({
     example: { id: 1, nickname: 'dha', image: 'https://cdn.42.fr/dha.jpg' },
+  })
+  user: UserDto;
+
+  @ApiProperty({
+    example: {
+      id: 2,
+      nickname: 'junghan',
+      image: 'https://cdn.42.fr/junghan.jpg',
+    },
   })
   opponent: UserDto;
 
