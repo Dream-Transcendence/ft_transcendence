@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
 import {
   ALREADYFORMATCH,
-  GAMECANCEL,
   GAMEMATCH,
   gameNameSpace,
   INVITEGAME,

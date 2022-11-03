@@ -80,6 +80,7 @@ function InviteMessageList() {
     } else if (info.type === 'game') {
       console.log('게임 수락!!!!');
       socket.emit(ACCEPTGAME, {
+        userId: gameInviteInfo.hostId,
         hostId: info.userId,
         mode: info.mode,
       });
