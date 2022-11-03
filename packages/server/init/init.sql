@@ -65,16 +65,16 @@ INSERT INTO "friend" ("id", "userId", "friendId") VALUES (12, 4, 2);
 INSERT INTO "request" ("id", "requestorId", "responserId") VALUES (1, 2, 5);
 INSERT INTO "request" ("id", "requestorId", "responserId") VALUES (2, 3, 5);
 
-INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (1, '42seoul', 1, NULL, "1283917239817", NULL);
+INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (1, '42seoul', 1, NULL, '128391723981a', NULL);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (1, 0, NULL, NULL, 1, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (2, NULL, NULL, NULL, 2, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (3, NULL, NULL, NULL, 3, 1);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (4, 1, 1, NULL, 4, 1);
 
-INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (2, '42tokyo', 1, NULL, "123123123", NULL);
+INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (2, '42tokyo', 1, NULL, '12312312a', NULL);
 INSERT INTO "channel_participant" ("id", "auth", "status", "statusStartDate", "userId", "roomId") VALUES (5, 0, NULL, NULL, 2, 2);
 
-INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (3, NULL, 0, NULL, "234234234", NULL);
+INSERT INTO "room" ("id", "name", "type", "salt", "title", "image") VALUES (3, NULL, 0, NULL, '23423423a', NULL);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (1, 1, 3);
 INSERT INTO "dm_participant" ("id", "userId", "roomId") VALUES (2, 2, 3);
 
