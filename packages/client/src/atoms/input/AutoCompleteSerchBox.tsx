@@ -15,11 +15,9 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   const { value: parentTarget, setValue: setParentTarget } = listParams; //부모컴포넌트에서 target의 변경을 감지하기 위함입니다.
   // const { nickname: atomNickname } = useRecoilValue(userDataAtom);
   const [userList, setUserList] = useState<BaseUserProfileData[]>([]); //navigate 하기 위함
-  const [value, setValue] = useState<string | null>('');
-
+  const [value, setValue] = useState<string>('');
+  const [subValue, setSubValue] = useState<string>('');
   useEffect(() => {
-    // if (typeof value === 'string') {
-    //   console.log(checkValidNickname(value));
     axios
       .get(`${url}`, {
         params: {
@@ -44,26 +42,37 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
   });
 
   //리스트 클릭시 user내에 기입한 글자를 포함하는 최초의 nickname을 target으로 넣어 해당 id로 이동
-  const handleEvent = (e: any) => {
+  const handleEnterKey = (e: any) => {
+    let targetKey: string;
+    if (subValue !== '') {
+      targetKey = subValue;
+    } else {
+      targetKey = e.target.value;
+    }
     if (e.key === 'Enter') {
       console.log('엔터 키가 눌렸습니다.');
       const target = userList.find((user) => {
-        if (e.target.value && user.nickname.includes(e.target.value))
-          return true;
+        if (e.target.value && user.nickname.includes(targetKey)) return true;
         return false; //값이 이상하면 기본 값으로 초기화
       });
       if (target) {
         setParentTarget(target);
         setValue('');
-        // navigate(`${PROFILEURL}/${target?.id}`);
       }
     }
   };
 
   const handleChange = (e: any) => {
-    if (e.target.value) {
+    if (e) {
       setValue(e.target.value);
-      // setParentTarget({ ...parentTarget, nickname: e.target.value });
+      setSubValue('');
+    }
+  };
+
+  const handleHighlight = (e: any, option: any, reason: string) => {
+    if (e) {
+      console.log(e.target, ' ', option, ' ', reason);
+      setSubValue(option);
     }
   };
 
@@ -94,13 +103,14 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
       sx={{ width: '100%' }}
       freeSolo //이 속성을 주지 않으면 배열에 없는 값을 입력했을 때 not option이 표시됨
       //입력을 렌더링
+      onHighlightChange={handleHighlight}
       renderInput={(params) => (
         <TextField
           style={{ position: 'relative' }}
           {...params}
           label="Search"
           onChange={handleChange}
-          onKeyDown={handleEvent}
+          onKeyDown={handleEnterKey}
         />
       )}
     />
