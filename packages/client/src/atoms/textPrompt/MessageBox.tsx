@@ -13,12 +13,14 @@ import { userDataAtom } from '../../recoil/user.recoil';
 
 const TextBoxLayout = styled('section')(() => ({
   width: '100%',
+  paddingTop: '3%',
+  paddingBottom: '3%',
 }));
 
 const TextBox = styled('div')(() => ({
   height: '100%',
   width: '100%',
-  padding: '3%',
+  padding: '1%',
   display: 'flex',
 }));
 

@@ -128,11 +128,12 @@ function JoinedDMListOrganisms() {
     return (
       <ListLayout key={room.id}>
         <UserStateLayout>
-          {room.blocked === BLOCK && (
+          {/* 유저프로필에서도 볼 수 있고, 디자인적으로 좋지 않아 삭제 */}
+          {/* {room.blocked === BLOCK && (
             <BlockBadge>
               <BlockCloss />
             </BlockBadge>
-          )}
+          )} */}
           <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
         </UserStateLayout>
       </ListLayout>

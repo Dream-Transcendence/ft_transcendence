@@ -127,19 +127,25 @@ function BasicSpeedDial(props: {
   };
 
   const handleBan = () => {
-    if (status !== BAN && status !== MUTE) {
-      const info = setInfo(auth, BAN);
-      setUserState(info, KickOff);
-      setTimeout(async () => {
-        const info = await setInfo(auth, NONE);
+    // 시간제한에서 영구변경으로 변경
+    if (status !== MUTE) {
+      if (status === BAN) {
+        const info = setInfo(auth, NONE);
         setUserState(info, beNone);
-      }, 5000);
+      } else if (status !== BAN) {
+        const info = setInfo(auth, BAN);
+        setUserState(info, KickOff);
+      }
+      // setTimeout(async () => {
+      //   const info = await setInfo(auth, NONE);
+      //   setUserState(info, beNone);
+      // }, 5000);
     }
   };
 
   const handleMute = () => {
-    if (auth === ADMIN) {
-      alert('관리자 권한을 해제한 뒤, 음소거 가능합니다.');
+    if (userType === ADMIN && auth === ADMIN) {
+      alert('같은 관리자는 음소거를 할 수 없습니다.');
       return;
     }
     if (status !== MUTE && status !== BAN) {

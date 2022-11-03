@@ -14,6 +14,8 @@ const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '11%',
   minHeight: '100px',
+  maxHeight: '110px',
+  marginTop: '1%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -22,6 +24,8 @@ const RoomInfoLayout = styled('div')(({ theme }) => ({
 const RoomInfoBox = styled('div')(({ theme }) => ({
   width: '93%',
   height: '80%',
+  minHeight: '100px',
+  maxHeight: '110px',
   display: 'flex',
   marginRight: '1%',
   borderRadius: '15px',

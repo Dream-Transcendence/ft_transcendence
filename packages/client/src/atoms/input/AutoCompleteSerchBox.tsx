@@ -30,7 +30,7 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
         setUserList([...searched]);
       })
       .catch((error) => {
-        alert(error);
+        // alert(error); //사용자에게 보여주지 않아도 되는 정보는 삭제
         console.log(error);
       });
     // }

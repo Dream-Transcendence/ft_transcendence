@@ -51,12 +51,16 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
+    console.log('?? twice');
     setValues({ ...values, body: value });
   };
 
   const handleEnter = (event: any) => {
-    if (event.key === 'Enter') {
-      //자꾸 enter를 누르면 refresh되길래 기본기능막아줌
+    console.log('keydow!', event);
+    //자꾸 enter를 누르면 refresh되길래 기본기능막아줌
+    //chrome은 한글자판을 사용할 경우 229라는 키코드를 두번 보내서 사전에 막아줌
+    if (event.key === 'Enter' && event.keyCode !== 229) {
+      console.log('~~~~~~~~~~~~');
       event.preventDefault();
       sendMessage();
     }
@@ -84,7 +88,9 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
           color: 'white',
           backgroundColor: '#76aef177',
           borderRadius: '10px',
+          spellcheck: 'false',
         }}
+        spellCheck="false"
         placeholder="  내용을 입력하세요.."
         onChange={handleChange}
         onKeyDown={handleEnter}
