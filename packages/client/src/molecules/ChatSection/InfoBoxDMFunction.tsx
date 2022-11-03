@@ -33,14 +33,14 @@ const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
 export async function blockUser(
   blockId: number,
   userId: number,
-  setBlock: () => void,
+  setBlock?: () => void,
 ) {
   try {
     await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
       id: blockId,
     });
     console.log('block!!');
-    setBlock();
+    if (setBlock) setBlock();
   } catch (error) {
     alert(error);
     throw console.dir(error);
@@ -50,12 +50,12 @@ export async function blockUser(
 export async function unBlockUser(
   blockId: number,
   userId: number,
-  setUnBlock: () => void,
+  setUnBlock?: () => void,
 ) {
   try {
     await axios.delete(`${SERVERURL}/users/${userId}/blocks/${blockId}`);
     console.log('unblock!!');
-    setUnBlock();
+    if (setUnBlock) setUnBlock();
   } catch (error) {
     alert(error);
     throw console.dir(error);
@@ -77,30 +77,30 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     return room.name !== roomInfo.name;
   });
 
-  const setBlock = () => {
-    const block = { ...roomInfo, blocked: true };
-    if (findRoom !== undefined) {
-      const blockedUser = { ...findRoom, blocked: true };
-      setRoomList([...popUserList, blockedUser]);
-    }
-    if (handler !== undefined) handler(block);
-  };
-  const setUnBlock = () => {
-    const unBlock = { ...roomInfo, blocked: false };
-    if (findRoom !== undefined) {
-      const blockedUser = { ...findRoom, blocked: false };
-      setRoomList([...popUserList, blockedUser]);
-    }
-    if (handler !== undefined) handler(unBlock);
-  };
-  function handlerBlock() {
-    //[수정요망] 나 block id roominfo에서 userid를 받아와야함
-    // roomInfo.id => roomInfo.userId
-    if (roomInfo.userId !== undefined && roomInfo.blocked === UNBLOCK)
-      blockUser(roomInfo.userId, userData.id, setBlock);
-    else if (roomInfo.userId !== undefined && roomInfo.blocked === BLOCK)
-      unBlockUser(roomInfo.userId, userData.id, setUnBlock);
-  }
+  // const setBlock = () => {
+  //   const block = { ...roomInfo, blocked: true };
+  //   if (findRoom !== undefined) {
+  //     const blockedUser = { ...findRoom, blocked: true };
+  //     setRoomList([...popUserList, blockedUser]);
+  //   }
+  //   if (handler !== undefined) handler(block);
+  // };
+  // const setUnBlock = () => {
+  //   const unBlock = { ...roomInfo, blocked: false };
+  //   if (findRoom !== undefined) {
+  //     const blockedUser = { ...findRoom, blocked: false };
+  //     setRoomList([...popUserList, blockedUser]);
+  //   }
+  //   if (handler !== undefined) handler(unBlock);
+  // };
+  // function handlerBlock() {
+  //   //[수정요망] 나 block id roominfo에서 userid를 받아와야함
+  //   // roomInfo.id => roomInfo.userId
+  //   if (roomInfo.userId !== undefined && roomInfo.blocked === UNBLOCK)
+  //     blockUser(roomInfo.userId, userData.id, setBlock);
+  //   else if (roomInfo.userId !== undefined && roomInfo.blocked === BLOCK)
+  //     unBlockUser(roomInfo.userId, userData.id, setUnBlock);
+  // }
 
   function handleMatch() {
     if (roomInfo.userId) {
@@ -120,10 +120,10 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     action: handleMatch,
   };
 
-  const customBlockProps: CustomIconProps = {
-    icon: <BlockIcon />,
-    action: handlerBlock,
-  };
+  // const customBlockProps: CustomIconProps = {
+  //   icon: <BlockIcon />,
+  //   action: handlerBlock,
+  // };
 
   const personalAction: LinkIconProps = {
     iconResource: personal,
@@ -131,7 +131,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   return (
     <InfoBoxFunctionLayout>
-      <CustomIconButton customProps={customBlockProps} />
+      {/* <CustomIconButton customProps={customBlockProps} /> */}
       <CustomIconButton customProps={gameAction} />
       <LinkPageIconButton linkIconProps={personalAction} />
     </InfoBoxFunctionLayout>

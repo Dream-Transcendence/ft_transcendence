@@ -34,7 +34,7 @@ import { UserSecondAuth } from '../../types/Profile.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
   width: '100%',
-  height: '100%',
+  height: '98%',
 }));
 
 const ChattingBanLayout = styled('div')(({ theme }) => ({
@@ -129,7 +129,6 @@ function EnteredChatRoomTemplate() {
       try {
         //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
         //5 === 랜더링 안됨.
-        console.log('room!!!!!!!', roomInfo, roomId);
         if (
           roomInfo.type !== DM &&
           roomInfo.type !== 5 &&
@@ -141,8 +140,9 @@ function EnteredChatRoomTemplate() {
           );
           setParticipantInfo(response.data);
         }
-      } catch (error) {
-        alert(error);
+      } catch (error: any) {
+        if (error.response.data.statusCode === 401) navigate('/');
+        // alert(error);
         throw console.dir(error);
       }
     }

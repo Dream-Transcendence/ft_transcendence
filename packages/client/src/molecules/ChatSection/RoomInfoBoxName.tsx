@@ -114,7 +114,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
         <Avatar
           style={{ marginRight: '3%' }}
           alt="Remy Sharp"
-          src={roomImage}
+          src={roomInfo.image}
         />
       )}
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}

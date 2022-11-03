@@ -153,31 +153,31 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
     userData: userInfo,
   };
 
-  const setBlock = () => {
-    const block = { ...participantInfo, blocked: true };
-    if (findRoom !== undefined) {
-      const blockedUser = { ...findRoom, blocked: true };
-      setRoomList([...popUserList, blockedUser]);
-    }
-    if (handler !== undefined) handler([...filteredParticipants, block]);
-  };
-  const setUnBlock = () => {
-    const unBlock = { ...participantInfo, blocked: false };
-    if (findRoom !== undefined) {
-      const blockedUser = { ...findRoom, blocked: false };
-      setRoomList([...popUserList, blockedUser]);
-    }
-    if (handler !== undefined) handler([...filteredParticipants, unBlock]);
-  };
-  function handlerBlock() {
-    if (blocked === UNBLOCK) blockUser(user.id, userData.id, setBlock);
-    else if (blocked === BLOCK) unBlockUser(user.id, userData.id, setUnBlock);
-  }
+  // const setBlock = () => {
+  //   const block = { ...participantInfo, blocked: true };
+  //   if (findRoom !== undefined) {
+  //     const blockedUser = { ...findRoom, blocked: true };
+  //     setRoomList([...popUserList, blockedUser]);
+  //   }
+  //   if (handler !== undefined) handler([...filteredParticipants, block]);
+  // };
+  // const setUnBlock = () => {
+  //   const unBlock = { ...participantInfo, blocked: false };
+  //   if (findRoom !== undefined) {
+  //     const blockedUser = { ...findRoom, blocked: false };
+  //     setRoomList([...popUserList, blockedUser]);
+  //   }
+  //   if (handler !== undefined) handler([...filteredParticipants, unBlock]);
+  // };
+  // function handlerBlock() {
+  //   if (blocked === UNBLOCK) blockUser(user.id, userData.id, setBlock);
+  //   else if (blocked === BLOCK) unBlockUser(user.id, userData.id, setUnBlock);
+  // }
 
-  const customProps: CustomIconProps = {
-    icon: <BlockIcon />,
-    action: handlerBlock,
-  };
+  // const customProps: CustomIconProps = {
+  //   icon: <BlockIcon />,
+  //   action: handlerBlock,
+  // };
 
   return (
     <UserProfileLayout>
@@ -196,9 +196,9 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
       </UserStateLayout>
       <UserFuntionLayout>
         <LinkPageIconButton linkIconProps={linkPersonal} />
-        {userData.id !== participantInfo.user.id && (
+        {/* {userData.id !== participantInfo.user.id && (
           <CustomIconButton customProps={customProps} />
-        )}
+        )} */}
         {/* admin 권한에 따라 활성/비활성화 */}
         {userType !== null && (
           <SpeedDialLayout>

@@ -18,10 +18,10 @@ function ProfilePage() {
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
-    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false) {
       navigate('/');
+    }
   }, [userData.id, passSecondOauth, navigate]);
-
   return (
     <ProfilePageLayout>
       <ProfileTemplate />

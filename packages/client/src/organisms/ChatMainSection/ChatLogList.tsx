@@ -58,7 +58,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   useEffect(() => {
     if (ulRef.current) {
       //향후 수정예정 특정 위치에서만 불러지도록 수정할 것
-
       if (scrollLayout.current != null) {
         if (ulRef.current.scrollHeight <= scrollLayout.current.clientHeight) {
           setIsOverflow(false);
@@ -182,16 +181,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
   };
 
-  const checkBlock = (msg: SocketMessage) => {
-    if (
-      blockedUser.every((blockUser) => {
-        return blockUser !== msg.user.id;
-      })
-    )
-      return false;
-    else return true;
-  };
-
   // intersection observer로 특정 컴포넌트가 뷰포인트에 드러나는지 감지
   const { firstItemRef } = useInfiniteScroll(callApi);
 
@@ -201,10 +190,10 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         <ListChatLayout key={index}>
           {index === 0 && isOverflow ? (
             <CallAPI ref={firstItemRef}>
-              {!checkBlock(msg) && <MessageBox message={msg} />}
+              <MessageBox message={msg} />
             </CallAPI>
           ) : (
-            !checkBlock(msg) && <MessageBox message={msg} />
+            <MessageBox message={msg} />
           )}
         </ListChatLayout>
       );

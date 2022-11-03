@@ -31,6 +31,8 @@ const ProfilePersonalLayout = styled('div')(({ theme }) => ({
 export interface FriendPropsType {
   value: FriendType[];
   setter: React.Dispatch<React.SetStateAction<FriendType[]>>;
+  isBlock?: boolean;
+  setIsBlock?: (isBlock: boolean) => void;
 }
 
 export function ProfilePersonal() {
@@ -42,6 +44,7 @@ export function ProfilePersonal() {
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const navigate = useNavigate();
   const [friendList, setFriendList] = useState<FriendType[]>([]);
+  const [isBlock, setIsBlock] = useState<boolean>(false);
 
   async function getSetFriendList(
     id: string | undefined,
@@ -70,9 +73,25 @@ export function ProfilePersonal() {
     }
   }, [paramsId, checkFriendRequest, userData.id, setCheckFriendRequest]);
 
+  useEffect(() => {
+    async function checkIsBlock() {
+      await axios
+        .get(`${SERVERURL}/users/${userData.id}/blocks/${paramsId}`)
+        .then((response: any) => {
+          setIsBlock(response.data.isBlocked);
+        })
+        .catch((error: any) => {
+          console.log('error status : ', error.response.data.statusCode);
+        });
+    }
+    if (paramsId && userData.id !== +paramsId) checkIsBlock();
+  }, [isBlock, setIsBlock, paramsId, userData.id]);
+
   const friendProps: FriendPropsType = {
     value: friendList,
     setter: setFriendList,
+    isBlock: isBlock,
+    setIsBlock: setIsBlock,
   };
 
   return (

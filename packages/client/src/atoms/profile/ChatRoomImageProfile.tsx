@@ -79,7 +79,7 @@ const ChatRoomImageProfile = (props: { roomInfoSet: RoomInfoSet }) => {
             backgroundColor: '#00000000',
             width: '30px',
             height: '30px',
-            fontSize: '1px',
+            fontSize: '15px',
             display: 'absolute',
             color: 'white',
             zIndex: '999',
