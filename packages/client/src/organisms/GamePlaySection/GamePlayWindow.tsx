@@ -12,6 +12,7 @@ import {
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
 import { height } from '@mui/system';
+import { Typography } from '@mui/material';
 import {
   BallProps,
   CanvasImgProps,
@@ -211,6 +212,14 @@ const RightUserProfile = styled('div')(({ theme }) => ({
   marginTop: '8%',
   marginLeft: '50%',
   zIndex: '2',
+  position: 'absolute',
+}));
+
+const HowToUseLayout = styled('div')(({ theme }) => ({
+  width: '400px',
+  height: '100px',
+  zIndex: '2',
+  marginLeft: '2%',
   position: 'absolute',
 }));
 
@@ -475,6 +484,14 @@ function GamePlayWindowOrganism() {
           </GamePlayCanvasLayout>
         )}
       </GameLayout>
+      <HowToUseLayout>
+        <Typography color={'grey'} fontSize={'30px'}>
+          ⇧ : Arrow Key UP
+        </Typography>
+        <Typography color={'grey'} fontSize={'30px'}>
+          ⇩ : Arrow Key DOWN
+        </Typography>
+      </HowToUseLayout>
       <GameResultModal
         open={open}
         setOpen={setOpen}
