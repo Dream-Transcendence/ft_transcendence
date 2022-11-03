@@ -35,19 +35,19 @@ function UserInfo() {
   const [userImage, setUserImage] = useState<FormData | undefined>();
 
   useEffect(() => {
-      if (userImage) {
-      axios.post(
-        `${SERVERURL}/users/${userId}/image`,
-        userImage,
-      ).then((response) => {
-        setUser({ ...user, image: response.data.image });
-        console.log('이미지 변경 성공');
-      }).catch ((error) => {
-        alert(error);
-        console.log('error : ', error);
-      })
+    if (userImage) {
+      axios
+        .post(`${SERVERURL}/users/${userId}/image`, userImage)
+        .then((response) => {
+          setUser({ ...user, image: response.data.image });
+          console.log('이미지 변경 성공');
+        })
+        .catch((error) => {
+          alert(error);
+          console.log('error : ', error);
+        });
     }
-  }, [userImage, userId])
+  }, [userImage, userId]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -61,9 +61,9 @@ function UserInfo() {
         const formData = new FormData();
         formData.append('file', file);
         setUserImage(formData);
-      };
+      }
     }
-  }
+  };
   const fileChangeProps: CustomUploadProps = {
     icon: <AddPhotoAlternateTowToneIcon color="disabled" />,
     action: handleChange,

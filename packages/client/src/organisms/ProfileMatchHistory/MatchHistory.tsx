@@ -7,7 +7,10 @@ import { useRecoilValue } from 'recoil';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { UserMatchHistoryType } from '../../types/Profile.type';
+import {
+  BaseUserProfileData,
+  UserMatchHistoryType,
+} from '../../types/Profile.type';
 import {
   ListGenerateLayout,
   ListLayout,
@@ -15,6 +18,7 @@ import {
 } from '../../atoms/list/styles/ListStylesCSS';
 import ProfileImage from '../../atoms/profile/ProfileImage';
 import { SERVERURL } from '../../configs/Link.url';
+import { userDataAtom } from '../../recoil/user.recoil';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -39,9 +43,11 @@ const TextLayout = styled('div')(({ theme }) => ({
 
 function MatchHistory() {
   const { userId } = useParams();
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [matchHistoryList, setMatchHistoryList] = useState<
     UserMatchHistoryType[]
   >([]);
+
   useEffect(() => {
     async function getUserLadder() {
       await axios
@@ -55,7 +61,7 @@ function MatchHistory() {
         });
     }
     getUserLadder();
-  }, [userId]);
+  }, [userId, userData]);
 
   //userId로 받아온 리스트
   const listElement: JSX.Element[] = matchHistoryList.map(
