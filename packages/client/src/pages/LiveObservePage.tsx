@@ -1,10 +1,13 @@
 import styled from '@emotion/styled';
+import { useEffect } from 'react';
 import {
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
 } from '../atoms/list/styles/ListStylesCSS';
 import LiveObserveElement from '../molecules/Observe/LiveObserveElement';
+import { gameNameSpace } from '../socket/event';
+import useSocket from '../socket/useSocket';
 import { GameRoomDto } from '../types/Game.type';
 
 const LiveObserveLayout = styled('section')(({ theme }) => ({
@@ -27,6 +30,7 @@ const GameListLayout = styled('div')(({ theme }) => ({
 }));
 
 function LiveObservePage() {
+  const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const mockUp: GameRoomDto[] = [
     {
       title: '',
@@ -46,6 +50,14 @@ function LiveObservePage() {
       mode: 1,
     },
   ];
+
+  useEffect(() => {
+    connect();
+
+    return () => {
+      disconnect();
+    };
+  }, []);
 
   const listElement: React.ReactElement[] = mockUp.map(
     (game: GameRoomDto, index: number) => {
