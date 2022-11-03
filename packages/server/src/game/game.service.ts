@@ -67,12 +67,15 @@ export class GameService {
             'playerAbstention',
             this.gameInfoMap.get(key).getAbstentionDto(player.id),
           );
+        const intervals = this.schedulerRegistry.getIntervals();
+        intervals.map((interval) => {
+          if (interval === key) this.schedulerRegistry.deleteInterval(key);
+        });
         client.leave(key);
         const players = this.gameInfoMap.get(key).player;
         this.userGateway.setConnection(players.left.id, false);
         this.userGateway.setConnection(players.right.id, false);
         this.gameInfoMap.delete(key);
-        this.schedulerRegistry.deleteInterval(key);
       }
     }
     // 게임 매치에서 다른 페이지로 이동했을 때
