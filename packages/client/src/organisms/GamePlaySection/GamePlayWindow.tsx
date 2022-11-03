@@ -65,6 +65,7 @@ const GamePlayCanvasLayout = ({ children, width, height }: CanvasProps) => {
         background: 'linear-gradient(to bottom right, blue, pink)',
         width: `${width}px`,
         height: `${height}px`,
+        minHeight: '310px',
       }}
     >
       {children}

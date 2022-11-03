@@ -45,6 +45,7 @@ export const ListChatGenerateLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column',
   height: '100%',
   width: '100%',
+  justifyContent: 'flex-end',
   backgroundColor: '#00FF0000',
 }));
 
