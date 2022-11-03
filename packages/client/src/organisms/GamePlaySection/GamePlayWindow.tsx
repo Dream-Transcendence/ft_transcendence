@@ -216,7 +216,7 @@ const RightUserProfile = styled('div')(({ theme }) => ({
 }));
 
 const HowToUseLayout = styled('div')(({ theme }) => ({
-  width: '400px',
+  width: '600px',
   height: '100px',
   zIndex: '2',
   marginLeft: '2%',
@@ -484,14 +484,17 @@ function GamePlayWindowOrganism() {
           </GamePlayCanvasLayout>
         )}
       </GameLayout>
-      <HowToUseLayout>
-        <Typography color={'grey'} fontSize={'30px'}>
-          ⇧ : Arrow Key UP
-        </Typography>
-        <Typography color={'grey'} fontSize={'30px'}>
-          ⇩ : Arrow Key DOWN
-        </Typography>
-      </HowToUseLayout>
+      {(userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id) && (
+        <HowToUseLayout>
+          <Typography color={'grey'} fontSize={'3vh'}>
+            ⇧ : Arrow Key UP
+          </Typography>
+          <Typography color={'grey'} fontSize={'3vh'}>
+            ⇩ : Arrow Key DOWN
+          </Typography>
+        </HowToUseLayout>
+      )}
       <GameResultModal
         open={open}
         setOpen={setOpen}
