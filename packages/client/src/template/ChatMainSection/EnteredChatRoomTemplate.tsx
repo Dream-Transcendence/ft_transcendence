@@ -129,7 +129,6 @@ function EnteredChatRoomTemplate() {
       try {
         //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
         //5 === 랜더링 안됨.
-        console.log('room!!!!!!!', roomInfo, roomId);
         if (
           roomInfo.type !== DM &&
           roomInfo.type !== 5 &&

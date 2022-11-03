@@ -82,10 +82,7 @@ export function ProfilePersonal() {
       await axios
         .get(`${SERVERURL}/users/${userData.id}/blocks/${paramsId}`)
         .then((response: any) => {
-          console.log(response);
-          if (response.status === 200) {
-            setIsBlock(response.data.isBlocked);
-          }
+          setIsBlock(response.data.isBlocked);
         })
         .catch((error: any) => {
           console.log('error status : ', error.response.data.statusCode);
@@ -100,6 +97,7 @@ export function ProfilePersonal() {
     isBlock: isBlock,
     setIsBlock: setIsBlock,
   };
+
   return (
     <ProfilePersonalLayout>
       {`${userData.id}` === paramsId ? (

@@ -147,24 +147,31 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     },
   };
 
-  async function handlerBlock() {
-    //[수정요망] 나 block id roominfo에서 userid를 받아와야함
-    // roomInfo.id => roomInfo.userId
+  const setBlock = () => {
+    if (setIsBlock) setIsBlock(true);
+  };
 
-    console.log('????!', isBlock);
-    if (userData.id !== undefined && isBlock === UNBLOCK)
-      blockUser(userData.id, id);
-    else if (userData.id !== undefined && isBlock === BLOCK)
-      unBlockUser(userData.id, id);
+  const setUnBlock = () => {
+    if (setIsBlock) setIsBlock(false);
+  };
+
+  async function handlerBlock() {
+    if (userData.id !== undefined && isBlock === UNBLOCK) {
+      blockUser(userData.id, id, setBlock);
+      alert('유저를 차단하였습니다.');
+    } else if (userData.id !== undefined && isBlock === BLOCK) {
+      unBlockUser(userData.id, id, setUnBlock);
+      alert('유저를 차단을 해제하였습니다.');
+    }
   }
 
   const customUnBlockProps: CustomIconProps = {
-    icon: <FaceRetouchingOffIcon />,
+    icon: <BlockIcon />,
     action: handlerBlock,
   };
 
   const customBlockProps: CustomIconProps = {
-    icon: <BlockIcon />,
+    icon: <FaceRetouchingOffIcon />,
     action: handlerBlock,
   };
 
