@@ -30,6 +30,7 @@ function ProfileNickname() {
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
+  const [isChange, setIsChange] = useState<boolean>(false);
 
   async function changeName(value: string) {
     try {
@@ -55,17 +56,20 @@ function ProfileNickname() {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsChange(true);
     const value = event.target.value;
     setNickname(value);
   };
 
   const handleClick = () => {
+    setIsChange(false);
     console.log('click ', nickname); //예외처리 추가
     if (checkValidNickname(nickname)) changeName(nickname);
     else alert('닉네임이 공백을 포함하거나 유효하지 않습니다!');
   };
 
   const handleMouseDown = (event: React.MouseEvent<HTMLButtonElement>) => {
+    //어떤 이벤트를 명시적으로 처리하지 않은 경우, 해당 이벤트에 대한 사용자 에이전트의 기본 동작을 실행하지 않도록 지정
     event.preventDefault();
   };
 
@@ -108,13 +112,15 @@ function ProfileNickname() {
         fullWidth
         endAdornment={
           <InputAdornment position="end">
-            <IconButton
-              aria-label="toggle password visibility"
-              onClick={handleClick}
-              onMouseDown={handleMouseDown}
-            >
-              <EditIcon />
-            </IconButton>
+            {isChange && (
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={handleClick}
+                onMouseDown={handleMouseDown}
+              >
+                <EditIcon />
+              </IconButton>
+            )}
           </InputAdornment>
         }
       />
