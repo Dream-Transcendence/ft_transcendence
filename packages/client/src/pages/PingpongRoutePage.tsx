@@ -4,7 +4,12 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
 import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import { NOTFOUNDURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
+import {
+  GAMELOADINGURL,
+  NOTFOUNDURL,
+  PROFILEURL,
+  SERVERURL,
+} from '../configs/Link.url';
 import {
   ACCEPTGAME,
   CHANGEUSERSTATUS,
@@ -298,31 +303,17 @@ function PingpongRoutePage() {
    */
   useEffect(() => {
     socket.on(ACCEPTGAME, (response: ServerAcceptGameDto) => {
-      gameSocket.emit(
-        GAMEMATCH,
-        {
-          title: response.title,
-          userId: userData.id,
-          mode: gameInviteInfo.mode,
-        },
-        (response: any) => {
-          console.log('match emit 성공 : ', response);
-        },
-      );
+      setGameInviteInfo({
+        ...gameInviteInfo,
+        title: response.title,
+        mode: response.mode,
+      });
+      navigate(GAMELOADINGURL);
     });
+    return () => {
+      socket.off(ACCEPTGAME);
+    };
   }, []);
-
-  // //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
-  // //채팅관련 소켓 네임스페이스(chat) 연결작업
-  // useEffect(() => {
-  //   function setChatSocketConnect() {
-  //     gconnect();
-  //   }
-  //   setChatSocketConnect();
-  //   return () => {
-  //     gdisconnect();
-  //   };
-  // }, []);
 
   useEffect(() => {
     socket.on('exception', (error: any) => {
@@ -332,7 +323,6 @@ function PingpongRoutePage() {
       socket.off('exception');
     };
   }, []);
-
   return (
     <PageSection>
       <header>

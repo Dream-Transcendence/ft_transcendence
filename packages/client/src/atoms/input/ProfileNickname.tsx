@@ -43,8 +43,8 @@ function ProfileNickname() {
           handleName(value);
         }
       }
-    } catch (error) {
-      alert(error);
+    } catch (error: any) {
+      if (error.response.status === 409) alert('중복된 닉네임입니다.');
       console.log(error);
     }
   }
@@ -56,7 +56,6 @@ function ProfileNickname() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-
     setNickname(value);
   };
 
