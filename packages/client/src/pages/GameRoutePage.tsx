@@ -60,7 +60,7 @@ function GameRoutePage() {
         title: '',
         hostId: 0,
         opponentId: 0,
-        mode: 0,
+        mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
       });
       disconnect();
     };

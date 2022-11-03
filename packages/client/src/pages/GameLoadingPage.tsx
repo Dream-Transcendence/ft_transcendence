@@ -29,7 +29,7 @@ import { InviteInfoListType } from '../types/Message.type';
 import { inviteInfoListAtom } from '../recoil/common.recoil';
 import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
 import { UserSecondAuth } from '../types/Profile.type';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import LinkPageTextButton from '../atoms/button/linkPage/LinkPageTextButton';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
@@ -196,7 +196,13 @@ function GameLoadingPage() {
       </LodingImageLayout>
       <BottomLayout>
         <ButtonLayout>
-          <HistoryBackTextButton />
+          <Button
+            style={buttonStyle}
+            onClick={() => navigate(PROFILEURL)}
+            variant="contained"
+          >
+            취소하기
+          </Button>
         </ButtonLayout>
       </BottomLayout>
     </GameLodingLayout>
