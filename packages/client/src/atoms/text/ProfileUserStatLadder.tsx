@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
+import { RANK } from '../../configs/userType';
 
 const StatLadderLayout = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -13,14 +14,12 @@ const StatLadderLayout = styled('div')(({ theme }) => ({
   borderRadius: '7%',
 }));
 
-function UserStatLadder(props: { value: string }) {
+function UserStatLadder(props: { value: number }) {
   const { value } = props;
-  {
-    /* [axios GET 요청] 레더 정보 불러오기 */
-  }
+
   return (
     <StatLadderLayout>
-      <Typography variant="h2">{value}</Typography>
+      <Typography variant="h2">{RANK[value]}</Typography>
     </StatLadderLayout>
   );
 }

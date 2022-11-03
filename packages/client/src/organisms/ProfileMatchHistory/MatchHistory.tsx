@@ -14,6 +14,7 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import ProfileImage from '../../atoms/profile/ProfileImage';
+import { SERVERURL } from '../../configs/Link.url';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -40,14 +41,21 @@ function MatchHistory() {
   const { userId } = useParams();
   const [matchHistoryList, setMatchHistoryList] = useState<
     UserMatchHistoryType[]
-  >([
-    {
-      id: Number(userId),
-      opponent: 'UnKnown',
-      isWin: false,
-      isLadder: false,
-    },
-  ]);
+  >([]);
+  useEffect(() => {
+    async function getUserLadder() {
+      await axios
+        .get(`${SERVERURL}/users/${userId}/game/records`)
+        .then((response) => {
+          const history: UserMatchHistoryType[] = response.data;
+          setMatchHistoryList(history);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    getUserLadder();
+  }, [userId]);
 
   //userId로 받아온 리스트
   const listElement: JSX.Element[] = matchHistoryList.map((matchHistory) => {

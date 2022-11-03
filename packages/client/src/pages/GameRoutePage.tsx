@@ -17,8 +17,8 @@ import {
 } from '../recoil/user.recoil';
 import {
   ALREADYFORMATCH,
-  GAMECANCLE,
-  gameLadderMatch,
+  GAMECANCEL,
+  GAMEMATCH,
   gameNameSpace,
 } from '../socket/event';
 import useSocket from '../socket/useSocket';

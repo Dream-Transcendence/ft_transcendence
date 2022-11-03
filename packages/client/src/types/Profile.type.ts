@@ -1,5 +1,5 @@
 export interface UserLadderType {
-  rank: string;
+  rank: number;
   winCount: number;
   loseCount: number;
 }
@@ -19,7 +19,11 @@ export interface UserProfileBoxType {
 
 export interface UserMatchHistoryType {
   id: number;
-  opponent: string;
+  opponent: {
+    id: number;
+    nickname: string;
+    image: string;
+  };
   isWin: boolean;
   isLadder: boolean;
 }

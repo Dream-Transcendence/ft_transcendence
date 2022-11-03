@@ -4,6 +4,7 @@ import { Typography } from '@mui/material';
 const StatLoseLayout = styled('div')(({ theme }) => ({
   width: '50%',
   height: '100%',
+  marginTop: '2%',
 }));
 
 const PointLayout = styled('div')(({ theme }) => ({
@@ -11,17 +12,22 @@ const PointLayout = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   alignItems: 'center',
   alignSelf: 'center',
-  marginTop: '-10%',
-  marginLeft: '13%',
+  marginLeft: '25%',
   width: '50%',
-  height: '100%',
 }));
 
 function UserStatLose(props: { value: number }) {
   const { value } = props;
   return (
     <StatLoseLayout>
-      <Typography variant="h6">StatLose : </Typography>
+      <Typography
+        display="flex"
+        variant="h6"
+        alignItems={'center'}
+        justifyContent={'center'}
+      >
+        StatLose
+      </Typography>
       <PointLayout>
         <Typography
           alignItems={'center'}

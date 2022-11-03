@@ -6,11 +6,16 @@ import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import { NOTFOUNDURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import {
+  ACCEPTGAME,
   CHANGEUSERSTATUS,
   FRIENDREQUEST,
   FRIENDREQUESTACCEPTED,
+  GAMEMATCH,
+  gameNameSpace,
+  INVITEGAME,
   logOn,
   REJECTFRIENDREQUEST,
+  REJECTGAME,
   USERLOGOFF,
   userNameSpace,
 } from '../socket/event';
@@ -31,12 +36,18 @@ import ChatroomPage from './ChatChannelPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
 import axios from 'axios';
-import { InviteInfoListType, RequestDto } from '../types/Message.type';
+import {
+  InviteInfoListType,
+  RequestDto,
+  ServerAcceptGameDto,
+} from '../types/Message.type';
 import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
 } from '../recoil/common.recoil';
 import NotFoundPage from './NotFoundPage';
+import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
+import { gameInviteInfoAtom } from '../recoil/game.recoil';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -47,6 +58,8 @@ const PageSection = styled('section')(({ theme }) => ({
 
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
+  const [gameSocket, gconnect, gdisconnect] = useSocket(gameNameSpace);
+
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const [passSecondOauth, setPassSecondOauth] =
@@ -55,9 +68,11 @@ function PingpongRoutePage() {
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setSheckFriendRequest] = useRecoilState(
+  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
     checkFriendRequestAtom,
   );
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -201,7 +216,7 @@ function PingpongRoutePage() {
       const newMessage: InviteInfoListType = {
         id: id,
         userId: userId,
-        message: `${nickname}님이 친구초대를 요청하셨습니다.`,
+        message: `${nickname}님이 친구를 신청하셨습니다.`,
         type: 'friend',
       };
       setInviteInfoList([...inviteInfoList, newMessage]);
@@ -219,7 +234,7 @@ function PingpongRoutePage() {
     socket.on(FRIENDREQUESTACCEPTED, (response: BaseUserProfileData) => {
       console.log('friendRequestAccepted', response);
       if (response) {
-        setSheckFriendRequest(true);
+        setCheckFriendRequest(true);
         /**
          * 상대방 수락 확인 메시지 기록 추가
          */
@@ -257,11 +272,66 @@ function PingpongRoutePage() {
     });
   }, []);
 
+  /**
+   * 게임 초대 받기
+   */
+  useEffect(() => {
+    socket.on(INVITEGAME, (response: ServerInviteGameDto) => {
+      const { host, mode } = response;
+      const { id: userId, nickname } = host;
+      const newMessage: InviteInfoListType = {
+        userId: userId,
+        message: `${nickname}님이 게임을 초대하셨습니다.`,
+        type: 'game',
+        mode: mode,
+      };
+      setInviteInfoList([...inviteInfoList, newMessage]);
+      console.log('socket : 게임 초대를 받았습니다.', newMessage);
+    });
+    return () => {
+      socket.off(INVITEGAME);
+    };
+  }, [inviteInfoList, setInviteInfoList, socket]);
+
+  /**
+   * 게임 수락 이후 title 받고 match 요청
+   */
+  useEffect(() => {
+    socket.on(ACCEPTGAME, (response: ServerAcceptGameDto) => {
+      gameSocket.emit(
+        GAMEMATCH,
+        {
+          title: response.title,
+          userId: userData.id,
+          mode: gameInviteInfo.mode,
+        },
+        (response: any) => {
+          console.log('match emit 성공 : ', response);
+        },
+      );
+    });
+  }, []);
+
+  // //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
+  // //채팅관련 소켓 네임스페이스(chat) 연결작업
+  // useEffect(() => {
+  //   function setChatSocketConnect() {
+  //     gconnect();
+  //   }
+  //   setChatSocketConnect();
+  //   return () => {
+  //     gdisconnect();
+  //   };
+  // }, []);
+
   useEffect(() => {
     socket.on('exception', (error: any) => {
       alert(error.message);
     });
-  });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   return (
     <PageSection>
