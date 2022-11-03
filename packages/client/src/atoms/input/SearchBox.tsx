@@ -25,7 +25,6 @@ const Search = styled('div')(({ theme }) => ({
 
 function SearchBox(prop: { searchProps: SearchPropsType }) {
   const searchProps = prop.searchProps;
-  console.log('asdasd', searchProps);
   return (
     <Search>
       <AutoComplateSerchBox searchProps={searchProps} />
