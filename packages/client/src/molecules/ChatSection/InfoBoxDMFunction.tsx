@@ -18,7 +18,9 @@ import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { gameOpponetAtom } from '../../recoil/game.recoil';
+import { gameInviteInfoAtom } from '../../recoil/game.recoil';
+import { GameInviteInfoType } from '../../types/Game.type';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -62,10 +64,12 @@ export async function unBlockUser(
 
 function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
+  const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
   const { roomInfo, handler } = roomInfoSet;
   const [roomlist, setRoomList] = useRecoilState(DMList);
-  const [gameOpponet, setGameOpponent] = useRecoilState(gameOpponetAtom);
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
   const findRoom = roomlist.find((room) => {
     return room.name === roomInfo.name;
   });
@@ -100,7 +104,9 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
 
   function handleMatch() {
     if (roomInfo.userId) {
-      setGameOpponent(roomInfo.userId);
+      //상대방 id 추가
+      setGameInviteInfo({ ...gameInviteInfo, opponentId: roomInfo.userId });
+      navigate(GAMECREATEURL);
     }
   }
 
@@ -109,8 +115,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     icon: <PersonIcon />,
   };
 
-  const goToGame: LinkIconResource = {
-    url: GAMECREATEURL,
+  const gameAction: CustomIconProps = {
     icon: <SportsKabaddiIcon />,
     action: handleMatch,
   };
@@ -124,14 +129,10 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
     iconResource: personal,
   };
 
-  const gameAction: LinkIconProps = {
-    iconResource: goToGame,
-  };
-
   return (
     <InfoBoxFunctionLayout>
       <CustomIconButton customProps={customBlockProps} />
-      <LinkPageIconButton linkIconProps={gameAction} />
+      <CustomIconButton customProps={gameAction} />
       <LinkPageIconButton linkIconProps={personalAction} />
     </InfoBoxFunctionLayout>
   );

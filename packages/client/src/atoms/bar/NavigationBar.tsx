@@ -104,7 +104,6 @@ function NavigationBar() {
   };
   const Channels: LinkIconResource = {
     url: CHANNELURL,
-    // url: '/pingpong/channel/room/4',
     icon: <ChatIcon fontSize="inherit" />,
   };
 

@@ -1,3 +1,5 @@
+import { Text } from '@chakra-ui/react';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const UserProfileBoxNicknameLayout = styled('span')(({ theme }) => ({

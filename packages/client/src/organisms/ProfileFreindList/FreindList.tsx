@@ -130,7 +130,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
           icon: <VisibilityIcon />,
           action: handlerObserver,
         };
-
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />

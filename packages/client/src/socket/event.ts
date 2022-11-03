@@ -21,9 +21,10 @@ export const gameNameSpace = 'game';
 
 export const WATCH = 'watch';
 export const GAMEINVITE = 'inviteGame';
-export const gameLadderMatch = 'match';
+export const GAMEMATCH = 'match';
+export const INVITEGAME = 'inviteGame';
 export const ALREADYFORMATCH = 'alreadyForMatch';
-export const GAMECANCLE = 'cancel';
+export const GAMECANCEL = 'cancelMatch';
 export const GAMESTART = 'start';
 export const GAMEPROCESS = 'gameProcess';
 export const GAMEEND = 'gameEnd';

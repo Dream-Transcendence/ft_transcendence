@@ -33,7 +33,7 @@ function useSearch(
     },
     type: type,
   };
-
+  console.log('useSearch', target);
   const createDM = async (participantId: number) => {
     try {
       const existDM = dmList.every((dm) => {
@@ -57,7 +57,9 @@ function useSearch(
 
   //참가자 리스트 생성
   useEffect(() => {
-    if (target.id > 0 && type === 5) navigate(`${naviUrl}${target.id}`); //profile 이동
+    console.log('gon junghan ', target);
+    if (target.id > 0 && type === 5)
+      navigate(`${naviUrl}${target.id}`); //profile 이동
     else if (target.id > 0 && type === DM) {
       createDM(target.id);
     } else if (target.id > 0 && type === PUBLIC) {

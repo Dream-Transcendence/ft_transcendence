@@ -15,6 +15,7 @@ const UserProfileBoxLayout = styled(Button)(({ theme }) => ({
   height: '20%',
   padding: '0',
   marginLeft: '0.3rem',
+  textTransform: 'unset',
 }));
 
 function UserProfileBox(props: { userProfileBoxProps: UserProfileBoxType }) {

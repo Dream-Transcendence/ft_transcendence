@@ -38,6 +38,7 @@ function GameCreatePage() {
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
+
   return (
     <GameCreateLayout>
       <GameCreateTemplateLayout>

@@ -59,7 +59,7 @@ function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
         <PlayerInfoLayout>
           {GamePlayer(userData.nickname)}
           <Typography>VS</Typography>
-          {GamePlayer(opponent)}
+          {GamePlayer(opponent.nickname)}
         </PlayerInfoLayout>
       </OneMatchHistoryLayout>
     </OneMatchLayout>

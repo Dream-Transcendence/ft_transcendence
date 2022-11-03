@@ -51,7 +51,6 @@ export function ProfilePersonal() {
     setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
   ) {
     try {
-      console.log(id, '의 친구 목록');
       const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
       setter(response.data);
       console.log('친구 목록을 최신화 하였습니다.');
@@ -61,9 +60,6 @@ export function ProfilePersonal() {
         alert('존재하지 않는 프로필입니다.');
         navigate(PROFILEURL);
       }
-
-      // alert(error);
-      // console.log(error);
     }
   }
 

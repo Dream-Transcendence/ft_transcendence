@@ -367,6 +367,7 @@ export class UserService {
   async searchUser(nickname: string): Promise<UserDto[]> {
     // SELECT * FROM public."user"
     // WHERE "user"."nickname" LIKE '%nickname%';
+    if (nickname === '') return [];
     const users = await this.usersRepository.find({
       where: { nickname: Like(`%${nickname}%`) },
     });
@@ -809,6 +810,8 @@ export class UserService {
 
     if (requestorClientId !== null)
       client.to(requestorClientId).emit('friendRequestAccepted', friendDto);
+
+    return { isDone: true };
   }
 
   async handleRejectFriendRequest(client: Socket, requestIdDto: RequestIdDto) {

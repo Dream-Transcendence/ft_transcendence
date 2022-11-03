@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
@@ -8,7 +8,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TransitionGroup } from 'react-transition-group';
-import { InviteInfoListType } from '../../types/Message.type';
+import {
+  InviteInfoListType,
+  ServerAcceptGameDto,
+} from '../../types/Message.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   checkFriendRequestAtom,
@@ -26,6 +29,10 @@ import {
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
+import { GameInviteInfoType } from '../../types/Game.type';
+import { gameInviteInfoAtom } from '../../recoil/game.recoil';
+import { useNavigate } from 'react-router-dom';
+import { GAMELOADINGURL } from '../../configs/Link.url';
 
 const InviteMessageListLayout = styled('div')(({ theme }) => ({
   bottom: '0',
@@ -44,33 +51,42 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 
 function InviteMessageList() {
   const [socket] = useSocket(userNameSpace);
+  const navigate = useNavigate();
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
   const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
     checkFriendRequestAtom,
   );
+  const [gameInviteInfo, setGameInviteInfo] =
+    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
   /**
    * 요청 수락
    */
   const handleAcceptMessage = (info: InviteInfoListType) => {
+    console.log(info.type, '수락을 눌렀습니다.');
+    setInviteInfoList((prev) => {
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
+    });
     if (info.type === 'friend') {
-      socket.emit(ACCEPTFRIENDREQUEST, {
-        id: info.id,
-      });
-      //디비에 저장하는 시간이 필요함
-      setTimeout(() => {
-        setCheckFriendRequest(true);
-      }, 1000);
+      socket.emit(
+        ACCEPTFRIENDREQUEST,
+        {
+          id: info.id,
+        },
+        (response: boolean) => {
+          if (response === true) {
+            console.log('ttt?');
+            setCheckFriendRequest(true);
+          }
+        },
+      );
     } else if (info.type === 'game') {
       socket.emit(ACCEPTGAME, {
         hostId: info.userId,
         mode: info.mode,
       });
+      navigate(GAMELOADINGURL);
     }
-    //수락을 눌렀습니다.
-    setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
-    });
   };
 
   /**
@@ -88,7 +104,7 @@ function InviteMessageList() {
     }
     //거절을 눌렀습니다.
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
   };
 
@@ -97,61 +113,63 @@ function InviteMessageList() {
    */
   const handleCheckMessage = (info: InviteInfoListType) => {
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
   };
 
-  const element = inviteInfoList.map((info: InviteInfoListType) => {
-    // console.log('why : ', info);
-    return (
-      <Collapse key={info.message}>
-        <ListItem
-          secondaryAction={
-            info.type !== 'check' ? (
-              <InviteMessageButtonLayout>
+  const element = inviteInfoList.map(
+    (info: InviteInfoListType, index: number) => {
+      // console.log('why : ', info);
+      return (
+        <Collapse key={index}>
+          <ListItem
+            secondaryAction={
+              info.type !== 'check' ? (
+                <InviteMessageButtonLayout>
+                  <IconButton
+                    edge="end"
+                    aria-label="accept"
+                    title="accept"
+                    sx={{ padding: 0 }}
+                    onClick={() => handleAcceptMessage(info)}
+                  >
+                    <CheckCircleTwoToneIcon />
+                  </IconButton>
+                  <IconButton
+                    edge="end"
+                    aria-label="refuse"
+                    title="refuse"
+                    onClick={() => handleRejecttMessage(info)}
+                  >
+                    <RemoveCircleTwoToneIcon />
+                  </IconButton>
+                </InviteMessageButtonLayout>
+              ) : (
                 <IconButton
                   edge="end"
                   aria-label="accept"
                   title="accept"
                   sx={{ padding: 0 }}
-                  onClick={() => handleAcceptMessage(info)}
+                  onClick={() => handleCheckMessage(info)}
                 >
                   <CheckCircleTwoToneIcon />
                 </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="refuse"
-                  title="refuse"
-                  onClick={() => handleRejecttMessage(info)}
-                >
-                  <RemoveCircleTwoToneIcon />
-                </IconButton>
-              </InviteMessageButtonLayout>
-            ) : (
-              <IconButton
-                edge="end"
-                aria-label="accept"
-                title="accept"
-                sx={{ padding: 0 }}
-                onClick={() => handleCheckMessage(info)}
-              >
-                <CheckCircleTwoToneIcon />
-              </IconButton>
-            )
-          }
-        >
-          <ListItemText
-            primary={
-              <Typography overflow={'hidden'} maxWidth={'100%'}>
-                {info.message}
-              </Typography>
+              )
             }
-            sx={{ backgroundColor: 'white', width: '10px' }}
-          />
-        </ListItem>
-      </Collapse>
-    );
-  });
+          >
+            <ListItemText
+              primary={
+                <Typography overflow={'hidden'} maxWidth={'100%'}>
+                  {info.message}
+                </Typography>
+              }
+              sx={{ backgroundColor: 'white', width: '10px' }}
+            />
+          </ListItem>
+        </Collapse>
+      );
+    },
+  );
 
   return (
     <div>
