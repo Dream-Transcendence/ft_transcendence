@@ -19,6 +19,11 @@ export interface UserProfileBoxType {
 
 export interface UserMatchHistoryType {
   id: number;
+  user: {
+    id: number;
+    nickname: string;
+    image: string;
+  };
   opponent: {
     id: number;
     nickname: string;
