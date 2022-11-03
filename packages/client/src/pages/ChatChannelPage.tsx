@@ -2,9 +2,19 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 import { CHANNELURL } from '../configs/Link.url';
 import axios from 'axios';
 import styled from '@emotion/styled';
@@ -58,10 +68,19 @@ function ChatroomPage() {
   const [roomList, setRoomList] = useRecoilState(unJoinedRoomList);
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
   const [socket, connect, disconnect] = useSocket(chatNameSpace);
+  const navigate = useNavigate();
   const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
+  const location = useLocation();
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getUnJoinedChatList(userData.id),
+  );
 
   useEffect(() => {
     setRoomList(unJoinedChatList);
+    return () => {
+      //셀렉터로 받아오는 데이터를 리프레쉬 해줌
+      refreshUserInfo();
+    };
   }, [unJoinedChatList, setRoomList]);
 
   //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함

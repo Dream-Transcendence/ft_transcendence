@@ -312,17 +312,17 @@ function PingpongRoutePage() {
     });
   }, []);
 
-  //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
-  //채팅관련 소켓 네임스페이스(chat) 연결작업
-  useEffect(() => {
-    function setChatSocketConnect() {
-      gconnect();
-    }
-    setChatSocketConnect();
-    return () => {
-      gdisconnect();
-    };
-  }, []);
+  // //[수정사항] socket 이 두번 연결됨 아마 리랜더링되는 현상 때문인듯, 막야줘야함
+  // //채팅관련 소켓 네임스페이스(chat) 연결작업
+  // useEffect(() => {
+  //   function setChatSocketConnect() {
+  //     gconnect();
+  //   }
+  //   setChatSocketConnect();
+  //   return () => {
+  //     gdisconnect();
+  //   };
+  // }, []);
 
   useEffect(() => {
     socket.on('exception', (error: any) => {

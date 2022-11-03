@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { CUSTOM, LADDER } from '../configs/Game.type';
-import { NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
+import {
+  GAMECREATEURL,
+  GAMELOADINGURL,
+  GAMEPLAYURL,
+  NOTFOUNDURL,
+  PROFILEURL,
+} from '../configs/Link.url';
 import { gameInfoAtom } from '../recoil/game.recoil';
 import {
   gameTypeAtom,
@@ -21,12 +27,15 @@ import { UserSecondAuth } from '../types/Profile.type';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
+import { useLocation } from 'react-router-dom';
 
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  let location = useLocation();
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -39,11 +48,9 @@ function GameRoutePage() {
       connect();
       console.log('game socket 연결');
     }
-    connectGameSocket();
-
+    if (socket.connected === false) connectGameSocket();
     return () => {
       disconnect();
-      console.log('game socket 해제');
     };
   }, []);
 

@@ -7,6 +7,7 @@ import {
   GAMEPROCESS,
   GAMESTART,
   MOVEPADDLE,
+  PLAYERABSTENTION,
   RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
@@ -175,6 +176,12 @@ const ReadCount = styled('span')(({ theme }) => ({
   color: '#ffd300',
 }));
 
+const ReadyCount = styled('span')(({ theme }) => ({
+  fontSize: '6.5vh',
+  marginLeft: '-50%',
+  color: '#ffd300',
+}));
+
 const ScoreLayout = styled('span')(({ theme }) => ({
   fontSize: '500%',
   textAlign: 'center',
@@ -215,6 +222,7 @@ function GamePlayWindowOrganism() {
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);
   const [score, setScore] = useState<ScoreProps | undefined>(gameInfo?.score);
+  const [abstention, setAbstention] = useState<number>(0);
   const [open, setOpen] = useState(false);
   const [offset, setOffset] = useState<GameOffsetProps>({
     ballPosX: gameInfo?.ballPos.x,
@@ -237,17 +245,7 @@ function GamePlayWindowOrganism() {
     image: '',
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
   useEffect(() => {
-    console.log(
-      '???? tlte ',
-      urlTitle !== gameInfo?.title,
-      urlTitle,
-      gameInfo?.title,
-    );
     if (urlTitle !== gameInfo?.title || gameInfo?.title === undefined)
       navigate(`${NOTFOUNDURL}`);
   }, [urlTitle]);
@@ -294,7 +292,14 @@ function GamePlayWindowOrganism() {
         setTime(timeRef.current);
       }, 1000);
     };
-    if (IsStart === false && time === 3) countReady();
+    if (
+      IsStart === false &&
+      time === 3 &&
+      (userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id)
+    ) {
+      countReady();
+    }
   }, [IsStart, time]);
 
   /* 게임 시작 시, 현재 패들과 공의 위치값 받아오는 로직 */
@@ -323,7 +328,6 @@ function GamePlayWindowOrganism() {
           right: res.score.right,
         });
         if (res.score.left === 3 || res.score.right === 3) {
-          handleOpen();
           setOpen(true);
         } else {
           setIsStart(true);
@@ -377,8 +381,9 @@ function GamePlayWindowOrganism() {
     /* 윈도우 이벤트 발생시 바로 날려주는 방식 */
     // 관전유저가 들어올 경우, 이벤트 처리  막아줌
     if (
-      userData.id === gameInfo?.leftPlayer.id ||
-      userData.id === gameInfo?.rightPlayer.id
+      (userData.id === gameInfo?.leftPlayer.id ||
+        userData.id === gameInfo?.rightPlayer.id) &&
+      abstention === 0
     ) {
       window.addEventListener('keydown', (e) => {
         // console.log('keyevent', e.key, e.key === 'ArrowUp');
@@ -388,18 +393,24 @@ function GamePlayWindowOrganism() {
             playerId: userData.id,
             moveDir: UP,
           });
-          console.log('keyevent', e.key, 'ArrowUp');
         } else if (e.key === 'ArrowDown') {
           socket.emit(`${MOVEPADDLE}`, {
             title: gameInfo?.title,
             playerId: userData.id,
             moveDir: DOWN,
           });
-          console.log('keyevent', e.key, 'ArrowDown');
         }
       });
     }
   }, []);
+
+  /* 상대방 기권 감지 */
+  useEffect(() => {
+    socket.on(PLAYERABSTENTION, (res) => {
+      setAbstention(res.abstainedPlayer);
+      setOpen(true);
+    });
+  }, [socket]);
 
   const leftPlayerProfile: UserProfileBoxType = {
     isButton: false,
@@ -431,7 +442,12 @@ function GamePlayWindowOrganism() {
             height={theme.canvasImgProps.height}
           >
             <ReadCountLayout>
-              <ReadCount>{time}</ReadCount>
+              {userData.id === gameInfo?.leftPlayer.id ||
+              userData.id === gameInfo?.rightPlayer.id ? (
+                <ReadCount>{time}</ReadCount>
+              ) : (
+                <ReadyCount>READY</ReadyCount>
+              )}
             </ReadCountLayout>
           </PreGamePlayCanvasLayout>
         ) : (
@@ -464,6 +480,7 @@ function GamePlayWindowOrganism() {
         setOpen={setOpen}
         score={score}
         gameInfo={gameInfo}
+        abstention={abstention}
       />
     </GameWindowLayout>
   );

@@ -86,12 +86,18 @@ function EnteredChatRoomTemplate() {
   const [blockedUser, setBlockedUser] = useState<ParticipantInfo[]>([]);
   const [MessageHistory, setMessageHistory] = useState<SocketMessage[]>([]);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
+  const [socket] = useSocket(chatNameSpace);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
       navigate('/');
   }, [userData.id, passSecondOauth, navigate]);
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (socket.disconnected === true) navigate(CHANNELURL);
+  }, []);
 
   useEffect(() => {
     async function getRoomInfo() {
@@ -123,7 +129,13 @@ function EnteredChatRoomTemplate() {
       try {
         //랜더링 시,   "Uncaught" error로 인해 조건을 걸어줌.
         //5 === 랜더링 안됨.
-        if (roomInfo.type !== DM && roomInfo.type !== 5) {
+        console.log('room!!!!!!!', roomInfo, roomId);
+        if (
+          roomInfo.type !== DM &&
+          roomInfo.type !== 5 &&
+          roomId !== undefined &&
+          +roomId === roomInfo.id
+        ) {
           const response = await axios.get(
             `${SERVERURL}/rooms/${roomId}/channel/${userData.id}/participants`,
           );
@@ -135,7 +147,7 @@ function EnteredChatRoomTemplate() {
       }
     }
     getParticipantInfo();
-  }, [roomId, userData.id, roomInfo.type]);
+  }, [roomId, userData.id, roomInfo.type, roomInfo]);
 
   useEffect(() => {
     if (
@@ -198,8 +210,6 @@ function EnteredChatRoomTemplate() {
     setUserState,
     participantInfo,
   ]);
-
-  const [socket] = useSocket(chatNameSpace);
 
   useEffect(() => {
     function changedParticipantStatus() {

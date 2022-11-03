@@ -65,7 +65,7 @@ function InviteMessageList() {
   const handleAcceptMessage = (info: InviteInfoListType) => {
     console.log(info.type, '수락을 눌렀습니다.');
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
     if (info.type === 'friend') {
       socket.emit(
@@ -104,7 +104,7 @@ function InviteMessageList() {
     }
     //거절을 눌렀습니다.
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
   };
 
@@ -113,7 +113,7 @@ function InviteMessageList() {
    */
   const handleCheckMessage = (info: InviteInfoListType) => {
     setInviteInfoList((prev) => {
-      return [...prev.filter((i) => i !== info)];
+      return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
   };
 

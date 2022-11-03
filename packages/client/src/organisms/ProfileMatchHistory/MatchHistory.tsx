@@ -51,7 +51,6 @@ function MatchHistory() {
           setMatchHistoryList(history);
         })
         .catch((error) => {
-          alert(error);
           console.log(error);
         });
     }
