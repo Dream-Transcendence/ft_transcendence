@@ -17,6 +17,7 @@ import { PatchNicknameDto } from './dto/patch-user.dto';
 import {
   FriendDto,
   ClientInviteGameDto,
+  CancelInviteDto,
   UserDto,
   ServerInviteGameDto,
   ClientAcceptGameDto,
@@ -656,6 +657,8 @@ export class UserService {
     return connectionsDto;
   }
 
+  private invitationMap = new Map<number, number>();
+
   async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
     const { hostId, opponentId, mode } = inviteGameDto;
 
@@ -685,7 +688,15 @@ export class UserService {
       mode: mode,
     };
 
+    this.invitationMap.set(hostId, opponentId);
     client.to(opponentClientId).emit('inviteGame', serverInviteGameDto);
+  }
+
+  async handleCancelInvite(client: Socket, cancelInviteDto: CancelInviteDto) {
+    const { hostId } = cancelInviteDto;
+
+    this.invitationMap.delete(hostId);
+    return { isDone: true };
   }
 
   async handleAcceptGame(
@@ -695,11 +706,15 @@ export class UserService {
   ) {
     let hostClientId: string = null;
 
+    if (this.invitationMap.get(acceptGameDto.hostId) !== acceptGameDto.userId)
+      throw new WsException('상대방이 취소한 요청입니다.');
     for (const [key, value] of this.connectionList) {
       if (value.userId === acceptGameDto.hostId) hostClientId = key;
     }
-    if (hostClientId === null)
+    if (hostClientId === null) {
+      this.invitationMap.delete(acceptGameDto.hostId);
       throw new WsException('호스트를 찾을 수 없습니다.');
+    }
 
     client.broadcast.emit(
       'changeUserStatus',

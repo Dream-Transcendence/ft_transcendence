@@ -9,6 +9,7 @@ import {
 import { Server, Socket } from 'socket.io';
 import { ConnectionDto } from './dto/connect-user.dto';
 import {
+  CancelInviteDto,
   ClientAcceptGameDto,
   ClientInviteGameDto,
   ClientRequestDto,
@@ -51,6 +52,11 @@ export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('inviteGame')
   async handleInviteGame(client: Socket, inviteGameDto: ClientInviteGameDto) {
     await this.userService.handleInviteGame(client, inviteGameDto);
+  }
+
+  @SubscribeMessage('cancelInvite')
+  async handleCancelInvite(client: Socket, cancelInviteDto: CancelInviteDto) {
+    return await this.userService.handleCancelInvite(client, cancelInviteDto);
   }
 
   @SubscribeMessage('acceptGame')
