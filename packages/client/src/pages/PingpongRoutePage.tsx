@@ -62,6 +62,20 @@ const PageSection = styled('section')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
+const HeaderSection = styled('header')(({ theme }) => ({
+  width: '100%',
+  height: '3%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const NavSection = styled('nav')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
   const [gameSocket, gconnect, gdisconnect] = useSocket(gameNameSpace);
@@ -328,9 +342,9 @@ function PingpongRoutePage() {
   return (
     <PageSection>
       <header>
-        <nav>
+        <NavSection>
           <NavigationBar></NavigationBar>
-        </nav>
+        </NavSection>
       </header>
       <Routes>
         {/* 사용자 프로필페이지 */}

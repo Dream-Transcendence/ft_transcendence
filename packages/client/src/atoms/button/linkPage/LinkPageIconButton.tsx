@@ -7,14 +7,14 @@ import {
 import CustomIconButton from '../icon/CustomIconButtion';
 
 function LinkPageIconButton(props: { linkIconProps: LinkIconProps }) {
-  const { iconResource, action } = props.linkIconProps;
+  const { iconResource, action, style } = props.linkIconProps;
   const customProps: CustomIconProps = {
     icon: iconResource.icon,
     action: action,
   };
 
   return (
-    <Link style={{ textDecoration: 'none' }} to={iconResource.url}>
+    <Link style={style} to={iconResource.url}>
       <CustomIconButton customProps={customProps} />
     </Link>
   );

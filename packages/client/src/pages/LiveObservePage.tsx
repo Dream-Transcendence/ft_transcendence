@@ -97,7 +97,7 @@ function LiveObservePage() {
           <NoGameLayout>
             <Typography
               whiteSpace={'normal'}
-              paddingTop={'25vh'}
+              paddingTop={'22vh'}
               paddingLeft={'30vh'}
               color={'white'}
               fontSize={'10vh'}
