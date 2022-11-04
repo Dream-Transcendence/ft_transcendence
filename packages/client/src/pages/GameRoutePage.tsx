@@ -60,24 +60,23 @@ function GameRoutePage() {
     connectGameSocket();
     return () => {
       console.log('disconnect gameType: ', gameType);
-      // if (gameType === CUSTOM) {
-      userSocket.emit(
-        CANCELINVITE,
-        {
-          hostId: userData.id,
-        },
-        (response: any) => {
-          console.log('match 취소 !!! : ', response);
-        },
-      );
-      setGameInviteInfo({
-        title: '',
-        hostId: 0,
-        opponentId: 0,
-        mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
-      });
-      // setGameType(-1);
-      // }
+      if (gameType === CUSTOM) {
+        userSocket.emit(
+          CANCELINVITE,
+          {
+            hostId: userData.id,
+          },
+          (response: any) => {
+            console.log('match 취소 !!! : ', response);
+          },
+        );
+        setGameInviteInfo({
+          title: '',
+          hostId: 0,
+          opponentId: 0,
+          mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
+        });
+      }
 
       disconnect();
     };
