@@ -11,16 +11,13 @@ import { BaseUserProfileData } from '../../types/Profile.type';
 import axios from 'axios';
 
 const Search = styled('div')(({ theme }) => ({
-  display: 'flex',
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
+  width: '400px',
+  marginBottom: '0.3vh',
+  borderRadius: '0.2rem',
+  backgroundColor: '#eeefff',
   '&:hover': {
     backgroundColor: alpha(theme.palette.common.white, 0.25),
   },
-  height: '100%',
-  marginLeft: 'auto',
-  width: '100%',
 }));
 
 function SearchBox(prop: { searchProps: SearchPropsType }) {

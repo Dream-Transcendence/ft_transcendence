@@ -4,8 +4,11 @@ export const ProfileLayout = styled('div')(({ theme }) => ({
   gridArea: 'ProfileItems',
   display: 'grid',
   placeContent: 'end',
+  // background:
+  //   'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
+  // backgroundColor: '#76aef1',
   background:
-    'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
+    'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
   height: '90%',
   width: '100%',
   gridTemplateColumns: '4fr 5fr',
@@ -30,8 +33,12 @@ export const Footer = styled('div')(({ theme }) => ({
 export const ProfilePageLayout = styled('section')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
+  // background:
+  //   'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
+  // backgroundColor: '#76aef1',
+  // backgroundColor: '#4477cc',
   background:
-    'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
+    'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
   height: '100%',
   width: '100%',
   minWidth: '1200px',

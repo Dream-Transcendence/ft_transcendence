@@ -5,6 +5,7 @@ export interface LinkIconResource {
   url: string;
   icon: React.ReactElement;
   action?: () => void;
+  style?: any;
 }
 
 export interface LinkTextResource {
@@ -24,6 +25,7 @@ export interface LinkIconProps {
     icon: React.ReactElement<any, string | React.JSXElementConstructor<any>>;
   };
   action?: () => void;
+  style?: any;
 }
 
 export interface CustomIconProps {

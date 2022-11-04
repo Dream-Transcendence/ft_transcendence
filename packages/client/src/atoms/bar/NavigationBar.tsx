@@ -40,15 +40,33 @@ const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '100%',
   minWidth: '1200px',
+  backgroundColor: '#aa99ff',
   display: 'flex',
+  flexDirection: 'row',
 }));
 
 const RightLayout = styled('section')(({ theme }) => ({
-  marginLeft: 'auto',
-  width: '30%',
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'flex-end',
+}));
+
+const LeftLayout = styled('section')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+}));
+
+const LogoutLayout = styled('section')(({ theme }) => ({
+  width: '5%',
+  height: '100%',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'right',
+  justifyContent: 'center',
 }));
 
 function NavigationBar() {
@@ -110,10 +128,16 @@ function NavigationBar() {
 
   const chatAction: LinkIconProps = {
     iconResource: Channels,
+    style: {
+      marginTop: '1%',
+    },
   };
 
   const liveObeserveAction: LinkIconProps = {
     iconResource: LiveObserve,
+    style: {
+      marginTop: '1%',
+    },
   };
 
   const avartarAction: LinkIconProps = {
@@ -123,6 +147,9 @@ function NavigationBar() {
   const ladderAction: LinkIconProps = {
     iconResource: Ladder,
     action: setLadder,
+    style: {
+      marginTop: '1%',
+    },
   };
 
   const logoutButton: CustomIconProps = {
@@ -133,22 +160,26 @@ function NavigationBar() {
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
-      <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
-        <AppBar position="static">
-          <Toolbar variant="dense">
-            <LinkPageIconButton linkIconProps={avartarAction} />
-            {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
-            {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
-            <LinkPageIconButton linkIconProps={ladderAction} />
-            <LinkPageIconButton linkIconProps={liveObeserveAction} />
-            <LinkPageIconButton linkIconProps={chatAction} />
-            <RightLayout>
-              <SearchBox searchProps={searchProps} />
-              <CustomIconButton customProps={logoutButton} />
-            </RightLayout>
-          </Toolbar>
-        </AppBar>
-      </Box>
+      {/* <Box sx={{ flexGrow: 1, minWidth: '100px' }}> */}
+      {/* <AppBar position="static">
+          <Toolbar variant="dense"> */}
+      <LeftLayout>
+        <LinkPageIconButton linkIconProps={avartarAction} />
+        {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
+        {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
+        <LinkPageIconButton linkIconProps={ladderAction} />
+        <LinkPageIconButton linkIconProps={liveObeserveAction} />
+        <LinkPageIconButton linkIconProps={chatAction} />
+      </LeftLayout>
+      <RightLayout>
+        <SearchBox searchProps={searchProps} />
+        <LogoutLayout>
+          <CustomIconButton customProps={logoutButton} />
+        </LogoutLayout>
+      </RightLayout>
+      {/* </Toolbar>
+        </AppBar> */}
+      {/* </Box> */}
     </NavLayout>
   );
 }
