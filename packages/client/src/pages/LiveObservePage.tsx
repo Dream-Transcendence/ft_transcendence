@@ -1,14 +1,18 @@
 import styled from '@emotion/styled';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
 } from '../atoms/list/styles/ListStylesCSS';
 import LiveObserveElement from '../molecules/Observe/LiveObserveElement';
+import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { gameNameSpace } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import { GameRoomDto } from '../types/Game.type';
+import { UserSecondAuth } from '../types/Profile.type';
 
 const LiveObserveLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -31,6 +35,10 @@ const GameListLayout = styled('div')(({ theme }) => ({
 
 function LiveObservePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const userData = useRecoilValue(userDataAtom);
+  const [passSecondOauth, setPassSecondOauth] =
+    useRecoilState<UserSecondAuth>(userSecondAuth);
+  const navigate = useNavigate();
   const mockUp: GameRoomDto[] = [
     {
       title: '',
@@ -52,10 +60,15 @@ function LiveObservePage() {
   ];
 
   useEffect(() => {
-    connect();
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
+  useEffect(() => {
+    if (socket.connected === false) connect();
     return () => {
-      disconnect();
+      if (socket.disconnected === false) disconnect();
     };
   }, []);
 

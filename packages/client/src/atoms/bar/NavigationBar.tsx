@@ -140,8 +140,8 @@ function NavigationBar() {
             {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
             {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
             <LinkPageIconButton linkIconProps={ladderAction} />
-            <LinkPageIconButton linkIconProps={chatAction} />
             <LinkPageIconButton linkIconProps={liveObeserveAction} />
+            <LinkPageIconButton linkIconProps={chatAction} />
             <RightLayout>
               <SearchBox searchProps={searchProps} />
               <CustomIconButton customProps={logoutButton} />

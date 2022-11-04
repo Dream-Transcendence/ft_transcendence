@@ -15,7 +15,7 @@ import {
   ParticipantInfoNState,
 } from '../../types/Participant.type';
 import useSocket from '../../socket/useSocket';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BAN, MUTE, NONE } from '../../configs/Status.case';
 import { userDataAtom } from '../../recoil/user.recoil';
 
@@ -164,11 +164,17 @@ function BasicSpeedDial(props: {
     socket.emit(`${PATCHUSERINFO}`, info, (response: any) => {
       console.log('status changed:', info);
     });
+    action();
+  };
+
+  useEffect(() => {
     socket.on('exception', (response: any) => {
       alert(`변경불가 \n 사유: ${response.message}`);
     });
-    action();
-  };
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   const AdminActions = [
     { icon: <RemoveCircleIcon />, name: 'User Ban', action: handleBan },

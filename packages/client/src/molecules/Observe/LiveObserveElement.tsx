@@ -10,6 +10,7 @@ import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import useSocket from '../../socket/useSocket';
 import { GameRoomDto } from '../../types/Game.type';
 import { LinkTextResource } from '../../types/Link.type';
+import { useEffect } from 'react';
 
 const LiveObserveElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -111,7 +112,7 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
     socket.emit(
       WATCH,
       {
-        userId: userData.id,
+        userId: gameInfo.leftPlayer.id,
       },
       (res: GameRoomDto) => {
         setGameInfo(res);
@@ -119,10 +120,16 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
         navigate(`${GAMEPLAYURL}/${res.title}`);
       },
     );
+  }
+
+  useEffect(() => {
     socket.on('exception', (error) => {
       alert(error.message);
     });
-  }
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url

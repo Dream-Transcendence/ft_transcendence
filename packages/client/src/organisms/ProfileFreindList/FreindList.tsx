@@ -120,11 +120,7 @@ function FreindList(props: { friendProps: FriendPropsType }) {
               navigate(`${GAMEPLAYURL}/${res.title}`);
             },
           );
-          socket.on('exception', (error) => {
-            alert(error.message);
-          });
         }
-
         userState.current = getUserState(userLogStateList, userData.id);
         const customProps: CustomIconProps = {
           icon: <VisibilityIcon />,
@@ -142,6 +138,15 @@ function FreindList(props: { friendProps: FriendPropsType }) {
       setListElement(element);
     }
   }, [friendList, navigate, userLogStateList]);
+
+  useEffect(() => {
+    socket.on('exception', (error) => {
+      alert(error.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   return (
     <FreindListLayout>
