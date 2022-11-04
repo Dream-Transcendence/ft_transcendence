@@ -83,10 +83,10 @@ function FreindList(props: { friendProps: FriendPropsType }) {
       connect();
       setOnGame(true);
     } else {
-      if (onGame) {
-        disconnect();
-        setOnGame(false);
-      }
+      // if (onGame) {
+      disconnect();
+      setOnGame(false);
+      // }
     }
   }, [userLogStateList]);
 

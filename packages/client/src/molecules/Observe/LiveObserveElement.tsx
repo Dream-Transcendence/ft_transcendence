@@ -33,6 +33,7 @@ const LeftPlayerLayout = styled('div')(({ theme }) => ({
   justifyContent: 'flex-start',
   alignItems: 'center',
   borderRadius: '3rem 0 0 3rem',
+  paddingLeft: '1%',
 }));
 
 const VerseLayout = styled('div')(({ theme }) => ({
@@ -54,33 +55,36 @@ const RightPlayerLayout = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   alignItems: 'center',
   borderRadius: '0 3rem 3rem 0',
+  paddingRight: '1%',
 }));
 
 const LeftPlayerImageLayout = styled('img')(({ theme }) => ({
   width: '20%',
   height: '50%',
-  borderRadius: '10rem 10rem 10rem 10rem',
+  borderRadius: '2rem 2rem 2rem 2rem',
+  paddingRight: '2%',
 }));
 
 const LeftPlayerNameLayout = styled('div')(({ theme }) => ({
   width: '80%',
   height: '50%',
-  borderRadius: '10rem 10rem 10rem 10rem',
-  backgroundColor: '#1ffff211',
+  borderRadius: '2rem 2rem 2rem 2rem',
+  backgroundColor: 'whitesmoke',
 }));
 
 const RightPlayerImageLayout = styled('img')(({ theme }) => ({
   width: '20%',
   height: '50%',
   marginLeft: '-50%',
-  borderRadius: '10rem 10rem 10rem 10rem',
+  borderRadius: '2rem 2rem 2rem 2rem',
+  paddingRight: '2%',
 }));
 
 const RightPlayerNameLayout = styled('div')(({ theme }) => ({
   width: '80%',
   height: '50%',
-  borderRadius: '10rem 10rem 10rem 10rem',
-  backgroundColor: '#1ffff211',
+  borderRadius: '2rem 2rem 2rem 2rem',
+  backgroundColor: 'whitesmoke',
 }));
 
 const ObserveEnterButtonLayout = styled('div')(({ theme }) => ({
@@ -95,21 +99,6 @@ const ModeLayout = styled('div')(({ theme }) => ({
 }));
 
 function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
-  // title: string;
-  // leftPlayer: {
-  //   id: number;
-  //   nickname: string;
-  //   image: string;
-  // };
-  // rightPlayer: {
-  //   id: number;
-  //   nickname: string;
-  //   image: string;
-  // };
-  // ballPos: { x: number; y: number };
-  // paddlePos: { left: number; right: number };
-  // score: { left: number; right: number };
-  // mode: number;
   const gameInfo = props.gameInfo;
   const setGameInfo = useSetRecoilState(gameInfoAtom);
   const navigate = useNavigate();
@@ -192,11 +181,12 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
           <Typography
             whiteSpace={'normal'}
             padding={'8%'}
-            color={'white'}
+            color={'#ff452aaa'}
             fontSize={'3vh'}
             style={{
               wordWrap: 'break-word',
               paddingLeft: '10%',
+              paddingTop: '10%',
               marginRight: '-20%',
             }}
           >
@@ -210,7 +200,7 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
             whiteSpace={'normal'}
             paddingLeft={'20%'}
             paddingTop={'10%'}
-            color={'white'}
+            color={'#aaffcc'}
             fontSize={'1vh'}
             style={{
               wordWrap: 'break-word',
@@ -241,10 +231,11 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
           <Typography
             whiteSpace={'normal'}
             padding={'8%'}
-            color={'white'}
+            color={'#2a45ffaa'}
             fontSize={'3vh'}
             style={{
               wordWrap: 'break-word',
+              paddingTop: '10%',
               paddingLeft: '10%',
               marginRight: '-20%',
             }}

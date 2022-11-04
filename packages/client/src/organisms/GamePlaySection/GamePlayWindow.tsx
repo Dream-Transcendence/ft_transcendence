@@ -434,6 +434,7 @@ function GamePlayWindowOrganism() {
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
+  console.log(gameInfo, time);
   return (
     <GameWindowLayout>
       <GameLayout>

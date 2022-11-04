@@ -22,6 +22,7 @@ const LiveObserveLayout = styled('section')(({ theme }) => ({
   flexDirection: 'column',
   justifyContent: 'center',
   alignItems: 'center',
+  alignContent: 'center',
   backgroundColor: '#6BADE2',
   minHeight: '1000px',
   height: '100%',
@@ -32,13 +33,16 @@ const LiveObserveLayout = styled('section')(({ theme }) => ({
 const GameListLayout = styled('div')(({ theme }) => ({
   height: '100%',
   width: '80%',
-
   marginTop: '1%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  alignContent: 'center',
 }));
 
 const NoGameLayout = styled('div')(({ theme }) => ({
-  height: '100%',
-  width: '100%',
+  height: '88vh',
+  width: '100vh',
 }));
 
 function LiveObservePage() {
@@ -48,25 +52,6 @@ function LiveObservePage() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
   const [gameInfos, setGameInfos] = useState<GameRoomDto[]>([]);
   const navigate = useNavigate();
-  const mockUp: GameRoomDto[] = [
-    {
-      title: '',
-      leftPlayer: {
-        id: 1,
-        nickname: '',
-        image: '',
-      },
-      rightPlayer: {
-        id: 1,
-        nickname: '',
-        image: '',
-      },
-      ballPos: { x: 1, y: 1 },
-      paddlePos: { left: 1, right: 2 },
-      score: { left: 1, right: 2 },
-      mode: 1,
-    },
-  ];
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -93,9 +78,6 @@ function LiveObservePage() {
 
   useEffect(() => {
     if (socket.connected === false) connect();
-    return () => {
-      if (socket.disconnected === false) disconnect();
-    };
   }, []);
 
   const listElement: React.ReactElement[] = gameInfos.map(
@@ -113,24 +95,23 @@ function LiveObservePage() {
       <GameListLayout>
         {gameInfos.length === 0 ? (
           <NoGameLayout>
-            {' '}
             <Typography
               whiteSpace={'normal'}
-              paddingTop={'25%'}
-              paddingLeft={'30%'}
+              paddingTop={'25vh'}
+              paddingLeft={'30vh'}
               color={'white'}
               fontSize={'10vh'}
               style={{
                 wordWrap: 'break-word',
-                marginRight: '-20%',
+                marginRight: '-20vh',
               }}
             >
               NO GAME
             </Typography>
             <Typography
               whiteSpace={'normal'}
-              paddingTop={'3%'}
-              paddingLeft={'43%'}
+              paddingTop={'3vh'}
+              paddingLeft={'43vh'}
               color={'white'}
               fontSize={'20vh'}
               style={{
