@@ -6,6 +6,8 @@ import { CHATROOMURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { DM, PUBLIC } from '../configs/RoomType';
 import { DMList, newParticipant } from '../recoil/chat.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
+import { chatNameSpace, ENTERCHANNEL } from '../socket/event';
+import useSocket from '../socket/useSocket';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { SearchPropsType } from '../types/search.type';
 
@@ -25,6 +27,8 @@ function useSearch(
   const user = useRecoilValue(userDataAtom);
   const [dmList, setDmList] = useRecoilState(DMList);
   const [newParticipants, setNewParticipant] = useRecoilState(newParticipant);
+  const [socket] = useSocket(chatNameSpace);
+  const userData = useRecoilValue(userDataAtom);
   const searchProps: SearchPropsType = {
     url: axiosUrl,
     listParams: {
@@ -46,6 +50,18 @@ function useSearch(
           })
           .then((res) => {
             setDmList([...dmList, res.data]);
+            socket.emit(
+              `${ENTERCHANNEL}`,
+              {
+                userId: userData.id,
+                roomId: res.data.id,
+                salt: '',
+              },
+              (response: any) => {
+                console.log('enter DM success ', response); // "got it"
+                navigate(`/pingpong/channel/room/${res.data.id}`);
+              },
+            );
             navigate(`${naviUrl}${res.data.id}`);
           });
       }

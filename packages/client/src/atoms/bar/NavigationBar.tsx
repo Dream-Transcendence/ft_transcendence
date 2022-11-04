@@ -1,17 +1,11 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import NavProfile from '../profile/NavProfile';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import ChatIcon from '@mui/icons-material/Chat';
-import LogoutIconButton from '../button/icon/LogoutIconButton';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,6 +19,7 @@ import {
   GAMECREATEURL,
   GAMELOADINGURL,
   GAMEPLAYURL,
+  LIVEOBSERVEURL,
   PROFILEURL,
   SERVERURL,
 } from '../../configs/Link.url';
@@ -102,13 +97,23 @@ function NavigationBar() {
     // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
+
   const Channels: LinkIconResource = {
     url: CHANNELURL,
     icon: <ChatIcon fontSize="inherit" />,
   };
 
+  const LiveObserve: LinkIconResource = {
+    url: LIVEOBSERVEURL,
+    icon: <OndemandVideoIcon fontSize="inherit" />,
+  };
+
   const chatAction: LinkIconProps = {
     iconResource: Channels,
+  };
+
+  const liveObeserveAction: LinkIconProps = {
+    iconResource: LiveObserve,
   };
 
   const avartarAction: LinkIconProps = {
@@ -135,6 +140,7 @@ function NavigationBar() {
             {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
             {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
             <LinkPageIconButton linkIconProps={ladderAction} />
+            <LinkPageIconButton linkIconProps={liveObeserveAction} />
             <LinkPageIconButton linkIconProps={chatAction} />
             <RightLayout>
               <SearchBox searchProps={searchProps} />

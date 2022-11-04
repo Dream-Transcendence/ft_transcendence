@@ -17,6 +17,8 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
 import { useNavigate } from 'react-router-dom';
 import { userDataAtom } from '../../recoil/user.recoil';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 
 const SettingRoomConfigLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -50,6 +52,7 @@ const SetButtonLayout = styled('div')(({ theme }) => ({
 function SettingRoomConfigOranisms(closeModal: () => void) {
   const userData = useRecoilValue(userDataAtom);
   const [joinedChatRoom, setJoinedChatRoom] = useRecoilState(chatRoomList);
+  const [socket] = useSocket(chatNameSpace);
   //[수정사항] 나중에 방의 초기값을 만든사람 이름을 하면 좋을듯
   const [newRoom, setNewRoom] = useState<CreateRoomSet>({
     userId: userData.id,
@@ -83,6 +86,17 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
         };
         setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
         resetAddedParticipantList();
+        socket.emit(
+          `${ENTERCHANNEL}`,
+          {
+            userId: userData.id,
+            roomId: res.data.id,
+          },
+          (response: any) => {
+            console.log('enter room success ', response);
+            navigate(`/pingpong/channel/room/${res.data.id}`);
+          },
+        );
         navigate(`${CHATROOMURL}${res.data.id}`);
       });
     } catch (error) {
