@@ -324,6 +324,7 @@ function PingpongRoutePage() {
       socket.off('exception');
     };
   }, []);
+
   return (
     <PageSection>
       <header>

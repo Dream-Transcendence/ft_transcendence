@@ -52,10 +52,10 @@ function GamePlayTemplate() {
         setMode('1 VS 1 🤼');
         break;
       case SPEEDUP:
-        setMode('1 VS 1 🏋️');
+        setMode('1 VS 1 💪');
         break;
       case SIZEDOWN:
-        setMode('1 VS 1 🧘‍♂️');
+        setMode('1 VS 1 👶');
         break;
     }
   }, []);

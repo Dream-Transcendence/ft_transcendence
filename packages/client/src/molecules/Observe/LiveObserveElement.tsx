@@ -10,7 +10,8 @@ import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import useSocket from '../../socket/useSocket';
 import { GameRoomDto } from '../../types/Game.type';
 import { LinkTextResource } from '../../types/Link.type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { CUSTOM, LADDER, SIZEDOWN, SPEEDUP } from '../../configs/Game.type';
 
 const LiveObserveElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -27,7 +28,7 @@ const LiveObserveElementLayout = styled('div')(({ theme }) => ({
 const LeftPlayerLayout = styled('div')(({ theme }) => ({
   width: '45%',
   height: '100%',
-  backgroundColor: '#197112',
+  // backgroundColor: '#197112',
   display: 'flex',
   justifyContent: 'flex-start',
   alignItems: 'center',
@@ -37,16 +38,18 @@ const LeftPlayerLayout = styled('div')(({ theme }) => ({
 const VerseLayout = styled('div')(({ theme }) => ({
   width: '10%',
   height: '100%',
-  backgroundColor: '#19ff12',
+  // backgroundColor: '#19ff12',
+  padding: '2%',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  flexDirection: 'column',
 }));
 
 const RightPlayerLayout = styled('div')(({ theme }) => ({
   width: '45%',
   height: '100%',
-  backgroundColor: '#ff7112',
+  // backgroundColor: '#ff7112',
   display: 'flex',
   justifyContent: 'flex-end',
   alignItems: 'center',
@@ -63,7 +66,7 @@ const LeftPlayerNameLayout = styled('div')(({ theme }) => ({
   width: '80%',
   height: '50%',
   borderRadius: '10rem 10rem 10rem 10rem',
-  backgroundColor: '#1ffff2',
+  backgroundColor: '#1ffff211',
 }));
 
 const RightPlayerImageLayout = styled('img')(({ theme }) => ({
@@ -77,13 +80,18 @@ const RightPlayerNameLayout = styled('div')(({ theme }) => ({
   width: '80%',
   height: '50%',
   borderRadius: '10rem 10rem 10rem 10rem',
-  backgroundColor: '#1f3332',
+  backgroundColor: '#1ffff211',
 }));
 
 const ObserveEnterButtonLayout = styled('div')(({ theme }) => ({
   width: '80px',
-  height: '50xp',
+  height: '40px',
   zIndex: '3',
+}));
+
+const ModeLayout = styled('div')(({ theme }) => ({
+  width: '80px',
+  height: '10px',
 }));
 
 function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
@@ -107,6 +115,7 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
   const navigate = useNavigate();
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
+  const [mode, setMode] = useState<string>('');
 
   function handlerObserver() {
     socket.emit(
@@ -129,6 +138,23 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
     return () => {
       socket.off('exception');
     };
+  }, []);
+
+  useEffect(() => {
+    switch (gameInfo?.mode) {
+      case LADDER:
+        setMode('Ladder 🎮');
+        break;
+      case CUSTOM:
+        setMode('1 VS 1 🤼');
+        break;
+      case SPEEDUP:
+        setMode('1 VS 1 💪');
+        break;
+      case SIZEDOWN:
+        setMode('1 VS 1 👶');
+        break;
+    }
   }, []);
 
   const EnterRoom: LinkTextResource = {
@@ -179,9 +205,24 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
         </LeftPlayerNameLayout>
       </LeftPlayerLayout>
       <VerseLayout>
+        <ModeLayout>
+          <Typography
+            whiteSpace={'normal'}
+            paddingLeft={'20%'}
+            paddingTop={'10%'}
+            color={'white'}
+            fontSize={'1vh'}
+            style={{
+              wordWrap: 'break-word',
+            }}
+          >
+            {mode}
+          </Typography>
+        </ModeLayout>
         <Typography
           whiteSpace={'normal'}
           padding={'8%'}
+          paddingBottom={'10%'}
           color={'white'}
           fontSize={'7vh'}
           style={{
