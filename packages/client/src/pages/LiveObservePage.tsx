@@ -1,5 +1,7 @@
 import styled from '@emotion/styled';
-import { useEffect } from 'react';
+import { Typography } from '@mui/material';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -7,6 +9,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../atoms/list/styles/ListStylesCSS';
+import { PROFILEURL, SERVERURL } from '../configs/Link.url';
 import LiveObserveElement from '../molecules/Observe/LiveObserveElement';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { gameNameSpace } from '../socket/event';
@@ -33,11 +36,17 @@ const GameListLayout = styled('div')(({ theme }) => ({
   marginTop: '1%',
 }));
 
+const NoGameLayout = styled('div')(({ theme }) => ({
+  height: '100%',
+  width: '100%',
+}));
+
 function LiveObservePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const [passSecondOauth, setPassSecondOauth] =
     useRecoilState<UserSecondAuth>(userSecondAuth);
+  const [gameInfos, setGameInfos] = useState<GameRoomDto[]>([]);
   const navigate = useNavigate();
   const mockUp: GameRoomDto[] = [
     {
@@ -66,13 +75,30 @@ function LiveObservePage() {
   }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    const getLiveGames = async () => {
+      await axios
+        .get(`${SERVERURL}/game/live-games`)
+        .then((res: any) => {
+          console.log(res.data);
+          setGameInfos([...res.data]);
+        })
+        .catch((error) => {
+          console.log(error);
+          navigate(PROFILEURL);
+        });
+    };
+    getLiveGames();
+  }, []);
+
+  useEffect(() => {
     if (socket.connected === false) connect();
     return () => {
       if (socket.disconnected === false) disconnect();
     };
   }, []);
 
-  const listElement: React.ReactElement[] = mockUp.map(
+  const listElement: React.ReactElement[] = gameInfos.map(
     (game: GameRoomDto, index: number) => {
       return (
         <ListLayout key={index}>
@@ -85,9 +111,40 @@ function LiveObservePage() {
   return (
     <LiveObserveLayout>
       <GameListLayout>
-        <ListGenerateLayout>
-          <ListUlLayout>{listElement}</ListUlLayout>
-        </ListGenerateLayout>
+        {gameInfos.length === 0 ? (
+          <NoGameLayout>
+            {' '}
+            <Typography
+              whiteSpace={'normal'}
+              paddingTop={'25%'}
+              paddingLeft={'30%'}
+              color={'white'}
+              fontSize={'10vh'}
+              style={{
+                wordWrap: 'break-word',
+                marginRight: '-20%',
+              }}
+            >
+              NO GAME
+            </Typography>
+            <Typography
+              whiteSpace={'normal'}
+              paddingTop={'3%'}
+              paddingLeft={'43%'}
+              color={'white'}
+              fontSize={'20vh'}
+              style={{
+                wordWrap: 'break-word',
+              }}
+            >
+              😭
+            </Typography>
+          </NoGameLayout>
+        ) : (
+          <ListGenerateLayout>
+            <ListUlLayout>{listElement}</ListUlLayout>
+          </ListGenerateLayout>
+        )}
       </GameListLayout>
     </LiveObserveLayout>
   );
