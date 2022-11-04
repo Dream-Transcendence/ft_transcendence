@@ -120,9 +120,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
               navigate(`${GAMEPLAYURL}/${res.title}`);
             },
           );
-          socket.on('exception', (error) => {
-            alert(error.message);
-          });
         }
 
         userState.current = getUserState(userLogStateList, userData.id);
@@ -130,6 +127,7 @@ function FreindList(props: { friendProps: FriendPropsType }) {
           icon: <VisibilityIcon />,
           action: handlerObserver,
         };
+
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
@@ -142,6 +140,18 @@ function FreindList(props: { friendProps: FriendPropsType }) {
       setListElement(element);
     }
   }, [friendList, navigate, userLogStateList]);
+
+  /**
+   * 예외처리
+   */
+  useEffect(() => {
+    socket.on('exception', (error) => {
+      alert(error.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  });
 
   return (
     <FreindListLayout>

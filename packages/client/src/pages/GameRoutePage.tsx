@@ -43,7 +43,7 @@ function GameRoutePage() {
   let location = useLocation();
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const gameType = useRecoilValue(gameTypeAtom);
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -56,28 +56,28 @@ function GameRoutePage() {
       connect();
       console.log('game socket 연결');
     }
-    if (socket.connected === false) connectGameSocket();
+    connectGameSocket();
     return () => {
-      console.log('test', gameType === CUSTOM);
+      console.log('disconnect gameType: ', gameType);
+      // if (gameType === CUSTOM) {
+      userSocket.emit(
+        CANCELINVITE,
+        {
+          hostId: userData.id,
+        },
+        (response: any) => {
+          console.log('match 취소 !!! : ', response);
+        },
+      );
+      setGameInviteInfo({
+        title: '',
+        hostId: 0,
+        opponentId: 0,
+        mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
+      });
+      // setGameType(-1);
+      // }
 
-      if (gameType === CUSTOM) {
-        console.log('test');
-        userSocket.emit(
-          CANCELINVITE,
-          {
-            userId: userData.id,
-          },
-          (response: any) => {
-            console.log('match emit 성공 : ', response);
-          },
-        );
-        setGameInviteInfo({
-          title: '',
-          hostId: 0,
-          opponentId: 0,
-          mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
-        });
-      }
       disconnect();
     };
   }, []);

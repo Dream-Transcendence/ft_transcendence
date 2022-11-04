@@ -318,11 +318,13 @@ function PingpongRoutePage() {
   useEffect(() => {
     socket.on('exception', (error: any) => {
       alert(error.message);
+      navigate(PROFILEURL);
     });
     return () => {
       socket.off('exception');
     };
   }, []);
+
   return (
     <PageSection>
       <header>

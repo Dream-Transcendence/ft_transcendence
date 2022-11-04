@@ -33,15 +33,20 @@ import { GameInviteInfoType } from '../../types/Game.type';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { useNavigate } from 'react-router-dom';
 import { GAMELOADINGURL } from '../../configs/Link.url';
+import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
+import { BaseUserProfileData } from '../../types/Profile.type';
+import { CUSTOM } from '../../configs/Game.type';
 
 const InviteMessageListLayout = styled('div')(({ theme }) => ({
-  bottom: '0',
-  right: '0',
+  bottom: '0%',
+  right: '0%',
   position: 'absolute',
   width: '30%',
-  height: '8%',
+  height: '10%',
   overflow: 'hidden',
-  backgroundColor: '#1976D2',
+  backgroundColor:
+    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
+  boxShadow: '0 15px 35px #00000066',
 }));
 
 const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
@@ -50,8 +55,10 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 }));
 
 function InviteMessageList() {
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [socket] = useSocket(userNameSpace);
   const navigate = useNavigate();
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
   const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
@@ -79,8 +86,9 @@ function InviteMessageList() {
       );
     } else if (info.type === 'game') {
       console.log('게임 수락!!!!');
+      setGameType(CUSTOM);
       socket.emit(ACCEPTGAME, {
-        userId: gameInviteInfo.hostId,
+        userId: userData.id,
         hostId: info.userId,
         mode: info.mode,
       });

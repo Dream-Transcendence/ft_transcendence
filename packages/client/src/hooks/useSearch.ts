@@ -56,7 +56,6 @@ function useSearch(
 
   //참가자 리스트 생성
   useEffect(() => {
-    console.log('gon junghan ', target);
     if (target.id > 0 && type === 5)
       navigate(`${naviUrl}${target.id}`); //profile 이동
     else if (target.id > 0 && type === DM) {
