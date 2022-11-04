@@ -12,6 +12,7 @@ import {
   GameScoreDto,
   WatchDto,
   GameUserDto,
+  GameRoomDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -38,6 +39,14 @@ export class GameService {
   canvasHeight = 620;
   paddleWidth = 20;
   paddleHeight = 186;
+
+  async getLiveGames(): Promise<GameRoomDto[]> {
+    const liveGames: GameRoomDto[] = [];
+    for (const [key, value] of this.gameInfoMap) {
+      liveGames.push(value.getGameRoomDto(key));
+    }
+    return liveGames;
+  }
 
   async handleDisconnect(client: Socket) {
     // 게임 중 다른 페이지로 이동했을 때
