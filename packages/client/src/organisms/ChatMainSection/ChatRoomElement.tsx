@@ -7,7 +7,7 @@ import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
@@ -95,10 +95,16 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
       },
     );
     //방을 잘못 들어갈 경우 에러처리
+  }
+
+  useEffect(() => {
     socket.on('exception', (response: any) => {
       alert(response.message);
     });
-  }
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
 

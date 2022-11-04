@@ -77,12 +77,11 @@ const BlockCloss = styled('span')(({ theme }) => ({
 function JoinedDMListOrganisms() {
   //채팅 참여자목록의 각 데이터 type형식으로 바꾸어 적용해야 합니다.
   //isblock은 공통사항이긴하지만 컴포넌트의 상태를 나타내는 것들은 한번 컴포넌트를 감싸서 표시해주기로 하였으므로, 기본 값에서 제외시켰습니다.
-
+  const [socket] = useSocket(chatNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const [roomlist, setRoomList] = useRecoilState(DMList);
   const joinedChatList = useRecoilValue(getJoinedChatList(userData.id));
   const navigate = useNavigate();
-  const [socket] = useSocket(chatNameSpace);
   const refreshUserInfo = useRecoilRefresher_UNSTABLE(
     getJoinedChatList(userData.id),
   );

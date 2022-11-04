@@ -1,17 +1,11 @@
-import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import NavProfile from '../profile/NavProfile';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import ChatIcon from '@mui/icons-material/Chat';
-import LogoutIconButton from '../button/icon/LogoutIconButton';
+import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
 import { Link, useNavigate } from 'react-router-dom';
@@ -25,6 +19,7 @@ import {
   GAMECREATEURL,
   GAMELOADINGURL,
   GAMEPLAYURL,
+  LIVEOBSERVEURL,
   PROFILEURL,
   SERVERURL,
 } from '../../configs/Link.url';
@@ -45,15 +40,33 @@ const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
   width: '100%',
   minWidth: '1200px',
+  backgroundColor: '#aa99ff',
   display: 'flex',
+  flexDirection: 'row',
 }));
 
 const RightLayout = styled('section')(({ theme }) => ({
-  marginLeft: 'auto',
-  width: '30%',
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'flex-end',
+}));
+
+const LeftLayout = styled('section')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  alignItems: 'flex-start',
+  justifyContent: 'flex-start',
+}));
+
+const LogoutLayout = styled('section')(({ theme }) => ({
+  width: '5%',
+  height: '100%',
   display: 'flex',
   alignItems: 'center',
-  justifyContent: 'right',
+  justifyContent: 'center',
 }));
 
 function NavigationBar() {
@@ -102,13 +115,29 @@ function NavigationBar() {
     // url: GAMECREATEURL,
     icon: <SportsEsportsIcon fontSize="inherit" />,
   };
+
   const Channels: LinkIconResource = {
     url: CHANNELURL,
     icon: <ChatIcon fontSize="inherit" />,
   };
 
+  const LiveObserve: LinkIconResource = {
+    url: LIVEOBSERVEURL,
+    icon: <OndemandVideoIcon fontSize="inherit" />,
+  };
+
   const chatAction: LinkIconProps = {
     iconResource: Channels,
+    style: {
+      marginTop: '1%',
+    },
+  };
+
+  const liveObeserveAction: LinkIconProps = {
+    iconResource: LiveObserve,
+    style: {
+      marginTop: '1%',
+    },
   };
 
   const avartarAction: LinkIconProps = {
@@ -118,6 +147,9 @@ function NavigationBar() {
   const ladderAction: LinkIconProps = {
     iconResource: Ladder,
     action: setLadder,
+    style: {
+      marginTop: '1%',
+    },
   };
 
   const logoutButton: CustomIconProps = {
@@ -128,21 +160,26 @@ function NavigationBar() {
   // nav의 사이즈를 동적으로 바꾸고 싶었는데 몇번의 시도끝에 실패
   return (
     <NavLayout>
-      <Box sx={{ flexGrow: 1, minWidth: '100px' }}>
-        <AppBar position="static">
-          <Toolbar variant="dense">
-            <LinkPageIconButton linkIconProps={avartarAction} />
-            {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
-            {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
-            <LinkPageIconButton linkIconProps={ladderAction} />
-            <LinkPageIconButton linkIconProps={chatAction} />
-            <RightLayout>
-              <SearchBox searchProps={searchProps} />
-              <CustomIconButton customProps={logoutButton} />
-            </RightLayout>
-          </Toolbar>
-        </AppBar>
-      </Box>
+      {/* <Box sx={{ flexGrow: 1, minWidth: '100px' }}> */}
+      {/* <AppBar position="static">
+          <Toolbar variant="dense"> */}
+      <LeftLayout>
+        <LinkPageIconButton linkIconProps={avartarAction} />
+        {/* [axios POST 요청] 래더 게임 큐에 등록 요청 */}
+        {/* [SocketIO 요청] 소켓을 쓸 것 같음.. 미지수 */}
+        <LinkPageIconButton linkIconProps={ladderAction} />
+        <LinkPageIconButton linkIconProps={liveObeserveAction} />
+        <LinkPageIconButton linkIconProps={chatAction} />
+      </LeftLayout>
+      <RightLayout>
+        <SearchBox searchProps={searchProps} />
+        <LogoutLayout>
+          <CustomIconButton customProps={logoutButton} />
+        </LogoutLayout>
+      </RightLayout>
+      {/* </Toolbar>
+        </AppBar> */}
+      {/* </Box> */}
     </NavLayout>
   );
 }

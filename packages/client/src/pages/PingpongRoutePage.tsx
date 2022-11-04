@@ -53,8 +53,23 @@ import {
 import NotFoundPage from './NotFoundPage';
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
+import LiveObservePage from './LiveObservePage';
 
 const PageSection = styled('section')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const HeaderSection = styled('header')(({ theme }) => ({
+  width: '100%',
+  height: '3%',
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const NavSection = styled('nav')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
@@ -328,9 +343,9 @@ function PingpongRoutePage() {
   return (
     <PageSection>
       <header>
-        <nav>
+        <NavSection>
           <NavigationBar></NavigationBar>
-        </nav>
+        </NavSection>
       </header>
       <Routes>
         {/* 사용자 프로필페이지 */}
@@ -341,6 +356,7 @@ function PingpongRoutePage() {
         <Route path="profile/:userId" element={<ProfilePage />} />
         <Route path="channel/*" element={<ChatroomPage />} />
         <Route path="game/*" element={<GameRoutePage />} />
+        <Route path="observe" element={<LiveObservePage />} />
         <Route path="/*" element={<Navigate replace to={NOTFOUNDURL} />} />
       </Routes>
     </PageSection>

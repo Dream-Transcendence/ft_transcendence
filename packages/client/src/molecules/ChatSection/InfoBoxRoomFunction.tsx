@@ -10,6 +10,7 @@ import { chatNameSpace, DELETECHANNELPARTICIPANT } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { RoomInfoSet, RoomList, UnJoinedRoomList } from '../../types/Room.type';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { useEffect } from 'react';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '30%',
@@ -64,13 +65,20 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
         navigate(`${CHANNELURL}`);
       },
     );
-    socket.on('exception', (response: any) => {
-      alert(response.message);
-    });
+
     // socket.on('roomMessage', (response: any) => {
     //   console.log(response);
     // });
   }
+
+  useEffect(() => {
+    socket.on('exception', (response: any) => {
+      alert(response.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   const outRoomProps: CustomIconProps = {
     icon: <MeetingRoomIcon />,

@@ -83,10 +83,10 @@ function FreindList(props: { friendProps: FriendPropsType }) {
       connect();
       setOnGame(true);
     } else {
-      if (onGame) {
-        disconnect();
-        setOnGame(false);
-      }
+      // if (onGame) {
+      disconnect();
+      setOnGame(false);
+      // }
     }
   }, [userLogStateList]);
 
@@ -121,7 +121,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
             },
           );
         }
-
         userState.current = getUserState(userLogStateList, userData.id);
         const customProps: CustomIconProps = {
           icon: <VisibilityIcon />,
@@ -151,7 +150,7 @@ function FreindList(props: { friendProps: FriendPropsType }) {
     return () => {
       socket.off('exception');
     };
-  });
+  }, []);
 
   return (
     <FreindListLayout>
