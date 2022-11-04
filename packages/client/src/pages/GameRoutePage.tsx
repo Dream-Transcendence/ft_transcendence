@@ -20,6 +20,7 @@ import {
   CANCELINVITE,
   GAMEMATCH,
   gameNameSpace,
+  userNameSpace,
 } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import {
@@ -35,7 +36,7 @@ import { useLocation } from 'react-router-dom';
 
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
-  const [userSocket] = useSocket(gameNameSpace);
+  const [userSocket] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
