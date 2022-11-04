@@ -695,6 +695,11 @@ export class UserService {
   async handleCancelInvite(client: Socket, cancelInviteDto: CancelInviteDto) {
     const { hostId } = cancelInviteDto;
 
+    const userId = this.connectionList.get(client.id).userId;
+    client.broadcast.emit(
+      'changeUserStatus',
+      this.setConnection(userId, false),
+    );
     this.invitationMap.delete(hostId);
     return { isDone: true };
   }
