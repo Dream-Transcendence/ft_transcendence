@@ -17,9 +17,10 @@ import {
 } from '../recoil/user.recoil';
 import {
   ALREADYFORMATCH,
-  GAMECANCEL,
+  CANCELINVITE,
   GAMEMATCH,
   gameNameSpace,
+  userNameSpace,
 } from '../socket/event';
 import useSocket from '../socket/useSocket';
 import {
@@ -35,6 +36,7 @@ import { useLocation } from 'react-router-dom';
 
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const [userSocket] = useSocket(userNameSpace);
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
@@ -42,6 +44,7 @@ function GameRoutePage() {
   let location = useLocation();
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -54,14 +57,27 @@ function GameRoutePage() {
       connect();
       console.log('game socket 연결');
     }
-    if (socket.connected === false) connectGameSocket();
+    connectGameSocket();
     return () => {
-      setGameInviteInfo({
-        title: '',
-        hostId: 0,
-        opponentId: 0,
-        mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
-      });
+      console.log('disconnect gameType: ', gameType);
+      if (gameType === CUSTOM) {
+        userSocket.emit(
+          CANCELINVITE,
+          {
+            hostId: userData.id,
+          },
+          (response: any) => {
+            console.log('match 취소 !!! : ', response);
+          },
+        );
+        setGameInviteInfo({
+          title: '',
+          hostId: 0,
+          opponentId: 0,
+          mode: CUSTOM, //초대의 mode는 기본 값이 custom입니다.
+        });
+      }
+
       disconnect();
     };
   }, []);

@@ -12,7 +12,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
 import { GAMEINVITE, gameNameSpace, userNameSpace } from '../../socket/event';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { useNavigate } from 'react-router-dom';
@@ -74,25 +74,25 @@ function GameCreateTemplate() {
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
   const [gameSocket] = useSocket(gameNameSpace);
   const [userSocket] = useSocket(userNameSpace);
   const navigate = useNavigate();
 
   //game invite
   const gameRequest = () => {
-    console.log(userData);
     userSocket.emit(GAMEINVITE, {
-      hostId: userData.id,
+      hostId: gameInviteInfo.hostId,
       opponentId: gameInviteInfo.opponentId,
       mode: gameInviteInfo.mode, // 게임 모드(1 normal, 2 speed up, 3 size up)
     });
+    navigate(GAMELOADINGURL);
   };
 
   const setNomal = () => {
-    setUserGameType(CUSTOM);
+    console.log('gameType', gameType);
+    // setGameType(CUSTOM);
     gameRequest();
-    // navigate(GAMELOADINGURL);
   };
 
   //[수정사항] gameloading으로 넘어가야함
@@ -119,7 +119,8 @@ function GameCreateTemplate() {
         <GameCreateMainOrganism />
       </GameSectionLayout>
       <GameFooterLayout>
-        <LinkPageComponentButton linkComponentprops={EnterGame} />
+        <InviteButton onClick={setNomal}>초대하기</InviteButton>
+        {/* <LinkPageComponentButton linkComponentprops={EnterGame} /> */}
       </GameFooterLayout>
     </GameTemplateLayout>
   );

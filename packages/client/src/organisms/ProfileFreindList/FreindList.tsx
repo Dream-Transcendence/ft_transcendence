@@ -126,6 +126,7 @@ function FreindList(props: { friendProps: FriendPropsType }) {
           icon: <VisibilityIcon />,
           action: handlerObserver,
         };
+
         return (
           <ListLayout key={friendData.user.id}>
             <UserProfileBox userProfileBoxProps={otherProfileBoxProp} />
@@ -139,6 +140,9 @@ function FreindList(props: { friendProps: FriendPropsType }) {
     }
   }, [friendList, navigate, userLogStateList]);
 
+  /**
+   * 예외처리
+   */
   useEffect(() => {
     socket.on('exception', (error) => {
       alert(error.message);

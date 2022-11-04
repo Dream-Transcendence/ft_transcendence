@@ -70,7 +70,7 @@ const LogoutLayout = styled('section')(({ theme }) => ({
 }));
 
 function NavigationBar() {
-  const [userGameType, setUserGameType] = useRecoilState(gameTypeAtom);
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
   const [userData, setUserData] = useRecoilState(userDataAtom);
   const [secondAuth, setSecondAuth] = useRecoilState(userSecondAuth);
   const navigate = useNavigate();
@@ -102,7 +102,7 @@ function NavigationBar() {
   };
 
   const setLadder = () => {
-    setUserGameType(LADDER);
+    setGameType(LADDER);
   };
 
   const Avartar: LinkIconResource = {

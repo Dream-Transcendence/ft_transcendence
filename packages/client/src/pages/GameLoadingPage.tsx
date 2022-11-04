@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
 import {
   ALREADYFORMATCH,
-  GAMECANCEL,
   GAMEMATCH,
   gameNameSpace,
   INVITEGAME,
@@ -85,6 +84,7 @@ function GameLoadingPage() {
   }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
+    console.log('gameType in Loading', gameType);
     // connect(); //game namespace socket 연결
     //ladder 일때
     if (gameType === LADDER) {
@@ -99,8 +99,8 @@ function GameLoadingPage() {
           console.log('match emit 성공 : ', response);
         },
       );
-    } else if (gameInviteInfo.title.length > 0) {
-      console.log('123', gameInviteInfo);
+    } else if (gameType === CUSTOM && gameInviteInfo.title.length > 0) {
+      console.log('Custom경기의 title입니다.', gameInviteInfo);
       gameSocket.emit(
         GAMEMATCH,
         {
@@ -113,7 +113,7 @@ function GameLoadingPage() {
         },
       );
     }
-  }, [gameInviteInfo]);
+  }, [gameInviteInfo, gameType]);
 
   //match 성공시 값 받아서 동작시켜야함
   useEffect(() => {

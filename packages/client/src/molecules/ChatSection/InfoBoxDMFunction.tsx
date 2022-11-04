@@ -17,10 +17,11 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { DMList, userAuth } from '../../recoil/chat.recoil';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import { BLOCK, UNBLOCK } from '../../configs/Block.case';
-import { userDataAtom } from '../../recoil/user.recoil';
+import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { GameInviteInfoType } from '../../types/Game.type';
 import { Navigate, useNavigate } from 'react-router-dom';
+import { CUSTOM } from '../../configs/Game.type';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({
   width: '80%',
@@ -70,6 +71,7 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const [roomlist, setRoomList] = useRecoilState(DMList);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
   const findRoom = roomlist.find((room) => {
     return room.name === roomInfo.name;
   });
@@ -105,7 +107,12 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   function handleMatch() {
     if (roomInfo.userId) {
       //상대방 id 추가
-      setGameInviteInfo({ ...gameInviteInfo, opponentId: roomInfo.userId });
+      setGameType(CUSTOM);
+      setGameInviteInfo({
+        ...gameInviteInfo,
+        hostId: userData.id,
+        opponentId: roomInfo.userId,
+      });
       navigate(GAMECREATEURL);
     }
   }
