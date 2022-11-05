@@ -49,7 +49,7 @@ const BlockLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
-  justifyContent: 'right',
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 

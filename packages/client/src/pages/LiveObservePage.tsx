@@ -24,7 +24,7 @@ const LiveObserveLayout = styled('section')(({ theme }) => ({
   alignItems: 'center',
   alignContent: 'center',
   backgroundColor: '#6BADE2',
-  minHeight: '1000px',
+  minHeight: '600px',
   height: '100%',
   width: '100%',
   minWidth: '1200px',
