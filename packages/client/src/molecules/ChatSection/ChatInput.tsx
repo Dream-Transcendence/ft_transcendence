@@ -31,8 +31,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
   }, [roomId]);
 
   const sendMessage = () => {
-    // console.log('is data???', values);
-    if (values.body !== '') {
+    if (values.body !== '' && /\S/.test(values.body)) {
       socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
         const sendMessage: SocketMessage = {
           body: values.body,
@@ -51,7 +50,6 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log('?? twice');
     setValues({ ...values, body: value });
   };
 
