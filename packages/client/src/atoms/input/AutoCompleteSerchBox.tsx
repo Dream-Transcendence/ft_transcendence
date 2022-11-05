@@ -82,7 +82,6 @@ function AutoComplateSerchBox(props: { searchProps: SearchPropsType }) {
       //자동 완성의 값입니다.값을 선택하려면 옵션과 참조가 동일해야 합니다.
       value={value}
       // clearOnEscape
-      id="search-box"
       options={nicknameList} //옵션 배열
       getOptionLabel={(option) => {
         //값 입력시 해당하는 list출력

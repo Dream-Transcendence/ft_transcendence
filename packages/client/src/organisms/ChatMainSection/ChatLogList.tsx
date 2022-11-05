@@ -31,7 +31,6 @@ const AnchorLayout = styled('div')(({ theme }) => ({
   // marginTop: '70%',
   height: '20px',
   width: '20px',
-  backgroundColor: 'red',
   position: 'absolute',
   zIndex: 1000,
 }));
