@@ -187,33 +187,34 @@ const ReadyCount = styled('span')(({ theme }) => ({
 const ScoreLayout = styled('span')(({ theme }) => ({
   fontSize: '500%',
   textAlign: 'center',
-  position: 'relative',
+  marginBottom: '4%',
+  color: '#ffdd',
+  width: `30%`,
+}));
+
+const GameInfoLayout = styled('div')(({ theme }) => ({
   display: 'flex',
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   marginBottom: '4%',
-  color: '#ffdd',
   width: `100%`,
   height: `10%`,
   minHeight: '80px',
 }));
 
 const LeftUserProfile = styled('div')(({ theme }) => ({
-  width: '2%',
-  height: '60%',
-  zIndex: '2',
-  marginTop: '8%',
-  marginRight: '50%',
-  position: 'absolute',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const RightUserProfile = styled('div')(({ theme }) => ({
-  width: '2%',
-  height: '60%',
-  marginTop: '8%',
-  marginLeft: '50%',
-  zIndex: '2',
-  position: 'absolute',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const HowToUseLayout = styled('div')(({ theme }) => ({
@@ -438,15 +439,18 @@ function GamePlayWindowOrganism() {
   return (
     <GameWindowLayout>
       <GameLayout>
-        <ScoreLayout>
+        <GameInfoLayout>
           <LeftUserProfile>
             <UserProfileBox userProfileBoxProps={leftPlayerProfile} />
           </LeftUserProfile>
-          {score?.left} : {score?.right}
+          <ScoreLayout>
+            {score?.left} : {score?.right}
+          </ScoreLayout>
           <RightUserProfile>
             <UserProfileBox userProfileBoxProps={rightPlayerProfile} />
           </RightUserProfile>
-        </ScoreLayout>
+        </GameInfoLayout>
+
         {time < 4 && time > 0 ? (
           <PreGamePlayCanvasLayout
             width={theme.canvasImgProps.width}

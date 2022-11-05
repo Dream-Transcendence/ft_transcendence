@@ -49,6 +49,7 @@ const RightLayout = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
+  paddingRight: '0.5%',
   alignItems: 'flex-end',
   justifyContent: 'flex-end',
 }));

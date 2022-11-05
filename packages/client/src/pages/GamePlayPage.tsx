@@ -20,7 +20,7 @@ const GamePlayLayout = styled('section')(({ theme }) => ({
   backgroundColor: '#6BADE2',
   height: '100%',
   width: '100%',
-  minHeight: '620px',
+  minHeight: '800px',
   minWidth: '1200px',
 }));
 
