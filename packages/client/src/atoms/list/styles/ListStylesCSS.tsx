@@ -26,6 +26,9 @@ export const ListUlLayout = styled('ul')(({ theme }) => ({
   margin: 0,
   padding: '0',
   overflow: 'auto',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 }));
 
 export const ListChatUlLayout = styled('ul')(({ theme }) => ({
@@ -36,6 +39,9 @@ export const ListChatUlLayout = styled('ul')(({ theme }) => ({
   display: 'flex',
   width: '100%',
   flexDirection: 'column',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
 }));
 
 export const ListChatGenerateLayout = styled('div')(({ theme }) => ({
