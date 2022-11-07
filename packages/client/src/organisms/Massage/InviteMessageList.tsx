@@ -28,15 +28,18 @@ import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { CUSTOM } from '../../configs/Game.type';
 
-const InviteMessageListLayout = styled('div')(({ theme }) => ({
-  bottom: '0%',
+const InviteMessageListLayout = styled('section')(({ theme }) => ({
+  bottom: '0',
   right: '0%',
-  position: 'absolute',
+  display: 'float',
+  position: 'fixed',
+  alignSelf: 'flex-end',
+  minWidth: '200px',
+  minHeight: '70px',
+  maxHeight: '210px',
+  padding: '1%',
   width: '30%',
-  height: '10%',
   overflow: 'hidden',
-  backgroundColor:
-    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
   boxShadow: '0 15px 35px #00000066',
 }));
 
@@ -125,7 +128,7 @@ function InviteMessageList() {
                     edge="end"
                     aria-label="accept"
                     title="accept"
-                    sx={{ padding: 0 }}
+                    sx={{ paddingTop: 0 }}
                     onClick={() => handleAcceptMessage(info)}
                   >
                     <CheckCircleTwoToneIcon />
@@ -151,6 +154,7 @@ function InviteMessageList() {
                 </IconButton>
               )
             }
+            style={{ marginBottom: '8%' }}
           >
             <ListItemText
               primary={
