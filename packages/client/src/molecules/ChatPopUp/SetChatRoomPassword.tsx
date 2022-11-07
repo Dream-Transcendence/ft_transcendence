@@ -27,13 +27,17 @@ function SetChatRoomPasswordModule(handler: {
 }) {
   const handlePassword = handler.handler;
 
+  const handlePasswordSet = {
+    handlePassword: handlePassword,
+  };
+
   return (
     <SetPasswordLayout>
       <Typography margin="3%" variant="h6">
         비밀번호 입력
       </Typography>
       <PasswordInputLayout>
-        <PasswordInput handler={handlePassword} />
+        <PasswordInput handlers={handlePasswordSet} />
       </PasswordInputLayout>
     </SetPasswordLayout>
   );

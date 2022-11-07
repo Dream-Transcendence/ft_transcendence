@@ -33,6 +33,11 @@ export interface HandleInviteList {
   setNewParticipantList: (numList: BaseUserProfileData[]) => void;
 }
 
+export interface HandlePassword {
+  handlePassword: (childData: string) => void;
+  handleChangePassword?: () => void;
+}
+
 export interface UnJoinedRoomList {
   id: number;
   name: string;

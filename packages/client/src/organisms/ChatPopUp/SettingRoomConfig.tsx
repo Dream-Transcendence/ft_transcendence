@@ -12,7 +12,7 @@ import {
 import { useState } from 'react';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
-import { PROTECTED } from '../../configs/RoomType';
+import { PRIVATE, PROTECTED } from '../../configs/RoomType';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
 import { useNavigate } from 'react-router-dom';
@@ -105,10 +105,12 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
   }
 
   const savehandler = () => {
-    if (newRoom.type === 2 && newRoom.salt === '')
+    if (newRoom.type === PROTECTED && newRoom.salt === '')
       alert('비밀번호를 입력하세요');
-    else if (newRoom.participantIds.length === 0)
-      alert('인원을 1명 이상 초대하세요');
+    else if (newRoom.participantIds.length === 0 && newRoom.type !== PRIVATE)
+      alert(
+        '인원을 1명 이상 초대하세요 \n\n혼자 방을 쓰고 싶다면 \n설정을 비공개로 선택해주세요',
+      );
     else {
       createRoom(newRoom);
       closeModal();

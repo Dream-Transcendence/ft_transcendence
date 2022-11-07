@@ -127,6 +127,10 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
     },
   };
 
+  const handlePasswordSet = {
+    handlePassword: handlePassword,
+  };
+
   return (
     <ChatRoomElementLayout>
       <RoomElementImageModule image={image} />
@@ -136,7 +140,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
-        {type === PROTECTED && <PasswordInput handler={handlePassword} />}
+        {type === PROTECTED && <PasswordInput handlers={handlePasswordSet} />}
       </PasswordInputLayout>
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />

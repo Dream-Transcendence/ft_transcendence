@@ -71,6 +71,11 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
     action: handleChangePassword,
   };
 
+  const handlePasswordSet = {
+    handlePassword: handlePassword,
+    handleChangePassword: handleChangePassword,
+  };
+
   return (
     <InfoBoxPasswordLayout>
       {type !== DM && userType === OWNER && (
@@ -82,7 +87,7 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
               <CustomIconButton customProps={lockOpenIconProps} />
             )}
           </PasswordIconLayout>
-          <PasswordInput handler={handlePassword} />
+          <PasswordInput handlers={handlePasswordSet} />
         </InfoBoxPasswordInnerLayout>
       )}
     </InfoBoxPasswordLayout>

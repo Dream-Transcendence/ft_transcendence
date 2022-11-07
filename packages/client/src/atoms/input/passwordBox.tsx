@@ -8,6 +8,7 @@ import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { HandlePassword } from '../../types/Room.type';
 
 interface State {
   amount: string;
@@ -17,8 +18,8 @@ interface State {
   showPassword: boolean;
 }
 
-function PasswordInput(handler: { handler: (props: string) => void }) {
-  const action = handler.handler;
+function PasswordInput(props: { handlers: HandlePassword }) {
+  const { handlePassword, handleChangePassword } = props.handlers;
   const [values, setValues] = React.useState<State>({
     amount: '',
     password: '',
@@ -33,7 +34,7 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
       //[수정완료]한글자씩 밀리는 현상발생
       const value = event.target.value;
       setValues({ ...values, [prop]: value });
-      action(value);
+      handlePassword(value);
     };
 
   const handleClickShowPassword = () => {
@@ -69,11 +70,13 @@ function PasswordInput(handler: { handler: (props: string) => void }) {
         value={values.password}
         onChange={handleChange('password')}
         //보류
-        // onKeyPress={(event) => {
-        //   if (event.key === 'Enter') {
-        //     action(values.password);
-        //   }
-        // }}
+        onKeyPress={(event) => {
+          if (handleChangePassword) {
+            if (event.key === 'Enter') {
+              handleChangePassword();
+            }
+          }
+        }}
         endAdornment={
           <InputAdornment position="end">
             <IconButton
