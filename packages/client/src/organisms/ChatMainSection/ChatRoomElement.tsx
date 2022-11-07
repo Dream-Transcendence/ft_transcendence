@@ -91,15 +91,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
     );
     //방을 잘못 들어갈 경우 에러처리
   };
-
-  useEffect(() => {
-    socket.on('exception', (response: any) => {
-      alert(response.message);
-    });
-    return () => {
-      socket.off('exception');
-    };
-  }, []);
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
 
