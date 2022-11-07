@@ -668,6 +668,8 @@ export class UserService {
     }
     if (opponentClientId === null)
       throw new WsException('상대를 찾을 수 없습니다.');
+    if (this.connectionList.get(opponentClientId).onGame)
+      throw new WsException('상대가 게임중입니다.');
 
     client.broadcast.emit(
       'changeUserStatus',
