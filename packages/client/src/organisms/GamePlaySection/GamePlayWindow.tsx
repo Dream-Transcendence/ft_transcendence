@@ -167,6 +167,9 @@ const GameWindowLayout = styled('div')(({ theme }) => ({
 const ReadCountLayout = styled('div')(({ theme }) => ({
   width: '12%',
   height: '60%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const ReadCount = styled('span')(({ theme }) => ({
@@ -176,7 +179,6 @@ const ReadCount = styled('span')(({ theme }) => ({
 
 const ReadyCount = styled('span')(({ theme }) => ({
   fontSize: '6.5vh',
-  marginLeft: '-50%',
   color: '#ffd300',
 }));
 
