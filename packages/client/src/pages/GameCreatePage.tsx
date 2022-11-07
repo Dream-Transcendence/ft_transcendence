@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import NavigationBar from '../atoms/bar/NavigationBar';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import { UserSecondAuth } from '../types/Profile.type';

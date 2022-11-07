@@ -10,16 +10,11 @@ import { PROTECTED } from '../../configs/RoomType';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  GetRoomInfoDto,
-  RoomList,
-  UnJoinedRoomList,
-} from '../../types/Room.type';
+import { RoomList, UnJoinedRoomList } from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { Scale } from '@mui/icons-material';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',

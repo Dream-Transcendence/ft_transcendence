@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
 import { SERVERURL } from '../../configs/Link.url';
 import UserStatResult from '../../molecules/ProfileSection/StatResult';

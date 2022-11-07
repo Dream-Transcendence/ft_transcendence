@@ -9,7 +9,7 @@ import {
   HandleInviteList,
   RoomList,
 } from '../../types/Room.type';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PROTECTED } from '../../configs/RoomType';

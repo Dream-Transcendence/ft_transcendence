@@ -1,19 +1,12 @@
 import { styled } from '@mui/material/styles';
 import ChatInputModule from '../../molecules/ChatSection/ChatInput';
 import ChatLogListOrganisms from './ChatLogList';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
 import { userStatus } from '../../recoil/chat.recoil';
 import { MUTE } from '../../configs/Status.case';
-import {
-  ControlMessage,
-  ControlRoomInfo,
-  SocketMessage,
-} from '../../types/Message.type';
-import { GetRoomInfoDto } from '../../types/Room.type';
+import { ControlRoomInfo } from '../../types/Message.type';
 import { DM } from '../../configs/RoomType';
 
 const DMChattingLayout = styled('div')(({ theme }) => ({

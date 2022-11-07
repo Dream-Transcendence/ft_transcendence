@@ -2,12 +2,11 @@ import styled from '@emotion/styled';
 import { Button, Input } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { PROFILEURL, SERVERURL } from '../configs/Link.url';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
-import { IsNumber } from 'class-validator';
 import { onlyNumbers } from '../utils/onlyNumber';
 
 const SecondOauthPageLayout = styled('div')(({ theme }) => ({

@@ -1,5 +1,4 @@
 import { GetRoomInfoDto } from './Room.type';
-import { ParticipantInfo } from './Participant.type';
 import { BaseUserProfileData } from './Profile.type';
 
 export interface ControlMessage {

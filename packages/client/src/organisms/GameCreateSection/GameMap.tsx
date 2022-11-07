@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import TextBox from '../../texts/TextBox';
-import ImageComponent from '../../atoms/Image/Image';
 import { Box, Typography } from '@mui/material';
 
 const GameMapModuleLayout = styled('div')(({ theme }) => ({
@@ -43,7 +41,9 @@ function GameMapModule() {
             width: '100%',
           }}
           alt={'game map'}
-          src={'https://www.imaginarycloud.com/blog/content/images/2019/02/Pong.jpg'}
+          src={
+            'https://www.imaginarycloud.com/blog/content/images/2019/02/Pong.jpg'
+          }
         />
       </GameMapLayout>
     </GameMapModuleLayout>

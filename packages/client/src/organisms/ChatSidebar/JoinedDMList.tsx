@@ -11,7 +11,6 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { BLOCK } from '../../configs/Block.case';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';

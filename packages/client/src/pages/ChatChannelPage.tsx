@@ -16,7 +16,6 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { CHANNELURL } from '../configs/Link.url';
-import axios from 'axios';
 import styled from '@emotion/styled';
 import useSocket from '../socket/useSocket';
 import { chatNameSpace } from '../socket/event';

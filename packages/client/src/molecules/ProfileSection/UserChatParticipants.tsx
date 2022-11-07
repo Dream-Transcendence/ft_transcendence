@@ -1,15 +1,9 @@
-import { keyframes, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonIcon from '@mui/icons-material/Person';
-import BlockIcon from '@mui/icons-material/Block';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
-import {
-  CustomIconProps,
-  LinkIconProps,
-  LinkIconResource,
-} from '../../types/Link.type';
+import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -20,11 +14,8 @@ import {
   ParticipantInfo,
   ParticipantInfoNState,
 } from '../../types/Participant.type';
-import { useState } from 'react';
 import { BAN, MUTE } from '../../configs/Status.case';
-import { BLOCK, UNBLOCK } from '../../configs/Block.case';
-import { Rotate90DegreesCcw } from '@mui/icons-material';
-import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
+import { BLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({

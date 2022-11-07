@@ -1,26 +1,17 @@
 import styled from '@emotion/styled';
-import TextBox from '../texts/TextBox';
-import { LinkTextResource } from '../types/Link.type';
-import HistoryBackTextButton from '../atoms/button/linkPage/HistoryBackTextButton';
 import { useNavigate } from 'react-router-dom';
 import useSocket from '../socket/useSocket';
 import {
   ALREADYFORMATCH,
   GAMEMATCH,
   gameNameSpace,
-  INVITEGAME,
   REJECTGAME,
   userNameSpace,
 } from '../socket/event';
 import { useEffect } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { CHATROOMURL, GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
-import {
-  gameInfoPropsType,
-  GameInviteInfoType,
-  GameRoomDto,
-  ServerInviteGameDto,
-} from '../types/Game.type';
+import { GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
+import { GameInviteInfoType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
 import { LADDER, CUSTOM } from '../configs/Game.type';
@@ -29,7 +20,6 @@ import { inviteInfoListAtom } from '../recoil/common.recoil';
 import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
 import { UserSecondAuth } from '../types/Profile.type';
 import { Button, Typography } from '@mui/material';
-import LinkPageTextButton from '../atoms/button/linkPage/LinkPageTextButton';
 
 const GameLodingLayout = styled('section')(({ theme }) => ({
   display: 'flex',

@@ -1,5 +1,5 @@
-import { ThemeProvider, Typography, Avatar } from '@mui/material';
-import { styled, createTheme, responsiveFontSizes } from '@mui/material/styles';
+import { Avatar } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 interface TitleProps {
   image: string;

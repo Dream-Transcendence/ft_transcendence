@@ -1,8 +1,6 @@
-import { Input, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import RadioGroupButton from '../../atoms/radio/RadioGroupButton';
-import { PUBLIC } from '../../configs/RoomType';
-
 /*
  * AsideSearchBox로 감싼 이유는
  * 공통적으로 사용하는 searchBox가 상위 레이아웃에 기반하여 모양을 잡기 때문

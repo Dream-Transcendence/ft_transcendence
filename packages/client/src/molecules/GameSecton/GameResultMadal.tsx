@@ -4,9 +4,7 @@ import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { styled, Typography } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
-import { color } from '@mui/system';
 import GameScore from './GameScore';
-import { useEffect } from 'react';
 import {
   UserProfileBoxDataType,
   UserProfileBoxType,

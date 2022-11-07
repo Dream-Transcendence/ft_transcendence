@@ -1,11 +1,8 @@
 import { styled } from '@mui/material/styles';
-import BlockIcon from '@mui/icons-material/Block';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
-import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import {
   CustomIconProps,
@@ -14,13 +11,12 @@ import {
 } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { DMList, userAuth } from '../../recoil/chat.recoil';
-import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
-import { BLOCK, UNBLOCK } from '../../configs/Block.case';
+import { DMList } from '../../recoil/chat.recoil';
+import { RoomInfoSet } from '../../types/Room.type';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { GameInviteInfoType } from '../../types/Game.type';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CUSTOM } from '../../configs/Game.type';
 
 const InfoBoxFunctionLayout = styled('div')(({ theme }) => ({

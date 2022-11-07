@@ -1,7 +1,5 @@
 import styled from '@emotion/styled';
 import NicknameInit from '../organisms/NicknameInit/NicknameInit';
-import { TextField } from '@mui/material';
-import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';

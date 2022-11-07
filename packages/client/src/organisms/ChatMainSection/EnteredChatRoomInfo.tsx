@@ -4,10 +4,6 @@ import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPasswo
 import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
-import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace } from '../../socket/event';
-import { useRecoilValue } from 'recoil';
 import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({

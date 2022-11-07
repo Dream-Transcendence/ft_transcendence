@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
 import {
   GAMELOADINGURL,
@@ -15,28 +15,21 @@ import {
   CHANGEUSERSTATUS,
   FRIENDREQUEST,
   FRIENDREQUESTACCEPTED,
-  GAMEMATCH,
   gameNameSpace,
   INVITEGAME,
   logOn,
   REJECTFRIENDREQUEST,
-  REJECTGAME,
   USERLOGOFF,
   userNameSpace,
 } from '../socket/event';
 import {
   userDataAtom,
-  gameTypeAtom,
   userLogStateListAtom,
   userSecondAuth,
 } from '../recoil/user.recoil';
 import useSocket from '../socket/useSocket';
 import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserSecondAuth,
-} from '../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
@@ -50,7 +43,6 @@ import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
 } from '../recoil/common.recoil';
-import NotFoundPage from './NotFoundPage';
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
 import LiveObservePage from './LiveObservePage';
@@ -58,13 +50,6 @@ import LiveObservePage from './LiveObservePage';
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-}));
-
-const HeaderSection = styled('header')(({ theme }) => ({
-  width: '100%',
-  height: '3%',
   display: 'flex',
   flexDirection: 'column',
 }));

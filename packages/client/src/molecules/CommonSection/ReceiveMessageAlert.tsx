@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Box, Button, ButtonGroup } from '@mui/material';
+import { Alert, AlertTitle, Button, ButtonGroup } from '@mui/material';
 import React, { useState } from 'react';
 
 ReceiveMessageAlert.defaultProps = {

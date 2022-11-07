@@ -1,14 +1,7 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ChatParticipantsListOrganisms from './ChatParticipantsList';
-import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
-import {
-  ParticipantInfo,
-  ParticipantInfoSet,
-} from '../../types/Participant.type';
-import { useEffect } from 'react';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace } from '../../socket/event';
+import { ParticipantInfoSet } from '../../types/Participant.type';
 
 const ChatParticipantsLayout = styled('div')(({ theme }) => ({
   width: '30%',

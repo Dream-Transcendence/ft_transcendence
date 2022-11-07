@@ -8,19 +8,15 @@ import {
   UserNicknameLayout,
   UserPictureLayout,
 } from '../OrganismsStyles/ProfileOrganismsCss';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
-import { CustomIconProps, CustomUploadProps } from '../../types/Link.type';
-import { useEffect, useRef, useState } from 'react';
-import axios, { AxiosError } from 'axios';
+import { CustomUploadProps } from '../../types/Link.type';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { SERVERURL } from '../../configs/Link.url';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
-import { ReadMoreRounded } from '@mui/icons-material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { userDataAtom } from '../../recoil/user.recoil';
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',

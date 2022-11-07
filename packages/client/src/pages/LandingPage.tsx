@@ -1,14 +1,8 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
-import { useState } from 'react';
 import { useRecoilState } from 'recoil';
-import LinkPageComponentButton from '../atoms/button/linkPage/LinkPageComponentButton';
-import { PROFILEURL, SERVERURL } from '../configs/Link.url';
-import { LinkComponentResource } from '../types/Link.type';
+import { SERVERURL } from '../configs/Link.url';
 import { BaseUserProfileData } from '../types/Profile.type';
-import { useCookies } from 'react-cookie';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import { userDataAtom } from '../recoil/user.recoil';
 
 const MainSection = styled.section`
@@ -36,6 +30,8 @@ const EnterButton = styled.button`
     background: #2d6;
   }
 `;
+
+console.log(window.location.origin);
 
 axios.defaults.withCredentials = true;
 

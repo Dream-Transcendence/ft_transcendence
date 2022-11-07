@@ -7,7 +7,7 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { UserSecondAuth } from '../../types/Profile.type';

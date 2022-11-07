@@ -1,11 +1,7 @@
 import { styled } from '@mui/material/styles';
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import AutoComplateSerchBox from '../../atoms/input/AutoCompleteSerchBox';
 import SearchBox from '../../atoms/input/SearchBox';
 import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
-import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
 import { DM } from '../../configs/RoomType';
 import { userDataAtom } from '../../recoil/user.recoil';

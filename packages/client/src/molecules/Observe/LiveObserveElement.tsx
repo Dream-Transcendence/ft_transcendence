@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { GAMEPLAYURL } from '../../configs/Link.url';
 import { gameInfoAtom } from '../../recoil/game.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';

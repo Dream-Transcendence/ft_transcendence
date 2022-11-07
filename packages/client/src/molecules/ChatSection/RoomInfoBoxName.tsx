@@ -1,25 +1,13 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import {
-  Avatar,
-  Typography,
-  IconButton,
-  Button,
-  TextField,
-  Input,
-  InputLabel,
-  FormControl,
-} from '@mui/material';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { Avatar, Typography, Input, FormControl } from '@mui/material';
 import { DM } from '../../configs/RoomType';
 import { RoomInfoSet } from '../../types/Room.type';
 import { useEffect, useState } from 'react';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { useParams } from 'react-router-dom';
 import { BLOCK } from '../../configs/Block.case';
-import axios from 'axios';
 import ChatRoomImageProfile from '../../atoms/profile/ChatRoomImageProfile';
-import { ADMIN, OWNER } from '../../configs/userType';
+import { OWNER } from '../../configs/userType';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',

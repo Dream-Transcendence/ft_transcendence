@@ -1,6 +1,4 @@
 import styled from '@emotion/styled';
-import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
-import ListGenerate from '../../atoms/list/ListGenerate';
 import OneMatchHistory from '../../molecules/ProfileSection/OneMatchHistory';
 import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';

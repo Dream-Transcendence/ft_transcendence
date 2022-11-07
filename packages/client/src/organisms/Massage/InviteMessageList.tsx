@@ -1,17 +1,11 @@
-import { useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { TransitionGroup } from 'react-transition-group';
-import {
-  InviteInfoListType,
-  ServerAcceptGameDto,
-} from '../../types/Message.type';
+import { InviteInfoListType } from '../../types/Message.type';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import {
   checkFriendRequestAtom,
@@ -29,10 +23,7 @@ import {
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { GameInviteInfoType } from '../../types/Game.type';
-import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { useNavigate } from 'react-router-dom';
-import { GAMELOADINGURL } from '../../configs/Link.url';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { CUSTOM } from '../../configs/Game.type';
@@ -64,8 +55,6 @@ function InviteMessageList() {
   const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
     checkFriendRequestAtom,
   );
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
   /**
    * 요청 수락
    */

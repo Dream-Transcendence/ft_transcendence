@@ -12,8 +12,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import axios from 'axios';
-import { HandleInviteList, RoomList } from '../../types/Room.type';
+import { HandleInviteList } from '../../types/Room.type';
 import {
   BaseUserProfileData,
   UserProfileBoxDataType,

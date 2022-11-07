@@ -13,7 +13,7 @@ import {
   ParticipantInfo,
   ParticipantInfoSet,
 } from '../../types/Participant.type';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAuth, userStatus } from '../../recoil/chat.recoil';
 import { COMMON } from '../../configs/userType';
 import {
@@ -29,7 +29,6 @@ import {
   ENTERMESSAGE,
   PATCHMESSAGE,
 } from '../../socket/event';
-import { SocketAddress } from 'net';
 import { UserSecondAuth } from '../../types/Profile.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({

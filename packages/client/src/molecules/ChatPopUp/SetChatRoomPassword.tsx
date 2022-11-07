@@ -1,8 +1,6 @@
-import { Input, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../atoms/input/SearchBox';
 import PasswordInput from '../../atoms/input/passwordBox';
-import { useState } from 'react';
 
 /*
  * AsideSearchBox로 감싼 이유는

@@ -8,16 +8,13 @@ import {
   GAMESTART,
   MOVEPADDLE,
   PLAYERABSTENTION,
-  RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { height } from '@mui/system';
 import { Typography } from '@mui/material';
 import {
   BallProps,
   CanvasImgProps,
   CanvasProps,
-  gameInfoPropsType,
   GameOffsetProps,
   GameWindowInfo,
   PaddleProps,
@@ -31,7 +28,6 @@ import {
   SIZEDOWN,
   SMALL,
   SMALLBALLMODE,
-  STOP,
   UP,
 } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';

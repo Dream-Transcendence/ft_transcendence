@@ -12,11 +12,7 @@ import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { CustomIconProps } from '../../types/Link.type';
 import { useEffect, useState } from 'react';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserSecondAuth,
-} from '../../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../../types/Profile.type';
 import axios from 'axios';
 import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useNavigate, useParams } from 'react-router-dom';

@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
-import { gameInfoPropsType } from '../../types/Game.type';
 import { useEffect, useState } from 'react';
 import { CUSTOM, LADDER, SIZEDOWN, SPEEDUP } from '../../configs/Game.type';
 import { useRecoilState } from 'recoil';

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import SmsIcon from '@mui/icons-material/Sms';
-import { color } from '@mui/system';
 import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
