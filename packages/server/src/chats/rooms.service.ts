@@ -480,7 +480,7 @@ export class RoomService {
       client.leave(room);
     });
     client.join(room.title);
-
+    client.to(room.title).emit('userMessage', '들어왔습니다', userId);
     // 참여 성공
     // NOTE: 유저 입장 후, 채널 메세지와 참여자 목록 가져오는 API 추가(REST)
     return { isEntered: true };
@@ -552,6 +552,12 @@ export class RoomService {
       },
       body: msg.body,
     };
+    console.log(
+      '😌😌😌😌😌😌😌😌😌😌😌😌dm title :',
+      client.id,
+      userId,
+      msg.room,
+    );
     client.to(msg.room.title).emit('userMessage', userMessageDto);
     return { isSent: true };
   }

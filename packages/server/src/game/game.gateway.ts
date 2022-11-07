@@ -1,3 +1,5 @@
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -6,6 +8,7 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Socket, Server } from 'socket.io';
+import { WsAuthGuard } from 'src/auth/ws-auth.guard';
 import {
   HandleStartDto,
   MatchDto,
@@ -19,6 +22,9 @@ import { GameService } from './game.service';
   namespace: 'game',
   cors: true,
 })
+@UseGuards(AuthGuard())
+// @UseGuards(WsAuthGuard)
+// @UseGuards(AuthGuard('wsjwt'))
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private gameService: GameService) {}
   @WebSocketServer()

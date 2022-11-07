@@ -1,3 +1,5 @@
+import { UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -7,6 +9,7 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { WsAuthGuard } from 'src/auth/ws-auth.guard';
 import { ConnectionDto } from './dto/connect-user.dto';
 import {
   CancelInviteDto,
@@ -21,6 +24,9 @@ import { UserService } from './users.service';
 @WebSocketGateway(4242, {
   namespace: 'user',
 })
+@UseGuards(AuthGuard())
+// @UseGuards(WsAuthGuard)
+// @UseGuards(AuthGuard('wsjwt'))
 export class UserGateway implements OnGatewayConnection, OnGatewayDisconnect {
   // NOTE: 유저와 채팅 게이트웨이를 분리해야할까?(연결을 별도로 구성해야 하나?)
   constructor(private userService: UserService) {}

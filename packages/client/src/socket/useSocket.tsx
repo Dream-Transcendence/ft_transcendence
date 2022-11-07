@@ -12,6 +12,7 @@ const useSocket = (
   if (!sockets[nameSpace]) {
     sockets[nameSpace] = io(`${SOCKETURL}/${nameSpace}`, {
       autoConnect: false,
+      withCredentials: true,
       // transports: ['websocket'],
     });
   }
@@ -28,7 +29,8 @@ const useSocket = (
   // console.log( sockets[nameSpace]);
   const connect = () => {
     //undefined를 체크한 이유는 가끔가다가 socket생성이 느려서 터짐!
-    if (sockets[nameSpace] !== undefined &&
+    if (
+      sockets[nameSpace] !== undefined &&
       sockets[nameSpace].connected === false
     ) {
       sockets[nameSpace].connect();
@@ -40,10 +42,10 @@ const useSocket = (
   };
 
   const disconnect = () => {
-    if (sockets[nameSpace] !== undefined &&
+    if (
+      sockets[nameSpace] !== undefined &&
       sockets[nameSpace].connected === true
-      ) {
-
+    ) {
       sockets[nameSpace].disconnect();
       console.log(
         `sockets[${nameSpace}].disconnected`,

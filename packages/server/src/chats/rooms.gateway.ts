@@ -13,8 +13,14 @@ import {
   SendMessageDto,
   PatchUserInfoDto,
 } from './dto/rooms.dto';
+import { UseGuards } from '@nestjs/common';
+import { WsAuthGuard } from 'src/auth/ws-auth.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @WebSocketGateway(4242, { namespace: 'chat', cors: true })
+@UseGuards(AuthGuard())
+// @UseGuards(WsAuthGuard)
+// @UseGuards(AuthGuard('wsjwt'))
 export class RoomsGateway {
   constructor(private readonly roomService: RoomService) {}
   @WebSocketServer()

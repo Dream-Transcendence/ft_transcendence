@@ -10,7 +10,7 @@ export class SocketIoAdapter extends IoAdapter {
   createIOServer(port: number, options?: any): any {
     const server = super.createIOServer(port, {
       ...options,
-      cors: { origin: true },
+      cors: { origin: 'http://localhost:3005', credentials: true },
     });
 
     return server;

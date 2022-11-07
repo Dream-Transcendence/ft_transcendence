@@ -14,7 +14,7 @@ export const databaseProviders = [
         entities: [__dirname + '/../**/*.entity{.ts,.js}'],
         // NOTE: synchronize는 개발용으로만 사용하고, 배포시에는 false 로 설정해야 함
         synchronize: false,
-        logging: true,
+        // logging: true,
         // NOTE console창에 query log를 볼 수 있는 option
       });
       return dataSource.initialize();

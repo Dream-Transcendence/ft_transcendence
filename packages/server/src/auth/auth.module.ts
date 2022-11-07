@@ -13,6 +13,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { WsJwtStrategy } from './ws-jwt.strategy';
 @Module({
   imports: [
     UsersModule,
@@ -32,6 +33,7 @@ import { ConfigModule } from '@nestjs/config';
     ...roomsProviders,
     bakingKimStrategy,
     JwtStrategy,
+    WsJwtStrategy,
     JwtModule,
   ],
   controllers: [AuthController],
