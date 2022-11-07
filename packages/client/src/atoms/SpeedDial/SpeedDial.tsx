@@ -154,9 +154,9 @@ function BasicSpeedDial(props: {
       setTimeout(async () => {
         const info = await setInfo(auth, NONE);
         setUserState(info, beNone);
-      }, 5000);
+      }, 60000);
     }
-    // set비동기처리 30초
+    // set비동기처리 60초
     //interval로 남은시간처리..?
   };
 

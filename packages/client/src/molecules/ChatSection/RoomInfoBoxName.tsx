@@ -83,6 +83,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const handleChangeRoomName = () => {
     roomInfo['name'] = roomName;
     setChangeRoomName(true);
+    alert('방 이름이 변경되었습니다');
   };
 
   return (
@@ -108,7 +109,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
         {type === DM ? (
-          <Typography paddingLeft={'10px'} color={'white'}>
+          <Typography paddingLeft={'10px'} color={'white'} spellCheck="false">
             {name}
           </Typography>
         ) : auth === OWNER ? (
@@ -116,6 +117,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
             disableUnderline
             style={divStyle}
             placeholder={name}
+            spellCheck="false"
             onChange={handleRoomName()}
             onKeyPress={(event) => {
               if (event.key === 'Enter') {

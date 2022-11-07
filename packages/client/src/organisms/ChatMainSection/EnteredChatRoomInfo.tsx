@@ -5,6 +5,7 @@ import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
+import { PROTECTED } from '../../configs/RoomType';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -49,9 +50,10 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
     } else if (
       response.status === 200 &&
       handler !== undefined &&
+      roomInfo['salt'] &&
       roomInfo['salt'] !== ''
     ) {
-      const room: any = { ...roomInfo, type: 2 };
+      const room: any = { ...roomInfo, type: PROTECTED };
       await handler(room);
     }
     return await response.status;
