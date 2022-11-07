@@ -23,7 +23,11 @@ import {
   PROFILEURL,
   SERVERURL,
 } from '../../configs/Link.url';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
 import {
@@ -35,6 +39,7 @@ import { LADDER } from '../../configs/Game.type';
 import CustomIconButton from '../button/icon/CustomIconButtion';
 import { CustomIconProps } from '../../types/Link.type';
 import axios from 'axios';
+import { getJoinedChatList } from '../../recoil/chat.recoil';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -75,6 +80,9 @@ function NavigationBar() {
   const [userData, setUserData] = useRecoilState(userDataAtom);
   const [secondAuth, setSecondAuth] = useRecoilState(userSecondAuth);
   const navigate = useNavigate();
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getJoinedChatList(userData.id),
+  );
 
   const searchProps: SearchPropsType = useSearch(
     `${SERVERURL}/users/search`,
@@ -132,6 +140,7 @@ function NavigationBar() {
     style: {
       marginTop: '1%',
     },
+    action: refreshUserInfo,
   };
 
   const liveObeserveAction: LinkIconProps = {

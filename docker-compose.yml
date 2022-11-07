@@ -29,8 +29,8 @@ services: # 컨테이너 실행을 위한 단위
       context: . # 도커 파일 경로 또는 레포지토리 url
       dockerfile: Dockerfile # 도커 파일
     # image: kingwangzzang/nestjs
-    volumes:
-      - .:/app
+    # volumes:
+    #   - .:/app
     ports:
       - '3000:3000' # expose-to-the-world : only-in-the-docker
       - '4242:4242'
