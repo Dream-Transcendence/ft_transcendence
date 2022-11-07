@@ -93,7 +93,7 @@ function JoinedDMListOrganisms() {
       //프로필로 나갔다가 다시  들어오면  데이터가 사라지는  현상을 고치기 위해 추가
       refreshUserInfo();
     };
-  }, [joinedChatList, setRoomList]);
+  }, []);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {

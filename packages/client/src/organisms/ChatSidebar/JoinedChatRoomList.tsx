@@ -57,7 +57,7 @@ function JoinedChatRoomModule() {
     return () => {
       refreshUserInfo();
     };
-  }, [joinedChatList, setRoomList]);
+  }, []);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
