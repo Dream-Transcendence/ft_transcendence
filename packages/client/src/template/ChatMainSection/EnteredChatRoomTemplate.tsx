@@ -226,12 +226,6 @@ function EnteredChatRoomTemplate() {
             auth: res.auth,
             status: res.status,
           };
-          console.log(
-            'modify: ',
-            modifiedParticipant,
-            'filter:',
-            filteredParticipants,
-          );
           setParticipantInfo([...filteredParticipants, modifiedParticipant]);
           // if (res.userId === userData.id) {
           //   setUserType(res.auth);
@@ -241,14 +235,10 @@ function EnteredChatRoomTemplate() {
       });
     }
     changedParticipantStatus();
-    // return () => {
-    //   socket.off(`${PATCHMESSAGE}`);
-    // };
+    return () => {
+      socket.off(`${PATCHMESSAGE}`);
+    };
   }, [participantInfo, socket]);
-
-  const getBlocked = async (blockedUserId: number) => {
-    let response;
-  };
 
   useEffect(() => {
     if (
@@ -315,6 +305,15 @@ function EnteredChatRoomTemplate() {
     roomInfo: roomInfo,
     controlMessage: messageSetter,
   };
+
+  useEffect(() => {
+    socket.on('exception', (error) => {
+      alert(error.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   return (
     <ChattingRoomLayout>

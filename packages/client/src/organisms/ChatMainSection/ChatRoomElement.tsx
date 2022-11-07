@@ -71,7 +71,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
   };
   //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
   //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
-  function enterRoom() {
+  const enterRoom = () => {
     //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
     socket.emit(
       `${ENTERCHANNEL}`,
@@ -90,7 +90,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
       },
     );
     //방을 잘못 들어갈 경우 에러처리
-  }
+  };
 
   useEffect(() => {
     socket.on('exception', (response: any) => {

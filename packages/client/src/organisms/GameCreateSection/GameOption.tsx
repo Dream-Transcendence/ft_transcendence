@@ -9,6 +9,8 @@ const GameOptionLayout = styled('div')(({ theme }) => ({
   overflow: 'hidden',
   width: '80%',
   height: '55%',
+  minHeight: '150px',
+  maxHeight: '160px',
 }));
 
 function GameOptionModule() {

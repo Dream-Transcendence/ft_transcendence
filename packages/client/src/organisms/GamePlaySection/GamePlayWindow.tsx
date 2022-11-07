@@ -39,7 +39,7 @@ import {
   UserProfileBoxType,
 } from '../../types/Profile.type';
 import { useNavigate, useParams } from 'react-router-dom';
-import { NOTFOUNDURL } from '../../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL } from '../../configs/Link.url';
 import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const GameLayout = styled('div')(({ theme }) => ({
@@ -414,6 +414,7 @@ function GamePlayWindowOrganism() {
   }, []);
 
   /* 상대방 기권 감지 */
+  //[수정사항] 동환님 이거 off안해줘도 괜찮나요? doyun
   useEffect(() => {
     socket.on(PLAYERABSTENTION, (res) => {
       setAbstention(res.abstainedPlayer);
@@ -433,7 +434,15 @@ function GamePlayWindowOrganism() {
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
-  console.log(gameInfo, time);
+  useEffect(() => {
+    socket.on('exception', (response: any) => {
+      navigate(PROFILEURL);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
+
   return (
     <GameWindowLayout>
       <GameLayout>

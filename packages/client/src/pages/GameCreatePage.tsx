@@ -12,6 +12,8 @@ const GameCreateLayout = styled('section')(({ theme }) => ({
   backgroundColor: '#6BADE2',
   height: '100%',
   width: '100%',
+  minHeight: '800px',
+  minWidth: '1200px',
 }));
 
 const NavGridLayout = styled('section')(({ theme }) => ({
