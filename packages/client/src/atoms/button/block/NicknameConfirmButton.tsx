@@ -23,7 +23,8 @@ export const checkValidNickname = (nickname: string) => {
     /\s/.test(nickname) ||
     nickname === '' ||
     nickname == null ||
-    nickname.length > 10
+    nickname.length > 10 ||
+    !/^[a-zA-Z0-9]*$/.test(nickname) //
   ) {
     return false;
   }

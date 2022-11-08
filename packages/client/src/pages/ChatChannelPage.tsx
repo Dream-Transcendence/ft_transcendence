@@ -27,7 +27,7 @@ const ChatChannel = styled('section')(({ theme }) => ({
 const MainSection = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
-  minWidth: '1200px',
+  minWidth: '1350px',
   minHeight: '700px',
   display: 'flex',
   flexDirection: 'row',
