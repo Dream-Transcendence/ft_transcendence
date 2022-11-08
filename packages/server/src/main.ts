@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useWebSocketAdapter(new SocketIoAdapter(app));
 
   app.enableCors({
-    origin: 'http://localhost:3005',
+    origin: `${process.env.FRONT_URL}`,
     credentials: true,
   });
   app.useGlobalPipes(

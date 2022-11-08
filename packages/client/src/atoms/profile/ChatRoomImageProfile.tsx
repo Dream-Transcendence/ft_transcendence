@@ -12,7 +12,7 @@ const CenteredContent = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   marginRight: '-2%',
-  marginTop: '7%',
+  marginTop: '5%',
 }));
 
 const ChatRoomImageProfile = (props: { roomInfoSet: RoomInfoSet }) => {

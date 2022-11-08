@@ -1,10 +1,49 @@
 # ft_transcendence
 
 ## 공용 노션
+
 https://www.notion.so/ft_transcendence-5d6b3da6b2c74db88cf186ecf0d7f8ea</br>
 
 #### [🗃 Project](https://github.com/orgs/Dream-Transcendence/projects/2/views/1)
+
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
+
+### env 설정
+
+#### client
+
+```
+REACT_APP_SERVER_URL=http://localhost:3000
+REACT_APP_SOCKET_URL=http://localhost:4242
+```
+
+#### server
+
+```
+AWS_S3_BUCKET_NAME=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_REGION=
+
+EMAIL_AUTH_ID=
+EMAIL_AUTH_PASSWORD=
+
+CLIENT_ID=
+CLIENT_SECRET=
+CALLBACK_URL=
+FRONT_URL=http://localhost:3005
+DOMAIN_URL=localhost
+```
+
+#### DB
+
+```
+DATABASE_USER=
+DATABASE_PASSWORD=
+DB_NAME=
+PGADMIN_USER=
+PGADMIN_PASSWORD=
+```
 
 ## Front-end 기술 스택
 

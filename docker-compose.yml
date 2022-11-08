@@ -27,20 +27,36 @@ services: # 컨테이너 실행을 위한 단위
   nestjs:
     build:
       context: . # 도커 파일 경로 또는 레포지토리 url
-      dockerfile: Dockerfile # 도커 파일
+      dockerfile: Dockerfile.backend # 도커 파일
     # image: kingwangzzang/nestjs
     # volumes:
     #   - .:/app
+    env_file:
+      - ./packages/server/.env
     ports:
       - '3000:3000' # expose-to-the-world : only-in-the-docker
       - '4242:4242'
     container_name: nest-app
     depends_on: # 실행 순서를 보장받고 싶을 때, 사용
       - db
-  # frontend:
+  # nginx:
   #   build:
-  #     context: . # 도커 파일 경로 또는 레포지토리 url
-  #     dockerfile: Fockerfile # 도커 파일
+  #     dockerfile: Dockerfile.nginx
+  #     context: .
   #   ports:
-  #     - '3005:3005' # expose-to-the-world : only-in-the-docker
-  #   container_name: front-end
+  #     - '80:80'
+  #   extra_hosts: #etc/hosts에 주입
+  # 		- "host.docker,internal:host-gateway"
+  #   depends_on:
+  #     - frontend
+  frontend:
+    build:
+      context: . # 도커 파일 경로 또는 레포지토리 url
+      dockerfile: Dockerfile.frontend # 도커 파일
+    env_file:
+      - ./packages/client/.env
+    ports:
+      - '3005:3005' # expose-to-the-world : only-in-the-docker
+    container_name: front-end
+    depends_on: # 실행 순서를 보장받고 싶을 때, 사용
+      - nestjs
