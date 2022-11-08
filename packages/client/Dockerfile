@@ -1,17 +1,9 @@
-
-# Before running this Dockerfile, run 'npm i' in 'packages/server'
 FROM node:18
 
-WORKDIR /app
-COPY ../../package.json ../../package-lock.json /app/
+WORKDIR /app/packages/client
 
-RUN npm install -g @nestjs/cli
-
-COPY package.json tsconfig.json /app/
+COPY ../../package*.json ./
+COPY ../.. /app
 RUN npm install
-
-COPY . /app
-
-
-
+# 정 빌드 안되면 yarn 쓸거임!
 CMD [ "npm", "run", "start-react" ]
