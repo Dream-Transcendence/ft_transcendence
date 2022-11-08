@@ -6,6 +6,7 @@ import { ParticipantInfoSet } from '../../types/Participant.type';
 const ChatParticipantsLayout = styled('div')(({ theme }) => ({
   width: '30%',
   height: '99%',
+  minWidth: '240px',
   display: 'float',
   float: 'right',
   textAlignLast: 'center',

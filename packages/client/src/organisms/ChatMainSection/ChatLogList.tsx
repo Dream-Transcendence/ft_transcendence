@@ -192,6 +192,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   };
 
   const checkBlock = (msg: SocketMessage) => {
+    // console.log('blockedUser!!', blockedUser);
     if (
       blockedUser.every((blockUser) => {
         return blockUser !== msg.user.id;
@@ -206,6 +207,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
 
   const listElement: React.ReactElement[] = messages.map(
     (msg: SocketMessage, index: number) => {
+      // console.log('checkBlock(msg)', checkBlock(msg), msg);
       return (
         <ListChatLayout key={index}>
           {index === 0 && isOverflow ? (
