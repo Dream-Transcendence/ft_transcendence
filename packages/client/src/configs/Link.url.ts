@@ -7,5 +7,3 @@ export const CHATDMURL = '/pingpong/channel/DM';
 export const CHANNELURL = '/pingpong/channel/';
 export const LIVEOBSERVEURL = '/pingpong/observe/';
 export const NOTFOUNDURL = '/404';
-export const SERVERURL = 'http://localhost:3000';
-export const SOCKETURL = 'http://localhost:4242';

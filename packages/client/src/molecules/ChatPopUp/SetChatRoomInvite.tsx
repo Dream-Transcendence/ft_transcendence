@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SearchBox from '../../atoms/input/SearchBox';
 import { useEffect } from 'react';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { CHATROOMURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
 import useSearch from '../../hooks/useSearch';
 import { PUBLIC } from '../../configs/RoomType';
@@ -70,7 +70,7 @@ function SetChatRoomInviteModule(props: {
   const handleParticipant = handler;
   const user = useRecoilValue(userDataAtom);
   const searchProps = useSearch(
-    `${SERVERURL}/users/${user.id}/friends/search`,
+    `${process.env.REACT_APP_SERVER_URL}/users/${user.id}/friends/search`,
     CHATROOMURL,
     PUBLIC,
   );

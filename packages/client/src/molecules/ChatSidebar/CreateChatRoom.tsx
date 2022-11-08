@@ -2,8 +2,6 @@ import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import SettingRoomConfigOranisms from '../../organisms/ChatPopUp/SettingRoomConfig';
-import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../recoil/user.recoil';
 
 const CreateChatRoomLayout = styled('div')(({ theme }) => ({
   height: '5.89%',
@@ -40,7 +38,6 @@ const CreateButton = styled('button')(({ theme }) => ({
 
 function CreateChatRoomModule() {
   const [open, setOpen] = React.useState(false);
-  const user = useRecoilValue(userDataAtom);
   const handleClose = () => {
     setOpen(false);
   };

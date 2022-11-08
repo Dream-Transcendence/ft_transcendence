@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import { useRecoilValue } from 'recoil';
 import SearchBox from '../../atoms/input/SearchBox';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { CHATROOMURL } from '../../configs/Link.url';
 import useSearch from '../../hooks/useSearch';
 import { DM } from '../../configs/RoomType';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -35,7 +35,7 @@ const SearchBoxLayout = styled('div')(({ theme }) => ({
 function SearchBoxModule() {
   const user = useRecoilValue(userDataAtom);
   const searchProps = useSearch(
-    `${SERVERURL}/users/${user.id}/friends/search`,
+    `${process.env.REACT_APP_SERVER_URL}/users/${user.id}/friends/search`,
     CHATROOMURL,
     DM,
   );

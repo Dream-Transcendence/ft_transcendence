@@ -42,7 +42,6 @@ const PlayerInfoLayout = styled('div')(({ theme }) => ({
 }));
 //수정!!
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
-  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { user, opponent, isWin, isLadder } = props.matchHistory;
   return (
     <OneMatchLayout>

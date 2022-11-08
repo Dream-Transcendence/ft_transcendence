@@ -1,13 +1,9 @@
-import { ControlMessage, SocketMessage } from '../../types/Message.type';
+import { SocketMessage } from '../../types/Message.type';
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemText from '@mui/material/ListItemText';
 import Avatar from '@mui/material/Avatar';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { ThemeProvider, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 

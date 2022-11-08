@@ -16,10 +16,10 @@ const GameCreateLayout = styled('section')(({ theme }) => ({
   minWidth: '1200px',
 }));
 
-const NavGridLayout = styled('section')(({ theme }) => ({
-  width: '100%',
-  height: '10%',
-}));
+// const NavGridLayout = styled('section')(({ theme }) => ({
+//   width: '100%',
+//   height: '10%',
+// }));
 
 const GameCreateTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',

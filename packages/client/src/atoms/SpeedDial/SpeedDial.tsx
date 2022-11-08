@@ -15,9 +15,8 @@ import {
   ParticipantInfoNState,
 } from '../../types/Participant.type';
 import useSocket from '../../socket/useSocket';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { BAN, MUTE, NONE } from '../../configs/Status.case';
-import { userDataAtom } from '../../recoil/user.recoil';
 
 //와.. 뭐지 react-dom.development.js:16317 Uncaught Error: Too many re-renders. React limits the number of renders to prevent an infinite loop 에러 발생
 //아래의 코드가 문제인듯하다.
@@ -48,18 +47,13 @@ function BasicSpeedDial(props: {
     handler: setParticipantInfos,
     participantInfoArray,
   } = props.participantInfoNState;
-  const { user, auth, status, blocked } = participantInfo;
+  const { user, auth, status } = participantInfo;
   const userType = useRecoilValue(userAuth);
-  const userData = useRecoilValue(userDataAtom);
   const { roomId } = useParams();
   const [socket] = useSocket(chatNameSpace);
   const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
     (participant) => participant.user.id !== participantInfo.user.id,
   );
-
-  const [isAdmin, setIsAdmin] = useState(false);
-  //const isBan = useState();
-  const [isMute, setIsMute] = useState(false);
 
   const setInfo = (authValue: number | null, statusValue: number | null) => {
     return {
@@ -183,7 +177,7 @@ function BasicSpeedDial(props: {
     return () => {
       socket.off('exception');
     };
-  }, []);
+  }, [socket]);
 
   const AdminActions = [
     { icon: <RemoveCircleIcon />, name: 'User Ban', action: handleBan },

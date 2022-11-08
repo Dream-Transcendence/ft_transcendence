@@ -9,7 +9,7 @@ import {
   userNameSpace,
 } from '../socket/event';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { GAMEPLAYURL, PROFILEURL } from '../configs/Link.url';
 import { GameInviteInfoType, GameRoomDto } from '../types/Game.type';
 import { gameTypeAtom, userSecondAuth } from '../recoil/user.recoil';
@@ -55,8 +55,7 @@ const ButtonLayout = styled('div')(({ theme }) => ({
 function GameLoadingPage() {
   const [gameSocket] = useSocket(gameNameSpace);
   const [userSocket] = useSocket(userNameSpace);
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
-  const [socket] = useSocket(gameNameSpace);
+  const setGameInfo = useSetRecoilState(gameInfoAtom);
   const { id: userId } = useRecoilValue(userDataAtom);
   const gameType = useRecoilValue(gameTypeAtom);
   const navigate = useNavigate();
@@ -64,8 +63,7 @@ function GameLoadingPage() {
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const gameInviteInfo = useRecoilValue<GameInviteInfoType>(gameInviteInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직

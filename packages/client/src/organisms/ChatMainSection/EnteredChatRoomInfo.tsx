@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
-import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
 import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
@@ -36,7 +35,7 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   try {
     const { roomInfo, roomId, handler } = roomInfoSet;
     const response = await axios.patch(
-      `${SERVERURL}/rooms/${roomId}`,
+      `${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}`,
       roomInfo,
     );
     //optimistic UI를 위해 즉시 적용

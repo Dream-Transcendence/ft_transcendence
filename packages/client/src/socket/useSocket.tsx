@@ -1,5 +1,4 @@
 import io, { Socket } from 'socket.io-client';
-import { SOCKETURL } from '../configs/Link.url';
 import { DefaultEventsMap } from '@socket.io/component-emitter';
 const sockets: { [key: string]: Socket<DefaultEventsMap, DefaultEventsMap> } =
   {};
@@ -9,10 +8,13 @@ const useSocket = (
 ): [Socket<DefaultEventsMap, DefaultEventsMap>, () => void, () => void] => {
   //transport로 폴링을 막아주면 초기 emit이 두번씩
   if (!sockets[nameSpace]) {
-    sockets[nameSpace] = io(`${SOCKETURL}/${nameSpace}`, {
-      autoConnect: false,
-      // transports: ['websocket'],
-    });
+    sockets[nameSpace] = io(
+      `${process.env.REACT_APP_SOCKET_URL}/${nameSpace}`,
+      {
+        autoConnect: false,
+        // transports: ['websocket'],
+      },
+    );
   }
 
   // if (sockets[nameSpace].connected) {

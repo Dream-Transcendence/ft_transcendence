@@ -3,8 +3,8 @@ import { Button, Input } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { PROFILEURL } from '../configs/Link.url';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import { onlyNumbers } from '../utils/onlyNumber';
@@ -56,7 +56,7 @@ function SecondOauthPage() {
   const [seconedOauth, setSecondOauth] = useState<string>('');
   const [isRequest, setIsRequest] = useState<boolean>(false);
   const navigate = useNavigate();
-  const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
+  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [passSecondOauth, setPassSecondOauth] =
     useRecoilState<UserSecondAuth>(userSecondAuth);
   //[수정사항] 오류횟수 추가해야하나 고민중
@@ -81,7 +81,7 @@ function SecondOauthPage() {
 
   const requestSecondOauth = async () => {
     await axios
-      .post(`${SERVERURL}/users/${user.id}/2nd-auth`)
+      .post(`${process.env.REACT_APP_SERVER_URL}/users/${user.id}/2nd-auth`)
       .then((res) => {
         setIsRequest(true);
       })
@@ -93,7 +93,7 @@ function SecondOauthPage() {
 
   const registSecondOauth = async () => {
     await axios
-      .patch(`${SERVERURL}/users/${user.id}/2nd-auth`, {
+      .patch(`${process.env.REACT_APP_SERVER_URL}/users/${user.id}/2nd-auth`, {
         code: +seconedOauth,
       })
       .then((res) => {

@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import { TransitionGroup } from 'react-transition-group';
 import { InviteInfoListType } from '../../types/Message.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
@@ -23,7 +23,6 @@ import {
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { useNavigate } from 'react-router-dom';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { CUSTOM } from '../../configs/Game.type';
@@ -51,11 +50,10 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 function InviteMessageList() {
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [socket] = useSocket(userNameSpace);
-  const navigate = useNavigate();
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const setGameType = useSetRecoilState<number | null>(gameTypeAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
+  const setCheckFriendRequest = useSetRecoilState<boolean>(
     checkFriendRequestAtom,
   );
   /**

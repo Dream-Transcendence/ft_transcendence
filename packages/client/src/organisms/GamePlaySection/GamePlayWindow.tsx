@@ -16,6 +16,7 @@ import {
   CanvasImgProps,
   CanvasProps,
   GameOffsetProps,
+  GameRoomDto,
   GameWindowInfo,
   PaddleProps,
   ResponsiveGameProps,
@@ -31,10 +32,11 @@ import {
   UP,
 } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import {
+  BaseUserProfileData,
   UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
@@ -224,9 +226,9 @@ const HowToUseLayout = styled('div')(({ theme }) => ({
 }));
 
 function GamePlayWindowOrganism() {
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const gameInfo = useRecoilValue<GameRoomDto | undefined>(gameInfoAtom);
   const [socket] = useSocket(gameNameSpace);
-  const userData = useRecoilValue(userDataAtom);
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [time, setTime] = useState<number>(3);
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);

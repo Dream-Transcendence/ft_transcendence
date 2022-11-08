@@ -12,7 +12,6 @@ import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
 import { CustomUploadProps } from '../../types/Link.type';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilState } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
@@ -33,7 +32,10 @@ function UserInfo() {
   useEffect(() => {
     if (userImage) {
       axios
-        .post(`${SERVERURL}/users/${userId}/image`, userImage)
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userId}/image`,
+          userImage,
+        )
         .then((response) => {
           setUser({ ...user, image: response.data.image });
           console.log('이미지 변경 성공');

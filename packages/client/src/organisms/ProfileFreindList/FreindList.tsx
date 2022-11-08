@@ -11,7 +11,7 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { userLogStateListAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 import { gameNameSpace, WATCH } from '../../socket/event';
@@ -57,9 +57,9 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindList(props: { friendProps: FriendPropsType }) {
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const setGameInfo = useSetRecoilState(gameInfoAtom);
   const navigate = useNavigate();
-  const { value: friendList, setter: setFriendList } = props.friendProps;
+  const { value: friendList } = props.friendProps;
   const [listElement, setListElement] = useState<JSX.Element[]>();
   const [onGame, setOnGame] = useState<boolean>(false);
   const userLogStateList =

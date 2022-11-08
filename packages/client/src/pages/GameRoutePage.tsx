@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { CUSTOM } from '../configs/Game.type';
 import { NOTFOUNDURL } from '../configs/Link.url';
-import { gameInfoAtom, gameInviteInfoAtom } from '../recoil/game.recoil';
+import { gameInviteInfoAtom } from '../recoil/game.recoil';
 import {
   gameTypeAtom,
   userDataAtom,
@@ -16,7 +16,6 @@ import { UserSecondAuth } from '../types/Profile.type';
 import GameCreatePage from './GameCreatePage';
 import GameLoadingPage from './GameLoadingPage';
 import GamePlayPage from './GamePlayPage';
-import { useLocation } from 'react-router-dom';
 
 function GameRoutePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
@@ -24,11 +23,9 @@ function GameRoutePage() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
-  let location = useLocation();
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const setGameInviteInfo =
+    useSetRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const gameType = useRecoilValue(gameTypeAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직

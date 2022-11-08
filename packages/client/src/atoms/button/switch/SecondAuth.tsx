@@ -1,15 +1,10 @@
 import { styled } from '@mui/material/styles';
 import { FormControlLabel, Switch } from '@mui/material';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
-import { SERVERURL } from '../../../configs/Link.url';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../../../recoil/user.recoil';
-import {
-  UserSecondAuth,
-  UserSecondAuthBody,
-} from '../../../types/Profile.type';
+import { UserSecondAuth } from '../../../types/Profile.type';
 
 const SecondAuthSwitchLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -57,13 +52,17 @@ function SecondAuthSwitch() {
     useRecoilState<UserSecondAuth>(userSecondAuth);
 
   const unSetSecondAuth = async () => {
-    await axios.patch(`${SERVERURL}/users/${userData.id}/2nd-auth`).then(() => {
-      setPassSecondOauth({
-        checkIsSecondOauth: false,
-        checkIsValid: true,
+    await axios
+      .patch(
+        `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/2nd-auth`,
+      )
+      .then(() => {
+        setPassSecondOauth({
+          checkIsSecondOauth: false,
+          checkIsValid: true,
+        });
+        alert('2차 인증이 해제되었습니다.');
       });
-      alert('2차 인증이 해제되었습니다.');
-    });
   };
 
   const handleChangeAuth = () => {

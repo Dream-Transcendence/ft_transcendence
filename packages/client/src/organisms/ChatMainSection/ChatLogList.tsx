@@ -13,7 +13,6 @@ import Loader from '../../atoms/Loading/Loader';
 import useInfiniteScroll from '../../hooks/useInfinitiScroll';
 import _ from 'lodash';
 import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 const ChatLogLayout = styled('div')(({ theme }) => ({
   width: '90%',
@@ -104,9 +103,12 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     async function getMessageHistory() {
       if (clientHeight !== undefined) {
         await axios
-          .get(`${SERVERURL}/rooms/messages/${roomId}/0`, {
-            params: { count: messageCounts },
-          })
+          .get(
+            `${process.env.REACT_APP_SERVER_URL}/rooms/messages/${roomId}/0`,
+            {
+              params: { count: messageCounts },
+            },
+          )
           .then((res) => {
             setMessages(res.data);
             if (isOverflow)
@@ -157,9 +159,12 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         setIsLoaded(false);
         try {
           await axios
-            .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`, {
-              params: { count: 15 },
-            })
+            .get(
+              `${process.env.REACT_APP_SERVER_URL}/rooms/messages/${roomId}/${messages[0].id}`,
+              {
+                params: { count: 15 },
+              },
+            )
             .then((res) => {
               setMessages([...res.data, ...messages]);
               setIsLoaded(true);

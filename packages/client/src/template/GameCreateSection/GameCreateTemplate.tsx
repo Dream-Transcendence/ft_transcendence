@@ -1,14 +1,12 @@
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GameCreateMainOrganism from '../../organisms/GameCreateSection/GameCreateMainSection';
-import { LinkComponentResource } from '../../types/Link.type';
 import { GAMELOADINGURL } from '../../configs/Link.url';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
+import { useRecoilValue } from 'recoil';
+import { gameTypeAtom } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
 import { GAMEINVITE, gameNameSpace, userNameSpace } from '../../socket/event';
 import { useEffect } from 'react';
-import { BaseUserProfileData } from '../../types/Profile.type';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { useNavigate } from 'react-router-dom';
 import { GameInviteInfoType } from '../../types/Game.type';
@@ -66,10 +64,8 @@ const InviteButton = styled.button`
 `;
 
 function GameCreateTemplate() {
-  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const gameInviteInfo = useRecoilValue<GameInviteInfoType>(gameInviteInfoAtom);
+  const gameType = useRecoilValue(gameTypeAtom);
   const [gameSocket] = useSocket(gameNameSpace);
   const [userSocket] = useSocket(userNameSpace);
   const navigate = useNavigate();
@@ -91,10 +87,10 @@ function GameCreateTemplate() {
   };
 
   //[수정사항] gameloading으로 넘어가야함
-  const EnterGame: LinkComponentResource = {
-    url: GAMELOADINGURL,
-    component: <InviteButton onClick={setNomal}>초대하기</InviteButton>,
-  };
+  // const EnterGame: LinkComponentResource = {
+  //   url: GAMELOADINGURL,
+  //   component: <InviteButton onClick={setNomal}>초대하기</InviteButton>,
+  // };
 
   useEffect(() => {
     gameSocket.on('exeption', (response) => {

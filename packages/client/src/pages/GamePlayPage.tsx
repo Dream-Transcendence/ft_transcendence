@@ -1,9 +1,7 @@
 import styled from '@emotion/styled';
-import { gameNameSpace } from '../socket/event';
-import useSocket from '../socket/useSocket';
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
 import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { useNavigate } from 'react-router-dom';
 import { UserSecondAuth } from '../types/Profile.type';
@@ -33,8 +31,7 @@ function GamePlayPage() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
-  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const gameInfo = useRecoilValue(gameInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직

@@ -7,7 +7,7 @@ import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { RoomList, UnJoinedRoomList } from '../../types/Room.type';

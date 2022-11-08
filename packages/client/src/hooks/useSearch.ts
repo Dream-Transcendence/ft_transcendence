@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { CHATROOMURL, PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { DM, PUBLIC } from '../configs/RoomType';
 import { DMList, newParticipant } from '../recoil/chat.recoil';
 import { userDataAtom } from '../recoil/user.recoil';
@@ -44,7 +43,7 @@ function useSearch(
       });
       if (existDM) {
         await axios
-          .post(`${SERVERURL}/rooms/dm`, {
+          .post(`${process.env.REACT_APP_SERVER_URL}/rooms/dm`, {
             userId: user.id,
             participantId: participantId,
           })

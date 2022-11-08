@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
-import { Typography, Button } from '@mui/material';
-import React, { createRef, useRef, useState } from 'react';
+import { Button } from '@mui/material';
+import React, { useState } from 'react';
 import { Avatar } from '@mui/material';
 import { RoomInfoSet } from '../../types/Room.type';
 import { useParams } from 'react-router-dom';
-import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 
 const CenteredContent = styled('div')(({ theme }) => ({
@@ -39,7 +38,7 @@ const ChatRoomImageProfile = (props: { roomInfoSet: RoomInfoSet }) => {
     if (image) {
       event.preventDefault(); //저장을 위해 연결된 기본동작 막아주기
       axios
-        .post(`${SERVERURL}/rooms/${roomId}`, image)
+        .post(`${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}`, image)
         .then((response) => {
           console.log('이미지 변경 성공');
           setImage(undefined);

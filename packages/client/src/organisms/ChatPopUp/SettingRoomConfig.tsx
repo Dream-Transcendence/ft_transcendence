@@ -10,7 +10,7 @@ import {
   RoomList,
 } from '../../types/Room.type';
 import { useState } from 'react';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { CHATROOMURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { PRIVATE, PROTECTED } from '../../configs/RoomType';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -70,35 +70,37 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
 
   async function createRoom(newRoom: CreateRoomSet) {
     try {
-      await axios.post(`${SERVERURL}/rooms/channels`, newRoom).then((res) => {
-        setNewRoom({
-          userId: userData.id,
-          name: '',
-          type: 1,
-          salt: '',
-          participantIds: [],
-        });
-        const joinedRoom: RoomList = {
-          id: res.data.id,
-          name: newRoom.name,
-          image: '',
-          recvMessageCount: 0,
-        };
-        setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
-        resetAddedParticipantList();
-        socket.emit(
-          `${ENTERCHANNEL}`,
-          {
+      await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/rooms/channels`, newRoom)
+        .then((res) => {
+          setNewRoom({
             userId: userData.id,
-            roomId: res.data.id,
-          },
-          (response: any) => {
-            console.log('enter room success ', response);
-            navigate(`/pingpong/channel/room/${res.data.id}`);
-          },
-        );
-        navigate(`${CHATROOMURL}${res.data.id}`);
-      });
+            name: '',
+            type: 1,
+            salt: '',
+            participantIds: [],
+          });
+          const joinedRoom: RoomList = {
+            id: res.data.id,
+            name: newRoom.name,
+            image: '',
+            recvMessageCount: 0,
+          };
+          setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
+          resetAddedParticipantList();
+          socket.emit(
+            `${ENTERCHANNEL}`,
+            {
+              userId: userData.id,
+              roomId: res.data.id,
+            },
+            (response: any) => {
+              console.log('enter room success ', response);
+              navigate(`/pingpong/channel/room/${res.data.id}`);
+            },
+          );
+          navigate(`${CHATROOMURL}${res.data.id}`);
+        });
     } catch (error) {
       console.dir(error);
     }

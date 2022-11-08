@@ -55,11 +55,10 @@ const divStyle = {
 
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo, handler } = roomInfoSet;
+  const { roomInfo } = roomInfoSet;
   const { roomId } = useParams();
-  const { name, type, image, auth } = roomInfo;
+  const { name, type, auth } = roomInfo;
   const [roomName, setRoomName] = useState<string>(name);
-  const [roomImage, setRoomImage] = useState<string>(image);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
   roomInfoSet['roomId'] = roomId;
 

@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import axios from 'axios';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { PROFILEURL, SERVERURL } from '../../../configs/Link.url';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { PROFILEURL } from '../../../configs/Link.url';
 import { userDataAtom } from '../../../recoil/user.recoil';
 import {
   BaseUserProfileData,
@@ -40,9 +40,12 @@ function NicknameConfirmButton(props: { controlNickname: ControlNickname }) {
     try {
       console.log('nick', nickname);
       await axios
-        .patch(`${SERVERURL}/users/${userData.id}/nickname`, {
-          nickname: nickname,
-        })
+        .patch(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/nickname`,
+          {
+            nickname: nickname,
+          },
+        )
         .then((res) => {
           setUser({ ...user, nickname: nickname });
           navigate(`${PROFILEURL}/${userData.id}`);

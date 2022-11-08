@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import UserStatLadder from '../../atoms/text/ProfileUserStatLadder';
-import { SERVERURL } from '../../configs/Link.url';
 import UserStatResult from '../../molecules/ProfileSection/StatResult';
 import { UserLadderType } from '../../types/Profile.type';
 
@@ -24,13 +23,13 @@ const UserStatLayout = styled('div')(({ theme }) => ({
   boxShadow: '0 15px 35px #00000066',
 }));
 
-const StatLadder = styled('div')(({ theme }) => ({
-  alignSelf: 'center',
-  alignItems: 'center', //내부 아이템이라고 생각하는 문자열이 좌측 상단 정렬 되어 있는 이유를 모르겠음
-  paddingLeft: '3%',
-  width: '30%',
-  height: '100%',
-}));
+// const StatLadder = styled('div')(({ theme }) => ({
+//   alignSelf: 'center',
+//   alignItems: 'center', //내부 아이템이라고 생각하는 문자열이 좌측 상단 정렬 되어 있는 이유를 모르겠음
+//   paddingLeft: '3%',
+//   width: '30%',
+//   height: '100%',
+// }));
 
 function UserStat() {
   const { userId } = useParams();
@@ -43,7 +42,7 @@ function UserStat() {
   useEffect(() => {
     async function getUserLadder() {
       await axios
-        .get(`${SERVERURL}/users/${userId}/game/ladder`)
+        .get(`${process.env.REACT_APP_SERVER_URL}/users/${userId}/game/ladder`)
         .then((response) => {
           const stat: UserLadderType = response.data;
           setUserLadder(stat);

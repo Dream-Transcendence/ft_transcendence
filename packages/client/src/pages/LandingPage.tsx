@@ -1,9 +1,5 @@
 import styled from '@emotion/styled';
 import axios from 'axios';
-import { useRecoilState } from 'recoil';
-import { SERVERURL } from '../configs/Link.url';
-import { BaseUserProfileData } from '../types/Profile.type';
-import { userDataAtom } from '../recoil/user.recoil';
 
 const MainSection = styled.section`
   background: #6bade2;
@@ -36,11 +32,9 @@ console.log(window.location.origin);
 axios.defaults.withCredentials = true;
 
 function LandingPage() {
-  const [user, setUser] = useRecoilState<BaseUserProfileData>(userDataAtom);
-
   const loginOauth = () => {
     //[수정사항] 이미 로그인 중인지도 파악하는 로직 추가예정
-    window.location.href = `${SERVERURL}/auth/login`;
+    window.location.href = `${process.env.REACT_APP_SERVER_URL}/auth/login`;
   };
 
   return (

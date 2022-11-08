@@ -14,8 +14,6 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import ProfileImage from '../../atoms/profile/ProfileImage';
-import { SERVERURL } from '../../configs/Link.url';
 import { userDataAtom } from '../../recoil/user.recoil';
 
 const MatchHistoryLayout = styled('section')(({ theme }) => ({
@@ -49,7 +47,7 @@ function MatchHistory() {
   useEffect(() => {
     async function getUserLadder() {
       await axios
-        .get(`${SERVERURL}/users/${userId}/game/records`)
+        .get(`${process.env.REACT_APP_SERVER_URL}/users/${userId}/game/records`)
         .then((response) => {
           const history: UserMatchHistoryType[] = response.data;
           setMatchHistoryList(history);

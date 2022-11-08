@@ -47,30 +47,6 @@ const UserStateLayout = styled('section')(({ theme }) => ({
   paddingRight: '10%',
 }));
 
-const BlockBadge = styled('span')(({ theme }) => ({
-  marginLeft: '1%',
-  marginTop: '-7%',
-  height: '40px',
-  width: '40px',
-  border: 'solid red',
-  borderRadius: '100%',
-  position: 'absolute',
-  backgroundColor: '#f3333355',
-  zIndex: '1',
-}));
-
-const BlockCloss = styled('span')(({ theme }) => ({
-  marginTop: '48%',
-  marginLeft: '0%',
-  height: '3px',
-  width: '40px',
-  position: 'absolute',
-
-  transform: 'rotate(-40deg)',
-  backgroundColor: '#f33333',
-  zIndex: '1',
-}));
-
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 function JoinedDMListOrganisms() {

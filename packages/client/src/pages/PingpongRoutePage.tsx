@@ -2,20 +2,14 @@ import styled from '@emotion/styled';
 import { useCallback, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import {
-  GAMELOADINGURL,
-  NOTFOUNDURL,
-  PROFILEURL,
-  SERVERURL,
-} from '../configs/Link.url';
+import { GAMELOADINGURL, NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
 import {
   ACCEPTGAME,
   CHANGEUSERSTATUS,
   FRIENDREQUEST,
   FRIENDREQUESTACCEPTED,
-  gameNameSpace,
   INVITEGAME,
   logOn,
   REJECTFRIENDREQUEST,
@@ -63,19 +57,15 @@ const NavSection = styled('nav')(({ theme }) => ({
 
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
-  const [gameSocket, gconnect, gdisconnect] = useSocket(gameNameSpace);
 
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
-  const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<UserSecondAuth>(userSecondAuth);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
-    checkFriendRequestAtom,
-  );
+  const setCheckFriendRequest = useSetRecoilState(checkFriendRequestAtom);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
@@ -119,7 +109,9 @@ function PingpongRoutePage() {
   useEffect(() => {
     async function getMessageList() {
       await axios
-        .get(`${SERVERURL}/users/${userData.id}/requests`)
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/requests`,
+        )
         .then((response: any) => {
           if (response.data.length > 0) {
             console.log('유저 메시지 기록 가져오기 : ', response);

@@ -1,7 +1,7 @@
 import { styled } from '@mui/material/styles';
 import SportsKabaddiIcon from '@mui/icons-material/SportsKabaddi';
 import PersonIcon from '@mui/icons-material/Person';
-import { GAMECREATEURL, PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { GAMECREATEURL, PROFILEURL } from '../../configs/Link.url';
 import axios from 'axios';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import {
@@ -10,8 +10,7 @@ import {
   LinkIconResource,
 } from '../../types/Link.type';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { DMList } from '../../recoil/chat.recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { RoomInfoSet } from '../../types/Room.type';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
@@ -33,9 +32,12 @@ export async function blockUser(
   setBlock?: () => void,
 ) {
   try {
-    await axios.post(`${SERVERURL}/users/${userId}/blocks`, {
-      id: blockId,
-    });
+    await axios.post(
+      `${process.env.REACT_APP_SERVER_URL}/users/${userId}/blocks`,
+      {
+        id: blockId,
+      },
+    );
     console.log('block!!');
     if (setBlock) setBlock();
   } catch (error) {
@@ -50,7 +52,9 @@ export async function unBlockUser(
   setUnBlock?: () => void,
 ) {
   try {
-    await axios.delete(`${SERVERURL}/users/${userId}/blocks/${blockId}`);
+    await axios.delete(
+      `${process.env.REACT_APP_SERVER_URL}/users/${userId}/blocks/${blockId}`,
+    );
     console.log('unblock!!');
     if (setUnBlock) setUnBlock();
   } catch (error) {
@@ -63,17 +67,10 @@ function InfoDMBoxFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
   const navigate = useNavigate();
   const userData = useRecoilValue(userDataAtom);
-  const { roomInfo, handler } = roomInfoSet;
-  const [roomlist, setRoomList] = useRecoilState(DMList);
+  const { roomInfo } = roomInfoSet;
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
-  const findRoom = roomlist.find((room) => {
-    return room.name === roomInfo.name;
-  });
-  const popUserList = roomlist.filter((room) => {
-    return room.name !== roomInfo.name;
-  });
+  const setGameType = useSetRecoilState(gameTypeAtom);
 
   // const setBlock = () => {
   //   const block = { ...roomInfo, blocked: true };

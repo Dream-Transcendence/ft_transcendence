@@ -1,5 +1,4 @@
 import { Button } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { LinkTextResource } from '../../../types/Link.type';
 
 function LinkPageTextButton(props: { LinkTextResource: LinkTextResource }) {
