@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { GAMEPLAYURL } from '../../configs/Link.url';
 import { gameInfoAtom } from '../../recoil/game.recoil';
-import { userDataAtom } from '../../recoil/user.recoil';
 import { gameNameSpace, WATCH } from '../../socket/event';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import useSocket from '../../socket/useSocket';
@@ -103,7 +102,6 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
   const setGameInfo = useSetRecoilState(gameInfoAtom);
   const navigate = useNavigate();
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
-  const userData = useRecoilValue(userDataAtom);
   const [mode, setMode] = useState<string>('');
 
   function handlerObserver() {

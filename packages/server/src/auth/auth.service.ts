@@ -56,12 +56,12 @@ export class AuthService {
     const payload = { username: user.nickname, sub: user.id };
     const access_token = this.jwtService.sign(payload);
     res.cookie('Authentication', access_token, {
-      domain: 'localhost', // 현재 쿠키가 어떤 서버로 전송되어져야 하는지를 지정할 수 있는 속성
+      domain: `${process.env.DOMAIN_URL}`, // 현재 쿠키가 어떤 서버로 전송되어져야 하는지를 지정할 수 있는 속성
       path: '/', // 모든 경로에 대해 쿠키전달
       httpOnly: true, // XSS와 같은 공격이 차단
     });
     console.log('🥎🥎🥎🥎🥎🥎🥎🥎 우리가 만든 jwt token ', access_token);
-    res.redirect(`http://localhost:3005/nickname`);
+    res.redirect(`${process.env.FRONT_URL}/nickname`);
   }
 
   logOut() {

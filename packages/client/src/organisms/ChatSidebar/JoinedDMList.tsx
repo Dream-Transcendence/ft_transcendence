@@ -11,7 +11,6 @@ import {
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { BLOCK } from '../../configs/Block.case';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { DMList, getJoinedChatList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
@@ -48,30 +47,6 @@ const UserStateLayout = styled('section')(({ theme }) => ({
   paddingRight: '10%',
 }));
 
-const BlockBadge = styled('span')(({ theme }) => ({
-  marginLeft: '1%',
-  marginTop: '-7%',
-  height: '40px',
-  width: '40px',
-  border: 'solid red',
-  borderRadius: '100%',
-  position: 'absolute',
-  backgroundColor: '#f3333355',
-  zIndex: '1',
-}));
-
-const BlockCloss = styled('span')(({ theme }) => ({
-  marginTop: '48%',
-  marginLeft: '0%',
-  height: '3px',
-  width: '40px',
-  position: 'absolute',
-
-  transform: 'rotate(-40deg)',
-  backgroundColor: '#f33333',
-  zIndex: '1',
-}));
-
 // const [isUser, setIsUser] = useRecoilState(IsUser);
 
 function JoinedDMListOrganisms() {
@@ -94,7 +69,7 @@ function JoinedDMListOrganisms() {
       //프로필로 나갔다가 다시  들어오면  데이터가 사라지는  현상을 고치기 위해 추가
       refreshUserInfo();
     };
-  }, [joinedChatList, setRoomList]);
+  }, []);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {
@@ -120,7 +95,7 @@ function JoinedDMListOrganisms() {
 
     const userProfileBoxProps = {
       isButton: true,
-      avatarType: 'circle',
+      avatarType: 'none',
       userData: profileData,
       action: enterRoom,
     };

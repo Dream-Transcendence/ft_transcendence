@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
-import NavigationBar from '../atoms/bar/NavigationBar';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import { UserSecondAuth } from '../types/Profile.type';
@@ -13,12 +12,14 @@ const GameCreateLayout = styled('section')(({ theme }) => ({
   backgroundColor: '#6BADE2',
   height: '100%',
   width: '100%',
+  minHeight: '800px',
+  minWidth: '1200px',
 }));
 
-const NavGridLayout = styled('section')(({ theme }) => ({
-  width: '100%',
-  height: '10%',
-}));
+// const NavGridLayout = styled('section')(({ theme }) => ({
+//   width: '100%',
+//   height: '10%',
+// }));
 
 const GameCreateTemplateLayout = styled('section')(({ theme }) => ({
   display: 'flex',

@@ -1,8 +1,6 @@
-import { Input, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchBox from '../../atoms/input/SearchBox';
 import PasswordInput from '../../atoms/input/passwordBox';
-import { useState } from 'react';
 
 /*
  * AsideSearchBox로 감싼 이유는
@@ -29,13 +27,17 @@ function SetChatRoomPasswordModule(handler: {
 }) {
   const handlePassword = handler.handler;
 
+  const handlePasswordSet = {
+    handlePassword: handlePassword,
+  };
+
   return (
     <SetPasswordLayout>
       <Typography margin="3%" variant="h6">
         비밀번호 입력
       </Typography>
       <PasswordInputLayout>
-        <PasswordInput handler={handlePassword} />
+        <PasswordInput handlers={handlePasswordSet} />
       </PasswordInputLayout>
     </SetPasswordLayout>
   );

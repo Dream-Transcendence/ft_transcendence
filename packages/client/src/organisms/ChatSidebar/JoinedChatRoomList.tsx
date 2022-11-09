@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   useRecoilRefresher_UNSTABLE,
@@ -57,7 +57,7 @@ function JoinedChatRoomModule() {
     return () => {
       refreshUserInfo();
     };
-  }, [joinedChatList, setRoomList]);
+  }, []);
 
   const listElement: React.ReactElement[] = roomlist.map((room: any) => {
     const profileData: UserProfileBoxDataType = {

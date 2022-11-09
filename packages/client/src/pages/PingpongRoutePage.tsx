@@ -1,42 +1,29 @@
 import styled from '@emotion/styled';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Route, Routes } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import NavigationBar from '../atoms/bar/NavigationBar';
-import {
-  GAMELOADINGURL,
-  NOTFOUNDURL,
-  PROFILEURL,
-  SERVERURL,
-} from '../configs/Link.url';
+import { GAMELOADINGURL, NOTFOUNDURL, PROFILEURL } from '../configs/Link.url';
 import {
   ACCEPTGAME,
   CHANGEUSERSTATUS,
   FRIENDREQUEST,
   FRIENDREQUESTACCEPTED,
-  GAMEMATCH,
-  gameNameSpace,
   INVITEGAME,
   logOn,
   REJECTFRIENDREQUEST,
-  REJECTGAME,
   USERLOGOFF,
   userNameSpace,
 } from '../socket/event';
 import {
   userDataAtom,
-  gameTypeAtom,
   userLogStateListAtom,
   userSecondAuth,
 } from '../recoil/user.recoil';
 import useSocket from '../socket/useSocket';
 import { ConnectionDto, ConnectionsDto } from '../types/LogOn.type';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserSecondAuth,
-} from '../types/Profile.type';
+import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import ChatroomPage from './ChatChannelPage';
 import GameRoutePage from './GameRoutePage';
 import ProfilePage from './ProfilePage';
@@ -50,7 +37,6 @@ import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
 } from '../recoil/common.recoil';
-import NotFoundPage from './NotFoundPage';
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
 import LiveObservePage from './LiveObservePage';
@@ -58,13 +44,6 @@ import LiveObservePage from './LiveObservePage';
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-}));
-
-const HeaderSection = styled('header')(({ theme }) => ({
-  width: '100%',
-  height: '3%',
   display: 'flex',
   flexDirection: 'column',
 }));
@@ -78,19 +57,15 @@ const NavSection = styled('nav')(({ theme }) => ({
 
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
-  const [gameSocket, gconnect, gdisconnect] = useSocket(gameNameSpace);
 
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
-  const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<UserSecondAuth>(userSecondAuth);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
     useRecoilState<ConnectionDto[]>(userLogStateListAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
-    checkFriendRequestAtom,
-  );
+  const setCheckFriendRequest = useSetRecoilState(checkFriendRequestAtom);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
 
@@ -134,7 +109,9 @@ function PingpongRoutePage() {
   useEffect(() => {
     async function getMessageList() {
       await axios
-        .get(`${SERVERURL}/users/${userData.id}/requests`)
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/requests`,
+        )
         .then((response: any) => {
           if (response.data.length > 0) {
             console.log('유저 메시지 기록 가져오기 : ', response);
@@ -330,6 +307,9 @@ function PingpongRoutePage() {
     };
   }, []);
 
+  //여기에서 lonin 중복을 처리하는 것 같은데, 모든 예외처리를 여기서 하는지라  login중복은 따로 처리를 해줘야할 것 같아요
+  //socket api를 따로 만들던지 해야 처리 가능할 듯 싶네요 동환님
+  //중복 로그인 처리하실 때, 말씀 부탁드릴게요
   useEffect(() => {
     socket.on('exception', (error: any) => {
       alert(error.message);

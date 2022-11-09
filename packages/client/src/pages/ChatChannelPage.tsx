@@ -2,13 +2,7 @@ import ChatSidebarTemplate from '../template/ChatMainSection/ChatSidebarTemplate
 import EnteredChatRoomTemplate from '../template/ChatMainSection/EnteredChatRoomTemplate';
 import ChatRoomDefaultTemplate from '../template/ChatMainSection/ChatRoomDefaultTemplate';
 import ChatRoomListTemplate from '../template/ChatMainSection/ChatRoomListTemplate';
-import {
-  Navigate,
-  Route,
-  Routes,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import { useEffect } from 'react';
 import {
   useRecoilRefresher_UNSTABLE,
@@ -16,12 +10,10 @@ import {
   useRecoilValue,
 } from 'recoil';
 import { CHANNELURL } from '../configs/Link.url';
-import axios from 'axios';
 import styled from '@emotion/styled';
 import useSocket from '../socket/useSocket';
 import { chatNameSpace } from '../socket/event';
 import { getUnJoinedChatList, unJoinedRoomList } from '../recoil/chat.recoil';
-import { BaseUserProfileData } from '../types/Profile.type';
 import { userDataAtom } from '../recoil/user.recoil';
 import InviteMessageList from '../organisms/Massage/InviteMessageList';
 
@@ -68,9 +60,6 @@ function ChatroomPage() {
   const [roomList, setRoomList] = useRecoilState(unJoinedRoomList);
   const unJoinedChatList = useRecoilValue(getUnJoinedChatList(userData.id));
   const [socket, connect, disconnect] = useSocket(chatNameSpace);
-  const navigate = useNavigate();
-  const user = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const location = useLocation();
   const refreshUserInfo = useRecoilRefresher_UNSTABLE(
     getUnJoinedChatList(userData.id),
   );

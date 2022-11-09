@@ -3,13 +3,13 @@ import { Typography } from '@mui/material';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import {
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
 } from '../atoms/list/styles/ListStylesCSS';
-import { PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { PROFILEURL } from '../configs/Link.url';
 import LiveObserveElement from '../molecules/Observe/LiveObserveElement';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import { gameNameSpace } from '../socket/event';
@@ -24,7 +24,7 @@ const LiveObserveLayout = styled('section')(({ theme }) => ({
   alignItems: 'center',
   alignContent: 'center',
   backgroundColor: '#6BADE2',
-  minHeight: '1000px',
+  minHeight: '600px',
   height: '100%',
   width: '100%',
   minWidth: '1200px',
@@ -48,8 +48,7 @@ const NoGameLayout = styled('div')(({ theme }) => ({
 function LiveObservePage() {
   const [socket, connect, disconnect] = useSocket(gameNameSpace);
   const userData = useRecoilValue(userDataAtom);
-  const [passSecondOauth, setPassSecondOauth] =
-    useRecoilState<UserSecondAuth>(userSecondAuth);
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [gameInfos, setGameInfos] = useState<GameRoomDto[]>([]);
   const navigate = useNavigate();
 
@@ -63,7 +62,7 @@ function LiveObservePage() {
     //정상적인 접근인지 판단하는 로직
     const getLiveGames = async () => {
       await axios
-        .get(`${SERVERURL}/game/live-games`)
+        .get(`${process.env.REACT_APP_SERVER_URL}/game/live-games`)
         .then((res: any) => {
           console.log(res.data);
           setGameInfos([...res.data]);

@@ -1,17 +1,12 @@
 import Badge from '@mui/material/Badge';
 import Avatar from '@mui/material/Avatar';
 import styled from '@emotion/styled';
-import { createTheme, makeStyles } from '@mui/material';
 import { ProfileAvatarLayout } from './AvartarStyles/AvartarStyleCss';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxDataType,
-} from '../../types/Profile.type';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
 import { useRecoilValue } from 'recoil';
 import { ConnectionDto } from '../../types/LogOn.type';
 import { userLogStateListAtom } from '../../recoil/user.recoil';
-import { useEffect, useMemo, useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {

@@ -9,10 +9,10 @@ import {
   HandleInviteList,
   RoomList,
 } from '../../types/Room.type';
-import { useState, useEffect } from 'react';
-import { CHATROOMURL, SERVERURL } from '../../configs/Link.url';
+import { useState } from 'react';
+import { CHATROOMURL } from '../../configs/Link.url';
 import axios from 'axios';
-import { PROTECTED } from '../../configs/RoomType';
+import { PRIVATE, PROTECTED } from '../../configs/RoomType';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { chatRoomList, newParticipant } from '../../recoil/chat.recoil';
 import { useNavigate } from 'react-router-dom';
@@ -70,45 +70,49 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
 
   async function createRoom(newRoom: CreateRoomSet) {
     try {
-      await axios.post(`${SERVERURL}/rooms/channels`, newRoom).then((res) => {
-        setNewRoom({
-          userId: userData.id,
-          name: '',
-          type: 1,
-          salt: '',
-          participantIds: [],
-        });
-        const joinedRoom: RoomList = {
-          id: res.data.id,
-          name: newRoom.name,
-          image: '',
-          recvMessageCount: 0,
-        };
-        setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
-        resetAddedParticipantList();
-        socket.emit(
-          `${ENTERCHANNEL}`,
-          {
+      await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/rooms/channels`, newRoom)
+        .then((res) => {
+          setNewRoom({
             userId: userData.id,
-            roomId: res.data.id,
-          },
-          (response: any) => {
-            console.log('enter room success ', response);
-            navigate(`/pingpong/channel/room/${res.data.id}`);
-          },
-        );
-        navigate(`${CHATROOMURL}${res.data.id}`);
-      });
+            name: '',
+            type: 1,
+            salt: '',
+            participantIds: [],
+          });
+          const joinedRoom: RoomList = {
+            id: res.data.id,
+            name: newRoom.name,
+            image: '',
+            recvMessageCount: 0,
+          };
+          setJoinedChatRoom([...joinedChatRoom, joinedRoom]);
+          resetAddedParticipantList();
+          socket.emit(
+            `${ENTERCHANNEL}`,
+            {
+              userId: userData.id,
+              roomId: res.data.id,
+            },
+            (response: any) => {
+              console.log('enter room success ', response);
+              navigate(`/pingpong/channel/room/${res.data.id}`);
+            },
+          );
+          navigate(`${CHATROOMURL}${res.data.id}`);
+        });
     } catch (error) {
       console.dir(error);
     }
   }
 
   const savehandler = () => {
-    if (newRoom.type === 2 && newRoom.salt === '')
+    if (newRoom.type === PROTECTED && newRoom.salt === '')
       alert('비밀번호를 입력하세요');
-    else if (newRoom.participantIds.length === 0)
-      alert('인원을 1명 이상 초대하세요');
+    else if (newRoom.participantIds.length === 0 && newRoom.type !== PRIVATE)
+      alert(
+        '인원을 1명 이상 초대하세요 \n\n혼자 방을 쓰고 싶다면 \n설정을 비공개로 선택해주세요',
+      );
     else {
       createRoom(newRoom);
       closeModal();

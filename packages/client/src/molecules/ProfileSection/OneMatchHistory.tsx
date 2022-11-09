@@ -1,7 +1,5 @@
-import { ThemeProvider } from '@emotion/react';
 import styled from '@emotion/styled';
-import { PhotoSizeSelectLargeSharp } from '@mui/icons-material';
-import { createTheme, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useRecoilValue } from 'recoil';
 import GamePlayer from '../../atoms/text/GamePlayer';
 import MatchType from '../../atoms/text/MatchType';
@@ -44,7 +42,6 @@ const PlayerInfoLayout = styled('div')(({ theme }) => ({
 }));
 //수정!!
 function OneMatchHistory(props: { matchHistory: UserMatchHistoryType }) {
-  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const { user, opponent, isWin, isLadder } = props.matchHistory;
   return (
     <OneMatchLayout>

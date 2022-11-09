@@ -1,9 +1,5 @@
 import { Link } from 'react-router-dom';
-import {
-  CustomIconProps,
-  LinkIconProps,
-  LinkIconResource,
-} from '../../../types/Link.type';
+import { CustomIconProps, LinkIconProps } from '../../../types/Link.type';
 import CustomIconButton from '../icon/CustomIconButtion';
 
 function LinkPageIconButton(props: { linkIconProps: LinkIconProps }) {

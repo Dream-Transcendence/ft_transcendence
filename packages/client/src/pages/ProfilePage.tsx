@@ -1,20 +1,16 @@
-import styled from '@emotion/styled';
 import InviteMessageList from '../organisms/Massage/InviteMessageList';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { atom, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 import ProfileTemplate from '../template/ProfileSection/ProfileTemplate';
-import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
+import { UserSecondAuth } from '../types/Profile.type';
 import { ProfilePageLayout } from './PageStyles/ProfilePageCss';
-import useSocket from '../socket/useSocket';
-import { gameNameSpace } from '../socket/event';
 
 function ProfilePage() {
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
-  const [socket, connect, disconnect] = useSocket(gameNameSpace);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직

@@ -7,11 +7,13 @@ import {
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { UserSecondAuth } from '../../types/Profile.type';
 import { UnJoinedRoomList } from '../../types/Room.type';
+import useSocket from '../../socket/useSocket';
+import { chatNameSpace } from '../../socket/event';
 
 const ChattingRoomListLayout = styled('div')(({ theme }) => ({
   marginTop: '1%',
@@ -26,6 +28,7 @@ const ChattingRoomListLayout = styled('div')(({ theme }) => ({
 function ChatRoomListTemplate(props: { roomList: UnJoinedRoomList[] }) {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
+  const [socket] = useSocket(chatNameSpace);
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
 
   useEffect(() => {
@@ -44,6 +47,15 @@ function ChatRoomListTemplate(props: { roomList: UnJoinedRoomList[] }) {
       );
     },
   );
+
+  useEffect(() => {
+    socket.on('exception', (response: any) => {
+      alert(response.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
 
   return (
     <ChattingRoomListLayout>

@@ -1,18 +1,13 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import { styled, Typography } from '@mui/material';
 import UserProfileBox from '../ProfileSection/UserProfileBox';
-import { color } from '@mui/system';
 import GameScore from './GameScore';
-import { useEffect } from 'react';
 import {
   UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
-import { useRecoilValue } from 'recoil';
-import { userDataAtom } from '../../recoil/user.recoil';
 import { GameResultModalControl } from '../../types/Game.type';
 import { useNavigate } from 'react-router-dom';
 import { PROFILEURL } from '../../configs/Link.url';
@@ -75,7 +70,6 @@ function GameResultModal(openControl: GameResultModalControl) {
     setOpen(false);
     navigate(`${PROFILEURL}`);
   };
-  const user = useRecoilValue(userDataAtom);
   const defaultUser: UserProfileBoxDataType = {
     id: 0,
     nickname: '',

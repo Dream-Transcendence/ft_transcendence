@@ -1,14 +1,10 @@
 import { styled } from '@mui/material/styles';
 import InfoEditBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import InfoBoxPasswordModule from '../../molecules/ChatSection/RoomInfoBoxPassword';
-import { SERVERURL } from '../../configs/Link.url';
 import axios from 'axios';
 import { GetRoomInfoDto, RoomInfoSet } from '../../types/Room.type';
-import InfoBoxRoomFunctionModule from '../../molecules/ChatSection/InfoBoxRoomFunction';
-import useSocket from '../../socket/useSocket';
-import { chatNameSpace } from '../../socket/event';
-import { useRecoilValue } from 'recoil';
 import InfoBoxFunctionModule from '../../molecules/ChatSection/RoomInfoBoxFunction';
+import { PROTECTED } from '../../configs/RoomType';
 
 const RoomInfoLayout = styled('div')(({ theme }) => ({
   width: '100%',
@@ -39,7 +35,7 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
   try {
     const { roomInfo, roomId, handler } = roomInfoSet;
     const response = await axios.patch(
-      `${SERVERURL}/rooms/${roomId}`,
+      `${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}`,
       roomInfo,
     );
     //optimistic UI를 위해 즉시 적용
@@ -53,9 +49,10 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
     } else if (
       response.status === 200 &&
       handler !== undefined &&
+      roomInfo['salt'] &&
       roomInfo['salt'] !== ''
     ) {
-      const room: any = { ...roomInfo, type: 2 };
+      const room: any = { ...roomInfo, type: PROTECTED };
       await handler(room);
     }
     return await response.status;

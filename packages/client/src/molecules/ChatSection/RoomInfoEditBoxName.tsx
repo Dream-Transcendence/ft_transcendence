@@ -1,15 +1,5 @@
 import { styled } from '@mui/material/styles';
-import {
-  Avatar,
-  Typography,
-  IconButton,
-  Button,
-  TextField,
-  Input,
-  InputLabel,
-  FormControl,
-} from '@mui/material';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { Avatar, IconButton, Input, FormControl } from '@mui/material';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '50%',

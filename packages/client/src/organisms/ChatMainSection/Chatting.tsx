@@ -1,19 +1,12 @@
 import { styled } from '@mui/material/styles';
 import ChatInputModule from '../../molecules/ChatSection/ChatInput';
 import ChatLogListOrganisms from './ChatLogList';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
 import { useRecoilValue } from 'recoil';
 import { userStatus } from '../../recoil/chat.recoil';
 import { MUTE } from '../../configs/Status.case';
-import {
-  ControlMessage,
-  ControlRoomInfo,
-  SocketMessage,
-} from '../../types/Message.type';
-import { GetRoomInfoDto } from '../../types/Room.type';
+import { ControlRoomInfo } from '../../types/Message.type';
 import { DM } from '../../configs/RoomType';
 
 const DMChattingLayout = styled('div')(({ theme }) => ({
@@ -30,16 +23,26 @@ const RoomChattingLayout = styled('div')(({ theme }) => ({
   flexDirection: 'column',
 }));
 
-const ChattingLayout = styled('div')(({ theme }) => ({
-  width: '70%',
+const ChattingLayout = styled('section')(({ theme }) => ({
+  width: '100%',
   height: '98%',
+}));
+
+const RoomSizeLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+}));
+
+const DMSizeLayout = styled('div')(({ theme }) => ({
+  width: '100%',
+  height: '100%',
 }));
 
 const BlockLayout = styled('div')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
-  justifyContent: 'right',
+  justifyContent: 'center',
   alignItems: 'center',
 }));
 
@@ -67,23 +70,27 @@ function ChattingOrganisms(props: { controlRoomInfo: ControlRoomInfo }) {
     //type에 따라 방 사이즈변경하려고 레이아웃을 나눔 하지만 지금은 적용안됨.
     <ChattingLayout>
       {type === DM ? (
-        roomInfo.blocked === false ? (
-          <DMChattingLayout>
-            <ChatLogListOrganisms messageSetter={controlMessage} />
-            <ChatInputModule messageSetter={controlMessage} />
-          </DMChattingLayout>
-        ) : (
-          <BlockLayout>
-            <BlockSpan>BLOCK</BlockSpan>
-          </BlockLayout>
-        )
-      ) : (
-        <RoomChattingLayout>
-          <ChatLogListOrganisms messageSetter={controlMessage} />
-          {userState !== MUTE && (
-            <ChatInputModule messageSetter={controlMessage} />
+        <DMSizeLayout>
+          {roomInfo.blocked === false ? (
+            <DMChattingLayout>
+              <ChatLogListOrganisms messageSetter={controlMessage} />
+              <ChatInputModule messageSetter={controlMessage} />
+            </DMChattingLayout>
+          ) : (
+            <BlockLayout>
+              <BlockSpan>BLOCK</BlockSpan>
+            </BlockLayout>
           )}
-        </RoomChattingLayout>
+        </DMSizeLayout>
+      ) : (
+        <RoomSizeLayout>
+          <RoomChattingLayout>
+            <ChatLogListOrganisms messageSetter={controlMessage} />
+            {userState !== MUTE && (
+              <ChatInputModule messageSetter={controlMessage} />
+            )}
+          </RoomChattingLayout>
+        </RoomSizeLayout>
       )}
     </ChattingLayout>
   );

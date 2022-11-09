@@ -13,7 +13,6 @@ import Loader from '../../atoms/Loading/Loader';
 import useInfiniteScroll from '../../hooks/useInfinitiScroll';
 import _ from 'lodash';
 import axios from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
 import { useParams } from 'react-router-dom';
 const ChatLogLayout = styled('div')(({ theme }) => ({
   width: '90%',
@@ -28,7 +27,7 @@ const CallAPI = styled('div')(({ theme }) => ({
 }));
 
 const AnchorLayout = styled('div')(({ theme }) => ({
-  marginTop: '70%',
+  // marginTop: '70%',
   height: '20px',
   width: '20px',
   position: 'absolute',
@@ -40,19 +39,21 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   const [socket] = useSocket(chatNameSpace);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesMiddleRef = useRef<HTMLDivElement | null>(null);
-  const messagesFirstRef = useRef<HTMLDivElement | null>(null);
   const messageCount = useRef<HTMLDivElement | null>(null);
   const scrollLayout = useRef<HTMLDivElement>(null);
+  const ulRef = useRef<any>(null);
+
   const [scrollState, setScrollState] = useState(true); // 자동 스크롤 여부
   const [startChatRender, setStartChatRender] = useState(false); // 최초 스크롤이 받아졌는지 여부
-  const [isLoaded, setIsLoaded] = useState(true);
-  const [isOverflow, setIsOverflow] = useState<boolean>(false);
-  const ulRef = useRef<any>(null);
+  const [isLoaded, setIsLoaded] = useState(true); //동글뱅이 로더를 띄워줄지말지 상태관리
+  const [isOverflow, setIsOverflow] = useState<boolean>(false); // 스크롤 생성을 감지하는 상태관리
+  const [anchorOffset, setAnchorOffset] = useState<string>('70%');
   const { roomId } = useParams();
+
   const scrollHeight = ulRef.current?.scrollHeight;
   const clientHeight = messageCount.current?.clientHeight;
   let messageCounts: number;
-  if (clientHeight !== undefined) messageCounts = clientHeight / 52 + 1;
+  if (clientHeight !== undefined) messageCounts = clientHeight / 47.5 + 1; // 47.5는 메시지의 최소 크기
 
   // ul에 리스트가 일정량이상있는지 체크 overflow감지
   useEffect(() => {
@@ -61,7 +62,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       if (scrollLayout.current != null) {
         if (ulRef.current.scrollHeight <= scrollLayout.current.clientHeight) {
           setIsOverflow(false);
-          messagesFirstRef.current?.scrollIntoView({ behavior: 'auto' });
         } else {
           const isOverflow =
             ulRef.current.scrollHeight > ulRef.current.clientHeight + 50;
@@ -80,7 +80,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
 
       // 스크롤이 맨 아래에서 0.1 이상 떨어져 있는 경우는 밑으로 이동하지 않도록 설정
       setScrollState(
-        scrollTop + clientHeight >= scrollHeight * 0.9 ? true : false,
+        scrollTop + clientHeight >= scrollHeight * 0.8 ? true : false,
       );
     }
   }, 500);
@@ -103,9 +103,12 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     async function getMessageHistory() {
       if (clientHeight !== undefined) {
         await axios
-          .get(`${SERVERURL}/rooms/messages/${roomId}/0`, {
-            params: { count: messageCounts },
-          })
+          .get(
+            `${process.env.REACT_APP_SERVER_URL}/rooms/messages/${roomId}/0`,
+            {
+              params: { count: messageCounts },
+            },
+          )
           .then((res) => {
             setMessages(res.data);
             if (isOverflow)
@@ -115,7 +118,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
     }
     // 데이터 양이 많아져 스크롤이 생길 경우, db에서 추가로직 불러오는 요청으로 데이터 받아올 것
     if (!isOverflow) {
-      getMessageHistory();
+      if (clientHeight) getMessageHistory();
     }
   }, [
     roomId,
@@ -156,12 +159,18 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         setIsLoaded(false);
         try {
           await axios
-            .get(`${SERVERURL}/rooms/messages/${roomId}/${messages[0].id}`, {
-              params: { count: messageCounts },
-            })
+            .get(
+              `${process.env.REACT_APP_SERVER_URL}/rooms/messages/${roomId}/${messages[0].id}`,
+              {
+                params: { count: 15 },
+              },
+            )
             .then((res) => {
               setMessages([...res.data, ...messages]);
               setIsLoaded(true);
+              const offset =
+                String(100 - (330 / ulRef.current.scrollHeight) * 100) + '%'; //사용자가 채팅 히스토리를 불러올 때, 이전 히스토리가 보이는 상태 중 가장 이상적 위치를 계산
+              setAnchorOffset(offset);
             });
         } catch (error) {
           console.log(error);
@@ -174,6 +183,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
         setStartChatRender(true);
       } else {
         //스크롤 중간으로 옮기기
+
         messagesMiddleRef.current?.scrollIntoView({
           behavior: 'auto',
         });
@@ -216,8 +226,12 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
       <ListChatGenerateLayout ref={scrollLayout}>
         {!isLoaded && <Loader />}
         <ListChatUlLayout className="scroll" ref={ulRef}>
-          <AnchorLayout ref={messagesMiddleRef} />
-          <div ref={messagesFirstRef} />
+          {isOverflow && (
+            <AnchorLayout
+              style={{ marginTop: anchorOffset }}
+              ref={messagesMiddleRef}
+            />
+          )}
           {listElement} <div ref={messagesEndRef} />
         </ListChatUlLayout>
       </ListChatGenerateLayout>

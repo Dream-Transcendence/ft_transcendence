@@ -9,7 +9,7 @@ export const ProfileLayout = styled('div')(({ theme }) => ({
   // backgroundColor: '#76aef1',
   background:
     'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
-  height: '90%',
+  height: '100%',
   width: '100%',
   gridTemplateColumns: '4fr 5fr',
   gridAutoRows: '14%', //gap의 값(5 * 3%)을 생각하여 계산해야됨
@@ -37,8 +37,8 @@ export const ProfilePageLayout = styled('section')(({ theme }) => ({
   //   'linear-gradient(to bottom right, #c0aef1, #76aef1, #70aef1, #c0aef1)',
   // backgroundColor: '#76aef1',
   // backgroundColor: '#4477cc',
-  background:
-    'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
+  // background:
+  //   'linear-gradient(to top right,#4477cc,#6077cc, #4477cc, #4477cc,#4477cc,  #6077cc, #4477cc,#4477cc)',
   height: '100%',
   width: '100%',
   minWidth: '1200px',

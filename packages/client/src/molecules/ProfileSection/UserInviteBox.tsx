@@ -1,17 +1,10 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
-import Badge from '@mui/material/Badge';
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import CancelIcon from '@mui/icons-material/Cancel';
 import UserProfileBox from './UserProfileBox';
 import { CustomIconProps } from '../../types/Link.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxDataType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
+import { UserProfileBoxDataType } from '../../types/Profile.type';
 
 const UserInviteProfileLayout = styled('div')(({ theme }) => ({
   margin: '1px',

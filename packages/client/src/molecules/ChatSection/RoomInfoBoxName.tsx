@@ -1,25 +1,13 @@
 import { styled } from '@mui/material/styles';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import {
-  Avatar,
-  Typography,
-  IconButton,
-  Button,
-  TextField,
-  Input,
-  InputLabel,
-  FormControl,
-} from '@mui/material';
-import InsertPhotoIcon from '@mui/icons-material/InsertPhoto';
+import { Avatar, Typography, Input, FormControl } from '@mui/material';
 import { DM } from '../../configs/RoomType';
 import { RoomInfoSet } from '../../types/Room.type';
 import { useEffect, useState } from 'react';
 import { ChangeRoomInfo } from '../../organisms/ChatMainSection/EnteredChatRoomInfo';
 import { useParams } from 'react-router-dom';
 import { BLOCK } from '../../configs/Block.case';
-import axios from 'axios';
 import ChatRoomImageProfile from '../../atoms/profile/ChatRoomImageProfile';
-import { ADMIN, OWNER } from '../../configs/userType';
+import { OWNER } from '../../configs/userType';
 
 const InfoBoxNameLayout = styled('div')(({ theme }) => ({
   width: '70%',
@@ -67,11 +55,10 @@ const divStyle = {
 
 function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const roomInfoSet = props.roomInfoSet;
-  const { roomInfo, handler } = roomInfoSet;
+  const { roomInfo } = roomInfoSet;
   const { roomId } = useParams();
-  const { name, type, image, auth } = roomInfo;
+  const { name, type, auth } = roomInfo;
   const [roomName, setRoomName] = useState<string>(name);
-  const [roomImage, setRoomImage] = useState<string>(image);
   const [changeRoomName, setChangeRoomName] = useState<boolean>(false);
   roomInfoSet['roomId'] = roomId;
 
@@ -95,6 +82,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
   const handleChangeRoomName = () => {
     roomInfo['name'] = roomName;
     setChangeRoomName(true);
+    alert('방 이름이 변경되었습니다');
   };
 
   return (
@@ -120,7 +108,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
       {/* [axios GET 요청]해당 채팅방 제목, 이미지 요청 */}
       <FormControl>
         {type === DM ? (
-          <Typography paddingLeft={'10px'} color={'white'}>
+          <Typography paddingLeft={'10px'} color={'white'} spellCheck="false">
             {name}
           </Typography>
         ) : auth === OWNER ? (
@@ -128,6 +116,7 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
             disableUnderline
             style={divStyle}
             placeholder={name}
+            spellCheck="false"
             onChange={handleRoomName()}
             onKeyPress={(event) => {
               if (event.key === 'Enter') {

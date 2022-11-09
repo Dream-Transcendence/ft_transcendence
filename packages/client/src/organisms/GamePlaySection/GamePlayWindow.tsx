@@ -8,17 +8,15 @@ import {
   GAMESTART,
   MOVEPADDLE,
   PLAYERABSTENTION,
-  RESIZEWINDOW,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { height } from '@mui/system';
 import { Typography } from '@mui/material';
 import {
   BallProps,
   CanvasImgProps,
   CanvasProps,
-  gameInfoPropsType,
   GameOffsetProps,
+  GameRoomDto,
   GameWindowInfo,
   PaddleProps,
   ResponsiveGameProps,
@@ -31,19 +29,19 @@ import {
   SIZEDOWN,
   SMALL,
   SMALLBALLMODE,
-  STOP,
   UP,
 } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import {
+  BaseUserProfileData,
   UserProfileBoxDataType,
   UserProfileBoxType,
 } from '../../types/Profile.type';
 import { useNavigate, useParams } from 'react-router-dom';
-import { NOTFOUNDURL } from '../../configs/Link.url';
+import { NOTFOUNDURL, PROFILEURL } from '../../configs/Link.url';
 import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const GameLayout = styled('div')(({ theme }) => ({
@@ -171,6 +169,9 @@ const GameWindowLayout = styled('div')(({ theme }) => ({
 const ReadCountLayout = styled('div')(({ theme }) => ({
   width: '12%',
   height: '60%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const ReadCount = styled('span')(({ theme }) => ({
@@ -180,40 +181,40 @@ const ReadCount = styled('span')(({ theme }) => ({
 
 const ReadyCount = styled('span')(({ theme }) => ({
   fontSize: '6.5vh',
-  marginLeft: '-50%',
   color: '#ffd300',
 }));
 
 const ScoreLayout = styled('span')(({ theme }) => ({
   fontSize: '500%',
   textAlign: 'center',
-  position: 'relative',
+  marginBottom: '4%',
+  color: '#ffdd',
+  width: `30%`,
+}));
+
+const GameInfoLayout = styled('div')(({ theme }) => ({
   display: 'flex',
+  flexDirection: 'row',
   justifyContent: 'center',
   alignItems: 'center',
   marginBottom: '4%',
-  color: '#ffdd',
   width: `100%`,
   height: `10%`,
   minHeight: '80px',
 }));
 
 const LeftUserProfile = styled('div')(({ theme }) => ({
-  width: '2%',
-  height: '60%',
-  zIndex: '2',
-  marginTop: '8%',
-  marginRight: '50%',
-  position: 'absolute',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const RightUserProfile = styled('div')(({ theme }) => ({
-  width: '2%',
-  height: '60%',
-  marginTop: '8%',
-  marginLeft: '50%',
-  zIndex: '2',
-  position: 'absolute',
+  height: '100%',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 const HowToUseLayout = styled('div')(({ theme }) => ({
@@ -225,9 +226,9 @@ const HowToUseLayout = styled('div')(({ theme }) => ({
 }));
 
 function GamePlayWindowOrganism() {
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const gameInfo = useRecoilValue<GameRoomDto | undefined>(gameInfoAtom);
   const [socket] = useSocket(gameNameSpace);
-  const userData = useRecoilValue(userDataAtom);
+  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [time, setTime] = useState<number>(3);
   const timeRef = useRef(4);
   const [IsStart, setIsStart] = useState<boolean>(true);
@@ -415,6 +416,7 @@ function GamePlayWindowOrganism() {
   }, []);
 
   /* 상대방 기권 감지 */
+  //[수정사항] 동환님 이거 off안해줘도 괜찮나요? doyun
   useEffect(() => {
     socket.on(PLAYERABSTENTION, (res) => {
       setAbstention(res.abstainedPlayer);
@@ -434,19 +436,30 @@ function GamePlayWindowOrganism() {
     userData: gameInfo?.rightPlayer || defaultUser,
   };
 
-  console.log(gameInfo, time);
+  useEffect(() => {
+    socket.on('exception', (response: any) => {
+      navigate(PROFILEURL);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, []);
+
   return (
     <GameWindowLayout>
       <GameLayout>
-        <ScoreLayout>
+        <GameInfoLayout>
           <LeftUserProfile>
             <UserProfileBox userProfileBoxProps={leftPlayerProfile} />
           </LeftUserProfile>
-          {score?.left} : {score?.right}
+          <ScoreLayout>
+            {score?.left} : {score?.right}
+          </ScoreLayout>
           <RightUserProfile>
             <UserProfileBox userProfileBoxProps={rightPlayerProfile} />
           </RightUserProfile>
-        </ScoreLayout>
+        </GameInfoLayout>
+
         {time < 4 && time > 0 ? (
           <PreGamePlayCanvasLayout
             width={theme.canvasImgProps.width}

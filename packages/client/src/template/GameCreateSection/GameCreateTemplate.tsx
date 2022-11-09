@@ -1,19 +1,12 @@
-import { Button } from '@chakra-ui/react';
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GameCreateMainOrganism from '../../organisms/GameCreateSection/GameCreateMainSection';
-import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
-import { LinkComponentResource, LinkTextResource } from '../../types/Link.type';
-import LinkPageComponentButton from '../../atoms/button/linkPage/LinkPageComponentButton';
-import { Typography } from '@mui/material';
-import { GAMECREATEURL, GAMELOADINGURL } from '../../configs/Link.url';
-import { CUSTOM } from '../../configs/Game.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
+import { GAMELOADINGURL } from '../../configs/Link.url';
+import { useRecoilValue } from 'recoil';
+import { gameTypeAtom } from '../../recoil/user.recoil';
 import useSocket from '../../socket/useSocket';
 import { GAMEINVITE, gameNameSpace, userNameSpace } from '../../socket/event';
-import { useCallback, useEffect } from 'react';
-import { BaseUserProfileData } from '../../types/Profile.type';
+import { useEffect } from 'react';
 import { gameInviteInfoAtom } from '../../recoil/game.recoil';
 import { useNavigate } from 'react-router-dom';
 import { GameInviteInfoType } from '../../types/Game.type';
@@ -71,10 +64,8 @@ const InviteButton = styled.button`
 `;
 
 function GameCreateTemplate() {
-  const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const gameInviteInfo = useRecoilValue<GameInviteInfoType>(gameInviteInfoAtom);
+  const gameType = useRecoilValue(gameTypeAtom);
   const [gameSocket] = useSocket(gameNameSpace);
   const [userSocket] = useSocket(userNameSpace);
   const navigate = useNavigate();
@@ -96,10 +87,10 @@ function GameCreateTemplate() {
   };
 
   //[수정사항] gameloading으로 넘어가야함
-  const EnterGame: LinkComponentResource = {
-    url: GAMELOADINGURL,
-    component: <InviteButton onClick={setNomal}>초대하기</InviteButton>,
-  };
+  // const EnterGame: LinkComponentResource = {
+  //   url: GAMELOADINGURL,
+  //   component: <InviteButton onClick={setNomal}>초대하기</InviteButton>,
+  // };
 
   useEffect(() => {
     gameSocket.on('exeption', (response) => {

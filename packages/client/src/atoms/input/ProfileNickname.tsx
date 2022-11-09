@@ -1,17 +1,10 @@
-import DoneIcon from '@mui/icons-material/Done';
-import ClearIcon from '@mui/icons-material/Clear';
-import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import styled from '@emotion/styled';
-import { Edit, WidthFull } from '@mui/icons-material';
-import { IconButton, Input, InputAdornment, TextField } from '@mui/material';
-import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
+import { IconButton, Input, InputAdornment } from '@mui/material';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { BaseUserProfileData, UserSecondAuth } from '../../types/Profile.type';
 import axios from 'axios';
-import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
 import { useEffect, useState } from 'react';
-import CustomIconButton from '../button/icon/CustomIconButtion';
 import EditIcon from '@mui/icons-material/Edit';
-import { CustomIconProps } from '../../types/Link.type';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { checkValidNickname } from '../button/block/NicknameConfirmButton';
@@ -36,7 +29,7 @@ function ProfileNickname() {
     try {
       if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
         const response = await axios.patch(
-          `${SERVERURL}/users/${user.id}/nickname`,
+          `${process.env.REACT_APP_SERVER_URL}/users/${user.id}/nickname`,
           { nickname: value },
         );
         if (response.status === 200) {
@@ -78,7 +71,7 @@ function ProfileNickname() {
       try {
         if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
           const response = await axios.get(
-            `${SERVERURL}/users/${userId}/profile`,
+            `${process.env.REACT_APP_SERVER_URL}/users/${userId}/profile`,
           );
           setUser(response.data);
         }

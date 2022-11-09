@@ -1,30 +1,18 @@
-import { keyframes, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Badge from '@mui/material/Badge';
 import UserProfileBox from './UserProfileBox';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import PersonIcon from '@mui/icons-material/Person';
-import BlockIcon from '@mui/icons-material/Block';
 import BasicSpeedDial from '../../atoms/SpeedDial/SpeedDial';
-import {
-  CustomIconProps,
-  LinkIconProps,
-  LinkIconResource,
-} from '../../types/Link.type';
+import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../../atoms/button/linkPage/LinkPageIconButton';
 import { UserProfileBoxDataType } from '../../types/Profile.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { PROFILEURL } from '../../configs/Link.url';
 import { ADMIN, OWNER } from '../../configs/userType';
-import { DMList, userAuth } from '../../recoil/chat.recoil';
-import {
-  ParticipantInfo,
-  ParticipantInfoNState,
-} from '../../types/Participant.type';
-import { useState } from 'react';
+import { userAuth } from '../../recoil/chat.recoil';
+import { ParticipantInfoNState } from '../../types/Participant.type';
 import { BAN, MUTE } from '../../configs/Status.case';
-import { BLOCK, UNBLOCK } from '../../configs/Block.case';
-import { Rotate90DegreesCcw } from '@mui/icons-material';
-import { blockUser, unBlockUser } from '../ChatSection/InfoBoxDMFunction';
+import { BLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
@@ -115,21 +103,11 @@ const SpeedDialLayout = styled('div')((props) => ({
 
 //향후 상태관리를 추가하여 조건에 따라 아이콘을 보이게 또는 안보이게 처리해줄 것 입니다.
 function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
-  const { participantInfo, participantInfoArray, handler } =
-    participantInfoNState;
-  const { user, auth, status, blocked } = participantInfo;
+  const { participantInfo } = participantInfoNState;
+  const { user, auth, status } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
-  const filteredParticipants: ParticipantInfo[] = participantInfoArray.filter(
-    (participant) => participant.user.id !== participantInfo.user.id,
-  );
-  const [roomlist, setRoomList] = useRecoilState(DMList);
-  const findRoom = roomlist.find((room) => {
-    return room.name === participantInfo.user.nickname;
-  });
-  const popUserList = roomlist.filter((room) => {
-    return room.name !== participantInfo.user.nickname;
-  });
+
   //const isBan = useState();
 
   const userInfo: UserProfileBoxDataType = {
@@ -152,32 +130,6 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
     avatarType: 'circle',
     userData: userInfo,
   };
-
-  // const setBlock = () => {
-  //   const block = { ...participantInfo, blocked: true };
-  //   if (findRoom !== undefined) {
-  //     const blockedUser = { ...findRoom, blocked: true };
-  //     setRoomList([...popUserList, blockedUser]);
-  //   }
-  //   if (handler !== undefined) handler([...filteredParticipants, block]);
-  // };
-  // const setUnBlock = () => {
-  //   const unBlock = { ...participantInfo, blocked: false };
-  //   if (findRoom !== undefined) {
-  //     const blockedUser = { ...findRoom, blocked: false };
-  //     setRoomList([...popUserList, blockedUser]);
-  //   }
-  //   if (handler !== undefined) handler([...filteredParticipants, unBlock]);
-  // };
-  // function handlerBlock() {
-  //   if (blocked === UNBLOCK) blockUser(user.id, userData.id, setBlock);
-  //   else if (blocked === BLOCK) unBlockUser(user.id, userData.id, setUnBlock);
-  // }
-
-  // const customProps: CustomIconProps = {
-  //   icon: <BlockIcon />,
-  //   action: handlerBlock,
-  // };
 
   return (
     <UserProfileLayout>

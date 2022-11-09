@@ -1,9 +1,7 @@
 import axios from 'axios';
 import { atom, selectorFamily } from 'recoil';
-import { SERVERURL, CHANNELURL } from '../configs/Link.url';
 import { BaseUserProfileData } from '../types/Profile.type';
 import { RoomList, UnJoinedRoomList } from '../types/Room.type';
-import { useNavigate } from 'react-router-dom';
 
 export const DMList = atom<RoomList[]>({
   key: 'DMList',
@@ -39,7 +37,9 @@ export const newParticipant = atom<BaseUserProfileData[]>({
 //현재 유저가 가입된 채팅방의 리스트를 받아옵니다.
 const getRoomList = async (userId: number) => {
   if (userId !== 0) {
-    const response = await axios.get(`${SERVERURL}/users/${userId}/rooms`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/users/${userId}/rooms`,
+    );
     return response.data;
   }
   return null;
@@ -62,7 +62,9 @@ export const getJoinedChatList = selectorFamily<any, number>({
 
 const getUnJoinedRoomList = async (userId: number) => {
   if (userId !== 0) {
-    const response = await axios.get(`${SERVERURL}/rooms/${userId}/channels`);
+    const response = await axios.get(
+      `${process.env.REACT_APP_SERVER_URL}/rooms/${userId}/channels`,
+    );
     return response.data;
   }
   return null;

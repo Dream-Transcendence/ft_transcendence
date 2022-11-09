@@ -1,29 +1,25 @@
 import { styled } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import NavProfile from '../profile/NavProfile';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import ChatIcon from '@mui/icons-material/Chat';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import { flexbox } from '@mui/system';
 import SearchBox from '../input/SearchBox';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 
 import { LinkIconProps, LinkIconResource } from '../../types/Link.type';
 import LinkPageIconButton from '../button/linkPage/LinkPageIconButton';
 import {
   CHANNELURL,
-  CHATROOMURL,
-  GAMECREATEURL,
   GAMELOADINGURL,
-  GAMEPLAYURL,
   LIVEOBSERVEURL,
   PROFILEURL,
-  SERVERURL,
 } from '../../configs/Link.url';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import {
+  useRecoilRefresher_UNSTABLE,
+  useRecoilState,
+  useSetRecoilState,
+} from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
 import useSearch from '../../hooks/useSearch';
 import {
@@ -35,6 +31,7 @@ import { LADDER } from '../../configs/Game.type';
 import CustomIconButton from '../button/icon/CustomIconButtion';
 import { CustomIconProps } from '../../types/Link.type';
 import axios from 'axios';
+import { getJoinedChatList } from '../../recoil/chat.recoil';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -49,6 +46,7 @@ const RightLayout = styled('section')(({ theme }) => ({
   width: '100%',
   height: '100%',
   display: 'flex',
+  paddingRight: '0.5%',
   alignItems: 'flex-end',
   justifyContent: 'flex-end',
 }));
@@ -70,32 +68,37 @@ const LogoutLayout = styled('section')(({ theme }) => ({
 }));
 
 function NavigationBar() {
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const setGameType = useSetRecoilState(gameTypeAtom);
   const [userData, setUserData] = useRecoilState(userDataAtom);
-  const [secondAuth, setSecondAuth] = useRecoilState(userSecondAuth);
+  const setSecondAuth = useSetRecoilState(userSecondAuth);
   const navigate = useNavigate();
+  const refreshUserInfo = useRecoilRefresher_UNSTABLE(
+    getJoinedChatList(userData.id),
+  );
 
   const searchProps: SearchPropsType = useSearch(
-    `${SERVERURL}/users/search`,
+    `${process.env.REACT_APP_SERVER_URL}/users/search`,
     `${PROFILEURL}/`,
     5, //profile type
   );
 
   const logoutHandler = async () => {
     try {
-      await axios.post(`${SERVERURL}/auth/logout`).then((res) => {
-        setUserData({
-          id: 0,
-          nickname: 'default',
-          image: '',
+      await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/auth/logout`)
+        .then((res) => {
+          setUserData({
+            id: 0,
+            nickname: 'default',
+            image: '',
+          });
+          setSecondAuth({
+            checkIsSecondOauth: false,
+            checkIsValid: true,
+          });
+          navigate('/');
+          console.log('logout!!');
         });
-        setSecondAuth({
-          checkIsSecondOauth: false,
-          checkIsValid: true,
-        });
-        navigate('/');
-        console.log('logout!!');
-      });
     } catch (error) {
       console.dir(error);
     }
@@ -131,6 +134,7 @@ function NavigationBar() {
     style: {
       marginTop: '1%',
     },
+    action: refreshUserInfo,
   };
 
   const liveObeserveAction: LinkIconProps = {

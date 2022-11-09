@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { PROFILEURL, SERVERURL } from '../../configs/Link.url';
+import { PROFILEURL } from '../../configs/Link.url';
 import { checkFriendRequestAtom } from '../../recoil/common.recoil';
 import {
   BaseUserProfileData,
@@ -51,7 +51,9 @@ export function ProfilePersonal() {
     setter: React.Dispatch<React.SetStateAction<FriendType[]>>,
   ) {
     try {
-      const response = await axios.get(`${SERVERURL}/users/${id}/friends`);
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/users/${id}/friends`,
+      );
       setter(response.data);
       console.log('친구 목록을 최신화 하였습니다.');
     } catch (error: any) {
@@ -76,7 +78,9 @@ export function ProfilePersonal() {
   useEffect(() => {
     async function checkIsBlock() {
       await axios
-        .get(`${SERVERURL}/users/${userData.id}/blocks/${paramsId}`)
+        .get(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/blocks/${paramsId}`,
+        )
         .then((response: any) => {
           setIsBlock(response.data.isBlocked);
         })

@@ -1,17 +1,11 @@
 import styled from '@emotion/styled';
-import NavigationBar from '../atoms/bar/NavigationBar';
-import { gameNameSpace, GAMESTART } from '../socket/event';
-import useSocket from '../socket/useSocket';
-import GameCreateTemplate from '../template/GameCreateSection/GameCreateTemplate';
 import GamePlayTemplate from '../template/GameCreateSection/GamePlayTemplate';
-import { gameInfoPropsType } from '../types/Game.type';
-import { useEffect, useState } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UserSecondAuth } from '../types/Profile.type';
 import { gameInfoAtom } from '../recoil/game.recoil';
-import { Socket } from 'socket.io';
 import { PROFILEURL } from '../configs/Link.url';
 
 const GamePlayLayout = styled('section')(({ theme }) => ({
@@ -20,7 +14,7 @@ const GamePlayLayout = styled('section')(({ theme }) => ({
   backgroundColor: '#6BADE2',
   height: '100%',
   width: '100%',
-  minHeight: '620px',
+  minHeight: '800px',
   minWidth: '1200px',
 }));
 
@@ -37,8 +31,7 @@ function GamePlayPage() {
   const userData = useRecoilValue(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
-  const [socket, connect, disconnect] = useSocket(gameNameSpace);
+  const gameInfo = useRecoilValue(gameInfoAtom);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직

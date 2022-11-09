@@ -7,19 +7,14 @@ import { LinkTextResource } from '../../types/Link.type';
 import LinkPageTextButton from '../../atoms/button/linkPage/LinkPageTextButton';
 import { CHATROOMURL } from '../../configs/Link.url';
 import { PROTECTED } from '../../configs/RoomType';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import {
-  GetRoomInfoDto,
-  RoomList,
-  UnJoinedRoomList,
-} from '../../types/Room.type';
+import { RoomList, UnJoinedRoomList } from '../../types/Room.type';
 import useSocket from '../../socket/useSocket';
 import { chatNameSpace, ENTERCHANNEL } from '../../socket/event';
 import { chatRoomList, unJoinedRoomList } from '../../recoil/chat.recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
-import { Scale } from '@mui/icons-material';
 
 const ChatRoomElementLayout = styled('div')(({ theme }) => ({
   width: '98%',
@@ -76,7 +71,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
   };
   //하나로 합칠까? enterRoom에 파라미터를 주고 action을 하나로 주면 관리하기 쉬울 것 같기도?
   //리스트에 데이터를 추가하는 기능때문에 합치기는 까다로울듯?
-  function enterRoom() {
+  const enterRoom = () => {
     //채팅방을 들어가는 작업 네임스페이스(ws://localhost:4242/chat)
     socket.emit(
       `${ENTERCHANNEL}`,
@@ -95,16 +90,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
       },
     );
     //방을 잘못 들어갈 경우 에러처리
-  }
-
-  useEffect(() => {
-    socket.on('exception', (response: any) => {
-      alert(response.message);
-    });
-    return () => {
-      socket.off('exception');
-    };
-  }, []);
+  };
   //항후, 방 넘버를 토대로 정보를 구성할 것임.
   //api 호출해서 룸 번호 알아냄
 
@@ -132,6 +118,10 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
     },
   };
 
+  const handlePasswordSet = {
+    handlePassword: handlePassword,
+  };
+
   return (
     <ChatRoomElementLayout>
       <RoomElementImageModule image={image} />
@@ -141,7 +131,7 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
       </RoomInfoLayout>
       {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
-        {type === PROTECTED && <PasswordInput handler={handlePassword} />}
+        {type === PROTECTED && <PasswordInput handlers={handlePasswordSet} />}
       </PasswordInputLayout>
       <EnterButtonLayout>
         <LinkPageTextButton LinkTextResource={EnterRoom} />

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { SERVERURL, CHANNELURL } from '../../configs/Link.url';
+import { CHANNELURL } from '../../configs/Link.url';
 import { DM } from '../../configs/RoomType';
 import { BAN } from '../../configs/Status.case';
 import ChatParticipantsOrganisms from '../../organisms/ChatMainSection/ChatParticipants';
@@ -29,7 +29,6 @@ import {
   ENTERMESSAGE,
   PATCHMESSAGE,
 } from '../../socket/event';
-import { SocketAddress } from 'net';
 import { UserSecondAuth } from '../../types/Profile.type';
 
 const ChattingRoomLayout = styled('div')(({ theme }) => ({
@@ -80,7 +79,7 @@ function EnteredChatRoomTemplate() {
   const [participantInfo, setParticipantInfo] = useState<ParticipantInfo[]>([]);
   const { roomId } = useParams();
   const userData = useRecoilValue(userDataAtom);
-  const [userType, setUserType] = useRecoilState(userAuth);
+  const setUserType = useSetRecoilState(userAuth);
   const navigate = useNavigate();
   const [userState, setUserState] = useRecoilState(userStatus);
   const [blockedUser, setBlockedUser] = useState<ParticipantInfo[]>([]);
@@ -103,7 +102,7 @@ function EnteredChatRoomTemplate() {
     async function getRoomInfo() {
       try {
         const response = await axios.get(
-          `${SERVERURL}/rooms/${roomId}/${userData.id}`,
+          `${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}/${userData.id}`,
         );
         setRoomInfo(response.data);
         setUserState(roomInfo.status);
@@ -122,6 +121,7 @@ function EnteredChatRoomTemplate() {
     setRoomInfo,
     roomInfo.status,
     setUserState,
+    passSecondOauth.checkIsValid,
   ]);
 
   useEffect(() => {
@@ -136,7 +136,7 @@ function EnteredChatRoomTemplate() {
           +roomId === roomInfo.id
         ) {
           const response = await axios.get(
-            `${SERVERURL}/rooms/${roomId}/channel/${userData.id}/participants`,
+            `${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}/channel/${userData.id}/participants`,
           );
           setParticipantInfo(response.data);
         }
@@ -227,12 +227,6 @@ function EnteredChatRoomTemplate() {
             auth: res.auth,
             status: res.status,
           };
-          console.log(
-            'modify: ',
-            modifiedParticipant,
-            'filter:',
-            filteredParticipants,
-          );
           setParticipantInfo([...filteredParticipants, modifiedParticipant]);
           // if (res.userId === userData.id) {
           //   setUserType(res.auth);
@@ -242,14 +236,10 @@ function EnteredChatRoomTemplate() {
       });
     }
     changedParticipantStatus();
-    // return () => {
-    //   socket.off(`${PATCHMESSAGE}`);
-    // };
+    return () => {
+      socket.off(`${PATCHMESSAGE}`);
+    };
   }, [participantInfo, socket]);
-
-  const getBlocked = async (blockedUserId: number) => {
-    let response;
-  };
 
   useEffect(() => {
     if (
@@ -260,7 +250,9 @@ function EnteredChatRoomTemplate() {
       socket.on(`${ENTERMESSAGE}`, async (res) => {
         try {
           await axios
-            .get(`${SERVERURL}/users/${userData.id}/blocks/${res.user.id}`)
+            .get(
+              `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/blocks/${res.user.id}`,
+            )
             .then((response) => {
               const participant = { ...res, blocked: response.data };
               setParticipantInfo([...participantInfo, participant]);
@@ -316,6 +308,15 @@ function EnteredChatRoomTemplate() {
     roomInfo: roomInfo,
     controlMessage: messageSetter,
   };
+
+  useEffect(() => {
+    socket.on('exception', (error) => {
+      alert(error.message);
+    });
+    return () => {
+      socket.off('exception');
+    };
+  }, [socket]);
 
   return (
     <ChattingRoomLayout>

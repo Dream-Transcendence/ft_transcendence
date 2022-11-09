@@ -1,40 +1,29 @@
 import styled from '@emotion/styled';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import { Typography } from '@mui/material';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-  BaseUserProfileData,
-  FriendType,
-  UserProfileBoxType,
-} from '../../types/Profile.type';
+import { useNavigate } from 'react-router-dom';
+import { FriendType, UserProfileBoxType } from '../../types/Profile.type';
 import { PROFILEURL, GAMEPLAYURL } from '../../configs/Link.url';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
+
 import {
   ListGenerateLayout,
   ListLayout,
   ListUlLayout,
 } from '../../atoms/list/styles/ListStylesCSS';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { userDataAtom, userLogStateListAtom } from '../../recoil/user.recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { userLogStateListAtom } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
-import {
-  FRIENDREQUESTACCEPTED,
-  gameNameSpace,
-  REJECTFRIENDREQUEST,
-  userNameSpace,
-  WATCH,
-} from '../../socket/event';
+import { gameNameSpace, WATCH } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { InviteInfoListType } from '../../types/Message.type';
-import { inviteInfoListAtom } from '../../recoil/common.recoil';
+
 import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
 import { CustomIconProps } from '../../types/Link.type';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { ConnectionDto } from '../../types/LogOn.type';
 import { getUserState } from '../../atoms/profile/ProfileAvatar';
-import { Socket } from 'socket.io-client';
-import { GameRoomDto, WatchGameType } from '../../types/Game.type';
+
+import { GameRoomDto } from '../../types/Game.type';
 import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const FreindListLayout = styled('div')(({ theme }) => ({
@@ -68,9 +57,9 @@ const ProfileBoxLayout = styled('div')(({ theme }) => ({
 }));
 
 function FreindList(props: { friendProps: FriendPropsType }) {
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const setGameInfo = useSetRecoilState(gameInfoAtom);
   const navigate = useNavigate();
-  const { value: friendList, setter: setFriendList } = props.friendProps;
+  const { value: friendList } = props.friendProps;
   const [listElement, setListElement] = useState<JSX.Element[]>();
   const [onGame, setOnGame] = useState<boolean>(false);
   const userLogStateList =

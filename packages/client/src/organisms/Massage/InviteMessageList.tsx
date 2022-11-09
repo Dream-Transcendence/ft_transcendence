@@ -1,18 +1,12 @@
-import { useEffect } from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import DeleteIcon from '@mui/icons-material/Delete';
 import { TransitionGroup } from 'react-transition-group';
-import {
-  InviteInfoListType,
-  ServerAcceptGameDto,
-} from '../../types/Message.type';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { InviteInfoListType } from '../../types/Message.type';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   checkFriendRequestAtom,
   inviteInfoListAtom,
@@ -29,23 +23,22 @@ import {
   userNameSpace,
 } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { GameInviteInfoType } from '../../types/Game.type';
-import { gameInviteInfoAtom } from '../../recoil/game.recoil';
-import { useNavigate } from 'react-router-dom';
-import { GAMELOADINGURL } from '../../configs/Link.url';
 import { gameTypeAtom, userDataAtom } from '../../recoil/user.recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { CUSTOM } from '../../configs/Game.type';
 
-const InviteMessageListLayout = styled('div')(({ theme }) => ({
-  bottom: '0%',
+const InviteMessageListLayout = styled('section')(({ theme }) => ({
+  bottom: '0',
   right: '0%',
-  position: 'absolute',
+  display: 'float',
+  position: 'fixed',
+  alignSelf: 'flex-end',
+  minWidth: '200px',
+  minHeight: '70px',
+  maxHeight: '210px',
+  padding: '1%',
   width: '30%',
-  height: '10%',
   overflow: 'hidden',
-  backgroundColor:
-    'linear-gradient(135deg,rgba(110,177,255,1) 0%,rgba(118,0,255,1) 120%)',
   boxShadow: '0 15px 35px #00000066',
 }));
 
@@ -57,15 +50,12 @@ const InviteMessageButtonLayout = styled('div')(({ theme }) => ({
 function InviteMessageList() {
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [socket] = useSocket(userNameSpace);
-  const navigate = useNavigate();
-  const [gameType, setGameType] = useRecoilState(gameTypeAtom);
+  const setGameType = useSetRecoilState<number | null>(gameTypeAtom);
   const [inviteInfoList, setInviteInfoList] =
     useRecoilState<InviteInfoListType[]>(inviteInfoListAtom);
-  const [checkFriendRequest, setCheckFriendRequest] = useRecoilState(
+  const setCheckFriendRequest = useSetRecoilState<boolean>(
     checkFriendRequestAtom,
   );
-  const [gameInviteInfo, setGameInviteInfo] =
-    useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
   /**
    * 요청 수락
    */
@@ -136,7 +126,7 @@ function InviteMessageList() {
                     edge="end"
                     aria-label="accept"
                     title="accept"
-                    sx={{ padding: 0 }}
+                    sx={{ paddingTop: 0 }}
                     onClick={() => handleAcceptMessage(info)}
                   >
                     <CheckCircleTwoToneIcon />
@@ -162,6 +152,7 @@ function InviteMessageList() {
                 </IconButton>
               )
             }
+            style={{ marginBottom: '8%' }}
           >
             <ListItemText
               primary={

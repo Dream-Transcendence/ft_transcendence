@@ -8,19 +8,14 @@ import {
   UserNicknameLayout,
   UserPictureLayout,
 } from '../OrganismsStyles/ProfileOrganismsCss';
-import CustomIconButton from '../../atoms/button/icon/CustomIconButtion';
-import InfoBoxNameModule from '../../molecules/ChatSection/RoomInfoBoxName';
 import FileUploadButton from '../../atoms/button/icon/FileUploadBotton';
-import { CustomIconProps, CustomUploadProps } from '../../types/Link.type';
-import { useEffect, useRef, useState } from 'react';
-import axios, { AxiosError } from 'axios';
-import { SERVERURL } from '../../configs/Link.url';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { CustomUploadProps } from '../../types/Link.type';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { useRecoilState } from 'recoil';
 import { BaseUserProfileData } from '../../types/Profile.type';
 import { useParams } from 'react-router-dom';
 import AddPhotoAlternateTowToneIcon from '@mui/icons-material/AddPhotoAlternate';
-import { ReadMoreRounded } from '@mui/icons-material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { userDataAtom } from '../../recoil/user.recoil';
 export const UserPictureButtonLayout = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -37,7 +32,10 @@ function UserInfo() {
   useEffect(() => {
     if (userImage) {
       axios
-        .post(`${SERVERURL}/users/${userId}/image`, userImage)
+        .post(
+          `${process.env.REACT_APP_SERVER_URL}/users/${userId}/image`,
+          userImage,
+        )
         .then((response) => {
           setUser({ ...user, image: response.data.image });
           console.log('이미지 변경 성공');

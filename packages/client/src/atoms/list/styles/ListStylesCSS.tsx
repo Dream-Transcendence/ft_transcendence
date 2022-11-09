@@ -1,11 +1,11 @@
 import { styled } from '@mui/material/styles';
-import { height } from '@mui/system';
 
 export const ListLayout = styled('li')(() => ({
   display: 'flex',
   alignItems: 'center',
   width: '100%',
   height: '20%',
+  minHeight: '20%',
   paddingTop: '2px',
   paddingBottom: '10px',
   bgcolor: '#00000000',
@@ -26,6 +26,14 @@ export const ListUlLayout = styled('ul')(({ theme }) => ({
   margin: 0,
   padding: '0',
   overflow: 'auto',
+  '::-webkit-scrollbar': {
+    backgroundColor: '#aaccff' /*스크롤바 트랙 색상*/,
+    borderRadius: '5px',
+  },
+  '::-webkit-scrollbar-thumb': {
+    backgroundColor: '#33aacc' /*스크롤바의 색상*/,
+    borderRadius: '50px',
+  },
 }));
 
 export const ListChatUlLayout = styled('ul')(({ theme }) => ({
@@ -36,6 +44,10 @@ export const ListChatUlLayout = styled('ul')(({ theme }) => ({
   display: 'flex',
   width: '100%',
   flexDirection: 'column',
+  '::-webkit-scrollbar': {
+    display: 'none',
+  },
+  scrollbarWidth: 'none',
 }));
 
 export const ListChatGenerateLayout = styled('div')(({ theme }) => ({

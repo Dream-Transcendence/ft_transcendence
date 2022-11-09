@@ -31,8 +31,7 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
   }, [roomId]);
 
   const sendMessage = () => {
-    // console.log('is data???', values);
-    if (values.body !== '') {
+    if (values.body !== '' && /\S/.test(values.body)) {
       socket.emit(`${SENDMESSAGE}`, values, (res: any) => {
         const sendMessage: SocketMessage = {
           body: values.body,
@@ -51,16 +50,13 @@ function ChatInputModule(props: { messageSetter: ControlMessage }) {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
-    console.log('?? twice');
     setValues({ ...values, body: value });
   };
 
   const handleEnter = (event: any) => {
-    console.log('keydow!', event);
     //자꾸 enter를 누르면 refresh되길래 기본기능막아줌
     //chrome은 한글자판을 사용할 경우 229라는 키코드를 두번 보내서 사전에 막아줌
     if (event.key === 'Enter' && event.keyCode !== 229) {
-      console.log('~~~~~~~~~~~~');
       event.preventDefault();
       sendMessage();
     }

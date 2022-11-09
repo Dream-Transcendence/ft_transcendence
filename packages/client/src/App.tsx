@@ -1,17 +1,11 @@
 import './App.css';
 import LandingPage from './pages/LandingPage';
-import ProfilePage from './pages/ProfilePage';
-import ChatroomPage from './pages/ChatChannelPage';
 import NicknamePage from './pages/NicknamePage';
-import GameCreatePage from './pages/GameCreatePage';
-import GameLoadingPage from './pages/GameLoadingPage';
-import GamePlayPage from './pages/GamePlayPage';
-import { RecoilRoot, selector, useRecoilState, useRecoilValue } from 'recoil';
+import { RecoilRoot } from 'recoil';
 import PingpongRoutePage from './pages/PingpongRoutePage';
 import { Navigate, Routes } from 'react-router-dom';
 import { Route } from 'react-router-dom';
 import { PROFILEURL } from './configs/Link.url';
-import { BaseUserProfileData } from './types/Profile.type';
 import React from 'react';
 import Loader from './atoms/Loading/Loader';
 import SecondOauthPage from './pages/SecondOauthPage';

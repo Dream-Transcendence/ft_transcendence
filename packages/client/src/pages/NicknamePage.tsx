@@ -1,13 +1,11 @@
 import styled from '@emotion/styled';
 import NicknameInit from '../organisms/NicknameInit/NicknameInit';
-import { TextField } from '@mui/material';
-import { useCookies } from 'react-cookie';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { BaseUserProfileData, UserSecondAuth } from '../types/Profile.type';
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { PROFILEURL, SERVERURL } from '../configs/Link.url';
+import { PROFILEURL } from '../configs/Link.url';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 
 const NicknamePageLayout = styled('div')(({ theme }) => ({
@@ -29,7 +27,7 @@ function NicknamePage() {
   useEffect(() => {
     async function getUserData() {
       await axios
-        .get(`${SERVERURL}/users/userinfo`)
+        .get(`${process.env.REACT_APP_SERVER_URL}/users/userinfo`)
         .then((res) => {
           setUser(res.data);
           console.log('nickname!!', res.data.nickname);
@@ -75,7 +73,7 @@ function NicknamePage() {
     if (checkOauth) {
       const getSecondOauth = async () => {
         await axios
-          .get(`${SERVERURL}/users/${user.id}/2nd-auth`)
+          .get(`${process.env.REACT_APP_SERVER_URL}/users/${user.id}/2nd-auth`)
           .then((res) => {
             console.log(res);
             if (!res.data.authenticated) {

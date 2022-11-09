@@ -1,10 +1,9 @@
 import styled from '@emotion/styled';
 import TextBox from '../../texts/TextBox';
 import GamePlayWindowOrganism from '../../organisms/GamePlaySection/GamePlayWindow';
-import { gameInfoPropsType } from '../../types/Game.type';
 import { useEffect, useState } from 'react';
 import { CUSTOM, LADDER, SIZEDOWN, SPEEDUP } from '../../configs/Game.type';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { gameInfoAtom } from '../../recoil/game.recoil';
 
 const GameTemplateLayout = styled('section')(({ theme }) => ({
@@ -41,7 +40,7 @@ const GameSectionLayout = styled('div')(({ theme }) => ({
 }));
 
 function GamePlayTemplate() {
-  const [gameInfo, setGameInfo] = useRecoilState(gameInfoAtom);
+  const gameInfo = useRecoilValue(gameInfoAtom);
   const [mode, setMode] = useState<string>('');
   useEffect(() => {
     switch (gameInfo?.mode) {
@@ -58,7 +57,7 @@ function GamePlayTemplate() {
         setMode('1 VS 1 👶');
         break;
     }
-  }, []);
+  }, [gameInfo?.mode]);
 
   return (
     <GameTemplateLayout>
