@@ -8,6 +8,16 @@ import {
 } from 'class-validator';
 import { User } from '../users.entity';
 
+export class WsExceptionDto {
+  constructor(status: number, message: string) {
+    this.status = status;
+    this.message = message;
+  }
+
+  status: number;
+  message: string;
+}
+
 export class UserDto {
   constructor(id: number, nickname: string, image: string) {
     this.id = id;
