@@ -516,7 +516,7 @@ export class RoomService {
           room: { id: roomId },
         });
         const ids = msgs.map((msg) => msg.id);
-        await this.messagesRepository.delete(ids);
+        if (ids.length !== 0) await this.messagesRepository.delete(ids);
         await this.roomsRepository.delete(roomId);
         return { isDeleted: true };
       }
