@@ -30,6 +30,7 @@ import {
   PatchAuthDto,
   IsBlockedDto,
   CheckFriendDto,
+  WsExceptionDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User, Rank, Game } from './users.entity';
@@ -632,7 +633,9 @@ export class UserService {
     const onlineUserList = Array.from(this.connectionList.values());
     onlineUserList.map((connection) => {
       if (connection.userId === connectionDto.userId) {
-        throw new WsException('이미 로그인 되어있습니다.');
+        throw new WsException(
+          new WsExceptionDto(100, '이미 로그인 되어 있습니다.'),
+        );
       }
     });
     connectionDto.onGame = false;
@@ -756,7 +759,7 @@ export class UserService {
       where: { user: { id: requestorId }, friend: { id: responserId } },
     });
     if (duplicateFriendCheck !== null)
-      throw new WsException('이미 친구입니다.');
+      throw new WsException(new WsExceptionDto(101, '이미 친구입니다.'));
 
     let duplicateRequestCheck = await this.requestsRepository.findOne({
       where: { requestor: { id: requestorId }, responser: { id: responserId } },
@@ -770,7 +773,9 @@ export class UserService {
       });
     }
     if (duplicateRequestCheck !== null)
-      throw new WsException('이미 친구 요청을 보냈거나 받았습니다.');
+      throw new WsException(
+        new WsExceptionDto(101, '이미 친구 요청을 보냈거나 받았습니다.'),
+      );
   }
 
   async handleFriendRequest(
