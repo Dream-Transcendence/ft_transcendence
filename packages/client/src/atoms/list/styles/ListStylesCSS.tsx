@@ -26,6 +26,7 @@ export const ListUlLayout = styled('ul')(({ theme }) => ({
   margin: 0,
   padding: '0',
   overflow: 'auto',
+  overflowX: 'hidden',
   '::-webkit-scrollbar': {
     backgroundColor: '#aaccff' /*스크롤바 트랙 색상*/,
     borderRadius: '5px',
