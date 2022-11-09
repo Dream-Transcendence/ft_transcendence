@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { UserSecondAuth } from '../types/Profile.type';
 import { gameInfoAtom } from '../recoil/game.recoil';
 import { PROFILEURL } from '../configs/Link.url';
+import axios from 'axios';
 
 const GamePlayLayout = styled('section')(({ theme }) => ({
   display: 'flex',
@@ -35,10 +36,24 @@ function GamePlayPage() {
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
+
     if (userData.id === 0 || passSecondOauth.checkIsValid === false)
       navigate('/');
     else if (gameInfo === undefined) navigate(PROFILEURL);
   }, [userData.id, passSecondOauth, navigate]);
+
+  useEffect(() => {
+    const checkIsValidGame = async () => {
+      const response = await axios.get(
+        `${process.env.REACT_APP_SERVER_URL}/game/rooms/${gameInfo?.title}`,
+      );
+      if (!response.data.isExist) {
+        return navigate(PROFILEURL);
+      }
+    };
+    //정상적인 접근인지 판단하는 로직
+    if (gameInfo !== undefined) checkIsValidGame();
+  }, [gameInfo, navigate]);
 
   return (
     <GamePlayLayout>
