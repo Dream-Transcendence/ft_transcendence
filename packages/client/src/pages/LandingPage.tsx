@@ -27,8 +27,6 @@ const EnterButton = styled.button`
   }
 `;
 
-console.log(window.location.origin);
-
 axios.defaults.withCredentials = true;
 
 function LandingPage() {

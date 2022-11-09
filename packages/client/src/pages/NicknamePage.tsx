@@ -30,7 +30,6 @@ function NicknamePage() {
         .get(`${process.env.REACT_APP_SERVER_URL}/users/userinfo`)
         .then((res) => {
           setUser(res.data);
-          console.log('nickname!!', res.data.nickname);
           if (res.data.nickname.length <= 10) {
             //최초 가입 유저
             setCheckOauth(true);
@@ -38,7 +37,6 @@ function NicknamePage() {
         })
         .catch(() => {
           navigate('/');
-          console.log('no auth');
         });
     }
     try {
@@ -59,7 +57,7 @@ function NicknamePage() {
         navigate('/secondOauth');
       }
     } catch {
-      console.log('error: PingpongRoutePage()');
+      // alert()
     }
   }, []);
 
@@ -69,7 +67,6 @@ function NicknamePage() {
         await axios
           .get(`${process.env.REACT_APP_SERVER_URL}/users/${user.id}/2nd-auth`)
           .then((res) => {
-            console.log(res);
             if (!res.data.authenticated) {
               // 2nd 가 설정되지않은경우
               setPassSecondOauth({
@@ -89,7 +86,7 @@ function NicknamePage() {
       try {
         getSecondOauth();
       } catch (error) {
-        console.dir(error);
+        // alert(error)''
       }
     }
   }, [checkOauth, user.id]);

@@ -29,7 +29,6 @@ function NickNameTextField(props: { controlNickname: ControlNickname }) {
 
   const editNickname = async () => {
     try {
-      console.log('nick', nickname);
       await axios
         .patch(
           `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/nickname`,

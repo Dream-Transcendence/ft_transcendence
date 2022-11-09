@@ -141,14 +141,10 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
             nickname: res.user.nickname,
           },
         };
-        // console.log('받는 데이터', message, messages);
         setMessages([...messages, message]);
       });
     };
     receiveMessage();
-    // return () => {
-    //   socket.off(`${USERMESSAGE}`);
-    // };
   }, [messages, setMessages, socket]);
 
   const callApi = async () => {
@@ -173,7 +169,7 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
               setAnchorOffset(offset);
             });
         } catch (error) {
-          console.log(error);
+          // alert(error);
         }
       }
       // 종종 시작하자마자 스크롤이 바로 안 내려가서 한번 더 불러오는 경우가 있다..
@@ -192,7 +188,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
   };
 
   const checkBlock = (msg: SocketMessage) => {
-    // console.log('blockedUser!!', blockedUser);
     if (
       blockedUser.every((blockUser) => {
         return blockUser !== msg.user.id;
@@ -207,7 +202,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
 
   const listElement: React.ReactElement[] = messages.map(
     (msg: SocketMessage, index: number) => {
-      // console.log('checkBlock(msg)', checkBlock(msg), msg);
       return (
         <ListChatLayout key={index}>
           {index === 0 && isOverflow ? (
@@ -224,7 +218,6 @@ function ChatLogListOrganisms(props: { messageSetter: ControlMessage }) {
 
   return (
     <ChatLogLayout ref={messageCount}>
-      {/* [axios GET 요청]해당 채팅방의 모든 로그 요청 */}
       <ListChatGenerateLayout ref={scrollLayout}>
         {!isLoaded && <Loader />}
         <ListChatUlLayout className="scroll" ref={ulRef}>

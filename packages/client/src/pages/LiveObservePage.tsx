@@ -64,11 +64,9 @@ function LiveObservePage() {
       await axios
         .get(`${process.env.REACT_APP_SERVER_URL}/game/live-games`)
         .then((res: any) => {
-          console.log(res.data);
           setGameInfos([...res.data]);
         })
         .catch((error) => {
-          console.log(error);
           navigate(PROFILEURL);
         });
     };

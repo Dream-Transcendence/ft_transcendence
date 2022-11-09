@@ -38,11 +38,9 @@ export async function blockUser(
         id: blockId,
       },
     );
-    console.log('block!!');
     if (setBlock) setBlock();
   } catch (error) {
     alert(error);
-    throw console.dir(error);
   }
 }
 
@@ -55,11 +53,9 @@ export async function unBlockUser(
     await axios.delete(
       `${process.env.REACT_APP_SERVER_URL}/users/${userId}/blocks/${blockId}`,
     );
-    console.log('unblock!!');
     if (setUnBlock) setUnBlock();
   } catch (error) {
     alert(error);
-    throw console.dir(error);
   }
 }
 

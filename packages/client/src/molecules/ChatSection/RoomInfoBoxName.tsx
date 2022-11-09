@@ -68,7 +68,6 @@ function InfoBoxNameModule(props: { roomInfoSet: RoomInfoSet }) {
         ChangeRoomInfo({ ...roomInfoSet, roomInfo: roomInfo });
       } catch (error) {
         alert(error);
-        console.dir(error);
       }
     }
     return setChangeRoomName(false);

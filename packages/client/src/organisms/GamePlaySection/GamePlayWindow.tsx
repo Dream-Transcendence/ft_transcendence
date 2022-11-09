@@ -273,7 +273,6 @@ function GamePlayWindowOrganism() {
         userData.id === gameInfo?.rightPlayer.id
       ) {
         setTimeout(() => {
-          console.log('GAME START');
           socket.emit(`${GAMESTART}`, {
             title: gameInfo?.title,
             userId: userData.id,
@@ -284,15 +283,6 @@ function GamePlayWindowOrganism() {
     };
     if (IsStart === true) startGame();
   }, [IsStart]);
-
-  useEffect(() => {
-    return () => {
-      console.log('game over!!!!');
-    };
-  }, []);
-
-  //마운트시 초기화가 되어서 무한랜더링됨.
-  //ref로 해결
 
   /* 게임 시작을 위한 카운트 다운을 세는 로직 */
   useEffect(() => {
@@ -383,7 +373,6 @@ function GamePlayWindowOrganism() {
     let timeId: any = null;
     window.onresize = function () {
       clearTimeout(timeId);
-      // resizeWindow(); //settimeout으로 조절하지 않으면 과부화가 걸릴 수 있다고함
       timeId = setTimeout(resizeWindow, 100);
     };
   }, [windowSize]);
@@ -398,7 +387,6 @@ function GamePlayWindowOrganism() {
     ) {
       window.addEventListener('keydown', (event) => {
         event.preventDefault();
-        // console.log('keyevent', e.key, e.key === 'ArrowUp');
         if (event.key === 'ArrowUp') {
           socket.emit(`${MOVEPADDLE}`, {
             title: gameInfo?.title,
@@ -417,7 +405,6 @@ function GamePlayWindowOrganism() {
   }, []);
 
   /* 상대방 기권 감지 */
-  //[수정사항] 동환님 이거 off안해줘도 괜찮나요? doyun
   useEffect(() => {
     socket.on(PLAYERABSTENTION, (res) => {
       setAbstention(res.abstainedPlayer);

@@ -80,23 +80,6 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     }
   }, [otherId, friendList]);
 
-  // async function addRequestFriend() {
-  //   try {
-  //     const responseAdd = await axios.post(`${REACT_APP_SERVER_URL}/users/${id}/friends`, {
-  //       id: Number(otherId),
-  //     });
-  //     if (responseAdd.status === 201) {
-  //       setFriendList(friendList.concat(responseAdd.data));
-  //       return true;
-  //     } else {
-  //       return false;
-  //     }
-  //   } catch (error: any) {
-  //     alert(error);
-  //     console.log(error);
-  //   }
-  // }
-
   function sendRequestFriend() {
     try {
       socket.emit(FRIENDREQUEST, {
@@ -111,10 +94,8 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
         };
       };
       setInviteInfoList([...inviteInfoList, reply()]);
-      console.log('socket : 친구 요청 보냈습니다.');
     } catch (error) {
       alert(error);
-      console.log(error);
     }
   }
 
@@ -127,7 +108,6 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     icon: <Diversity1Icon />,
     action: () => {
       alert('이미 친구입니다.');
-      console.log('이미 친구입니다.');
     },
   };
 

@@ -95,14 +95,13 @@ function SettingRoomConfigOranisms(closeModal: () => void) {
               roomId: res.data.id,
             },
             (response: any) => {
-              console.log('enter room success ', response);
               navigate(`/pingpong/channel/room/${res.data.id}`);
             },
           );
           navigate(`${CHATROOMURL}${res.data.id}`);
         });
     } catch (error) {
-      console.dir(error);
+      // alert(error);
     }
   }
 

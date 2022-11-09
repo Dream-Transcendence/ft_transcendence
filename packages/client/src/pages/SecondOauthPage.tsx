@@ -86,7 +86,6 @@ function SecondOauthPage() {
         setIsRequest(true);
       })
       .catch((error) => {
-        console.dir(error);
         alert('인증 요청 실패');
       });
   };
@@ -104,7 +103,6 @@ function SecondOauthPage() {
         navigate(`${PROFILEURL}/${user.id}`);
       })
       .catch((error) => {
-        console.dir(error);
         alert('인증코드가 잘못되었습니다.');
       });
   };

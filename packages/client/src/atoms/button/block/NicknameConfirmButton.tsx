@@ -39,7 +39,6 @@ function NicknameConfirmButton(props: { controlNickname: ControlNickname }) {
 
   const editNickname = async () => {
     try {
-      console.log('nick', nickname);
       await axios
         .patch(
           `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/nickname`,
@@ -66,7 +65,6 @@ function NicknameConfirmButton(props: { controlNickname: ControlNickname }) {
 
   return (
     <NicknameConfirmBottonLayout>
-      {/* [axios POST 요청] 서버 측으로 닉네임 전달 */}
       <Button fullWidth variant="contained" onClick={handler}>
         확인
       </Button>

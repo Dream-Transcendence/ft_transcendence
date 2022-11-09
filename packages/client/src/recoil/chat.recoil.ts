@@ -54,7 +54,6 @@ export const getJoinedChatList = selectorFamily<any, number>({
         const response = await getRoomList(userId);
         return response;
       } catch (error) {
-        console.log(error);
         // alert(error);
       }
     },
@@ -79,7 +78,7 @@ export const getUnJoinedChatList = selectorFamily<any, number>({
         const response = await getUnJoinedRoomList(userId);
         return response;
       } catch (error) {
-        console.dir(error);
+        // alert(error);
       }
     },
 });

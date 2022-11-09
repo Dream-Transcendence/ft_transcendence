@@ -72,38 +72,21 @@ function GameLoadingPage() {
   }, [userData.id, passSecondOauth, navigate]);
 
   useEffect(() => {
-    console.log('gameType in Loading', gameType);
-    // connect(); //game namespace socket 연결
     //ladder 일때
     if (gameType === LADDER) {
-      console.log('before emit');
-      gameSocket.emit(
-        GAMEMATCH,
-        {
-          userId: userId,
-          mode: LADDER,
-        },
-        (response: any) => {
-          console.log('match emit 성공 : ', response);
-        },
-      );
+      gameSocket.emit(GAMEMATCH, {
+        userId: userId,
+        mode: LADDER,
+      });
     } else if (gameType === CUSTOM && gameInviteInfo.title.length > 0) {
-      console.log('Custom경기의 title입니다.', gameInviteInfo);
-      gameSocket.emit(
-        GAMEMATCH,
-        {
-          title: gameInviteInfo.title,
-          userId: userData.id,
-          mode: gameInviteInfo.mode,
-        },
-        (response: any) => {
-          console.log('match emit 성공 : ', response);
-        },
-      );
+      gameSocket.emit(GAMEMATCH, {
+        title: gameInviteInfo.title,
+        userId: userData.id,
+        mode: gameInviteInfo.mode,
+      });
     }
   }, [gameInviteInfo, gameType]);
 
-  //match 성공시 값 받아서 동작시켜야함
   useEffect(() => {
     gameSocket.on(ALREADYFORMATCH, (response: GameRoomDto) => {
       setGameInfo(response);
@@ -125,7 +108,6 @@ function GameLoadingPage() {
         type: 'check',
       };
       setInviteInfoList([...inviteInfoList, newMessage]);
-      console.log('socket : 게임 초대를 거절당했습니다.', newMessage);
       navigate(PROFILEURL);
     });
     return () => {
@@ -139,8 +121,6 @@ function GameLoadingPage() {
   useEffect(() => {
     gameSocket.on('exception', (response: any) => {
       alert(response.message);
-      console.log('게임 에러', response);
-      // navigate(PROFILEURL);
     });
     return () => {
       gameSocket.off('exception');
@@ -154,9 +134,6 @@ function GameLoadingPage() {
 
   return (
     <GameLodingLayout>
-      {/* [axios GET 요청] 게임 큐 체크? */}
-      {/* [axios POST 요청] 매칭 성공 시, 게임 방 생성요청 */}
-      {/* [SocketIO 요청] 게임 큐 체크? */}
       <LodingImageLayout>
         <Typography
           sx={{

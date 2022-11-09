@@ -57,7 +57,6 @@ function useSearch(
                 salt: '',
               },
               (response: any) => {
-                console.log('enter DM success ', response); // "got it"
                 navigate(`/pingpong/channel/room/${res.data.id}`);
               },
             );
@@ -65,7 +64,7 @@ function useSearch(
           });
       }
     } catch (error) {
-      console.log(error);
+      // alert(error);
     }
   };
 

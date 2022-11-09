@@ -43,12 +43,10 @@ function InfoBoxPasswordModule(props: { roomInfoSet: RoomInfoSet }) {
         if (handler !== undefined) {
           const room = { ...roomInfo, salt: password };
           handler(room);
-          console.log('', room);
           ChangeRoomInfo({ ...roomInfoSet, roomInfo: room });
         }
       } catch (error) {
         alert(error);
-        console.dir(error);
       }
     }
     return setChangePassword(false);

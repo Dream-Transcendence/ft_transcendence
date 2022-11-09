@@ -36,21 +36,13 @@ function GameRoutePage() {
   useEffect(() => {
     function connectGameSocket() {
       connect();
-      console.log('game socket 연결');
     }
     connectGameSocket();
     return () => {
-      console.log('disconnect gameType: ', gameType);
       if (gameType === CUSTOM) {
-        userSocket.emit(
-          CANCELINVITE,
-          {
-            hostId: userData.id,
-          },
-          (response: any) => {
-            console.log('match 취소 !!! : ', response);
-          },
-        );
+        userSocket.emit(CANCELINVITE, {
+          hostId: userData.id,
+        });
         setGameInviteInfo({
           title: '',
           hostId: 0,

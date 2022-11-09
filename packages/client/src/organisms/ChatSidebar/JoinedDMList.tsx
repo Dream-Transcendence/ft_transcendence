@@ -87,7 +87,6 @@ function JoinedDMListOrganisms() {
           salt: '',
         },
         (response: any) => {
-          console.log('enter DM success ', response); // "got it"
           navigate(`/pingpong/channel/room/${room.id}`);
         },
       );

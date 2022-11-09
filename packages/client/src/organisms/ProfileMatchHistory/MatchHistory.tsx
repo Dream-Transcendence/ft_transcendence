@@ -53,7 +53,7 @@ function MatchHistory() {
           setMatchHistoryList(history);
         })
         .catch((error) => {
-          console.log(error);
+          // alert(error);
         });
     }
     getUserLadder();

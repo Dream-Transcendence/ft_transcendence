@@ -60,7 +60,6 @@ function InviteMessageList() {
    * 요청 수락
    */
   const handleAcceptMessage = (info: InviteInfoListType) => {
-    console.log(info.type, '수락을 눌렀습니다.');
     setInviteInfoList((prev) => {
       return [...prev.filter((prevMassage) => prevMassage !== info)];
     });
@@ -75,7 +74,6 @@ function InviteMessageList() {
         },
       );
     } else if (info.type === 'game') {
-      console.log('게임 수락!!!!');
       setGameType(CUSTOM);
       socket.emit(ACCEPTGAME, {
         userId: userData.id,
@@ -115,7 +113,6 @@ function InviteMessageList() {
 
   const element = inviteInfoList.map(
     (info: InviteInfoListType, index: number) => {
-      // console.log('why : ', info);
       return (
         <Collapse key={index}>
           <ListItem

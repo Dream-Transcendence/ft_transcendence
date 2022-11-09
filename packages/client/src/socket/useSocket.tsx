@@ -34,10 +34,6 @@ const useSocket = (
       sockets[nameSpace].connected === false
     ) {
       sockets[nameSpace].connect();
-      console.log(
-        `sockets[${nameSpace}].connected`,
-        sockets[nameSpace].connected,
-      );
     }
   };
 
@@ -47,10 +43,6 @@ const useSocket = (
       sockets[nameSpace].connected === true
     ) {
       sockets[nameSpace].disconnect();
-      console.log(
-        `sockets[${nameSpace}].disconnected`,
-        sockets[nameSpace].connected,
-      );
       delete sockets[nameSpace];
     }
   };

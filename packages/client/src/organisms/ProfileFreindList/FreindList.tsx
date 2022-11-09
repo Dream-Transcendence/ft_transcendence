@@ -105,7 +105,6 @@ function FreindList(props: { friendProps: FriendPropsType }) {
             },
             (res: GameRoomDto) => {
               setGameInfo(res);
-              console.log(res);
               navigate(`${GAMEPLAYURL}/${res.title}`);
             },
           );

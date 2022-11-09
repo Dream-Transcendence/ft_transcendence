@@ -54,7 +54,6 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
         roomId: Number(roomId),
       },
       (response: any) => {
-        console.log('deleteChannel!! ', response); // "got it"
         const RemoveFromJoinedRoom = filterPopJoinedRoom();
         setJoinedList([...RemoveFromJoinedRoom]);
         const addToUnJoinedRoom: UnJoinedRoomList = {
@@ -65,10 +64,6 @@ function InfoBoxRoomFunctionModule(props: { roomInfoSet: RoomInfoSet }) {
         navigate(`${CHANNELURL}`);
       },
     );
-
-    // socket.on('roomMessage', (response: any) => {
-    //   console.log(response);
-    // });
   }
 
   useEffect(() => {
