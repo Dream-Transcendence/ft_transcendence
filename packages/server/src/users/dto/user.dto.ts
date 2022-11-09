@@ -9,12 +9,12 @@ import {
 import { User } from '../users.entity';
 
 export class WsExceptionDto {
-  constructor(status: number, message: string) {
-    this.status = status;
+  constructor(code: number, message: string) {
+    this.code = code;
     this.message = message;
   }
 
-  status: number;
+  code: number;
   message: string;
 }
 
