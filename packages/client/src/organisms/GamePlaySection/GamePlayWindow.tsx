@@ -423,6 +423,9 @@ function GamePlayWindowOrganism() {
       setAbstention(res.abstainedPlayer);
       setOpen(true);
     });
+    return () => {
+      socket.off(PLAYERABSTENTION);
+    };
   }, [socket]);
 
   const leftPlayerProfile: UserProfileBoxType = {
