@@ -53,7 +53,7 @@ export class FriendDto {
   isBlocked: boolean;
 }
 
-export class GetFriendDto {
+export class CheckFriendDto {
   constructor(isFriend: boolean) {
     this.isFriend = isFriend;
   }

@@ -29,7 +29,7 @@ import {
   ClientRequestDto,
   PatchAuthDto,
   IsBlockedDto,
-  GetFriendDto,
+  CheckFriendDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User, Rank, Game } from './users.entity';
@@ -454,13 +454,13 @@ export class UserService {
     return friendDto;
   }
 
-  async getFriend(id: number, friendId: number): Promise<GetFriendDto> {
+  async checkFriend(id: number, friendId: number): Promise<CheckFriendDto> {
     const friend = await this.friendsRepository.findOne({
       relations: ['user', 'friend'],
       where: { user: { id: id }, friend: { id: friendId } },
     });
-    if (friend === null) return new GetFriendDto(false);
-    else return new GetFriendDto(true);
+    if (friend === null) return new CheckFriendDto(false);
+    else return new CheckFriendDto(true);
   }
 
   async getFriends(id: number): Promise<FriendDto[]> {
