@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Game, Rank, User } from '../users/users.entity';
 import { Socket } from 'socket.io';
 import { UserDto } from 'src/users/dto/user.dto';
+import { isBoolean } from 'class-validator';
 
 const GAME_MODE = {
   ladder: 0,
@@ -16,6 +17,15 @@ const MOVE_DIR = {
   down: 1,
 } as const;
 export type MOVE_DIR = typeof MOVE_DIR[keyof typeof MOVE_DIR];
+
+export class CheckGameExistDto {
+  constructor(isExist: boolean) {
+    this.isExist = isExist;
+  }
+
+  @ApiProperty({ example: true })
+  isExist: boolean;
+}
 
 export class GameLadderDto {
   constructor(rank: Rank) {
