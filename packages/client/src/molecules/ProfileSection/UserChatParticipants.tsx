@@ -14,6 +14,7 @@ import { ParticipantInfoNState } from '../../types/Participant.type';
 import { BAN, MUTE } from '../../configs/Status.case';
 import { BLOCK } from '../../configs/Block.case';
 import { userDataAtom } from '../../recoil/user.recoil';
+import { useNavigate } from 'react-router-dom';
 
 const UserProfileLayout = styled(Badge)(({ theme }) => ({
   marginLeft: '4%',
@@ -62,12 +63,11 @@ const MuteBadge = styled('span')(({ theme }) => ({
 }));
 
 const BanBadge = styled('span')(({ theme }) => ({
-  marginTop: '11%',
-  marginLeft: '76%',
-  fontSize: '5px',
-  color: 'yellowgreen',
+  marginTop: '10%',
+  height: '20px',
+  width: '20px',
   position: 'absolute',
-  zIndex: '1',
+  zIndex: '2',
 }));
 
 const BlockBadge = styled('span')(({ theme }) => ({
@@ -107,8 +107,13 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
   const { user, auth, status } = participantInfo;
   const userType = useRecoilValue(userAuth);
   const userData = useRecoilValue(userDataAtom);
+  const navigate = useNavigate();
 
   //const isBan = useState();
+
+  const moveProfile = () => {
+    navigate(`${PROFILEURL}/${user.id}`);
+  };
 
   const userInfo: UserProfileBoxDataType = {
     id: user.id,
@@ -126,9 +131,10 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
   };
 
   const userProfileBoxProps = {
-    isButton: false,
+    isButton: true,
     avatarType: 'circle',
     userData: userInfo,
+    action: moveProfile,
   };
 
   return (
@@ -138,7 +144,7 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
         {auth === ADMIN && <OwnerBadge>🔮</OwnerBadge>}
         {auth === OWNER && <AdminBadge>👑</AdminBadge>}
         {status === MUTE && <MuteBadge>🔇</MuteBadge>}
-        {status === BAN && <BanBadge>BAN</BanBadge>}
+        {status === BAN && <BanBadge>⛔️</BanBadge>}
         {participantInfo.blocked === BLOCK && (
           <BlockBadge>
             <BlockCloss />
@@ -147,7 +153,7 @@ function UserChatParticipantsBox(participantInfoNState: ParticipantInfoNState) {
         <UserProfileBox userProfileBoxProps={userProfileBoxProps} />
       </UserStateLayout>
       <UserFuntionLayout>
-        <LinkPageIconButton linkIconProps={linkPersonal} />
+        {/* <LinkPageIconButton linkIconProps={linkPersonal} /> */}
         {/* {userData.id !== participantInfo.user.id && (
           <CustomIconButton customProps={customProps} />
         )} */}

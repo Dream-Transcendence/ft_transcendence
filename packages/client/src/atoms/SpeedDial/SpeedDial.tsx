@@ -185,9 +185,9 @@ function BasicSpeedDial(props: {
   ];
 
   const OwnerActions = [
-    { icon: <StarRateIcon />, name: 'Admin', action: handleAdmin },
     { icon: <RemoveCircleIcon />, name: 'User Ban / kick', action: handleBan },
     { icon: <VolumeOffIcon />, name: 'Mute', action: handleMute },
+    { icon: <StarRateIcon />, name: 'Admin', action: handleAdmin },
   ];
 
   return (
@@ -200,11 +200,12 @@ function BasicSpeedDial(props: {
       ariaLabel="SpeedDial basic example"
       sx={{
         position: 'absolute',
+        marginLeft: '-10%',
         width: '48px',
         height: '48px',
       }}
       icon={<SettingsApplicationsIcon />}
-      direction="right"
+      direction="left"
     >
       {userType === OWNER
         ? OwnerActions.map((action) => (

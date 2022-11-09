@@ -18,6 +18,7 @@ import {
 import {
   useRecoilRefresher_UNSTABLE,
   useRecoilState,
+  useRecoilValue,
   useSetRecoilState,
 } from 'recoil';
 import { SearchPropsType } from '../../types/search.type';
@@ -32,6 +33,8 @@ import CustomIconButton from '../button/icon/CustomIconButtion';
 import { CustomIconProps } from '../../types/Link.type';
 import axios from 'axios';
 import { getJoinedChatList } from '../../recoil/chat.recoil';
+import { useEffect } from 'react';
+import { UserSecondAuth } from '../../types/Profile.type';
 
 const NavLayout = styled('section')(({ theme }) => ({
   height: '100%',
@@ -72,9 +75,16 @@ function NavigationBar() {
   const [userData, setUserData] = useRecoilState(userDataAtom);
   const setSecondAuth = useSetRecoilState(userSecondAuth);
   const navigate = useNavigate();
+  const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const refreshUserInfo = useRecoilRefresher_UNSTABLE(
     getJoinedChatList(userData.id),
   );
+
+  useEffect(() => {
+    //정상적인 접근인지 판단하는 로직
+    if (userData.id === 0 || passSecondOauth.checkIsValid === false)
+      navigate('/');
+  }, [userData.id, passSecondOauth, navigate]);
 
   const searchProps: SearchPropsType = useSearch(
     `${process.env.REACT_APP_SERVER_URL}/users/search`,

@@ -396,15 +396,16 @@ function GamePlayWindowOrganism() {
         userData.id === gameInfo?.rightPlayer.id) &&
       abstention === 0
     ) {
-      window.addEventListener('keydown', (e) => {
+      window.addEventListener('keydown', (event) => {
+        event.preventDefault();
         // console.log('keyevent', e.key, e.key === 'ArrowUp');
-        if (e.key === 'ArrowUp') {
+        if (event.key === 'ArrowUp') {
           socket.emit(`${MOVEPADDLE}`, {
             title: gameInfo?.title,
             playerId: userData.id,
             moveDir: UP,
           });
-        } else if (e.key === 'ArrowDown') {
+        } else if (event.key === 'ArrowDown') {
           socket.emit(`${MOVEPADDLE}`, {
             title: gameInfo?.title,
             playerId: userData.id,
@@ -422,6 +423,9 @@ function GamePlayWindowOrganism() {
       setAbstention(res.abstainedPlayer);
       setOpen(true);
     });
+    return () => {
+      socket.off(PLAYERABSTENTION);
+    };
   }, [socket]);
 
   const leftPlayerProfile: UserProfileBoxType = {

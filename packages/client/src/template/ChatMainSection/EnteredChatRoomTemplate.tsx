@@ -254,7 +254,7 @@ function EnteredChatRoomTemplate() {
               `${process.env.REACT_APP_SERVER_URL}/users/${userData.id}/blocks/${res.user.id}`,
             )
             .then((response) => {
-              const participant = { ...res, blocked: response.data };
+              const participant = { ...res, blocked: response.data.isBlocked };
               setParticipantInfo([...participantInfo, participant]);
             });
         } catch (error) {
