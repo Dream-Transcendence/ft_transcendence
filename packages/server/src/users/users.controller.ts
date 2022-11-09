@@ -255,8 +255,8 @@ export class UsersController {
   @ApiOkResponse({ description: '친구 정보 확인 성공', type: UserDto })
   @ApiNotFoundResponse({ description: 'Friend Not Found' })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
-  getFriend(@Param('id') id: number, @Param('friendId') friendId: number) {
-    return this.userService.getFriend(id, friendId);
+  checkFriend(@Param('id') id: number, @Param('friendId') friendId: number) {
+    return this.userService.checkFriend(id, friendId);
   }
 
   @Get('/:id/friends')
