@@ -13,6 +13,7 @@ import {
   WatchDto,
   GameUserDto,
   GameRoomDto,
+  CheckGameExistDto,
 } from './game.dto';
 import { Game, Rank, User } from '../users/users.entity';
 import { Repository } from 'typeorm';
@@ -39,6 +40,12 @@ export class GameService {
   canvasHeight = 620;
   paddleWidth = 20;
   paddleHeight = 186;
+
+  async checkGameExist(title: string): Promise<CheckGameExistDto> {
+    const game = this.gameInfoMap.get(title);
+    if (game === undefined) return new CheckGameExistDto(false);
+    return new CheckGameExistDto(true);
+  }
 
   async getLiveGames(): Promise<GameRoomDto[]> {
     const liveGames: GameRoomDto[] = [];
