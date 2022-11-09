@@ -249,6 +249,7 @@ export class GameService {
         this.gameInfoMap.get(title).player.left.id,
         this.gameInfoMap.get(title).player.right.id,
       ].sort();
+      this.readyMap.delete(title);
       if (JSON.stringify(arr1) !== JSON.stringify(arr2))
         throw new WsException('There is an incorrect user in the game room.');
     }
