@@ -40,6 +40,7 @@ import {
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
 import LiveObservePage from './LiveObservePage';
+import { NavigateNextTwoTone } from '@mui/icons-material';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -58,7 +59,7 @@ const NavSection = styled('nav')(({ theme }) => ({
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
 
-  const userData = useRecoilValue(userDataAtom);
+  const [userData, setUserData] = useRecoilState(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
@@ -68,6 +69,7 @@ function PingpongRoutePage() {
   const setCheckFriendRequest = useSetRecoilState(checkFriendRequestAtom);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const setSecondAuth = useSetRecoilState(userSecondAuth);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -307,13 +309,45 @@ function PingpongRoutePage() {
     };
   }, []);
 
+  const logoutHandler = async () => {
+    try {
+      await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/auth/logout`)
+        .then((res) => {
+          setUserData({
+            id: 0,
+            nickname: 'xxxxxxxxxxxxxxx',
+            image: '',
+          });
+          setSecondAuth({
+            checkIsSecondOauth: false,
+            checkIsValid: true,
+          });
+          navigate('/');
+          console.log('logout!!');
+        });
+    } catch (error) {
+      console.dir(error);
+    }
+  };
   //여기에서 lonin 중복을 처리하는 것 같은데, 모든 예외처리를 여기서 하는지라  login중복은 따로 처리를 해줘야할 것 같아요
   //socket api를 따로 만들던지 해야 처리 가능할 듯 싶네요 동환님
   //중복 로그인 처리하실 때, 말씀 부탁드릴게요
   useEffect(() => {
     socket.on('exception', (error: any) => {
-      alert(error.message);
-      navigate(PROFILEURL);
+      console.log(error);
+      if (error.status === 100) {
+        alert(error.message);
+        navigate('/');
+        logoutHandler();
+      } else if (error.status === 101) {
+        alert(error.message);
+        setInviteInfoList((prev) => {
+          return [...prev.slice(0, -1)];
+        });
+      } else {
+        navigate(PROFILEURL);
+      }
     });
     return () => {
       socket.off('exception');

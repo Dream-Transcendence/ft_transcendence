@@ -21,7 +21,7 @@ import { userDataAtom, userSecondAuth } from '../../recoil/user.recoil';
 import { FriendPropsType } from '../ProfilePersonal/ProfilePersonal';
 import { FRIENDREQUEST, userNameSpace } from '../../socket/event';
 import useSocket from '../../socket/useSocket';
-import { InviteInfoListType } from '../../types/Message.type';
+import { CheckFriendDto, InviteInfoListType } from '../../types/Message.type';
 import { inviteInfoListAtom } from '../../recoil/common.recoil';
 import {
   blockUser,
@@ -66,15 +66,11 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
     await axios
       .get(`${process.env.REACT_APP_SERVER_URL}/users/${id}/friends/${otherId}`)
       .then((response: any) => {
-        if (response.status === 200) {
-          setIsFriend(true);
-        }
+        const res: CheckFriendDto = response.data;
+        setIsFriend(res.isFriend);
       })
       .catch((error: any) => {
-        console.log('error status : ', error.response.data.statusCode);
-        if (error.response.data.statusCode === 404) {
-          setIsFriend(false);
-        }
+        // alert(error);
       });
   }
 
@@ -107,19 +103,19 @@ function OtherInfo(props: { friendProps: FriendPropsType }) {
         requestorId: id,
         responserId: Number(otherId),
       });
+      const reply = () => {
+        return {
+          userId: userData.id,
+          message: `${userData.nickname}님에게 친구 초대를 보냈습니다.`,
+          type: 'check',
+        };
+      };
+      setInviteInfoList([...inviteInfoList, reply()]);
+      console.log('socket : 친구 요청 보냈습니다.');
     } catch (error) {
       alert(error);
       console.log(error);
     }
-    const reply = () => {
-      return {
-        userId: userData.id,
-        message: `${userData.nickname}님에게 친구 초대를 보냈습니다.`,
-        type: 'check',
-      };
-    };
-    setInviteInfoList([...inviteInfoList, reply()]);
-    console.log('socket : 친구 요청 보냈습니다.');
   }
 
   const addFriendProps: CustomIconProps = {
