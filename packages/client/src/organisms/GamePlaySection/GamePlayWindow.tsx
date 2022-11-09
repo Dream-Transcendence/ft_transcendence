@@ -32,7 +32,7 @@ import {
   UP,
 } from '../../configs/Game.type';
 import { largeTheme, smallTheme } from './GmaePlayTheme';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { userDataAtom } from '../../recoil/user.recoil';
 import UserProfileBox from '../../molecules/ProfileSection/UserProfileBox';
 import {
@@ -226,7 +226,9 @@ const HowToUseLayout = styled('div')(({ theme }) => ({
 }));
 
 function GamePlayWindowOrganism() {
-  const gameInfo = useRecoilValue<GameRoomDto | undefined>(gameInfoAtom);
+  const [gameInfo, setGameInfo] = useRecoilState<GameRoomDto | undefined>(
+    gameInfoAtom,
+  );
   const [socket] = useSocket(gameNameSpace);
   const userData = useRecoilValue<BaseUserProfileData>(userDataAtom);
   const [time, setTime] = useState<number>(3);
@@ -263,6 +265,9 @@ function GamePlayWindowOrganism() {
 
   useEffect(() => {
     if (gameInfo?.mode === SIZEDOWN) setBallMode(SMALLBALLMODE);
+    return () => {
+      setGameInfo(undefined);
+    };
   }, []);
 
   /* 게임 시작을 위해 서버로 정보를 날리는 로직 */
