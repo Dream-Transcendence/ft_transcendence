@@ -38,6 +38,10 @@ export interface ServerAcceptGameDto {
   mode: number;
 }
 
+export interface CheckFriendDto {
+  isFriend: boolean;
+}
+
 // export interface InviteMessageListType {
 //   id: number,
 //   requestor: {

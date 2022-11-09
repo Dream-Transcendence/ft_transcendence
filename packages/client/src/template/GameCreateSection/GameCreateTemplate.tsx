@@ -81,37 +81,25 @@ function GameCreateTemplate() {
   };
 
   const setNomal = () => {
-    console.log('gameType', gameType);
-    // setGameType(CUSTOM);
     gameRequest();
   };
-
-  //[수정사항] gameloading으로 넘어가야함
-  // const EnterGame: LinkComponentResource = {
-  //   url: GAMELOADINGURL,
-  //   component: <InviteButton onClick={setNomal}>초대하기</InviteButton>,
-  // };
 
   useEffect(() => {
     gameSocket.on('exeption', (response) => {
       alert('상대방이 로그오프 상태입니다.');
-      console.log(response);
     });
   });
 
   return (
     <GameTemplateLayout>
-      {/* [axios GET 요청] 상대방이 게임중인지 확인할 수 있는 정보 불러오기 및 POST요청 시 확인해도 가능 */}
       <GameHeaderLayout>
         <TextBox value={'Enjoy Game!'} size={'3rem'} fontColor={'black'} />
       </GameHeaderLayout>
       <GameSectionLayout>
-        {/* mpa, option */}
         <GameCreateMainOrganism />
       </GameSectionLayout>
       <GameFooterLayout>
         <InviteButton onClick={setNomal}>초대하기</InviteButton>
-        {/* <LinkPageComponentButton linkComponentprops={EnterGame} /> */}
       </GameFooterLayout>
     </GameTemplateLayout>
   );

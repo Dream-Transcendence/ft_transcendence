@@ -81,18 +81,14 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
         salt: password,
       },
       (response: any) => {
-        console.log('enter new room success ', response); // "got it"
         //임시 데이터 생성
         const newRoom: RoomList = { ...roomInfo, recvMessageCount: 0 };
         setJoinedRoomList([...joinedRoomList, newRoom]);
-        setUnJoinedList([...filterPopRoom()]); //버튼클릭고장
+        setUnJoinedList([...filterPopRoom()]);
         navigate(`${CHATROOMURL}${roomId}`);
       },
     );
-    //방을 잘못 들어갈 경우 에러처리
   };
-  //항후, 방 넘버를 토대로 정보를 구성할 것임.
-  //api 호출해서 룸 번호 알아냄
 
   const EnterRoom: LinkTextResource = {
     //데이터에 따라 다른 url
@@ -129,7 +125,6 @@ function ChatRoomElementOrganisms(props: { roomInfo: UnJoinedRoomList }) {
         <RoomTitleModule title={name} type={type}></RoomTitleModule>
         <RoomNumberOfPeopleModule num={personnel}></RoomNumberOfPeopleModule>
       </RoomInfoLayout>
-      {/* 채팅방 타입에 따라 유연하게 보일 것 */}
       <PasswordInputLayout>
         {type === PROTECTED && <PasswordInput handlers={handlePasswordSet} />}
       </PasswordInputLayout>

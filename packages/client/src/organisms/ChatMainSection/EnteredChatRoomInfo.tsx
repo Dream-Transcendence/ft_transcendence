@@ -58,7 +58,6 @@ export const ChangeRoomInfo = async (roomInfoSet: RoomInfoSet) => {
     return await response.status;
   } catch (error) {
     alert(error);
-    throw await console.dir(error);
   }
 };
 

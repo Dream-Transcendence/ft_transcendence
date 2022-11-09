@@ -40,12 +40,10 @@ const ChatRoomImageProfile = (props: { roomInfoSet: RoomInfoSet }) => {
       axios
         .post(`${process.env.REACT_APP_SERVER_URL}/rooms/${roomId}`, image)
         .then((response) => {
-          console.log('이미지 변경 성공');
           setImage(undefined);
         })
         .catch((error) => {
           alert(error);
-          console.log('error : ', error);
         });
     }
   };

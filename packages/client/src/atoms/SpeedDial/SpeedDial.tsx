@@ -18,19 +18,6 @@ import useSocket from '../../socket/useSocket';
 import { useEffect } from 'react';
 import { BAN, MUTE, NONE } from '../../configs/Status.case';
 
-//와.. 뭐지 react-dom.development.js:16317 Uncaught Error: Too many re-renders. React limits the number of renders to prevent an infinite loop 에러 발생
-//아래의 코드가 문제인듯하다.
-// const checkStatus = (
-//   auth: number | null,
-//   status: number | null,
-//   AdminSetter: (state: boolean) => void,
-//   MuteSetter: (state: boolean) => void,
-// ) => {
-//   if (status === MUTE) MuteSetter(true);
-//   else if (status === BAN) console.log('ban!!!!!!');
-//   else if (auth === ADMIN) AdminSetter(true);
-// };
-
 const changeParticipant = (
   participantInfo: ParticipantInfo,
   key: string,
@@ -65,7 +52,6 @@ function BasicSpeedDial(props: {
   };
 
   const onOffCrown = () => {
-    console.log('Admin!!!!!!!!!');
     if (participantInfo.auth === ADMIN)
       setParticipantInfos([
         ...filteredParticipants,
@@ -84,30 +70,23 @@ function BasicSpeedDial(props: {
       ...filteredParticipants,
       changeParticipant(participantInfo, 'status', BAN),
     ]);
-    console.log('ban!!!!!!!!!!!');
   };
 
   //[검증사항]mute는 로그인 구현 후, 검증가능
   const OnMute = () => {
-    // if (!isMute) setIsMute(true);
-    // else alert('이미 음소거 처리되었습니다.');
     if (status !== BAN && status !== MUTE) {
       setParticipantInfos([
         ...filteredParticipants,
         changeParticipant(participantInfo, 'status', MUTE),
       ]);
-      console.log('mute!!!!!!!!!!!');
     }
   };
 
   const beNone = () => {
-    // if (!isMute) setIsMute(true);
-    // else alert('이미 음소거 처리되었습니다.');
     setParticipantInfos([
       ...filteredParticipants,
       changeParticipant(participantInfo, 'status', null),
     ]);
-    console.log('NONE!!!!!!!!!!!');
   };
 
   const handleAdmin = () => {
@@ -125,7 +104,7 @@ function BasicSpeedDial(props: {
   };
 
   const handleBan = () => {
-    // 시간제한에서 영구변경으로 변경
+    //영구
     if (status !== MUTE) {
       if (status === BAN) {
         const info = setInfo(auth, NONE);
@@ -134,10 +113,6 @@ function BasicSpeedDial(props: {
         const info = setInfo(auth, BAN);
         setUserState(info, KickOff);
       }
-      // setTimeout(async () => {
-      //   const info = await setInfo(auth, NONE);
-      //   setUserState(info, beNone);
-      // }, 5000);
     } else if (status === MUTE) {
       alert('유저의 음소거 상태가 해제되면 다시 시도해주세요');
     }
@@ -157,16 +132,12 @@ function BasicSpeedDial(props: {
         setUserState(info, beNone);
       }
     } else if (status === BAN) {
-      alert('유저의 제약상태를 해제 후, 다시 시도해주세요'); //시간 제한으로 했다가, 다시 껏다키면으로 바꿈
+      alert('유저의 제약상태를 해제 후, 다시 시도해주세요');
     }
-    // set비동기처리 60초
-    //interval로 남은시간처리..?
   };
 
   const setUserState = (info: ChangeParticipantInfo, action: () => void) => {
-    socket.emit(`${PATCHUSERINFO}`, info, (response: any) => {
-      console.log('status changed:', info);
-    });
+    socket.emit(`${PATCHUSERINFO}`, info);
     action();
   };
 

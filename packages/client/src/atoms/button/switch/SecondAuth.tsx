@@ -66,12 +66,11 @@ function SecondAuthSwitch() {
   };
 
   const handleChangeAuth = () => {
-    console.log('IsSecondOauth:', passSecondOauth);
     if (passSecondOauth.checkIsSecondOauth) {
       try {
         unSetSecondAuth(); // 클릭된 현재 Auth가 on일 때 // auth를 끄는 동작
       } catch (error) {
-        console.dir(error);
+        // alert(error);
       }
     } else if (!passSecondOauth.checkIsSecondOauth) {
       navigate('/secondOauth'); // 클릭된 현재 Auth가 off일 때 // auth를 키는 동작
@@ -88,15 +87,8 @@ function SecondAuthSwitch() {
             checked={passSecondOauth.checkIsSecondOauth}
             onClick={handleChangeAuth}
           />
-          // <Switch
-          //   //onChange={handleChange}
-          //   inputProps={{ 'aria-label': 'controlled' }}
-          //   checked={passSecondOauth.checkIsSecondOauth}
-          //   onClick={handleChangeAuth}
-          // />
         }
         label="2차 인증"
-        // [axios PATCH 요청] 2차 인증 상태 변경
       />
     </SecondAuthSwitchLayout>
   );

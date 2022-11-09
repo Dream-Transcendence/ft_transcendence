@@ -38,11 +38,9 @@ function UserInfo() {
         )
         .then((response) => {
           setUser({ ...user, image: response.data.image });
-          console.log('이미지 변경 성공');
         })
         .catch((error) => {
           alert(error);
-          console.log('error : ', error);
         });
     }
   }, [userImage, userId]);

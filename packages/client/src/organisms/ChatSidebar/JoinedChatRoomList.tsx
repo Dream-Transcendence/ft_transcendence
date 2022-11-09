@@ -75,7 +75,6 @@ function JoinedChatRoomModule() {
           roomId: room.id,
         },
         (response: any) => {
-          console.log('enter room success ', response);
           navigate(`/pingpong/channel/room/${room.id}`);
         },
       );

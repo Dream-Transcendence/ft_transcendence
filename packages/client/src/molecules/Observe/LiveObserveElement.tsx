@@ -112,7 +112,6 @@ function LiveObserveElement(props: { gameInfo: GameRoomDto }) {
       },
       (res: GameRoomDto) => {
         setGameInfo(res);
-        console.log(res);
         navigate(`${GAMEPLAYURL}/${res.title}`);
       },
     );

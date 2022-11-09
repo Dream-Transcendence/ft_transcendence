@@ -99,7 +99,7 @@ function NavigationBar() {
         .then((res) => {
           setUserData({
             id: 0,
-            nickname: 'default',
+            nickname: 'xxxxxxxxxxxxxxx',
             image: '',
           });
           setSecondAuth({
@@ -107,10 +107,9 @@ function NavigationBar() {
             checkIsValid: true,
           });
           navigate('/');
-          console.log('logout!!');
         });
     } catch (error) {
-      console.dir(error);
+      // alert(error);
     }
   };
 

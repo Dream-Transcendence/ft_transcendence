@@ -108,7 +108,6 @@ function EnteredChatRoomTemplate() {
         setUserState(roomInfo.status);
       } catch (error) {
         navigate(`${CHANNELURL}`);
-        // throw console.dir(error);
       }
     }
     if (userData.id !== 0 && passSecondOauth.checkIsValid !== false) {
@@ -143,7 +142,6 @@ function EnteredChatRoomTemplate() {
       } catch (error: any) {
         if (error.response.data.statusCode === 401) navigate('/');
         // alert(error);
-        throw console.dir(error);
       }
     }
     getParticipantInfo();
@@ -258,7 +256,7 @@ function EnteredChatRoomTemplate() {
               setParticipantInfo([...participantInfo, participant]);
             });
         } catch (error) {
-          console.dir(error);
+          // alert(error);
         }
       });
     }
@@ -279,7 +277,6 @@ function EnteredChatRoomTemplate() {
             return participant.user.id !== +res;
           },
         );
-        console.log(res, filteredParticipants);
         setParticipantInfo([...filteredParticipants]);
       });
     }

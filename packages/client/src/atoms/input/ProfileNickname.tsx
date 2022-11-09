@@ -33,13 +33,11 @@ function ProfileNickname() {
           { nickname: value },
         );
         if (response.status === 200) {
-          console.log('변경 성공');
           handleName(value);
         }
       }
     } catch (error: any) {
       if (error.response.status === 409) alert('중복된 닉네임입니다.');
-      console.log(error);
     }
   }
 
@@ -56,7 +54,6 @@ function ProfileNickname() {
 
   const handleClick = () => {
     setIsChange(false);
-    console.log('click ', nickname); //예외처리 추가
     if (checkValidNickname(nickname)) changeName(nickname);
     else alert('닉네임이 공백을 포함하거나 유효하지 않습니다!');
   };
@@ -78,22 +75,12 @@ function ProfileNickname() {
       } catch (error: any) {
         if (error.response.data.statusCode === 401) navigate('/');
         else {
-          console.log(error);
           alert(error);
         }
       }
     }
     getUserData();
   }, []);
-
-  //useEffect(() => {
-  // if (user.nickname !== 'dha') {
-  //   console.info('if', user);
-  // } else {
-  //   console.info('else', user);
-  // }
-  //setUser(response.data);
-  //}, [user.nickname]);
 
   return (
     //[axios GET 요청] 프로필 이름

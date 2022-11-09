@@ -40,6 +40,7 @@ import {
 import { GameInviteInfoType, ServerInviteGameDto } from '../types/Game.type';
 import { gameInviteInfoAtom } from '../recoil/game.recoil';
 import LiveObservePage from './LiveObservePage';
+import { NavigateNextTwoTone } from '@mui/icons-material';
 
 const PageSection = styled('section')(({ theme }) => ({
   width: '100%',
@@ -58,7 +59,7 @@ const NavSection = styled('nav')(({ theme }) => ({
 function PingpongRoutePage() {
   const [socket, connect, disconnect] = useSocket(userNameSpace);
 
-  const userData = useRecoilValue(userDataAtom);
+  const [userData, setUserData] = useRecoilState(userDataAtom);
   const navigate = useNavigate();
   const passSecondOauth = useRecoilValue<UserSecondAuth>(userSecondAuth);
   const [userLogStateList, setUserLogStateList] =
@@ -68,6 +69,7 @@ function PingpongRoutePage() {
   const setCheckFriendRequest = useSetRecoilState(checkFriendRequestAtom);
   const [gameInviteInfo, setGameInviteInfo] =
     useRecoilState<GameInviteInfoType>(gameInviteInfoAtom);
+  const setSecondAuth = useSetRecoilState(userSecondAuth);
 
   useEffect(() => {
     //정상적인 접근인지 판단하는 로직
@@ -79,7 +81,6 @@ function PingpongRoutePage() {
   //로그온관련 소켓 네임스페이스(ws://localhost:4242/user) 연결작업
   useEffect(() => {
     connect();
-    console.log('로그온입니다.');
     socket.emit(
       logOn,
       {
@@ -88,20 +89,15 @@ function PingpongRoutePage() {
       },
       (response: ConnectionsDto) => {
         setUserLogStateList(response.connections); //로그인 중인 유저들 정보  받기
-        console.log('로그온 유저 목록');
-        console.log(response);
       },
     );
     return () => {
-      // socket.off('exception'); //exception 리스너가 없는데 off를 해야하나???
-      console.log('로그오프입니다.');
       disconnect();
       socket.close();
       //logoff자동실행, 접속중인 친구들에게 detectlogoff 이벤트 발송한다고함
     };
-    //logStateList deps에 넣어두긴 했는데, 로그인 정보가 바뀌었다고 여기에서 랜더링 될 필요가 있나..??
   }, []);
-  //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함, id 또한 재 로그인 하지 않는이상 다시 바뀔 일은 없겠지만 일단 남겨 둠
+  //connect, disconnect를 빼 첫 랜더링 시에만 socket 생성 및 연결하도록 함
 
   /**
    * 유저의 미확인 메시지 기록 받아오기
@@ -114,7 +110,6 @@ function PingpongRoutePage() {
         )
         .then((response: any) => {
           if (response.data.length > 0) {
-            console.log('유저 메시지 기록 가져오기 : ', response);
             const infoList = response.data.map((message: any) => {
               return {
                 id: message.id,
@@ -123,27 +118,22 @@ function PingpongRoutePage() {
                 type: 'friend',
               };
             });
-            console.log(inviteInfoList, 'to', infoList);
             setInviteInfoList([...inviteInfoList, ...infoList]);
           }
         })
         .catch((error) => {
           if (error.response.data.statusCode === 401) navigate('/');
           else {
-            console.log(error);
             alert(error);
           }
         });
     }
     getMessageList();
-    console.log(inviteInfoList);
   }, []);
 
   //hook에서 사용되는 함수로써 매번 랜더링시마다 새로 함수가 만들어 져야하므로 useCallback으로 함수의 재생성 방지
   const findChanged = useCallback(
     (userChangedState: ConnectionDto) => {
-      console.log('기존 로그인 중인 사람들 목록', userLogStateList);
-      console.log('상태 바뀐사람 : ', userChangedState);
       const myIndex: number = userLogStateList.findIndex((user) => {
         return user.userId === userChangedState?.userId;
       });
@@ -158,19 +148,16 @@ function PingpongRoutePage() {
   useEffect(() => {
     //check friend's log state changing
     socket.on(CHANGEUSERSTATUS, (response: ConnectionDto) => {
-      console.log('불특정 유저 상태 변경');
       const idx = findChanged(response);
       if (userLogStateList.length > 0 && idx !== -1) {
         //emit한 결과를 받은 list가 존재해야함
         const newList = [...userLogStateList];
         //기존 상태값 변경
         newList.splice(idx, 1, response);
-        console.log('기존 상태 변경', newList);
         setUserLogStateList(newList);
       } else if (idx === -1) {
         //로그인 유저 추가
         const newList = [...userLogStateList, response];
-        console.log('새로운 유저 로그인', newList);
         setUserLogStateList(newList);
       }
     });
@@ -197,12 +184,6 @@ function PingpongRoutePage() {
     };
   }, [userLogStateList, setUserLogStateList, findChanged, socket]); //userLogStateList, setUserLogStateList, findChanged, socket
 
-  // useEffect(() => {
-  //   socket.onAny((res) => {
-  //     console.log(res, 'what! tje fucl');
-  //   });
-  // }, []);
-
   /**
    * 친구 요청 받기
    */
@@ -217,7 +198,6 @@ function PingpongRoutePage() {
         type: 'friend',
       };
       setInviteInfoList([...inviteInfoList, newMessage]);
-      console.log('socket : 친구 요청을 받았습니다.', newMessage);
     });
     return () => {
       socket.off(FRIENDREQUEST);
@@ -229,7 +209,6 @@ function PingpongRoutePage() {
    */
   useEffect(() => {
     socket.on(FRIENDREQUESTACCEPTED, (response: BaseUserProfileData) => {
-      console.log('friendRequestAccepted', response);
       if (response) {
         setCheckFriendRequest(true);
         /**
@@ -242,7 +221,6 @@ function PingpongRoutePage() {
             type: 'check',
           };
         };
-        console.log(inviteInfoList, 'to accecpt', reply);
         setInviteInfoList([...inviteInfoList, reply()]);
       }
     });
@@ -252,7 +230,6 @@ function PingpongRoutePage() {
   useEffect(() => {
     socket.on(REJECTFRIENDREQUEST, (response: BaseUserProfileData) => {
       if (response) {
-        console.log('rejectFriendRequest', response);
         /**
          * 상대방 거절 확인 메시지 기록
          */
@@ -263,7 +240,6 @@ function PingpongRoutePage() {
             type: 'check',
           };
         };
-        console.log(inviteInfoList, 'to reject', reply);
         setInviteInfoList([...inviteInfoList, reply()]);
       }
     });
@@ -283,7 +259,6 @@ function PingpongRoutePage() {
         mode: mode,
       };
       setInviteInfoList([...inviteInfoList, newMessage]);
-      console.log('socket : 게임 초대를 받았습니다.', newMessage);
     });
     return () => {
       socket.off(INVITEGAME);
@@ -307,13 +282,40 @@ function PingpongRoutePage() {
     };
   }, []);
 
-  //여기에서 lonin 중복을 처리하는 것 같은데, 모든 예외처리를 여기서 하는지라  login중복은 따로 처리를 해줘야할 것 같아요
-  //socket api를 따로 만들던지 해야 처리 가능할 듯 싶네요 동환님
-  //중복 로그인 처리하실 때, 말씀 부탁드릴게요
+  const logoutHandler = async () => {
+    try {
+      await axios
+        .post(`${process.env.REACT_APP_SERVER_URL}/auth/logout`)
+        .then((res) => {
+          setUserData({
+            id: 0,
+            nickname: 'xxxxxxxxxxxxxxx',
+            image: '',
+          });
+          setSecondAuth({
+            checkIsSecondOauth: false,
+            checkIsValid: true,
+          });
+          navigate('/');
+        });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     socket.on('exception', (error: any) => {
-      alert(error.message);
-      navigate(PROFILEURL);
+      if (error.code === 100) {
+        alert(error.message);
+        navigate('/');
+        logoutHandler();
+      } else if (error.code === 101) {
+        alert(error.message);
+        setInviteInfoList((prev) => {
+          return [...prev.slice(0, -1)];
+        });
+      } else {
+        alert(error.message);
+        navigate(PROFILEURL);
+      }
     });
     return () => {
       socket.off('exception');

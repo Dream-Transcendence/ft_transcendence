@@ -55,11 +55,10 @@ export function ProfilePersonal() {
         `${process.env.REACT_APP_SERVER_URL}/users/${id}/friends`,
       );
       setter(response.data);
-      console.log('친구 목록을 최신화 하였습니다.');
     } catch (error: any) {
       if (error.response.data.statusCode === 401) navigate('/');
       else {
-        alert('존재하지 않는 프로필입니다.');
+        alert('error: 존재하지 않는 프로필입니다.');
         navigate(PROFILEURL);
       }
     }
@@ -85,7 +84,7 @@ export function ProfilePersonal() {
           setIsBlock(response.data.isBlocked);
         })
         .catch((error: any) => {
-          console.log('error status : ', error.response.data.statusCode);
+          // alert(error);
         });
     }
     if (paramsId && userData.id !== +paramsId) checkIsBlock();
