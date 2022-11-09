@@ -29,6 +29,7 @@ import {
   ClientRequestDto,
   PatchAuthDto,
   IsBlockedDto,
+  GetFriendDto,
 } from './dto/user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { Auth, Block, Friend, Request, User, Rank, Game } from './users.entity';
@@ -453,19 +454,13 @@ export class UserService {
     return friendDto;
   }
 
-  async getFriend(id: number, friendId: number): Promise<UserDto> {
+  async getFriend(id: number, friendId: number): Promise<GetFriendDto> {
     const friend = await this.friendsRepository.findOne({
       relations: ['user', 'friend'],
       where: { user: { id: id }, friend: { id: friendId } },
     });
-    if (friend === null) throw new NotFoundException('친구가 아닙니다.');
-
-    const friendDto = new UserDto(
-      friend.friend.id,
-      friend.friend.nickname,
-      friend.friend.image,
-    );
-    return friendDto;
+    if (friend === null) return new GetFriendDto(false);
+    else return new GetFriendDto(true);
   }
 
   async getFriends(id: number): Promise<FriendDto[]> {

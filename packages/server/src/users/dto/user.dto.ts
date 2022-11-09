@@ -53,6 +53,16 @@ export class FriendDto {
   isBlocked: boolean;
 }
 
+export class GetFriendDto {
+  constructor(isFriend: boolean) {
+    this.isFriend = isFriend;
+  }
+
+  @ApiProperty({ example: true })
+  @IsBoolean()
+  isFriend: boolean;
+}
+
 export class UserIdDto {
   constructor(id: number) {
     this.id = id;
