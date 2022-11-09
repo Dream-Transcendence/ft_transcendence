@@ -10,7 +10,6 @@ const NicknameInitLayout = styled('section')(({ theme }) => ({
   justifyItems: 'center',
   backgroundColor: '#0288D1',
   width: '24%',
-  height: '8%',
   border: 'solid 1px',
 }));
 

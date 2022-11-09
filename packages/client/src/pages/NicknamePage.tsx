@@ -9,9 +9,9 @@ import { PROFILEURL } from '../configs/Link.url';
 import { userDataAtom, userSecondAuth } from '../recoil/user.recoil';
 
 const NicknamePageLayout = styled('div')(({ theme }) => ({
-  display: 'grid',
+  display: 'flex',
   alignItems: 'center',
-  justifyItems: 'center',
+  justifyContent: 'center',
   backgroundColor: '#6BADE2',
   width: '100%',
   height: '100%',

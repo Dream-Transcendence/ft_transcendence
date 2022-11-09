@@ -40,6 +40,7 @@ function ChatRoomListTemplate(props: { roomList: UnJoinedRoomList[] }) {
   const roomList = props.roomList;
   const listElement: React.ReactElement[] = roomList.map(
     (room: UnJoinedRoomList) => {
+      if (room.personnel === 0) return <div></div>;
       return (
         <ListLayout key={room.id}>
           <ChatRoomElementOrganisms roomInfo={room} />
