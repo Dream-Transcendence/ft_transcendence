@@ -27,22 +27,22 @@ ALTER TABLE "game" ADD CONSTRAINT "FK_a8106c0a84d70ecfc3358301c54" FOREIGN KEY (
 ALTER TABLE "game" ADD CONSTRAINT "FK_3240e72a746928ea85f05b3b2f8" FOREIGN KEY ("opponentId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "rank" ADD CONSTRAINT "FK_0319fdc8ba0d4c2f456815dafea" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://cdn.intra.42.fr/users/dha.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (1, 'dha', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (1, 'dha@student.42seoul.kr', true, 1);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (1, 0, 2, 0, 1);
-INSERT INTO "user" ("id", "nickname", "image") VALUES (2, 'junghan', 'https://cdn.intra.42.fr/users/junghan.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (2, 'junghan', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (2, 'junghan@student.42seoul.kr', false, 2);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (2, 0, 2, 0, 2);
-INSERT INTO "user" ("id", "nickname", "image") VALUES (3, 'doyun', 'https://cdn.intra.42.fr/users/doyun.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (3, 'doyun', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (3, 'doyun@student.42seoul.kr', false, 3);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (3, 0, 0, 0, 3);
-INSERT INTO "user" ("id", "nickname", "image") VALUES (4, 'sonkang', 'https://cdn.intra.42.fr/users/sonkang.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (4, 'sonkang', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (4, 'sonkang@student.42seoul.kr', false, 4);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (4, 0, 0, 0, 4);
-INSERT INTO "user" ("id", "nickname", "image") VALUES (5, 'hybae', 'https://cdn.intra.42.fr/users/hybae.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (5, 'hybae', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (5, 'hybae@student.42seoul.kr', false, 5);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (5, 0, 0, 0, 5);
-INSERT INTO "user" ("id", "nickname", "image") VALUES (6, 'huchoi', 'https://cdn.intra.42.fr/users/huchoi.jpg');
+INSERT INTO "user" ("id", "nickname", "image") VALUES (6, 'huchoi', 'https://pingpongking-bakingkim.s3.ap-northeast-2.amazonaws.com/%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%8F%C3%A1%C2%85%C2%B3%C3%A1%C2%84%C2%85%C3%A1%C2%85%C2%B5%C3%A1%C2%86%C2%AB%C3%A1%C2%84%C2%89%C3%A1%C2%85%C2%A3%C3%A1%C2%86%C2%BA+2022-08-30+%C3%A1%C2%84%C2%8B%C3%A1%C2%85%C2%A9%C3%A1%C2%84%C2%92%C3%A1%C2%85%C2%AE+5.28.14.png');
 INSERT INTO "auth" ("id", "email", "authenticated", "userId") VALUES (6, 'huchoi@student.42seoul.kr', false, 6);
 INSERT INTO "rank" ("id", "rank", "win", "lose", "userId") VALUES (6, 0, 0, 0, 6);
 
