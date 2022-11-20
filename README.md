@@ -9,10 +9,10 @@ https://www.notion.so/ft_transcendence-5d6b3da6b2c74db88cf186ecf0d7f8ea</br>
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-%23FE5196?logo=conventionalcommits&logoColor=white)](https://conventionalcommits.org)
 
 ### 미리보기 
-<div >
- <img src="https://user-images.githubusercontent.com/55140432/202898309-623e2db2-c55c-4b94-bc2f-ba51c5113e97.png" align="left" width="48%" 
- height="20%"/>
- <img src="https://user-images.githubusercontent.com/55140432/202898324-a42e6aa2-3821-4e75-a23d-1e631ff97d3e.png" align="left" width="48%" height="20%"/>,
+<div align="center">
+ <img src="https://user-images.githubusercontent.com/55140432/202898309-623e2db2-c55c-4b94-bc2f-ba51c5113e97.png" width="500px" 
+ height="400px"/>
+ <img src="https://user-images.githubusercontent.com/55140432/202898324-a42e6aa2-3821-4e75-a23d-1e631ff97d3e.png" width="500px" height="400px"/>
 </div> 
 
 
